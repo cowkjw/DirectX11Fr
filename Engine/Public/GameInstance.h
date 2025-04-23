@@ -10,7 +10,7 @@ BEGIN(Engine)
 
 class ENGINE_DLL CGameInstance final : public CBase
 {
-	DECLARE_SINGLETON(CGameInstance)
+	DECLARE_SINGLETON(CGameInstance);
 
 private:
 	CGameInstance();
@@ -19,14 +19,17 @@ private:
 public:
 	HRESULT Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppContextOut);
 	void Update_Engine(_float fTimeDelta);
-	HRESULT Draw();	
 	void Clear(_uint iLevelIndex);
+	HRESULT Begin_Draw();
+	HRESULT Draw();
+	HRESULT End_Draw();
+
 	_float Compute_Random_Normal();
 	_float Compute_Random(_float fMin, _float fMax);
 
 #pragma region LEVEL_MANAGER
 public:
-	void Request_Change_Level(_uint iLevelIndex, class CLevel* pNewLevel);
+	HRESULT Change_Level(_uint iLevelIndex, class CLevel* pNewLevel);
 #pragma endregion
 //
 //#pragma region PROTOTYPE_MANAGER

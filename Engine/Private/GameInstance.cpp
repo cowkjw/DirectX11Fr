@@ -52,8 +52,6 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
-	m_pLevel_Manager->Apply_Pending_Change_Level();
-
 	//m_pObject_Manager->Priority_Update(fTimeDelta);
 
 	//m_pPicking->Update();
@@ -66,7 +64,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pLevel_Manager->Update(fTimeDelta);
 }
 
-HRESULT CGameInstance::Draw()
+HRESULT CGameInstance::Begin_Draw()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -74,8 +72,21 @@ HRESULT CGameInstance::Draw()
 	m_pGraphic_Device->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f));
 	m_pGraphic_Device->Clear_DepthStencil_View();
 
+	return S_OK;
+}
+
+HRESULT CGameInstance::Draw()
+{
+	if (nullptr == m_pGraphic_Device)
+		return E_FAIL;
+
 	m_pLevel_Manager->Render();
 
+	return S_OK;
+}
+
+HRESULT CGameInstance::End_Draw()
+{
 	m_pGraphic_Device->Present();
 
 	return S_OK;
@@ -92,6 +103,7 @@ void CGameInstance::Clear(_uint iLevelIndex)
 	//m_pPrototype_Manager->Clear(iLevelIndex);
 }
 
+
 _float CGameInstance::Compute_Random_Normal()
 {
 	return rand() / static_cast<_float>(RAND_MAX);	
@@ -104,9 +116,9 @@ _float CGameInstance::Compute_Random(_float fMin, _float fMax)
 
 #pragma region LEVEL_MANAGER
 
-void CGameInstance::Request_Change_Level(_uint iLevelIndex, CLevel* pNewLevel)
+HRESULT CGameInstance::Change_Level(_uint iLevelIndex, CLevel* pNewLevel)
 {
-	 m_pLevel_Manager->Request_Change_Level(iLevelIndex, pNewLevel);
+	return m_pLevel_Manager->Change_Level(iLevelIndex, pNewLevel);
 }
 #pragma endregion
 //

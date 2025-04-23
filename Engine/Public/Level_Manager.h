@@ -15,21 +15,15 @@ private:
 	virtual ~CLevel_Manager() = default;
 
 public:
-	HRESULT Apply_Pending_Change_Level();
-	void Request_Change_Level(_uint iLevelIndex, class CLevel* pNewLevel);
+	HRESULT Change_Level(_uint iLevelIndex, class CLevel* pNewLevel);
 	void Update(_float fTimeDelta);
 	HRESULT Render();
 
-private:
-	HRESULT Change_Level(_uint iLevelIndex, class CLevel* pNewLevel);
 
 private:
 	_uint					m_iCurrentLevelIndex = {};
 	class CLevel*			m_pCurrentLevel = { nullptr };
 	class CGameInstance*	m_pGameInstance = { nullptr };
-	_bool					m_bLevelChangeRequested = false;
-	_uint					m_iRequestedLevelIndex = 0;
-	class CLevel* m_pRequestedLevel = nullptr;
 
 public:
 	static CLevel_Manager* Create();

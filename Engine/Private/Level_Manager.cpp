@@ -9,20 +9,6 @@ CLevel_Manager::CLevel_Manager()
     Safe_AddRef(m_pGameInstance);
 }
 
-
-
-HRESULT CLevel_Manager::Apply_Pending_Change_Level()
-{
-    if (!m_bLevelChangeRequested) 
-        return E_FAIL;
-    HRESULT hr = Change_Level(m_iRequestedLevelIndex, m_pRequestedLevel);
-
-    m_bLevelChangeRequested = false;
-    m_pRequestedLevel = nullptr;
-
-    return hr;
-}
-
 HRESULT CLevel_Manager::Change_Level(_uint iLevelIndex, CLevel* pNewLevel)
 {
     /* 기존 레벨용 자원을 파괴해준다.*/
@@ -37,16 +23,6 @@ HRESULT CLevel_Manager::Change_Level(_uint iLevelIndex, CLevel* pNewLevel)
     m_iCurrentLevelIndex = iLevelIndex;
 
     return S_OK;
-}
-
-void CLevel_Manager::Request_Change_Level(_uint iLevelIndex, CLevel* pNewLevel)
-{
-    if (nullptr == pNewLevel)
-        return;
-
-    m_bLevelChangeRequested = true;
-    m_iRequestedLevelIndex = iLevelIndex;
-    m_pRequestedLevel = pNewLevel;
 }
 
 void CLevel_Manager::Update(_float fTimeDelta)
