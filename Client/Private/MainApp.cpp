@@ -28,6 +28,8 @@ HRESULT CMainApp::Initialize()
 	ImGui::StyleColorsDark();
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
+	Safe_AddRef(m_pDevice);
+	Safe_AddRef(m_pContext);
 
 	if (FAILED(Start_Level(LEVEL::LEVEL_LOGO)))
 		return E_FAIL;
@@ -82,16 +84,17 @@ CMainApp* CMainApp::Create()
 void CMainApp::Free()
 {
 	__super::Free();
-
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
-
+	Safe_Release(m_pContext);
+	Safe_Release(m_pDevice);
 	m_pGameInstance->Release_Engine();
 
 	Safe_Release(m_pGameInstance);
 
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+
 
 }
