@@ -77,8 +77,6 @@ HRESULT CGameInstance::Begin_Draw()
 
 HRESULT CGameInstance::Draw()
 {
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
 
 	m_pLevel_Manager->Render();
 

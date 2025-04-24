@@ -8,7 +8,13 @@
 #include "../Default/framework.h"
 #include <process.h>
 #include "Client_Enum.h"
-
+#pragma region IMGUI
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+#include "../../External Libraries/ImGuizmo-master/ImGuizmo.h" 
+#pragma endregion
 
 namespace Client
 {
@@ -19,7 +25,7 @@ namespace Client
 extern HWND g_hWnd;
 extern HINSTANCE g_hInst;
 
-
+using namespace ImGui;
 using namespace Client;
 
 /* 1. ¶Ë½Ñ³ð(³²). */

@@ -11,6 +11,14 @@ using namespace DirectX;
 #include <map>
 #include <list>
 #include <vector>
+#include <queue>
+#include <stack>
+#include <algorithm>
+#include <shobjidl.h> // IFileOpenDialog 사용을 위한 헤더
+#include <set>
+#include <unordered_map>
+#include <unordered_set>
+
 using namespace std;
 
 #include "Engine_Struct.h"
@@ -18,7 +26,8 @@ using namespace std;
 #include "Engine_Function.h"
 #include "Engine_Typedef.h"
 #include "Engine_Macro.h"
-
+#include "../../External Libraries/json.hpp"
+using json = nlohmann::json;
 using namespace Engine;
 
 
