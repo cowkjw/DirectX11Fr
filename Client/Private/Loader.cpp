@@ -202,14 +202,14 @@ void CLoader::Free()
 {
 	__super::Free();
 
-	WaitForSingleObject(m_hThread, INFINITE);
-
-	DeleteObject(m_hThread);
-
-	CloseHandle(m_hThread);
+	if (m_hThread)
+	{
+		WaitForSingleObject(m_hThread, INFINITE);
+		CloseHandle(m_hThread);
+		m_hThread = nullptr;
+	}
 
 	Safe_Release(m_pGameInstance);
-
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
 
