@@ -34,6 +34,9 @@
     <Filter Include="IMGUI\Lib">
       <UniqueIdentifier>{7279c5b3-acde-45e7-bef5-2202e057c392}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Json">
+      <UniqueIdentifier>{f908b2d1-2f8d-40d5-a070-34641c8ba114}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
