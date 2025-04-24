@@ -28,6 +28,12 @@
     <Filter Include="IMGUI">
       <UniqueIdentifier>{2c474aa3-3a5a-4932-b610-5b8c1043248f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IMGUI\Manager">
+      <UniqueIdentifier>{34c3a51a-7a1d-41fc-a186-238ef3f091d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IMGUI\Lib">
+      <UniqueIdentifier>{7279c5b3-acde-45e7-bef5-2202e057c392}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -63,6 +69,9 @@
     <ClInclude Include="..\public\MainApp.h">
       <Filter>00.MainApp</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\IMGUIMag.h">
+      <Filter>IMGUI\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -96,26 +105,29 @@
     <ClCompile Include="..\private\MainApp.cpp">
       <Filter>00.MainApp</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\External Libraries\imgui\imgui_tables.cpp">
-      <Filter>IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\External Libraries\imgui\imgui_widgets.cpp">
-      <Filter>IMGUI</Filter>
+    <ClCompile Include="..\private\IMGUIMag.cpp">
+      <Filter>IMGUI\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\External Libraries\imgui\imgui.cpp">
-      <Filter>IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\External Libraries\imgui\imgui_draw.cpp">
-      <Filter>IMGUI</Filter>
+      <Filter>IMGUI\Lib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\External Libraries\imgui\imgui_demo.cpp">
-      <Filter>IMGUI</Filter>
+      <Filter>IMGUI\Lib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\External Libraries\imgui\backends\imgui_impl_win32.cpp">
-      <Filter>IMGUI</Filter>
+    <ClCompile Include="..\..\External Libraries\imgui\imgui_draw.cpp">
+      <Filter>IMGUI\Lib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\External Libraries\imgui\backends\imgui_impl_dx11.cpp">
-      <Filter>IMGUI</Filter>
+      <Filter>IMGUI\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External Libraries\imgui\backends\imgui_impl_win32.cpp">
+      <Filter>IMGUI\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External Libraries\imgui\imgui_tables.cpp">
+      <Filter>IMGUI\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External Libraries\imgui\imgui_widgets.cpp">
+      <Filter>IMGUI\Lib</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

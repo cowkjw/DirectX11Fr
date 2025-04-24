@@ -23,11 +23,6 @@ HRESULT CMainApp::Initialize()
 
 
 
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(g_hWnd);
-	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
 
 	if (FAILED(Start_Level(LEVEL::LEVEL_LOGO)))
 		return E_FAIL;
@@ -45,12 +40,8 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Begin_Draw();
 	m_pGameInstance->Draw();
 
-	ImGui_ImplWin32_NewFrame();
-	ImGui_ImplDX11_NewFrame();
-	ImGui::NewFrame();
-	ImGui::ShowDemoWindow();
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+
 	// 7) 스왑체인에 Present
 	m_pGameInstance->End_Draw();
 
@@ -89,9 +80,4 @@ void CMainApp::Free()
 	m_pGameInstance->Release_Engine();
 
 	Safe_Release(m_pGameInstance);
-
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
-
 }
