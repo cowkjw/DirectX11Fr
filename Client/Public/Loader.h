@@ -27,14 +27,14 @@ public:
 	void Output_LoadingText() {
 		SetWindowText(g_hWnd, m_szLoadingText);
 	}
-	
+
 
 private:
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
 	LEVEL						m_eNextLevelID = { LEVEL::LEVEL_END };
 	_bool						m_isFinished = { false };
-	CGameInstance*				m_pGameInstance = { nullptr };
+	CGameInstance* m_pGameInstance = { nullptr };
 
 private:
 	HANDLE						m_hThread = {};

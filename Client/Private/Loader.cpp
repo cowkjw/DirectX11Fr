@@ -10,9 +10,9 @@
 //#include "Sky.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: m_pDevice { pDevice }
-	, m_pContext { pContext }
-	, m_pGameInstance { CGameInstance::Get_Instance() }
+	: m_pDevice{ pDevice }
+	, m_pContext{ pContext }
+	, m_pGameInstance{ CGameInstance::Get_Instance() }
 {
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pContext);
@@ -22,10 +22,10 @@ CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 _uint APIENTRY LoadingMain(void* pArg)
 {
 	/* 자원로딩한다. */
-	CLoader*		pLoader = static_cast<CLoader*>(pArg);
+	CLoader* pLoader = static_cast<CLoader*>(pArg);
 
 	if (FAILED(pLoader->Loading()))
-		return 1;	
+		return 1;
 
 	return 0;
 
@@ -46,6 +46,9 @@ HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 
 HRESULT CLoader::Loading()
 {
+	if (FAILED(CoInitializeEx(nullptr, 0)))
+		return E_FAIL;
+
 	EnterCriticalSection(&m_CriticalSection);
 
 	HRESULT		hr = {};
@@ -60,18 +63,19 @@ HRESULT CLoader::Loading()
 		hr = Loading_For_GamePlay();
 		break;
 	}
+	LeaveCriticalSection(&m_CriticalSection);
+
+	CoUninitialize();
 
 	if (FAILED(hr))
 		return E_FAIL;
-
-	LeaveCriticalSection(&m_CriticalSection);
 
 	return S_OK;
 }
 
 HRESULT CLoader::Loading_For_Logo()
 {
-	
+
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐을(를) 로딩중입니다."));
 	///* For.Prototype_Component_Texture_BackGround*/
 	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_BackGround"),
@@ -89,7 +93,7 @@ HRESULT CLoader::Loading_For_Logo()
 
 
 	lstrcpy(m_szLoadingText, TEXT("사운드을(를) 로딩중입니다."));
-	
+
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체을(를) 로딩중입니다."));
 
@@ -97,7 +101,7 @@ HRESULT CLoader::Loading_For_Logo()
 	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_GameObject_BackGround"),
 	//	CBackGround::Create(m_pGraphic_Device))))
 	//	return E_FAIL;
-	
+
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
 	m_isFinished = true;
@@ -135,13 +139,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CVIBuffer_Terrain::Create(m_pGraphic_Device, 256, 256))))
 		return E_FAIL;*/
 
-	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
-	//	CVIBuffer_Terrain::Create(m_pGraphic_Device, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp")))))
-	//	return E_FAIL;
-	///* For.Prototype_Component_VIBuffer_Cube */
-	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"),
-	//	CVIBuffer_Cube::Create(m_pGraphic_Device))))
-	//	return E_FAIL;
+		//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
+		//	CVIBuffer_Terrain::Create(m_pGraphic_Device, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp")))))
+		//	return E_FAIL;
+		///* For.Prototype_Component_VIBuffer_Cube */
+		//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"),
+		//	CVIBuffer_Cube::Create(m_pGraphic_Device))))
+		//	return E_FAIL;
 
 
 	lstrcpy(m_szLoadingText, TEXT("사운드을(를) 로딩중입니다."));
@@ -208,7 +212,6 @@ void CLoader::Free()
 
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
-
 
 	DeleteCriticalSection(&m_CriticalSection);
 }
