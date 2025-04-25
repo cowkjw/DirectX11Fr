@@ -37,6 +37,15 @@
     <Filter Include="Json">
       <UniqueIdentifier>{f908b2d1-2f8d-40d5-a070-34641c8ba114}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. GameObject">
+      <UniqueIdentifier>{e674d3e7-1c24-4197-b240-8882005a214b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameObject\UI">
+      <UniqueIdentifier>{3813ae51-6983-476e-a1f2-d743909a5d65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameObject\UI\00. Background">
+      <UniqueIdentifier>{8a7f108f-d75a-41ab-9bca-099ad870fc62}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -74,6 +83,15 @@
     </ClInclude>
     <ClInclude Include="..\public\IMGUIMag.h">
       <Filter>IMGUI\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BackGround.h">
+      <Filter>01. GameObject\UI\00. Background</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\JsonLoader.h">
+      <Filter>Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Function.h">
+      <Filter>99.Defines</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +149,12 @@
     </ClCompile>
     <ClCompile Include="..\..\External Libraries\imgui\imgui_widgets.cpp">
       <Filter>IMGUI\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BackGround.cpp">
+      <Filter>01. GameObject\UI\00. Background</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\JsonLoader.cpp">
+      <Filter>Json</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

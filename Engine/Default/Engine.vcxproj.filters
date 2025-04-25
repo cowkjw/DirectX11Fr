@@ -49,6 +49,21 @@
     <ClInclude Include="..\Public\Transform.h">
       <Filter>01.Utility\03.Components\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Renderer.h">
+      <Filter>01.Utility\05. Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIObject.h">
+      <Filter>01.Utility\02.GameObject\Manager\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Prototype_Manager.h">
+      <Filter>01.Utility\04. Prototype</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Object_Manager.h">
+      <Filter>01.Utility\02.GameObject\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Layer.h">
+      <Filter>01.Utility\02.GameObject\Layer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -80,6 +95,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\Transform.cpp">
       <Filter>01.Utility\03.Components\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Layer.cpp">
+      <Filter>01.Utility\02.GameObject\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIObject.cpp">
+      <Filter>01.Utility\02.GameObject\Manager\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Object_Manager.cpp">
+      <Filter>01.Utility\02.GameObject\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Prototype_Manager.cpp">
+      <Filter>01.Utility\04. Prototype</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Renderer.cpp">
+      <Filter>01.Utility\05. Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +151,21 @@
     </Filter>
     <Filter Include="01.Utility\03.Components\Transform">
       <UniqueIdentifier>{6b3d22a0-5c82-4ff4-a7fe-543e619d38f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObject\Manager">
+      <UniqueIdentifier>{bbd19095-0089-4062-917c-c8db67e8f05a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04. Prototype">
+      <UniqueIdentifier>{5acbce42-5d79-4906-8eda-c0e9e18621c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05. Renderer">
+      <UniqueIdentifier>{6206779f-4417-49ba-be81-0835e27bc788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObject\Layer">
+      <UniqueIdentifier>{fa48aa71-4901-4dea-9251-8c643a040894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObject\Manager\UIObject">
+      <UniqueIdentifier>{f52e9462-3900-403d-8e17-d3e4b4f861c2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

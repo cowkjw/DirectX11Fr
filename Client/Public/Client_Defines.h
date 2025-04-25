@@ -7,6 +7,7 @@
 /* 기타 다른 정의파일(.h)들을 인클루드하는 역활. */
 #include "../Default/framework.h"
 #include <process.h>
+#include <fstream>
 #include "Client_Enum.h"
 #pragma region IMGUI
 #define IMGUI_DEFINE_MATH_OPERATORS

@@ -2,6 +2,7 @@
 
 namespace Engine
 {
-	enum class PROTOTYPE { TYPE_GAMEOBJECT, TYPE_COMPONENT };
+	enum class RENDERGROUP : unsigned int { RG_PRIORITY, RG_NONBLEND, RG_BLEND, RG_UI, RG_END };
+	enum class PROTOTYPE : unsigned int { TYPE_GAMEOBJECT, TYPE_COMPONENT };
 	
 }

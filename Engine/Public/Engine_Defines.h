@@ -28,6 +28,11 @@ using namespace std;
 #include "Engine_Macro.h"
 #include "../../External Libraries/json.hpp"
 using json = nlohmann::json;
+
+namespace Engine
+{
+	const _wstring	g_strTransformTag = TEXT("Com_Transform");
+}
 using namespace Engine;
 
 

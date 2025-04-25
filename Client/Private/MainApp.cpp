@@ -16,7 +16,7 @@ HRESULT CMainApp::Initialize()
 	EngineDesc.iWinSizeX = g_iWinSizeX;
 	EngineDesc.iWinSizeY = g_iWinSizeY;
 	EngineDesc.isWindowed = true;
-	EngineDesc.iNumLevels = static_cast<_uint>(LEVEL::LEVEL_END);
+	EngineDesc.iNumLevels = +(LEVEL::LEVEL_END);
 
 	if (FAILED(m_pGameInstance->Initialize_Engine(EngineDesc, &m_pDevice, &m_pContext)))
 		return E_FAIL;
@@ -51,7 +51,7 @@ HRESULT CMainApp::Render()
 
 HRESULT CMainApp::Start_Level(LEVEL eStartLevel)
 {
-	if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LEVEL_LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, eStartLevel))))
+	if (FAILED(m_pGameInstance->Change_Level(+LEVEL::LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eStartLevel))))
 		return E_FAIL;
 
 	return S_OK;
