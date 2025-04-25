@@ -39,6 +39,14 @@ HRESULT CRenderer::Draw()
 	return S_OK;
 }
 
+void CRenderer::Clear()
+{
+	for (auto& ObjectList : m_RenderObjects)
+	{
+		ObjectList.clear();
+	}
+}
+
 HRESULT CRenderer::Render_Priority()
 {
 	for (auto& pGameObject : m_RenderObjects[+(RENDERGROUP::RG_PRIORITY)])

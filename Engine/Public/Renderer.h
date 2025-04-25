@@ -13,6 +13,7 @@ private:
 public:
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
 	HRESULT Draw();
+	void Clear();
 
 private:
 	ID3D11Device*				m_pDevice = { nullptr };

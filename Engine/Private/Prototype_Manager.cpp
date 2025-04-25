@@ -36,10 +36,11 @@ CBase* CPrototype_Manager::Clone_Prototype(PROTOTYPE ePrototypeType, _uint iProt
 		return nullptr;
 
 	if (ePrototypeType == PROTOTYPE::TYPE_GAMEOBJECT)
-		return dynamic_cast<CGameObject*>(pPrototype)->Clone(pArg);
+		return static_cast<CGameObject*>(pPrototype)->Clone(pArg);
 	else
-		return dynamic_cast<CComponent*>(pPrototype)->Clone(pArg);
-		return nullptr;	
+		return static_cast<CComponent*>(pPrototype)->Clone(pArg);
+
+	return nullptr;	
 }
 
 void CPrototype_Manager::Clear(_uint iLevelIndex)

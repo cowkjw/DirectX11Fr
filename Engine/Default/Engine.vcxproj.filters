@@ -43,9 +43,6 @@
     <ClInclude Include="..\Public\Component.h">
       <Filter>01.Utility\03.Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\GameObject.h">
-      <Filter>01.Utility\02.GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Transform.h">
       <Filter>01.Utility\03.Components\Transform</Filter>
     </ClInclude>
@@ -63,6 +60,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Layer.h">
       <Filter>01.Utility\02.GameObject\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject.h">
+      <Filter>01.Utility\02.GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -33,7 +33,7 @@ HRESULT CObject_Manager::Add_GameObject(_uint iPrototypeLevelIndex, const _wstri
 {
 	/* 사본객체를 오브젝트 매니져에 추가한다. */
 	/* 원형 매니져에게 복제하여 내놔!! */
-	CGameObject*		pGameObject = dynamic_cast<CGameObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::TYPE_GAMEOBJECT, iPrototypeLevelIndex, strPrototypeTag, pArg));
+	CGameObject*		pGameObject = static_cast<CGameObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::TYPE_GAMEOBJECT, iPrototypeLevelIndex, strPrototypeTag, pArg));
 	if (nullptr == pGameObject)
 		return E_FAIL;
 

@@ -54,7 +54,7 @@ CBackGround* CBackGround::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CMainApp");
+		MSG_BOX("Failed to Created : CBackGround");
 		Safe_Release(pInstance);
 	}
 
