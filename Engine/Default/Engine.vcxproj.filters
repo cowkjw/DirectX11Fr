@@ -64,6 +64,9 @@
     <ClInclude Include="..\Public\GameObject.h">
       <Filter>01.Utility\02.GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Texture.h">
+      <Filter>01.Utility\03.Components\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -110,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Renderer.cpp">
       <Filter>01.Utility\05. Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Texture.cpp">
+      <Filter>01.Utility\03.Components\Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +172,9 @@
     </Filter>
     <Filter Include="01.Utility\02.GameObject\Manager\UIObject">
       <UniqueIdentifier>{f52e9462-3900-403d-8e17-d3e4b4f861c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Texture">
+      <UniqueIdentifier>{4fea5725-6fae-4273-95ed-6f07bc78498d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

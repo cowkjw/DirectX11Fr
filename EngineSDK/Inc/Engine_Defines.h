@@ -4,7 +4,8 @@
 
 #include <d3d11.h>
 #include <DirectXMath.h>
-
+#include "DDSTextureLoader.h"
+#include "WICTextureLoader.h"
 using namespace DirectX;
 
 #include <string>
