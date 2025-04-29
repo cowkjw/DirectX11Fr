@@ -48,6 +48,7 @@ protected:
 	map<const _wstring, class CComponent*>		m_Components;
 	_bool m_bIsActive{ true };
 	_bool m_bIsPooled{ false };
+	_bool m_isCloned = { false };
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;

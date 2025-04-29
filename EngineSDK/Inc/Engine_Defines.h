@@ -4,8 +4,8 @@
 
 #include <d3d11.h>
 #include <DirectXMath.h>
-#include "DDSTextureLoader.h"
-#include "WICTextureLoader.h"
+#include "DirectXTK/DDSTextureLoader.h"
+#include "DirectXTK/WICTextureLoader.h"
 using namespace DirectX;
 
 #include <string>
@@ -28,7 +28,6 @@ using namespace std;
 #include "Engine_Typedef.h"
 #include "Engine_Macro.h"
 #include "../../External Libraries/json.hpp"
-using json = nlohmann::json;
 
 namespace Engine
 {

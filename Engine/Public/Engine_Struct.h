@@ -12,11 +12,19 @@ namespace Engine
 	}ENGINE_DESC;
 
 
+    typedef struct tagVertexPositionTexcoord
+    {
+        XMFLOAT3		vPosition;
+        XMFLOAT2		vTexcoord;
+    }VTXPOSTEX;
+
+
+
 	typedef struct tagVector : public XMFLOAT3
 	{
         tagVector() : XMFLOAT3(0.f, 0.f, 0.f) {}
 
-        tagVector(_float _x, _float _y, _float _z) : XMFLOAT3(_x, _y, _z) {}
+        tagVector(float _x, float _y, float _z) : XMFLOAT3(_x, _y, _z) {}
 
         // XMVECTOR에서 변환하는 생성자
         tagVector(FXMVECTOR v) { XMStoreFloat3(this, v); }
@@ -79,7 +87,7 @@ namespace Engine
             return *this;
         }
 
-        _float Dot(const tagVector& rhs) const
+        float Dot(const tagVector& rhs) const
         {
             return XMVectorGetX(XMVector3Dot(*this, rhs));
         }
@@ -90,12 +98,12 @@ namespace Engine
         }
 
         // 길이(length) 계산
-        _float Length() const
+        float Length() const
         {
             return XMVectorGetX(XMVector3Length(*this));
         }
 
-        _float LengthSq() const
+        float LengthSq() const
         {
             return XMVectorGetX(XMVector3LengthSq(*this));
         }
