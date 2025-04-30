@@ -167,8 +167,12 @@
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\Public\Node.h" />
+    <ClInclude Include="..\public\Observer.h" />
+    <ClInclude Include="..\public\ObserverManager.h" />
     <ClInclude Include="..\Public\TaskNode.h" />
+    <ClInclude Include="..\public\UIButton.h" />
     <ClInclude Include="..\public\UIManager.h" />
+    <ClInclude Include="..\public\UIProgressBar.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -190,7 +194,10 @@
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
+    <ClCompile Include="..\private\ObserverManager.cpp" />
+    <ClCompile Include="..\private\UIButton.cpp" />
     <ClCompile Include="..\private\UIManager.cpp" />
+    <ClCompile Include="..\private\UIProgressBar.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -52,6 +52,18 @@
     <Filter Include="100.ShaderFiles">
       <UniqueIdentifier>{a3db1018-9645-49e1-8060-77e418525ea8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="94.Observer">
+      <UniqueIdentifier>{b3d8b20a-4967-4f84-9398-fcf865468851}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94.Observer\Manager">
+      <UniqueIdentifier>{92058b1c-a767-43d8-b243-ec80e04019d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\UI\Manager">
+      <UniqueIdentifier>{7ee58bad-0672-4d83-b014-4b6d9c24b462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\UI\UIControls">
+      <UniqueIdentifier>{4bfff0cf-f249-43c4-a75f-76c491231913}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -111,7 +123,21 @@
     <ClInclude Include="..\Public\TaskNode.h">
       <Filter>95.BehaivorTree</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UIManager.h" />
+    <ClInclude Include="..\public\ObserverManager.h">
+      <Filter>94.Observer\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Observer.h">
+      <Filter>94.Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UIManager.h">
+      <Filter>01.GameObject\UI\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UIButton.h">
+      <Filter>01.GameObject\UI\UIControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UIProgressBar.h">
+      <Filter>01.GameObject\UI\UIControls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -175,7 +201,18 @@
     <ClCompile Include="..\private\JsonLoader.cpp">
       <Filter>96.Json</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UIManager.cpp" />
+    <ClCompile Include="..\private\ObserverManager.cpp">
+      <Filter>94.Observer\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UIManager.cpp">
+      <Filter>01.GameObject\UI\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UIButton.cpp">
+      <Filter>01.GameObject\UI\UIControls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UIProgressBar.cpp">
+      <Filter>01.GameObject\UI\UIControls</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
