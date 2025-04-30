@@ -59,6 +59,13 @@ public:
 //	_bool Picking_InLocal(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC);
 //#pragma endregion
 
+
+#pragma region FRUSTUM
+	_bool IsPointInFrustum(const _float3& point);
+	_bool IsSphereInFrustum(const _float3& point, _float fRadius = 0.f);
+	_bool IsAABBInFrustum(const _float3& point, const _float3& scale);
+#pragma endregion
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CLevel_Manager*		m_pLevel_Manager = { nullptr };
@@ -67,6 +74,7 @@ private:
 	class CRenderer*			m_pRenderer = { nullptr };
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
 	// class CPicking*				m_pPicking = { nullptr };
+	class CFrustumCull* m_pFrustumCull = { nullptr };
 
 public:
 	void Release_Engine();

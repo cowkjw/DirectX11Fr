@@ -29,12 +29,18 @@ namespace Engine
 	typedef XMFLOAT4					_float4;
 
 	typedef XMFLOAT4X4					_float4x4;
-	
 
-	//typedef D3DXVECTOR2					_float2;
-	//typedef D3DXVECTOR3					_float3;
-	//typedef D3DXVECTOR4					_float4;
+	/* 벡터의 연산을 위해 제공되는 타입. */
+	typedef		XMVECTOR					_vector;
+	typedef		FXMVECTOR					_fvector;
+	typedef		GXMVECTOR					_gvector;
+	typedef		HXMVECTOR					_hvector;
+	typedef		CXMVECTOR					_cvector;
 
-	//typedef D3DXMATRIX					_float4x4;
+	typedef		XMFLOAT4X4					_float4x4;
+	typedef		XMMATRIX					_matrix;
+	typedef		FXMMATRIX					_fmatrix;
+	typedef		CXMMATRIX					_cmatrix;
+
 
 }

@@ -5,6 +5,7 @@
 #include "Level_Manager.h"
 #include "Timer_Manager.h"
 #include "Graphic_Device.h"
+#include "FrustumCull.h"
 #include "Object_Manager.h"
 #include "Prototype_Manager.h"
 
@@ -45,6 +46,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	//	return E_FAIL;
 
 
+	m_pFrustumCull = CFrustumCull::Create();
+	if (nullptr == m_pFrustumCull)
+		return E_FAIL;
+
 
 
 	return S_OK;
@@ -52,6 +57,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
+	//	m_pFrustumCull->Update(); 추후에 카메라에서 뷰, 투영 행렬을 받아서 업데이트 하도록 수정해야함
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 
 	//m_pPicking->Update();
@@ -59,7 +65,6 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pObject_Manager->Update(fTimeDelta);	
 
 	m_pObject_Manager->Late_Update(fTimeDelta);
-
 
 	m_pLevel_Manager->Update(fTimeDelta);
 }
@@ -191,9 +196,29 @@ void CGameInstance::Update_Timer(const _wstring& strTimerTag)
 //
 //#pragma endregion
 
+
+#pragma region FRUSTUM
+_bool CGameInstance::IsPointInFrustum(const _float3& point)
+{
+	return m_pFrustumCull->IsPointInFrustum(point);
+}
+
+_bool CGameInstance::IsSphereInFrustum(const _float3& point, _float fRadius)
+{
+	return m_pFrustumCull->IsSphereInFrustum(point, fRadius);
+}
+
+_bool CGameInstance::IsAABBInFrustum(const _float3& point, const _float3& scale)
+{
+	return m_pFrustumCull->IsAABBInFrustum(point, scale);
+}
+#pragma endregion
+
+
 void CGameInstance::Release_Engine()
 {
 	//Safe_Release(m_pPicking);
+	Safe_Release(m_pFrustumCull);
 
 	Safe_Release(m_pTimer_Manager);
 
