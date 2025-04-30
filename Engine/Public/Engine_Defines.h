@@ -6,6 +6,11 @@
 #include <DirectXMath.h>
 #include "DirectXTK/DDSTextureLoader.h"
 #include "DirectXTK/WICTextureLoader.h"
+#include "DirectXTK/Keyboard.h"
+#include "DirectXTK/Mouse.h"
+
+#include "Fx11/d3dx11effect.h"
+#include <d3dcompiler.h>
 using namespace DirectX;
 
 #include <string>

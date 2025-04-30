@@ -28,17 +28,17 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	if (nullptr == m_pLevel_Manager)
 		return E_FAIL;
 
-	//m_pPrototype_Manager = CPrototype_Manager::Create(EngineDesc.iNumLevels);
-	//if (nullptr == m_pPrototype_Manager)
-	//	return E_FAIL;
+	m_pPrototype_Manager = CPrototype_Manager::Create(EngineDesc.iNumLevels);
+	if (nullptr == m_pPrototype_Manager)
+		return E_FAIL;
 
-	//m_pObject_Manager = CObject_Manager::Create(EngineDesc.iNumLevels);
-	//if (nullptr == m_pObject_Manager)
-	//	return E_FAIL;
+	m_pObject_Manager = CObject_Manager::Create(EngineDesc.iNumLevels);
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
 
-	//m_pRenderer = CRenderer::Create(*ppOut);
-	//if (nullptr == m_pRenderer)
-	//	return E_FAIL;
+	m_pRenderer = CRenderer::Create(*ppDeviceOut, *ppContextOut);
+	if (nullptr == m_pRenderer)
+		return E_FAIL;
 
 	//m_pPicking = CPicking::Create(*ppOut, EngineDesc.hWnd, EngineDesc.iWinSizeX, EngineDesc.iWinSizeY);
 	//if (nullptr == m_pPicking)
