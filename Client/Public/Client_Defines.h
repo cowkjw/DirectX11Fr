@@ -23,11 +23,11 @@
 
 #pragma endregion
 
-// 이후 다시 new 매크로를 쓰고 싶으면 다시 define해주면 됨
-#ifdef _DEBUG
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-#define new DBG_NEW
-#endif
+//// 이후 다시 new 매크로를 쓰고 싶으면 다시 define해주면 됨
+//#ifdef _DEBUG
+//#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+//#define new DBG_NEW
+//#endif
 namespace Client
 {
 	const unsigned int			g_iWinSizeX = 1280;

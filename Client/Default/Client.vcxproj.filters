@@ -138,6 +138,9 @@
     <ClInclude Include="..\public\UIProgressBar.h">
       <Filter>01.GameObject\UI\UIControls</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UIImage.h">
+      <Filter>01.GameObject\UI\UIControls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -211,6 +214,9 @@
       <Filter>01.GameObject\UI\UIControls</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UIProgressBar.cpp">
+      <Filter>01.GameObject\UI\UIControls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UIImage.cpp">
       <Filter>01.GameObject\UI\UIControls</Filter>
     </ClCompile>
   </ItemGroup>

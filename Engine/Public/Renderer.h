@@ -20,7 +20,7 @@ private:
 	ID3D11DeviceContext*		m_pContext = { nullptr };
 
 private:
-	list<class CGameObject*>	m_RenderObjects[+RENDERGROUP::RG_END];
+	list<class CGameObject*>	m_RenderObjects[ToIndex(RENDERGROUP::RG_END)];
 
 private:
 	HRESULT Render_Priority();

@@ -7,14 +7,14 @@
 BEGIN(Engine)
 class CTexture;
 END
+
 BEGIN(Client)
-
-typedef struct CUIBarDesc
-{
-}BAR_DESC;
-
 class CUIProgressBar final : public CUIObject, public IObserver<_float>
 {
+public:
+	typedef struct tBarDesc : public UIOBJECT_DESC
+	{
+	}BAR_DESC;
 private:
 	CUIProgressBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUIProgressBar(const CUIProgressBar& Prototype);

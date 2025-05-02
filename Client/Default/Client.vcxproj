@@ -171,6 +171,7 @@
     <ClInclude Include="..\public\ObserverManager.h" />
     <ClInclude Include="..\Public\TaskNode.h" />
     <ClInclude Include="..\public\UIButton.h" />
+    <ClInclude Include="..\public\UIImage.h" />
     <ClInclude Include="..\public\UIManager.h" />
     <ClInclude Include="..\public\UIProgressBar.h" />
     <ClInclude Include="Client.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\ObserverManager.cpp" />
     <ClCompile Include="..\private\UIButton.cpp" />
+    <ClCompile Include="..\private\UIImage.cpp" />
     <ClCompile Include="..\private\UIManager.cpp" />
     <ClCompile Include="..\private\UIProgressBar.cpp" />
     <ClCompile Include="Client.cpp" />

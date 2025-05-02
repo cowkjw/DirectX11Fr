@@ -47,7 +47,7 @@
       <Filter>01.Utility\05. Renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIObject.h">
-      <Filter>01.Utility\02.GameObject\Manager\UIObject</Filter>
+      <Filter>01.Utility\02.GameObject\UIObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Prototype_Manager.h">
       <Filter>01.Utility\04. Prototype</Filter>
@@ -76,7 +76,6 @@
     <ClInclude Include="..\Public\Graphic_Device.h">
       <Filter>00.System\01.Device\Graphic</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
     <ClInclude Include="..\public\Input_Device.h">
       <Filter>00.System\01.Device\Input</Filter>
     </ClInclude>
@@ -116,7 +115,7 @@
       <Filter>01.Utility\02.GameObject\Layer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIObject.cpp">
-      <Filter>01.Utility\02.GameObject\Manager\UIObject</Filter>
+      <Filter>01.Utility\02.GameObject\UIObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Object_Manager.cpp">
       <Filter>01.Utility\02.GameObject\Manager</Filter>
@@ -201,9 +200,6 @@
     <Filter Include="01.Utility\02.GameObject\Layer">
       <UniqueIdentifier>{fa48aa71-4901-4dea-9251-8c643a040894}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\02.GameObject\Manager\UIObject">
-      <UniqueIdentifier>{f52e9462-3900-403d-8e17-d3e4b4f861c2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03.Components\Texture">
       <UniqueIdentifier>{4fea5725-6fae-4273-95ed-6f07bc78498d}</UniqueIdentifier>
     </Filter>
@@ -225,8 +221,8 @@
     <Filter Include="01.Utility\09. Culling">
       <UniqueIdentifier>{6789d8ab-a554-4cd7-bb84-ca037e7e58ea}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Engine.rc" />
+    <Filter Include="01.Utility\02.GameObject\UIObject">
+      <UniqueIdentifier>{f52e9462-3900-403d-8e17-d3e4b4f861c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

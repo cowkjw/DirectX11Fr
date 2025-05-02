@@ -1,14 +1,15 @@
 #include "Texture.h"
+#include "Shader.h"
 
 CTexture::CTexture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CComponent { pDevice, pContext }
+	: CComponent{ pDevice, pContext }
 {
 }
 
 CTexture::CTexture(const CTexture& Prototype)
 	: CComponent{ Prototype }
 	, m_SRVs{ Prototype.m_SRVs }
-	, m_iNumTextures { Prototype.m_iNumTextures }
+	, m_iNumTextures{ Prototype.m_iNumTextures }
 {
 
 	for (auto& pSRV : m_SRVs)
@@ -27,7 +28,7 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
 		ID3D11ShaderResourceView* pSRV = { nullptr };
 
 		wsprintf(szTexturePath, pTextureFilePath, i);
-		
+
 		HRESULT			hr = {};
 
 		if (false == lstrcmp(TEXT(".dds"), szExt))
@@ -57,9 +58,12 @@ HRESULT CTexture::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CTexture::Bind_ShaderResource()
+HRESULT CTexture::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, _uint iTextureIndex)
 {
-	return S_OK;
+	if (iTextureIndex >= m_iNumTextures)
+		return E_FAIL;
+
+	return pShader->Bind_SRV(pConstantName, m_SRVs[iTextureIndex]);
 }
 
 CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pTextureFilePath, _uint iNumTextures)

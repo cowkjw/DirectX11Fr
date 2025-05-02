@@ -1,18 +1,20 @@
 #pragma once
-#include "UIObject.h"   
+#include "UIImage.h"   
 #include "Client_Defines.h"
 
 BEGIN(Client)
 
-typedef struct tButtonDesc
-{
-	function<void()> OnClick;  
-}BUTTON_DESC;
 
-class CUIButton final : public CUIObject
+class CUIButton final : public CUIImage
 {
+public:
+	typedef struct tButtonDesc : public UIOBJECT_DESC
+	{
+		function<void()> OnClick;
+	}BUTTON_DESC;
+
 private:
-	CUIButton(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUIButton(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HWND hWnd);
 	CUIButton(const CUIButton& Prototype);
 	virtual ~CUIButton() = default;
 public:
@@ -24,11 +26,17 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	void CheckMouseOver();
+
+private:
 	function<void()> m_OnClick;
 	_bool m_bHovered = false;
 	_bool m_bPressed = false;
+	HWND m_hWnd{ nullptr };
+	CTexture* m_pHoverTexture{ nullptr };
+
 public:
-	static CUIButton* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float4& vColor, function<void()> onClick);
+	static CUIButton* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,HWND hWnd,  const _float4& vColor, function<void()> onClick);
 	CUIObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

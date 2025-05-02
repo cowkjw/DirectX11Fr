@@ -16,9 +16,10 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	HRESULT Bind_ShaderResource();
+	/* 쉐이더에 텍스쳐를 셋한다. */
+	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iTextureIndex);
 
-private:	
+private:
 	vector<ID3D11ShaderResourceView*>				m_SRVs;
 	_uint											m_iNumTextures = {};
 

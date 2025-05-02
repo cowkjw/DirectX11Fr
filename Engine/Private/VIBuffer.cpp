@@ -7,14 +7,14 @@ CVIBuffer::CVIBuffer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CVIBuffer::CVIBuffer(const CVIBuffer& Prototype)
 	: CComponent{ Prototype }
-	, m_pVB { Prototype.m_pVB }
-	, m_pIB { Prototype.m_pIB }
-	, m_iNumVertices { Prototype.m_iNumVertices }
-	, m_iVertexStride { Prototype.m_iVertexStride }
-	, m_iNumIndices { Prototype.m_iNumIndices }
-	, m_iIndexStride { Prototype.m_iIndexStride }
-	, m_pVertexPositions { Prototype.m_pVertexPositions }
-	, m_iNumVertexBuffers { Prototype.m_iNumVertexBuffers }
+	, m_pVB{ Prototype.m_pVB }
+	, m_pIB{ Prototype.m_pIB }
+	, m_iNumVertices{ Prototype.m_iNumVertices }
+	, m_iVertexStride{ Prototype.m_iVertexStride }
+	, m_iNumIndices{ Prototype.m_iNumIndices }
+	, m_iIndexStride{ Prototype.m_iIndexStride }
+	, m_pVertexPositions{ Prototype.m_pVertexPositions }
+	, m_iNumVertexBuffers{ Prototype.m_iNumVertexBuffers }
 	, m_eIndexFormat{ Prototype.m_eIndexFormat }
 	, m_ePrimitiveTopology{ Prototype.m_ePrimitiveTopology }
 {
@@ -36,39 +36,39 @@ HRESULT CVIBuffer::Initialize(void* pArg)
 HRESULT CVIBuffer::Bind_Buffers()
 {
 	ID3D11Buffer* pVertexBuffers[] = {
-		m_pVB, 
+		m_pVB,
 		/*m_pVB1,
 		m_pVB2,*/
 	};
 
 	_uint		iVertexStrides[] = {
-		m_iVertexStride, 
+		m_iVertexStride,
 	};
 
 	_uint		iOffsets[] = {
 		0
 	};
 
-	m_pContext->IASetVertexBuffers(0, m_iNumVertexBuffers, pVertexBuffers, iVertexStrides, iOffsets);	// 정점 버퍼 바인딩
-	m_pContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);	// 인덱스 버퍼 바인딩
-	m_pContext->IASetPrimitiveTopology(m_ePrimitiveTopology); // 프리미티브 토폴로지 설정
+	m_pContext->IASetVertexBuffers(0, m_iNumVertexBuffers, pVertexBuffers, iVertexStrides, iOffsets);
+	m_pContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
+	m_pContext->IASetPrimitiveTopology(m_ePrimitiveTopology);
 
 	/*
 	LPCSTR SemanticName;
-    UINT SemanticIndex;
-    DXGI_FORMAT Format;
-    UINT InputSlot;
-    UINT AlignedByteOffset;
-    D3D11_INPUT_CLASSIFICATION InputSlotClass;
-    UINT InstanceDataStepRate;
+	UINT SemanticIndex;
+	DXGI_FORMAT Format;
+	UINT InputSlot;
+	UINT AlignedByteOffset;
+	D3D11_INPUT_CLASSIFICATION InputSlotClass;
+	UINT InstanceDataStepRate;
 	*/
-	D3D11_INPUT_ELEMENT_DESC		Elements[6] =
+	/*D3D11_INPUT_ELEMENT_DESC		Elements[6] =
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 
-	_uint		iNumElements = 2;
+	_uint		iNumElements = 2;*/
 
 	//m_pDevice->CreateInputLayout(Elements, iNumElements, );
 

@@ -1,41 +1,40 @@
 #include "VIBuffer_Rect.h"
 
 CVIBuffer_Rect::CVIBuffer_Rect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    : CVIBuffer { pDevice, pContext }
+	: CVIBuffer{ pDevice, pContext }
 {
 }
 
 CVIBuffer_Rect::CVIBuffer_Rect(const CVIBuffer_Rect& Prototype)
-    : CVIBuffer{ Prototype }
+	: CVIBuffer( Prototype )
 {
 }
 
 HRESULT CVIBuffer_Rect::Initialize_Prototype()
 {
-	
-	m_iNumVertexBuffers = 1; 
+
+	m_iNumVertexBuffers = 1;
 	m_iNumVertices = 4;
 	m_iVertexStride = sizeof(VTXPOSTEX);
 	m_iNumIndices = 6;
 	m_iIndexStride = sizeof(_ushort);
-	m_eIndexFormat = DXGI_FORMAT_R16_UINT; 
+	m_eIndexFormat = DXGI_FORMAT_R16_UINT;
 	m_ePrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	D3D11_BUFFER_DESC			VBBufferDesc{};
-	VBBufferDesc.ByteWidth = m_iNumVertices * m_iVertexStride; // 잡아놓을 메모리 크기
-	VBBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER; // 정점 버퍼로 바인딩
+	VBBufferDesc.ByteWidth = m_iNumVertices * m_iVertexStride;
+	VBBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	VBBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	VBBufferDesc.CPUAccessFlags = /*D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE*/0; // CPU에서 접근 불가
-	VBBufferDesc.StructureByteStride = m_iVertexStride; 
-	VBBufferDesc.MiscFlags = 0; 
+	VBBufferDesc.CPUAccessFlags = /*D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE*/0;
+	VBBufferDesc.StructureByteStride = m_iVertexStride;
+	VBBufferDesc.MiscFlags = 0;
 
-	// 미리 잡아놓을 메모리 크기와 정점 버퍼로 바인딩을 설정
-	D3D11_SUBRESOURCE_DATA		VBInitialData{}; 
+	D3D11_SUBRESOURCE_DATA		VBInitialData{};
 
 	VTXPOSTEX* pVertices = new VTXPOSTEX[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXPOSTEX) * m_iNumVertices);
 
-	m_pVertexPositions = new _float3[m_iNumVertices]; // 정점 위치를 저장할 메모리 할당 나중에 네비,픽킹등에 사용
+	m_pVertexPositions = new _float3[m_iNumVertices];
 	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
 
 	pVertices[0].vPosition = _float3(-0.5f, 0.5f, 0.f);
@@ -53,16 +52,9 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 		m_pVertexPositions[i] = pVertices[i].vPosition;
 
-	VBInitialData.pSysMem = pVertices; // 정점 버퍼를 초기화할 때 사용할 메모리 주소를 설정
+	VBInitialData.pSysMem = pVertices;
 
-	/*
-	   HRESULT CreateBuffer(
-		const D3D11_BUFFER_DESC* pDesc,  구조체 기반으로 GPU 메모리 할당
-		const D3D11_SUBRESOURCE_DATA* pInitialData, pInitialData에 있는 CPU 메모리의 내용을 GPU 메모리에 복사. 내부에서 memcpy처럼 처리가 됨
-		ID3D11Buffer** ppBuffer 		생성된 버퍼의 주소를 저장할 포인터
-      );
-	*/
-	if (FAILED(m_pDevice->CreateBuffer(&VBBufferDesc, &VBInitialData, &m_pVB))) 
+	if (FAILED(m_pDevice->CreateBuffer(&VBBufferDesc, &VBInitialData, &m_pVB)))
 		return E_FAIL;
 
 	Safe_Delete_Array(pVertices);
@@ -97,12 +89,12 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 
 
 
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT CVIBuffer_Rect::Initialize(void* pArg)
 {
-    return S_OK;
+	return S_OK;
 }
 
 CVIBuffer_Rect* CVIBuffer_Rect::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -133,7 +125,7 @@ CComponent* CVIBuffer_Rect::Clone(void* pArg)
 
 void CVIBuffer_Rect::Free()
 {
-    __super::Free();
+	__super::Free();
 
 
 }

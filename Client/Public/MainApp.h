@@ -26,6 +26,7 @@ private:
 	ID3D11DeviceContext*		m_pContext = { nullptr };
 public:
 	HRESULT Start_Level(LEVEL eStartLevel);
+	HRESULT Ready_Prototype_Component();
 public:
 	static CMainApp* Create();
 	virtual void Free() override;

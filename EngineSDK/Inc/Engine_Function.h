@@ -49,9 +49,9 @@ namespace Engine
 
 
 	template<typename E>
-	constexpr typename underlying_type<E>::type operator+(E e) noexcept {
-		return static_cast<typename underlying_type<E>::type>(e);
+	constexpr unsigned int ToIndex(E e) {
+		static_assert(is_enum<E>::value, "ToIndex only accepts enum types.");
+		return static_cast<unsigned int>(e);
 	}
-
 
 }
