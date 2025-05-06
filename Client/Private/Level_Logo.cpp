@@ -19,6 +19,7 @@ HRESULT CLevel_Logo::Initialize()
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
+
 	if (GetKeyState(VK_RETURN) & 0x8000)
 	{
 		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LEVEL_LOADING),
@@ -26,11 +27,23 @@ void CLevel_Logo::Update(_float fTimeDelta)
 			return;
 	}
 
+	POINT pt = m_pGameInstance->GetMousePos();
+
+	{
+		char buf[64];
+		// 포맷팅: 변수 pt.x, pt.y를 문자열에 삽입
+		sprintf_s(buf, "MousePos: %d, %d", pt.x, pt.y);
+		// 윈도우 타이틀(또는 컨트롤)에 출력
+		SetWindowTextA(g_hWnd, buf);
+	}
+
+	int a = 0;
+
 }
 
 HRESULT CLevel_Logo::Render()
 {
-	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
+//	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
 
 	return S_OK;
 }

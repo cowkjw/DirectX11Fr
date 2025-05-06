@@ -33,7 +33,7 @@ private:
 private:
 	virtual HRESULT Ready_Components();
 public:
-	static CUIImage* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HWND hWnd, const _float4& vColor, function<void()> onClick);
+	static CUIImage* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUIObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

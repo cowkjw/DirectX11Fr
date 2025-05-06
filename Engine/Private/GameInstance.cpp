@@ -7,6 +7,7 @@
 #include "Graphic_Device.h"
 #include "FrustumCull.h"
 #include "Object_Manager.h"
+#include "Input_Device.h"
 #include "Prototype_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance);
@@ -50,7 +51,9 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	if (nullptr == m_pFrustumCull)
 		return E_FAIL;
 
-
+	m_pInput_Device = CInput_Device::Create(EngineDesc.hWnd);
+	if (nullptr == m_pInput_Device)
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -58,6 +61,9 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
 	//	m_pFrustumCull->Update(); 추후에 카메라에서 뷰, 투영 행렬을 받아서 업데이트 하도록 수정해야함
+
+	
+
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 
 	//m_pPicking->Update();
@@ -215,12 +221,49 @@ _bool CGameInstance::IsAABBInFrustum(const _float3& point, const _float3& scale)
 {
 	return m_pFrustumCull->IsAABBInFrustum(point, scale);
 }
+_bool CGameInstance::IsKeyDown(_ushort vkey) const
+{
+	return m_pInput_Device->IsKeyDown(vkey);
+}
+_bool CGameInstance::IsKeyPressed(_ushort vkey) const
+{
+	return m_pInput_Device->IsKeyPressed(vkey);
+}
+_bool CGameInstance::IsMouseDown(_ulonglong btn) const
+{
+	return m_pInput_Device->IsMouseDown(btn);
+}
+_bool CGameInstance::IsMousePressed(_ulonglong btn) const
+{
+	return m_pInput_Device->IsMousePressed(btn);
+}
+POINT CGameInstance::GetMousePos() const
+{
+	return m_pInput_Device->GetMousePos();
+}
+LONG CGameInstance::GetMouseWheel() const
+{
+	return m_pInput_Device->GetMouseWheel();
+}
+void CGameInstance::ProcessRawInput(LPARAM lParam)
+{
+	m_pInput_Device->ProcessRawInput(lParam);
+}
+void CGameInstance::Update_Input()
+{
+	m_pInput_Device->Update();
+}
 #pragma endregion
+
+
 
 
 void CGameInstance::Release_Engine()
 {
 	//Safe_Release(m_pPicking);
+
+	Safe_Release(m_pInput_Device);
+
 	Safe_Release(m_pFrustumCull);
 
 	Safe_Release(m_pTimer_Manager);

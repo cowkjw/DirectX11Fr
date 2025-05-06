@@ -12,6 +12,7 @@ namespace Engine
 	typedef signed int					_int;
 
 	typedef unsigned long				_ulong;
+	typedef unsigned long long			_ulonglong;
 	typedef signed long					_long;
 
 	typedef float						_float;

@@ -32,11 +32,10 @@ private:
 	function<void()> m_OnClick;
 	_bool m_bHovered = false;
 	_bool m_bPressed = false;
-	HWND m_hWnd{ nullptr };
 	CTexture* m_pHoverTexture{ nullptr };
 
 public:
-	static CUIButton* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,HWND hWnd,  const _float4& vColor, function<void()> onClick);
+	static CUIButton* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,const _float4& vColor, function<void()> onClick);
 	CUIObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

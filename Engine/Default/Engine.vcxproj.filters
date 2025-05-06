@@ -76,11 +76,11 @@
     <ClInclude Include="..\Public\Graphic_Device.h">
       <Filter>00.System\01.Device\Graphic</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Input_Device.h">
-      <Filter>00.System\01.Device\Input</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\FrustumCull.h">
       <Filter>01.Utility\09. Culling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Input_Device.h">
+      <Filter>00.System\01.Device\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -141,11 +141,11 @@
     <ClCompile Include="..\Private\Graphic_Device.cpp">
       <Filter>00.System\01.Device\Graphic</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Input_Device.cpp">
-      <Filter>00.System\01.Device\Input</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\FrustumCull.cpp">
       <Filter>01.Utility\09. Culling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Input_Device.cpp">
+      <Filter>00.System\01.Device\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

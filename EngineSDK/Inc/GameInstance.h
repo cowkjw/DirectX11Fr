@@ -66,6 +66,19 @@ public:
 	_bool IsAABBInFrustum(const _float3& point, const _float3& scale);
 #pragma endregion
 
+#pragma region INPUT_DEVICE
+	_bool IsKeyDown(_ushort vkey) const;
+	_bool IsKeyPressed(_ushort vkey) const;
+	_bool IsMouseDown(_ulonglong btn) const;
+	_bool IsMousePressed(_ulonglong btn) const;
+	POINT GetMousePos() const;
+	LONG GetMouseWheel() const;
+	void ProcessRawInput(LPARAM lParam);
+	void Update_Input();
+#pragma endregion
+
+
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CLevel_Manager*		m_pLevel_Manager = { nullptr };
@@ -75,6 +88,7 @@ private:
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
 	// class CPicking*				m_pPicking = { nullptr };
 	class CFrustumCull* m_pFrustumCull = { nullptr };
+	class CInput_Device* m_pInput_Device = { nullptr };
 
 public:
 	void Release_Engine();

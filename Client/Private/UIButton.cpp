@@ -1,10 +1,12 @@
 #include "UIButton.h"
+#include "GameInstance.h"
 
 void CUIButton::CheckMouseOver()
 {
-    POINT pt;
-    GetCursorPos(&pt);
-    ScreenToClient(m_hWnd, &pt);
+	POINT pt = m_pGameInstance->GetMousePos();
+
+    int a = 0;
+
 
     _float left = m_fX - m_fSizeX * 0.5f;
     _float right = m_fX + m_fSizeX * 0.5f;

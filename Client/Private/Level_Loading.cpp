@@ -32,7 +32,8 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 void CLevel_Loading::Update(_float fTimeDelta)
 {
 
-	if (GetKeyState(VK_SPACE) & 0x8000)
+
+	if (m_pGameInstance->IsKeyDown(VK_SPACE))
 	{
 		if (true == m_pLoader->isFinished())
 		{
