@@ -33,7 +33,7 @@ void CLevel_Loading::Update(_float fTimeDelta)
 {
 
 
-	if (m_pGameInstance->IsKeyDown(VK_SPACE))
+	if (m_pGameInstance->IsKeyPressed(VK_SPACE))
 	{
 		if (true == m_pLoader->isFinished())
 		{
