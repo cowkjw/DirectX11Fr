@@ -100,7 +100,7 @@ HRESULT CGameInstance::Draw()
 HRESULT CGameInstance::End_Draw()
 {
 	m_pGraphic_Device->Present();
-
+	m_pLevel_Manager->Change_Level();
 	return S_OK;
 }
 
@@ -130,7 +130,7 @@ _float CGameInstance::Compute_Random(_float fMin, _float fMax)
 
 HRESULT CGameInstance::Change_Level(_uint iLevelIndex, CLevel* pNewLevel)
 {
-	return m_pLevel_Manager->Change_Level(iLevelIndex, pNewLevel);
+ 	return m_pLevel_Manager->Prepanding_Change_Level(iLevelIndex, pNewLevel);
 }
 #pragma endregion
 
