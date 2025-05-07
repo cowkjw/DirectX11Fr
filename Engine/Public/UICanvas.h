@@ -18,8 +18,9 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void AddChildUI(CUIObject* pChildUI);
-	void RemoveChildUI(CUIObject* pChildUI);
+	void AddChildUI(CUIObject* pChildUI,void* pArg = nullptr);
+	CUIObject* GetChildUI(const _wstring& uiName);
+	void RemoveChildUI(const _wstring& uiName);
 	
 private:
 	void SortChildUI();

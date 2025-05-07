@@ -3,13 +3,13 @@
 #include "GameInstance.h"
 
 CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CUIObject{ pDevice, pContext }
+	: CUIImage{pDevice, pContext }
 {
 
 }
 
 CBackGround::CBackGround(const CBackGround& Prototype)
-	: CUIObject{ Prototype }
+	: CUIImage(Prototype )
 {
 
 }
@@ -21,7 +21,7 @@ HRESULT CBackGround::Initialize_Prototype()
 
 HRESULT CBackGround::Initialize(void* pArg)
 {
-	BACKGROUND_DESC* pDesc = static_cast<BACKGROUND_DESC*>(pArg);
+	UIOBJECT_DESC* pDesc = static_cast<UIOBJECT_DESC*>(pArg);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -44,31 +44,12 @@ void CBackGround::Update(_float fTimeDelta)
 
 void CBackGround::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::PRIORITY, this);
+	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CBackGround::Render()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-		return E_FAIL;
-
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Begin(0)))
-		return E_FAIL;
-
-	if (FAILED(m_pVIBufferCom->Bind_Buffers()))
-		return E_FAIL;
-
-	if (FAILED(m_pVIBufferCom->Render()))
-		return E_FAIL;
-
+	__super::Render();
 	return S_OK;
 }
 

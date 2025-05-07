@@ -200,7 +200,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTex.hlsl">
       <Filter>100.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

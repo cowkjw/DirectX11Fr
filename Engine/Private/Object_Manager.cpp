@@ -29,13 +29,13 @@ HRESULT CObject_Manager::Initialize(_uint iNumLevels)
     return S_OK;
 }
 
-HRESULT CObject_Manager::Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLevelIndex, const _wstring& strLayerTag, void* pArg)
+CGameObject* CObject_Manager::Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLevelIndex, const _wstring& strLayerTag, void* pArg)
 {
 	/* 사본객체를 오브젝트 매니져에 추가한다. */
 	/* 원형 매니져에게 복제하여 내놔!! */
 	CGameObject*		pGameObject = static_cast<CGameObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, iPrototypeLevelIndex, strPrototypeTag, pArg));
 	if (nullptr == pGameObject)
-		return E_FAIL;
+		return nullptr;
 
 	CLayer*		pLayer = Find_Layer(iLevelIndex, strLayerTag);
 
@@ -50,7 +50,7 @@ HRESULT CObject_Manager::Add_GameObject(_uint iPrototypeLevelIndex, const _wstri
 	else
 		pLayer->Add_GameObject(pGameObject);
 
-	return S_OK;
+	return pGameObject;
 }
 
 void CObject_Manager::Priority_Update(_float fTimeDelta)

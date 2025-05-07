@@ -4,6 +4,7 @@
 
 //#include "Camera_Free.h"
 #include "BackGround.h"
+#include "UICanvas.h"
 //#include "Terrain.h"
 //#include "player.h"
 //#include "Effect.h"
@@ -78,8 +79,14 @@ HRESULT CLoader::Loading_For_Logo()
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐을(를) 로딩중입니다."));
 	/* For.Prototype_Component_Texture_BackGround*/
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::LOGO), TEXT("Prototype_Component_Texture_BackGround"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Lang_Title_Char.png")))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Asset/Resources/Textures/Lang_Title_Char.png")))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::LOGO), TEXT("Prototype_Component_Texture_TitleEffect"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Asset/Resources/Textures/Back_Eff.png")))))
+		return E_FAIL;
+
+
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
 
@@ -92,10 +99,15 @@ HRESULT CLoader::Loading_For_Logo()
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체을(를) 로딩중입니다."));
 
-	/* For.Prototype_GameObject_BackGround */
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::LOGO), TEXT("Prototype_GameObject_BackGround"),
-		CBackGround::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	///* For.Prototype_GameObject_BackGround */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::LOGO), TEXT("Prototype_GameObject_BackGround"),
+	//	CBackGround::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+
+	///* For.Prototype_GameObject_LogoCanvas */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::LOGO), TEXT("Prototype_GameObject_LogoCanvas"),
+	//	CUICanvas::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 

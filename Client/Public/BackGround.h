@@ -1,24 +1,11 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "UIObject.h"
-
-BEGIN_NAMESPACE(Engine)
-class CShader;
-class CTexture;
-class CVIBuffer_Rect;
-END_NAMESPACE
-
+#include "UIImage.h"
 BEGIN_NAMESPACE(Client)
 
-class CBackGround final : public CUIObject
+class CBackGround final : public CUIImage
 {
-public:
-	typedef struct tagBackGroundDesc : public CUIObject::UIOBJECT_DESC
-	{
-
-	}BACKGROUND_DESC;
-
 private:
 	CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBackGround(const CBackGround& Prototype);
@@ -33,12 +20,7 @@ public:
 	virtual HRESULT Render();
 
 private:
-	CShader* m_pShaderCom = { nullptr };
-	CTexture* m_pTextureCom = { nullptr };
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-
-private:
-	HRESULT Ready_Components();
+	virtual HRESULT Ready_Components() override;
 
 public:
 	static CBackGround* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

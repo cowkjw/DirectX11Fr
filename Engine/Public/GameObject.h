@@ -8,7 +8,8 @@ class ENGINE_DLL CGameObject abstract : public CBase
 { public:
 	typedef struct tagGameObjectDesc : public CTransform::TRANSFORM_DESC
 	{
-
+		_wstring strName;
+		_wstring strTag;
 	}GAMEOBJECT_DESC;
 
 protected:
@@ -24,6 +25,9 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
+	virtual void OnEnable() {};
+	virtual void OnDisable() {};
+
 public:
 	_bool IsActive() const { return m_bIsActive; }
 	void SetActive(_bool bActive) {
@@ -33,10 +37,10 @@ public:
 		if (bActive) OnEnable();
 		else         OnDisable();
 	}
-	virtual void OnEnable() {};
-	virtual void OnDisable() {};
 
 	CComponent* Get_Component(const _wstring& strComponentTag);
+
+	const _wstring& Get_Name() const { return m_strName; }
 
 protected:
 	HRESULT Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg = nullptr);
@@ -50,7 +54,9 @@ protected:
 	map<const _wstring, class CComponent*>		m_Components;
 	_bool m_bIsActive{ true };
 	_bool m_bIsPooled{ false };
-	_bool m_isCloned = { false };
+	_bool m_bIsCloned = { false };
+	_wstring m_strName{};
+	_wstring m_strTag;
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;

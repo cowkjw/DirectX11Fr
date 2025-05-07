@@ -39,7 +39,7 @@ public:
 #pragma endregion
 
 #pragma region OBJECT_MANAGER
-	HRESULT Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLevelIndex, const _wstring& strLayerTag, void* pArg = nullptr);
+	class CGameObject* Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLevelIndex, const _wstring& strLayerTag, void* pArg = nullptr);
 	CComponent* Get_Component(_uint iLevelIndex, const _wstring& strLayerTag, const _wstring& strComponentTag, _uint iIndex = 0);
 #pragma endregion
 
@@ -83,6 +83,13 @@ public:
 	const _float4x4* Get_Transform_Float4x4(TRANSNFORM eState) const;
 	const _matrix Get_Transform_Matrix(TRANSNFORM eState) const;
 	const _float4* Get_CamPosition() const;
+#pragma endregion
+
+#pragma region UI
+	void AddCanvasUI(class CUICanvas* pCanvas);
+	void RemoveCanvasUI(const _wstring& canvasName);
+	void RemoveUI(const _wstring& canvasName, const _wstring& uiName);
+	class CUIObject* Get_UI(const _wstring& canvasName, const _wstring& uiName);
 #pragma endregion
 
 

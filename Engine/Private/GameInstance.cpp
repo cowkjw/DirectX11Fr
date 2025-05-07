@@ -7,6 +7,7 @@
 #include "Graphic_Device.h"
 #include "FrustumCull.h"
 #include "UIManager.h"
+#include "GameObject.h"
 #include "Object_Manager.h"
 #include "Input_Device.h"
 #include "TransformPipeline.h"
@@ -61,30 +62,27 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	if (nullptr == m_pTransformPipeline)
 		return E_FAIL;
 
-	//m_pUIManager = CUIManager::Create(*ppDeviceOut, *ppContextOut);
-	//if (nullptr == m_pUIManager)
-	//	return E_FAIL;
+	m_pUIManager = CUIManager::Create();
+	if (nullptr == m_pUIManager)
+		return E_FAIL;
 
 	return S_OK;
 }
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
-	//	m_pFrustumCull->Update(); 추후에 카메라에서 뷰, 투영 행렬을 받아서 업데이트 하도록 수정해야함
-
-	
-
 	m_pObject_Manager->Priority_Update(fTimeDelta);
-
 	m_pTransformPipeline->Update();
+
 	//m_pPicking->Update();
 
 	m_pFrustumCull->Update(*m_pTransformPipeline->Get_Transform_Float4x4(TRANSNFORM::VIEW), *m_pTransformPipeline->Get_Transform_Float4x4(TRANSNFORM::PROJECTION));
 	m_pObject_Manager->Update(fTimeDelta);	
-
 	m_pObject_Manager->Late_Update(fTimeDelta);
 
+
 	m_pLevel_Manager->Update(fTimeDelta);
+	m_pUIManager->Update_UI(fTimeDelta);
 }
 
 HRESULT CGameInstance::Begin_Draw()
@@ -160,7 +158,7 @@ CBase* CGameInstance::Clone_Prototype(PROTOTYPE ePrototypeType, _uint iPrototype
 #pragma endregion
 
 #pragma region OBJECT_MANAGER
-HRESULT CGameInstance::Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLevelIndex, const _wstring& strLayerTag, void* pArg)
+CGameObject* CGameInstance::Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLevelIndex, const _wstring& strLayerTag, void* pArg)
 {
 	return m_pObject_Manager->Add_GameObject(iPrototypeLevelIndex, strPrototypeTag, iLevelIndex, strLayerTag, pArg);
 }
@@ -291,6 +289,30 @@ const _matrix CGameInstance::Get_Transform_Matrix(TRANSNFORM eState) const
 const _float4* CGameInstance::Get_CamPosition() const
 {
 	return m_pTransformPipeline->Get_CamPosition();
+}
+void CGameInstance::AddCanvasUI(CUICanvas* pCanvas)
+{
+	if (nullptr == m_pUIManager)
+		return;
+	m_pUIManager->AddCanvasUI(pCanvas);
+}
+void CGameInstance::RemoveCanvasUI(const _wstring& canvasName)
+{
+	if (nullptr == m_pUIManager)
+		return;
+	m_pUIManager->RemoveCanvasUI(canvasName);
+}
+void CGameInstance::RemoveUI(const _wstring& canvasName, const _wstring& uiName)
+{
+	if (nullptr == m_pUIManager)
+		return;
+	m_pUIManager->RemoveUI(canvasName, uiName);
+}
+CUIObject* CGameInstance::Get_UI(const _wstring& canvasName, const _wstring& uiName)
+{
+	if (nullptr == m_pUIManager)
+		return nullptr;
+	return m_pUIManager->GetUI(canvasName, uiName);
 }
 #pragma endregion
 

@@ -15,7 +15,7 @@ CGameObject::CGameObject(const CGameObject& Prototype)
 	: m_pDevice{ Prototype.m_pDevice }
 	, m_pContext{ Prototype.m_pContext }
 	, m_pGameInstance{ CGameInstance::Get_Instance() }
-	, m_isCloned(true)
+	, m_bIsCloned(true)
 {
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pContext);
@@ -58,6 +58,8 @@ HRESULT CGameObject::Initialize(void* pArg)
 		return S_OK;
 
 	GAMEOBJECT_DESC* pDesc = static_cast<GAMEOBJECT_DESC*>(pArg);
+	m_strName = pDesc->strName;
+	m_strTag = pDesc->strTag;
 
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pTransformCom)

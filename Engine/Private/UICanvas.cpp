@@ -20,6 +20,8 @@ HRESULT CUICanvas::Initialize_Prototype()
 
 HRESULT CUICanvas::Initialize(void* pArg)
 {
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -62,25 +64,38 @@ HRESULT CUICanvas::Render()
 	return S_OK;
 }
 
-void CUICanvas::AddChildUI(CUIObject* pChildUI)
+void CUICanvas::AddChildUI(CUIObject* pChildUI, void* pArg)
 {
 	if (nullptr == pChildUI)
 		return;
 	Safe_AddRef(pChildUI);
+	pChildUI->Initialize(pArg);
 	m_vecChildUIObjects.push_back(pChildUI);
 	pChildUI->SetParent(this);
 	pChildUI->SetSortingOrder(m_iSortingOrder + 1);
 	SortChildUI();
 }
 
-void CUICanvas::RemoveChildUI(CUIObject* pChildUI)
+CUIObject* CUICanvas::GetChildUI(const _wstring& uiName)
 {
-	if (nullptr == pChildUI)
-		return;
-	auto iter = find(m_vecChildUIObjects.begin(), m_vecChildUIObjects.end(), pChildUI);
+	for (auto* pChild : m_vecChildUIObjects)
+	{
+		if (pChild && pChild->Get_Name() == uiName)
+			return pChild;
+	}
+	return nullptr;
+}
+
+void CUICanvas::RemoveChildUI(const _wstring& uiName)
+{
+	auto iter = std::find_if(
+		m_vecChildUIObjects.begin(),
+		m_vecChildUIObjects.end(),
+		[&](CUIObject* pUi) { return pUi->Get_Name() == uiName; }
+	);
 	if (iter != m_vecChildUIObjects.end())
 	{
-		Safe_Release(pChildUI);
+		Safe_Release(*iter);           
 		m_vecChildUIObjects.erase(iter);
 		SortChildUI();
 	}

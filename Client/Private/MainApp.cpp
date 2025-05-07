@@ -71,7 +71,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	};
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex.hlsl"), Elements, 2))))
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Asset/ShaderFiles/Shader_VtxPosTex.hlsl"), Elements, 2))))
 		return E_FAIL;
 	return S_OK;
 }
