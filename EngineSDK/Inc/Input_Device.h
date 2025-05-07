@@ -29,6 +29,7 @@ public:
     // 마우스 위치 및 휠
     POINT GetMousePos()   const;
     _long  GetMouseWheel() const;
+    POINT GetMouseDelta() const;
 
 
 
@@ -41,6 +42,7 @@ private:
     array<_bool, 5> m_mouseBtn = {};
     array<_bool, 5> m_prevMouse = {};
     POINT                 m_MousePos = { 0,0 };
+    POINT                 m_PrevMousePos = { 0,0 };
     LONG                  m_WheelDelta = 0;
 public:
 

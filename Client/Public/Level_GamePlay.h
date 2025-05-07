@@ -5,11 +5,11 @@
 
 BEGIN_NAMESPACE(Client)
 
-class CGamePlay final : public CLevel
+class CLevel_GamePlay final : public CLevel
 {
 private:
-	CGamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CGamePlay() = default;
+	CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CLevel_GamePlay() = default;
 
 public:
 	virtual HRESULT Initialize() override;
@@ -19,7 +19,7 @@ public:
 
 
 public:
-	static CGamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 };
 

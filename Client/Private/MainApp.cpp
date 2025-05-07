@@ -51,7 +51,7 @@ HRESULT CMainApp::Render()
 
 HRESULT CMainApp::Start_Level(LEVEL eStartLevel)
 {
-	if (FAILED(m_pGameInstance->Change_Level(ToIndex(LEVEL::LOADING), CLoading::Create(m_pDevice, m_pContext, eStartLevel))))
+	if (FAILED(m_pGameInstance->Change_Level(ToIndex(LEVEL::LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, eStartLevel))))
 		return E_FAIL;
 
 	return S_OK;

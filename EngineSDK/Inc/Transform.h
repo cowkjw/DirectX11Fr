@@ -30,8 +30,6 @@ public:
 		XMStoreFloat4(reinterpret_cast<_float4*>(&m_WorldMatrix.m[ToIndex(eState)]), vState);
 	}
 
-
-
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
@@ -45,11 +43,16 @@ public:
 	void Go_Backward(_float fTimeDelta);
 	void Go_Right(_float fTimeDelta);
 	void Go_Left(_float fTimeDelta);
-	void Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance);
+	void Follow_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance);
+
+public:
+	_matrix Get_WorldMatrix_Inverse() const
+	{
+		return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix));
+	}
 
 public:
 	void LookAt(_fvector vAt);
-
 
 public:
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);

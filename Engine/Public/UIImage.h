@@ -1,16 +1,12 @@
 #pragma once
 #include "UIObject.h"   
-#include "Client_Defines.h"
 
 BEGIN_NAMESPACE(Engine)
 class CShader;
 class CTexture;
 class CVIBuffer_Rect;
-END_NAMESPACE
 
-BEGIN_NAMESPACE(Client)
-
-class CUIImage : public CUIObject
+class ENGINE_DLL CUIImage : public CUIObject
 {
 
 protected:
@@ -37,5 +33,5 @@ public:
 	CUIObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };
-	END_NAMESPACE
+END_NAMESPACE
 

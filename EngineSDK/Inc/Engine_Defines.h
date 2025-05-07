@@ -8,6 +8,7 @@
 #include "DirectXTK/WICTextureLoader.h"
 #include "DirectXTK/Keyboard.h"
 #include "DirectXTK/Mouse.h"
+#include "DirectXTK/VertexTypes.h"
 
 #include "Fx11/d3dx11effect.h"
 #include <d3dcompiler.h>
@@ -27,11 +28,12 @@ using namespace DirectX;
 
 using namespace std;
 
+#include "Engine_Macro.h"
 #include "Engine_Struct.h"
 #include "Engine_Enum.h"
 #include "Engine_Function.h"
 #include "Engine_Typedef.h"
-#include "Engine_Macro.h"
+
 #include "../../External Libraries/json.hpp"
 
 namespace Engine

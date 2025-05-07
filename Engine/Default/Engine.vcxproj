@@ -121,7 +121,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>d3d11.lib;DirectXTKd.lib;Effects11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../ThirdPartyLib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../ThirdPartyLib/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -141,10 +141,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>d3d11.lib;DirectXTK.lib;Effects11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../ThirdPartyLib/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h" />
+    <ClInclude Include="..\public\Camera.h" />
     <ClInclude Include="..\Public\Component.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
     <ClInclude Include="..\Public\Engine_Enum.h" />
@@ -168,12 +170,20 @@
     <ClInclude Include="..\Public\Timer.h" />
     <ClInclude Include="..\Public\Timer_Manager.h" />
     <ClInclude Include="..\Public\Transform.h" />
+    <ClInclude Include="..\Public\TransformPipeline.h" />
+    <ClInclude Include="..\Public\UIButton.h" />
+    <ClInclude Include="..\public\UICanvas.h" />
+    <ClInclude Include="..\Public\UIImage.h" />
+    <ClInclude Include="..\Public\UIManager.h" />
     <ClInclude Include="..\Public\UIObject.h" />
+    <ClInclude Include="..\Public\UIProgressBar.h" />
     <ClInclude Include="..\Public\VIBuffer.h" />
     <ClInclude Include="..\Public\VIBuffer_Rect.h" />
+    <ClInclude Include="..\public\VIBuffer_Terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp" />
+    <ClCompile Include="..\private\Camera.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\FrustumCull.cpp" />
     <ClCompile Include="..\Private\GameInstance.cpp" />
@@ -191,9 +201,17 @@
     <ClCompile Include="..\Private\Timer.cpp" />
     <ClCompile Include="..\Private\Timer_Manager.cpp" />
     <ClCompile Include="..\Private\Transform.cpp" />
+    <ClCompile Include="..\Private\TransformPipeline.cpp" />
+    <ClCompile Include="..\Private\UIButton.cpp" />
+    <ClCompile Include="..\private\UICanvas.cpp" />
+    <ClCompile Include="..\Private\UIImage.cpp" />
+    <ClCompile Include="..\Private\UIManager.cpp" />
     <ClCompile Include="..\Private\UIObject.cpp" />
+    <ClCompile Include="..\Private\UIProgressBar.cpp" />
     <ClCompile Include="..\Private\VIBuffer.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Terrain.cpp" />
+    <ClCompile Include="..\Public\Engine_Structcpp.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

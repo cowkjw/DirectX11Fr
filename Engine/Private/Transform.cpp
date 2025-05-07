@@ -94,7 +94,7 @@ void CTransform::Go_Left(_float fTimeDelta)
 	Set_State(STATE::POSITION, vPosition);
 }
 
-void CTransform::Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance)
+void CTransform::Follow_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance)
 {
 	_vector		vMoveDir = vTarget - Get_State(STATE::POSITION);
 

@@ -5,11 +5,11 @@
 
 BEGIN_NAMESPACE(Client)
 
-class CLogo final : public CLevel
+class CLevel_Logo final : public CLevel
 {
 private:
-	CLogo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CLogo() = default;
+	CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CLevel_Logo() = default;
 
 public:
 	virtual HRESULT Initialize() override;
@@ -21,7 +21,7 @@ public:
 
 
 public:
-	static CLogo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 };
 

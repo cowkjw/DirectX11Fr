@@ -1,11 +1,7 @@
 #pragma once
 #include "UIImage.h"   
-#include "Client_Defines.h"
-
-BEGIN_NAMESPACE(Client)
-
-
-class CUIButton final : public CUIImage
+BEGIN_NAMESPACE(Engine)
+class ENGINE_DLL CUIButton : public CUIImage
 {
 public:
 	typedef struct tButtonDesc : public UIOBJECT_DESC

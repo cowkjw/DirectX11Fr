@@ -1,9 +1,8 @@
 #pragma once
 #include "Base.h"
-#include "Client_Defines.h"	
+#include "UIObject.h"
+
 BEGIN_NAMESPACE(Engine)
-class CUIObject;
-END_NAMESPACE
 class CUIManager final : public CBase
 {
 private:
@@ -22,7 +21,6 @@ public:
 public:
 	HRESULT Initialize();
 
-
 private:
 	map<_wstring, vector<CUIObject*>> m_mapUI;	
 public:
@@ -30,4 +28,4 @@ public:
 	virtual void Free() override;
 
 };
-
+END_NAMESPACE

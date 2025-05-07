@@ -161,6 +161,7 @@
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Function.h" />
     <ClInclude Include="..\Public\CompositeNode.h" />
+    <ClInclude Include="..\public\FreeCamera.h" />
     <ClInclude Include="..\public\IMGUIMag.h" />
     <ClInclude Include="..\public\JsonLoader.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
@@ -172,10 +173,6 @@
     <ClInclude Include="..\public\Observer.h" />
     <ClInclude Include="..\public\ObserverManager.h" />
     <ClInclude Include="..\Public\TaskNode.h" />
-    <ClInclude Include="..\public\UIButton.h" />
-    <ClInclude Include="..\public\UIImage.h" />
-    <ClInclude Include="..\public\UIManager.h" />
-    <ClInclude Include="..\public\UIProgressBar.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -190,6 +187,7 @@
     <ClCompile Include="..\..\External Libraries\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\..\External Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
+    <ClCompile Include="..\private\FreeCamera.cpp" />
     <ClCompile Include="..\private\IMGUIMag.cpp" />
     <ClCompile Include="..\private\JsonLoader.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
@@ -198,10 +196,6 @@
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\ObserverManager.cpp" />
-    <ClCompile Include="..\private\UIButton.cpp" />
-    <ClCompile Include="..\private\UIImage.cpp" />
-    <ClCompile Include="..\private\UIManager.cpp" />
-    <ClCompile Include="..\private\UIProgressBar.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>

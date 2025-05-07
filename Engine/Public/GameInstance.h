@@ -73,8 +73,16 @@ public:
 	_bool IsMousePressed(_ulonglong btn) const;
 	POINT GetMousePos() const;
 	LONG GetMouseWheel() const;
+	POINT GetMouseDelta() const;
 	void ProcessRawInput(LPARAM lParam);
 	void Update_Input();
+#pragma endregion
+
+#pragma region TRASNFROM_PIPELINE
+	void Set_Transform(TRANSNFORM eState, _fmatrix TransformMatrix);
+	const _float4x4* Get_Transform_Float4x4(TRANSNFORM eState) const;
+	const _matrix Get_Transform_Matrix(TRANSNFORM eState) const;
+	const _float4* Get_CamPosition() const;
 #pragma endregion
 
 
@@ -89,6 +97,8 @@ private:
 	// class CPicking*				m_pPicking = { nullptr };
 	class CFrustumCull* m_pFrustumCull = { nullptr };
 	class CInput_Device* m_pInput_Device = { nullptr };
+	class CTransformPipeline* m_pTransformPipeline = { nullptr };
+	class CUIManager* m_pUIManager = { nullptr };
 
 public:
 	void Release_Engine();

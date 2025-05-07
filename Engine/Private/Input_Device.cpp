@@ -74,6 +74,7 @@ void CInput_Device::Update()
 {        
     m_prevKeys = m_keys;
     m_prevMouse = m_mouseBtn;
+	m_PrevMousePos = m_MousePos;
     m_WheelDelta = 0;
 }
 
@@ -105,6 +106,14 @@ POINT CInput_Device::GetMousePos() const
 LONG CInput_Device::GetMouseWheel() const
 {
     return m_WheelDelta;
+}
+
+POINT CInput_Device::GetMouseDelta() const
+{
+    return {
+        m_MousePos.x - m_PrevMousePos.x,
+            m_MousePos.y - m_PrevMousePos.y
+    };
 }
 
 CInput_Device* CInput_Device::Create(HWND hWnd)

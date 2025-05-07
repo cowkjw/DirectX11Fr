@@ -11,15 +11,6 @@ namespace Engine
 		unsigned int	iNumLevels;		
 	}ENGINE_DESC;
 
-
-    typedef struct tagVertexPositionTexcoord
-    {
-        XMFLOAT3		vPosition;
-        XMFLOAT2		vTexcoord;
-    }VTXPOSTEX;
-
-
-
 	typedef struct tagVector : public XMFLOAT3
 	{
         tagVector() : XMFLOAT3(0.f, 0.f, 0.f) {}
@@ -131,5 +122,39 @@ namespace Engine
         static const tagVector Right() { return tagVector(1.f, 0.f, 0.f); }
         static const tagVector Up() { return tagVector(0.f, 1.f, 0.f); }
         static const tagVector Forward() { return tagVector(0.f, 0.f, 1.f); }
-	}VECTOR;
+	}VECTOR3;
+
+
+
+    typedef struct ENGINE_DLL tagVertexPositionTexcoord
+    {
+        XMFLOAT3		vPosition;
+        XMFLOAT2		vTexcoord;
+
+        static const unsigned int					iNumElements = { 2 };
+
+        static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
+    }VTXPOSTEX;
+
+    typedef struct ENGINE_DLL tagVertexPositionNormalTexcoord
+    {
+        XMFLOAT3		vPosition;
+        XMFLOAT3		vNormal;
+        XMFLOAT2		vTexcoord;
+
+        static const unsigned int					iNumElements = { 3 };
+        static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
+    }VTXNORTEX;
+
+    typedef struct ENGINE_DLL tagVertexMesh
+    {
+        XMFLOAT3		vPosition;
+        XMFLOAT3		vNormal;
+        XMFLOAT3		vTangent;
+        XMFLOAT2		vTexcoord;
+
+        static const unsigned int					iNumElements = { 4 };
+        static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
+    }VTXMESH;
+
 }

@@ -2,11 +2,13 @@
 
 CUIObject::CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
+	, m_iSortingOrder(0)
 {
 }
 
 CUIObject::CUIObject(const CUIObject& Prototype)
-	: CGameObject(Prototype)
+	: CGameObject(Prototype),
+	m_iSortingOrder(Prototype.m_iSortingOrder)
 {
 }
 

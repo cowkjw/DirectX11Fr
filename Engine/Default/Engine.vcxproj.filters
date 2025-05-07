@@ -82,6 +82,30 @@
     <ClInclude Include="..\public\Input_Device.h">
       <Filter>00.System\01.Device\Input</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Terrain.h">
+      <Filter>01.Utility\03.Components\Buffer\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TransformPipeline.h">
+      <Filter>06. Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Camera.h">
+      <Filter>01.Utility\02.GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIManager.h">
+      <Filter>01.Utility\02.GameObject\UIObject\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIButton.h">
+      <Filter>01.Utility\02.GameObject\UIObject\UIControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIImage.h">
+      <Filter>01.Utility\02.GameObject\UIObject\UIControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIProgressBar.h">
+      <Filter>01.Utility\02.GameObject\UIObject\UIControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UICanvas.h">
+      <Filter>01.Utility\02.GameObject\UIObject\UIControls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -146,6 +170,33 @@
     </ClCompile>
     <ClCompile Include="..\private\Input_Device.cpp">
       <Filter>00.System\01.Device\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Terrain.cpp">
+      <Filter>01.Utility\03.Components\Buffer\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Engine_Structcpp.cpp">
+      <Filter>99.Defines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TransformPipeline.cpp">
+      <Filter>06. Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera.cpp">
+      <Filter>01.Utility\02.GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIManager.cpp">
+      <Filter>01.Utility\02.GameObject\UIObject\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIImage.cpp">
+      <Filter>01.Utility\02.GameObject\UIObject\UIControls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIButton.cpp">
+      <Filter>01.Utility\02.GameObject\UIObject\UIControls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIProgressBar.cpp">
+      <Filter>01.Utility\02.GameObject\UIObject\UIControls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UICanvas.cpp">
+      <Filter>01.Utility\02.GameObject\UIObject\UIControls</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +274,21 @@
     </Filter>
     <Filter Include="01.Utility\02.GameObject\UIObject">
       <UniqueIdentifier>{f52e9462-3900-403d-8e17-d3e4b4f861c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Buffer\Terrain">
+      <UniqueIdentifier>{5655ddf7-e4be-476e-a931-3edb1c06ec48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Pipeline">
+      <UniqueIdentifier>{21393b79-8252-4971-b1a1-b4fb015cd1c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObject\Camera">
+      <UniqueIdentifier>{c44c0464-5d0c-487c-b1b4-f5f904c8d782}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObject\UIObject\Manager">
+      <UniqueIdentifier>{dc955d31-589e-4ac7-97ca-12d7d455ea42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObject\UIObject\UIControls">
+      <UniqueIdentifier>{dfb08b2d-5ca0-45a6-a6ff-626242da8021}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,15 +1,9 @@
 #pragma once
 #include "UIObject.h"   
-#include "Observer.h"
 #include "Texture.h"
-#include "Client_Defines.h"
 
 BEGIN_NAMESPACE(Engine)
-class CTexture;
-END_NAMESPACE
-
-BEGIN_NAMESPACE(Client)
-class CUIProgressBar final : public CUIObject, public IObserver<_float>
+class ENGINE_DLL CUIProgressBar : public CUIObject
 {
 public:
 	typedef struct tBarDesc : public UIOBJECT_DESC
@@ -35,9 +29,6 @@ public:
 	static CUIProgressBar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUIObject* Clone(void* pArg) override;
 	virtual void Free() override;
-
-	// IObserver을(를) 통해 상속됨
-	void Notify(_float const& msg) override;
 };
 END_NAMESPACE
 

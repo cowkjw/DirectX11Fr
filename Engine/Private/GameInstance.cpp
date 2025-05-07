@@ -6,8 +6,10 @@
 #include "Timer_Manager.h"
 #include "Graphic_Device.h"
 #include "FrustumCull.h"
+#include "UIManager.h"
 #include "Object_Manager.h"
 #include "Input_Device.h"
+#include "TransformPipeline.h"
 #include "Prototype_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance);
@@ -55,6 +57,14 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	if (nullptr == m_pInput_Device)
 		return E_FAIL;
 
+	m_pTransformPipeline = CTransformPipeline::Create();
+	if (nullptr == m_pTransformPipeline)
+		return E_FAIL;
+
+	//m_pUIManager = CUIManager::Create(*ppDeviceOut, *ppContextOut);
+	//if (nullptr == m_pUIManager)
+	//	return E_FAIL;
+
 	return S_OK;
 }
 
@@ -66,8 +76,10 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 
+	m_pTransformPipeline->Update();
 	//m_pPicking->Update();
 
+	m_pFrustumCull->Update(*m_pTransformPipeline->Get_Transform_Float4x4(TRANSNFORM::VIEW), *m_pTransformPipeline->Get_Transform_Float4x4(TRANSNFORM::PROJECTION));
 	m_pObject_Manager->Update(fTimeDelta);	
 
 	m_pObject_Manager->Late_Update(fTimeDelta);
@@ -221,6 +233,9 @@ _bool CGameInstance::IsAABBInFrustum(const _float3& point, const _float3& scale)
 {
 	return m_pFrustumCull->IsAABBInFrustum(point, scale);
 }
+#pragma endregion
+
+#pragma region INPUT_DEVICE
 _bool CGameInstance::IsKeyDown(_ushort vkey) const
 {
 	return m_pInput_Device->IsKeyDown(vkey);
@@ -245,6 +260,10 @@ LONG CGameInstance::GetMouseWheel() const
 {
 	return m_pInput_Device->GetMouseWheel();
 }
+POINT CGameInstance::GetMouseDelta() const
+{
+	return m_pInput_Device->GetMouseDelta();
+}
 void CGameInstance::ProcessRawInput(LPARAM lParam)
 {
 	m_pInput_Device->ProcessRawInput(lParam);
@@ -256,11 +275,35 @@ void CGameInstance::Update_Input()
 #pragma endregion
 
 
+#pragma region TRANSNFORM_PIPELINE
+void CGameInstance::Set_Transform(TRANSNFORM eState, _fmatrix TransformMatrix)
+{
+	m_pTransformPipeline->Set_Transform(eState, TransformMatrix);
+}
+const _float4x4* CGameInstance::Get_Transform_Float4x4(TRANSNFORM eState) const
+{
+	return m_pTransformPipeline->Get_Transform_Float4x4(eState);
+}
+const _matrix CGameInstance::Get_Transform_Matrix(TRANSNFORM eState) const
+{
+	return m_pTransformPipeline->Get_Transform_Matrix(eState);
+}
+const _float4* CGameInstance::Get_CamPosition() const
+{
+	return m_pTransformPipeline->Get_CamPosition();
+}
+#pragma endregion
+
+
 
 
 void CGameInstance::Release_Engine()
 {
 	//Safe_Release(m_pPicking);
+
+	Safe_Release(m_pTransformPipeline);
+
+	Safe_Release(m_pUIManager);
 
 	Safe_Release(m_pInput_Device);
 
