@@ -2,7 +2,7 @@
 
 #include "Transform.h"
 
-BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 
 class ENGINE_DLL CGameObject abstract : public CBase
 { public:
@@ -55,4 +55,4 @@ public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;
 };
-END
+END_NAMESPACE

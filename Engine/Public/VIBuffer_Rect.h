@@ -2,7 +2,7 @@
 
 #include "VIBuffer.h"
 
-BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 
 class ENGINE_DLL CVIBuffer_Rect final : public CVIBuffer
 {
@@ -22,4 +22,4 @@ public:
 
 };
 
-END
+END_NAMESPACE

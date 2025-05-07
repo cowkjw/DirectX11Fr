@@ -2,7 +2,7 @@
 
 #include "Base.h"
 
-BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 
 class CTimer final : public CBase
 {
@@ -31,4 +31,4 @@ public:
 	virtual void Free();
 };
 
-END
+END_NAMESPACE

@@ -3,13 +3,13 @@
 #include "Client_Defines.h"
 #include "Level.h"
 
-BEGIN(Client)
+BEGIN_NAMESPACE(Client)
 
-class CLevel_Logo final : public CLevel
+class CLogo final : public CLevel
 {
 private:
-	CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CLevel_Logo() = default;
+	CLogo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CLogo() = default;
 
 public:
 	virtual HRESULT Initialize() override;
@@ -21,8 +21,8 @@ public:
 
 
 public:
-	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLogo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 };
 
-END
+END_NAMESPACE

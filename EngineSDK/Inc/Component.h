@@ -2,7 +2,7 @@
 
 #include "Base.h"
 
-BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 
 class ENGINE_DLL CComponent abstract : public CBase
 {
@@ -30,4 +30,4 @@ public:
 	virtual void Free() override;
 };
 
-END
+END_NAMESPACE

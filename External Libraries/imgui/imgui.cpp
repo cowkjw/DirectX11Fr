@@ -16966,14 +16966,14 @@ void ImGui::ShowIDStackToolWindow(bool* p_open)
     tool->ResultPathBuf.resize(0);
     for (int stack_n = 0; stack_n < tool->Results.Size; stack_n++)
     {
-        char level_desc[256];
-        StackToolFormatLevelInfo(tool, stack_n, false, level_desc, IM_ARRAYSIZE(level_desc));
+        char desc[256];
+        StackToolFormatLevelInfo(tool, stack_n, false, desc, IM_ARRAYSIZE(desc));
         tool->ResultPathBuf.append(stack_n == 0 ? "//" : "/");
-        for (int n = 0; level_desc[n]; n++)
+        for (int n = 0; desc[n]; n++)
         {
-            if (level_desc[n] == '/')
+            if (desc[n] == '/')
                 tool->ResultPathBuf.append("\\");
-            tool->ResultPathBuf.append(level_desc + n, level_desc + n + 1);
+            tool->ResultPathBuf.append(desc + n, desc + n + 1);
         }
     }
     Text("0x%08X", tool->QueryId);

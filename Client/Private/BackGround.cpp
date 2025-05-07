@@ -44,7 +44,7 @@ void CBackGround::Update(_float fTimeDelta)
 
 void CBackGround::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_PRIORITY, this);
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::PRIORITY, this);
 }
 
 HRESULT CBackGround::Render()
@@ -75,15 +75,15 @@ HRESULT CBackGround::Render()
 HRESULT CBackGround::Ready_Components()
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ToIndex(LEVEL::LEVEL_STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
+	if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(ToIndex(LEVEL::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
+	if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(ToIndex(LEVEL::LEVEL_LOGO), TEXT("Prototype_Component_Texture_BackGround"),
+	if (FAILED(__super::Add_Component(ToIndex(LEVEL::LOGO), TEXT("Prototype_Component_Texture_BackGround"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 

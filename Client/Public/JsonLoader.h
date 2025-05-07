@@ -1,11 +1,11 @@
 #pragma once
 #include "Client_Defines.h"
 #include "Base.h"
-BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 class CGameInstance;
-END
+END_NAMESPACE
 
-BEGIN(Client)
+BEGIN_NAMESPACE(Client)
 class CJsonLoader final : public CBase
 {
 public:
@@ -18,4 +18,4 @@ private:
 public:
     virtual void Free() override;
 };
-END
+END_NAMESPACE

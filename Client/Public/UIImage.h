@@ -2,13 +2,13 @@
 #include "UIObject.h"   
 #include "Client_Defines.h"
 
-BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 class CShader;
 class CTexture;
 class CVIBuffer_Rect;
-END
+END_NAMESPACE
 
-BEGIN(Client)
+BEGIN_NAMESPACE(Client)
 
 class CUIImage : public CUIObject
 {
@@ -37,5 +37,5 @@ public:
 	CUIObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };
-	END
+	END_NAMESPACE
 

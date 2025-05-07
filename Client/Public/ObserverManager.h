@@ -3,7 +3,7 @@
 #include "Client_Defines.h"	
 #include "Observer.h"
 
-BEGIN(Client)
+BEGIN_NAMESPACE(Client)
 template<typename MsgT>
 class CObserverManager final : public CBase
 {
@@ -49,4 +49,4 @@ public:
 		m_mapObservers.clear();
     }
 };
-END
+END_NAMESPACE

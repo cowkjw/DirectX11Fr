@@ -1,7 +1,7 @@
 #pragma once
 
-#define BEGIN(NAMESPACE) namespace NAMESPACE { 
-#define END }
+#define BEGIN_NAMESPACE(NAMESPACE) namespace NAMESPACE { 
+#define END_NAMESPACE }
 
 #ifdef ENGINE_EXPORTS
 #define ENGINE_DLL _declspec(dllexport)

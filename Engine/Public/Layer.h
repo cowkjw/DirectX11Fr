@@ -4,7 +4,7 @@
 
 /* 객체들을 모아놓는다. */
 
-BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 
 class CLayer final : public CBase
 {
@@ -28,4 +28,4 @@ public:
 	virtual void Free();
 };
 
-END
+END_NAMESPACE

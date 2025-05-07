@@ -1,9 +1,9 @@
 #pragma once
 #include "Base.h"
 #include "Client_Defines.h"	
-BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 class CUIObject;
-END
+END_NAMESPACE
 class CUIManager final : public CBase
 {
 private:

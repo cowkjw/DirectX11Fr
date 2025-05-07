@@ -2338,20 +2338,20 @@ static int DataTypeCompareT(const T* lhs, const T* rhs)
     return 0;
 }
 
-int ImGui::DataTypeCompare(ImGuiDataType data_type, const void* arg_1, const void* arg_2)
+int ImGui::DataTypeCompare(ImGuiDataType data_type, const void* a1, const void* a2)
 {
     switch (data_type)
     {
-    case ImGuiDataType_S8:     return DataTypeCompareT<ImS8  >((const ImS8*  )arg_1, (const ImS8*  )arg_2);
-    case ImGuiDataType_U8:     return DataTypeCompareT<ImU8  >((const ImU8*  )arg_1, (const ImU8*  )arg_2);
-    case ImGuiDataType_S16:    return DataTypeCompareT<ImS16 >((const ImS16* )arg_1, (const ImS16* )arg_2);
-    case ImGuiDataType_U16:    return DataTypeCompareT<ImU16 >((const ImU16* )arg_1, (const ImU16* )arg_2);
-    case ImGuiDataType_S32:    return DataTypeCompareT<ImS32 >((const ImS32* )arg_1, (const ImS32* )arg_2);
-    case ImGuiDataType_U32:    return DataTypeCompareT<ImU32 >((const ImU32* )arg_1, (const ImU32* )arg_2);
-    case ImGuiDataType_S64:    return DataTypeCompareT<ImS64 >((const ImS64* )arg_1, (const ImS64* )arg_2);
-    case ImGuiDataType_U64:    return DataTypeCompareT<ImU64 >((const ImU64* )arg_1, (const ImU64* )arg_2);
-    case ImGuiDataType_Float:  return DataTypeCompareT<float >((const float* )arg_1, (const float* )arg_2);
-    case ImGuiDataType_Double: return DataTypeCompareT<double>((const double*)arg_1, (const double*)arg_2);
+    case ImGuiDataType_S8:     return DataTypeCompareT<ImS8  >((const ImS8*  )a1, (const ImS8*  )a2);
+    case ImGuiDataType_U8:     return DataTypeCompareT<ImU8  >((const ImU8*  )a1, (const ImU8*  )a2);
+    case ImGuiDataType_S16:    return DataTypeCompareT<ImS16 >((const ImS16* )a1, (const ImS16* )a2);
+    case ImGuiDataType_U16:    return DataTypeCompareT<ImU16 >((const ImU16* )a1, (const ImU16* )a2);
+    case ImGuiDataType_S32:    return DataTypeCompareT<ImS32 >((const ImS32* )a1, (const ImS32* )a2);
+    case ImGuiDataType_U32:    return DataTypeCompareT<ImU32 >((const ImU32* )a1, (const ImU32* )a2);
+    case ImGuiDataType_S64:    return DataTypeCompareT<ImS64 >((const ImS64* )a1, (const ImS64* )a2);
+    case ImGuiDataType_U64:    return DataTypeCompareT<ImU64 >((const ImU64* )a1, (const ImU64* )a2);
+    case ImGuiDataType_Float:  return DataTypeCompareT<float >((const float* )a1, (const float* )a2);
+    case ImGuiDataType_Double: return DataTypeCompareT<double>((const double*)a1, (const double*)a2);
     case ImGuiDataType_COUNT:  break;
     }
     IM_ASSERT(0);

@@ -11,7 +11,7 @@
 /* 1_1. 원형객체의 타입( CGameObject, CComponent )에 크게 영향을 받지 않는다. */
 /* 1_2. 보관할때 레벨별( + 모든레벨) 로 구분하여 저장할거야. */
 
-BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 
 class CPrototype_Manager final : public CBase
 {
@@ -37,4 +37,4 @@ public:
 	virtual void Free() override;
 };
 
-END
+END_NAMESPACE

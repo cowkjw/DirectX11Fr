@@ -3,11 +3,11 @@
 #include "Client_Defines.h"
 #include "Base.h"
 
-BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 class CGameInstance;
-END
+END_NAMESPACE
 
-BEGIN(Client)
+BEGIN_NAMESPACE(Client)
 
 class CMainApp final : public CBase
 {
@@ -33,4 +33,4 @@ public:
 
 };
 
-END
+END_NAMESPACE

@@ -35,7 +35,7 @@ CBase* CPrototype_Manager::Clone_Prototype(PROTOTYPE ePrototypeType, _uint iProt
 	if (nullptr == pPrototype)
 		return nullptr;
 
-	if (ePrototypeType == PROTOTYPE::TYPE_GAMEOBJECT)
+	if (ePrototypeType == PROTOTYPE::GAMEOBJECT)
 		return static_cast<CGameObject*>(pPrototype)->Clone(pArg);
 	else
 		return static_cast<CComponent*>(pPrototype)->Clone(pArg);

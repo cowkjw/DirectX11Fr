@@ -7,13 +7,13 @@
 
 #include "GameInstance.h"
 
-CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLoading::CLoading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		: CLevel { pDevice, pContext }
 {
 
 }
 
-HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
+HRESULT CLoading::Initialize(LEVEL eNextLevelID)
 {
 	m_eNextLevelID = eNextLevelID;
 
@@ -29,7 +29,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 	return S_OK;
 }
 
-void CLevel_Loading::Update(_float fTimeDelta)
+void CLoading::Update(_float fTimeDelta)
 {
 
 
@@ -41,11 +41,11 @@ void CLevel_Loading::Update(_float fTimeDelta)
 
 			switch (m_eNextLevelID)
 			{
-			case LEVEL::LEVEL_LOGO:
-				pLevel = CLevel_Logo::Create(m_pDevice, m_pContext);
+			case LEVEL::LOGO:
+				pLevel = CLogo::Create(m_pDevice, m_pContext);
 				break;
-			case LEVEL::LEVEL_GAMEPLAY:
-				pLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
+			case LEVEL::GAMEPLAY:
+				pLevel = CGamePlay::Create(m_pDevice, m_pContext);
 				break;
 			}
 
@@ -59,20 +59,20 @@ void CLevel_Loading::Update(_float fTimeDelta)
 	}	
 }
 
-HRESULT CLevel_Loading::Render()
+HRESULT CLoading::Render()
 {
 	m_pLoader->Output_LoadingText();
 
 	return S_OK;
 }
 
-CLevel_Loading* CLevel_Loading::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID)
+CLoading* CLoading::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID)
 {
-	CLevel_Loading* pInstance = new CLevel_Loading(pDevice, pContext);
+	CLoading* pInstance = new CLoading(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize(eNextLevelID)))
 	{
-		MSG_BOX("Failed to Created : CLevel_Loading");
+		MSG_BOX("Failed to Created : CLoading");
 		Safe_Release(pInstance);
 	}
 
@@ -80,7 +80,7 @@ CLevel_Loading* CLevel_Loading::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 }
 
 
-void CLevel_Loading::Free()
+void CLoading::Free()
 {
 	__super::Free();
 

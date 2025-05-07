@@ -1,7 +1,7 @@
 #pragma once
 #include "Base.h"
 
-BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 class CFrustumCull final : public CBase
 {
 private:
@@ -25,4 +25,4 @@ public:
 	static CFrustumCull* Create();  
     virtual void Free() override;
 };
-END
+END_NAMESPACE

@@ -4,11 +4,11 @@
 #include "Texture.h"
 #include "Client_Defines.h"
 
-BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 class CTexture;
-END
+END_NAMESPACE
 
-BEGIN(Client)
+BEGIN_NAMESPACE(Client)
 class CUIProgressBar final : public CUIObject, public IObserver<_float>
 {
 public:
@@ -39,5 +39,5 @@ public:
 	// IObserver을(를) 통해 상속됨
 	void Notify(_float const& msg) override;
 };
-END
+END_NAMESPACE
 

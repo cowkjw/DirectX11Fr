@@ -2,7 +2,7 @@
 
 #include "Base.h"
 
-BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 
 class CRenderer final : public CBase
 {
@@ -20,7 +20,7 @@ private:
 	ID3D11DeviceContext*		m_pContext = { nullptr };
 
 private:
-	list<class CGameObject*>	m_RenderObjects[ToIndex(RENDERGROUP::RG_END)];
+	list<class CGameObject*>	m_RenderObjects[ToIndex(RENDERGROUP::END)];
 
 private:
 	HRESULT Render_Priority();
@@ -33,4 +33,4 @@ public:
 	virtual void Free() override;
 };
 
-END
+END_NAMESPACE

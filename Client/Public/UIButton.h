@@ -2,7 +2,7 @@
 #include "UIImage.h"   
 #include "Client_Defines.h"
 
-BEGIN(Client)
+BEGIN_NAMESPACE(Client)
 
 
 class CUIButton final : public CUIImage
@@ -39,5 +39,5 @@ public:
 	CUIObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };
-END
+END_NAMESPACE
 

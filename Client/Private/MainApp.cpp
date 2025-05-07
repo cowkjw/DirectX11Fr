@@ -16,7 +16,7 @@ HRESULT CMainApp::Initialize()
 	EngineDesc.iWinSizeX = g_iWinSizeX;
 	EngineDesc.iWinSizeY = g_iWinSizeY;
 	EngineDesc.isWindowed = true;
-	EngineDesc.iNumLevels = ToIndex(LEVEL::LEVEL_END);
+	EngineDesc.iNumLevels = ToIndex(LEVEL::END);
 
 	if (FAILED(m_pGameInstance->Initialize_Engine(EngineDesc, &m_pDevice, &m_pContext)))
 		return E_FAIL;
@@ -24,7 +24,7 @@ HRESULT CMainApp::Initialize()
 
 
 	Ready_Prototype_Component();
-	if (FAILED(Start_Level(LEVEL::LEVEL_LOGO)))
+	if (FAILED(Start_Level(LEVEL::LOGO)))
 		return E_FAIL;
 	return S_OK;
 }
@@ -51,7 +51,7 @@ HRESULT CMainApp::Render()
 
 HRESULT CMainApp::Start_Level(LEVEL eStartLevel)
 {
-	if (FAILED(m_pGameInstance->Change_Level(ToIndex(LEVEL::LEVEL_LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, eStartLevel))))
+	if (FAILED(m_pGameInstance->Change_Level(ToIndex(LEVEL::LOADING), CLoading::Create(m_pDevice, m_pContext, eStartLevel))))
 		return E_FAIL;
 
 	return S_OK;
@@ -59,7 +59,7 @@ HRESULT CMainApp::Start_Level(LEVEL eStartLevel)
 
 HRESULT CMainApp::Ready_Prototype_Component()
 {	/* For.Prototype_Component_VIBuffer_Rect*/
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
@@ -70,7 +70,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::LEVEL_STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex.hlsl"), Elements, 2))))
 		return E_FAIL;
 	return S_OK;

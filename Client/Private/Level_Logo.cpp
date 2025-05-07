@@ -3,13 +3,13 @@
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "BackGround.h"
-CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLogo::CLogo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		: CLevel { pDevice, pContext }
 {
 
 }
 
-HRESULT CLevel_Logo::Initialize()
+HRESULT CLogo::Initialize()
 {
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
@@ -17,13 +17,13 @@ HRESULT CLevel_Logo::Initialize()
 	return S_OK;
 }
 
-void CLevel_Logo::Update(_float fTimeDelta)
+void CLogo::Update(_float fTimeDelta)
 {
 
 	if (GetKeyState(VK_RETURN) & 0x8000)
 	{
-		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LEVEL_LOADING),
-			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LEVEL_GAMEPLAY))))
+		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
+			CLoading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY))))
 			return;
 	}
 
@@ -41,14 +41,14 @@ void CLevel_Logo::Update(_float fTimeDelta)
 
 }
 
-HRESULT CLevel_Logo::Render()
+HRESULT CLogo::Render()
 {
 //	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
 
 	return S_OK;
 }
 
-HRESULT CLevel_Logo::Ready_Layer_BackGround(const _wstring strLayerTag)
+HRESULT CLogo::Ready_Layer_BackGround(const _wstring strLayerTag)
 {
 	CBackGround::BACKGROUND_DESC				BackGroundDesc{};
 
@@ -57,21 +57,21 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _wstring strLayerTag)
 	BackGroundDesc.fSizeX = g_iWinSizeX;
 	BackGroundDesc.fSizeY = g_iWinSizeY;
 
-	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::LEVEL_LOGO), TEXT("Prototype_GameObject_BackGround"),
-		static_cast<_uint>(LEVEL::LEVEL_LOGO), strLayerTag, &BackGroundDesc)))
+	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::LOGO), TEXT("Prototype_GameObject_BackGround"),
+		static_cast<_uint>(LEVEL::LOGO), strLayerTag, &BackGroundDesc)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
 
-CLevel_Logo* CLevel_Logo::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLogo* CLogo::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CLevel_Logo* pInstance = new CLevel_Logo(pDevice, pContext);
+	CLogo* pInstance = new CLogo(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize()))
 	{
-		MSG_BOX("Failed to Created : CLevel_Logo");
+		MSG_BOX("Failed to Created : CLogo");
 		Safe_Release(pInstance);
 	}
 
@@ -79,7 +79,7 @@ CLevel_Logo* CLevel_Logo::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 }
 
 
-void CLevel_Logo::Free()
+void CLogo::Free()
 {
 	__super::Free();
 

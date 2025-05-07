@@ -13,7 +13,7 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pRenderObject)
 {
-	if (eRenderGroup >=	RENDERGROUP::RG_END ||
+	if (eRenderGroup >=	RENDERGROUP::END ||
 		nullptr == pRenderObject)
 		return E_FAIL;
 
@@ -49,28 +49,28 @@ void CRenderer::Clear()
 
 HRESULT CRenderer::Render_Priority()
 {
-	for (auto& pGameObject : m_RenderObjects[ToIndex(RENDERGROUP::RG_PRIORITY)])
+	for (auto& pGameObject : m_RenderObjects[ToIndex(RENDERGROUP::PRIORITY)])
 	{
 		if (nullptr != pGameObject)
 			pGameObject->Render();
 
 		Safe_Release(pGameObject);
 	}
-	m_RenderObjects[ToIndex(RENDERGROUP::RG_PRIORITY)].clear();
+	m_RenderObjects[ToIndex(RENDERGROUP::PRIORITY)].clear();
 
 	return S_OK;
 }
 
 HRESULT CRenderer::Render_NonBlend()
 {
-	for (auto& pGameObject : m_RenderObjects[ToIndex(RENDERGROUP::RG_NONBLEND)])
+	for (auto& pGameObject : m_RenderObjects[ToIndex(RENDERGROUP::NONBLEND)])
 	{
 		if (nullptr != pGameObject)
 			pGameObject->Render();
 
 		Safe_Release(pGameObject);
 	}
-	m_RenderObjects[ToIndex(RENDERGROUP::RG_NONBLEND)].clear();
+	m_RenderObjects[ToIndex(RENDERGROUP::NONBLEND)].clear();
 
 	return S_OK;
 }
@@ -82,33 +82,33 @@ HRESULT CRenderer::Render_NonBlend()
 
 HRESULT CRenderer::Render_Blend()
 {
-	/*m_RenderObjects[RG_BLEND].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
+	/*m_RenderObjects[BLEND].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
 	{
 		return dynamic_cast<CBlendObject*>(pSour)->Get_Depth() > dynamic_cast<CBlendObject*>(pDest)->Get_Depth();
 	});*/
 
-	for (auto& pGameObject : m_RenderObjects[ToIndex(RENDERGROUP::RG_BLEND)])
+	for (auto& pGameObject : m_RenderObjects[ToIndex(RENDERGROUP::BLEND)])
 	{
 		if (nullptr != pGameObject)
 			pGameObject->Render();
 
 		Safe_Release(pGameObject);
 	}
-	m_RenderObjects[ToIndex(RENDERGROUP::RG_BLEND)].clear();
+	m_RenderObjects[ToIndex(RENDERGROUP::BLEND)].clear();
 
 	return S_OK;
 }
 
 HRESULT CRenderer::Render_UI()
 {
-	for (auto& pGameObject : m_RenderObjects[ToIndex(RENDERGROUP::RG_UI)])
+	for (auto& pGameObject : m_RenderObjects[ToIndex(RENDERGROUP::UI)])
 	{
 		if (nullptr != pGameObject)
 			pGameObject->Render();
 
 		Safe_Release(pGameObject);
 	}
-	m_RenderObjects[ToIndex(RENDERGROUP::RG_UI)].clear();
+	m_RenderObjects[ToIndex(RENDERGROUP::UI)].clear();
 
 	return S_OK;
 }

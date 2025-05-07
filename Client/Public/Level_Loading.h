@@ -3,13 +3,13 @@
 #include "Client_Defines.h"
 #include "Level.h"
 
-BEGIN(Client)
+BEGIN_NAMESPACE(Client)
 
-class CLevel_Loading final : public CLevel
+class CLoading final : public CLevel
 {
 private:
-	CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CLevel_Loading() = default;
+	CLoading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CLoading() = default;
 
 public:
 	virtual HRESULT Initialize(LEVEL eNextLevelID);
@@ -17,14 +17,14 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	LEVEL				m_eNextLevelID = { LEVEL::LEVEL_END };
+	LEVEL				m_eNextLevelID = { LEVEL::END };
 	class CLoader*		m_pLoader = { nullptr };
 
 
 
 public:
-	static CLevel_Loading* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);
+	static CLoading* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);
 	virtual void Free() override;
 };
 
-END
+END_NAMESPACE

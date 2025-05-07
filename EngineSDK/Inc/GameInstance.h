@@ -6,7 +6,7 @@
 #include "Prototype_Manager.h"
 
 
-BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 
 
 class ENGINE_DLL CGameInstance final : public CBase
@@ -95,4 +95,4 @@ public:
 	virtual void Free() override;
 };
 
-END
+END_NAMESPACE
