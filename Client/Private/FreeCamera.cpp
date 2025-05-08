@@ -12,18 +12,29 @@ CFreeCamera::CFreeCamera(const CFreeCamera& Prototype)
 
 HRESULT CFreeCamera::Initialize_Prototype()
 {
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT CFreeCamera::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	CCamera::CAMERA_DESC			Desc{};
+
+	Desc.vEye = _float3(0.f, 20.f, -15.f);
+	Desc.vAt = _float3(0.f, 0.f, 0.f);
+	Desc.fFov = XMConvertToRadians(60.0f);
+	Desc.fNear = 0.1f;
+	Desc.fFar = 500.f;
+	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
+	Desc.fSpeedPerSec = 10.0f;
+	m_strName = TEXT("Camera");
+	m_fMouseSensor = 0.1f;
+	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
 
-	CAMERA_FREE_DESC* pDesc = static_cast<CAMERA_FREE_DESC*>(pArg);
-	m_fMouseSensor = pDesc->fMouseSensor;
+	//CAMERA_FREE_DESC* pDesc = static_cast<CAMERA_FREE_DESC*>(pArg);
+	//m_fMouseSensor = pDesc->fMouseSensor;
 
-    return S_OK;
+	return S_OK;
 }
 
 void CFreeCamera::Priority_Update(_float fTimeDelta)
@@ -50,9 +61,31 @@ void CFreeCamera::Update(_float fTimeDelta)
 		m_pTransformCom->Go_Right(fTimeDelta);
 	}
 
-	POINT vMouseDelta = m_pGameInstance->GetMouseDelta();
+	if (m_pGameInstance->IsMouseDown(1))
+	{
+		POINT vMouseDelta = m_pGameInstance->GetMouseDelta();
+		_long			MouseMove = {};
 
+		if (vMouseDelta.x != 0)
+		{
+			_float fYawAngle = vMouseDelta.x * fTimeDelta * m_fMouseSensor;
+			// Up 축 (0,1,0) 기준으로 Yaw
+			m_pTransformCom->Turn(
+				XMVectorSet(0.f, 1.f, 0.f, 0.f),
+				fYawAngle
+			);
+		}
 
+		if (vMouseDelta.y != 0)
+		{
+			_float fPitchAngle = vMouseDelta.y * fTimeDelta * m_fMouseSensor;
+			// Right 축 기준으로 Pitch
+			m_pTransformCom->Turn(
+				m_pTransformCom->Get_State(STATE::RIGHT),
+				fPitchAngle
+			);
+		}
+	}
 	__super::Update_Camera();
 }
 

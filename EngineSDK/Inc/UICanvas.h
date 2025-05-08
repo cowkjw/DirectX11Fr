@@ -25,7 +25,7 @@ public:
 private:
 	void SortChildUI();
 
-private:
+protected:
 	vector<CUIObject*> m_vecChildUIObjects;
 public:
 	static CUICanvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

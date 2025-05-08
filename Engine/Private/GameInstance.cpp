@@ -11,6 +11,7 @@
 #include "Object_Manager.h"
 #include "Input_Device.h"
 #include "TransformPipeline.h"
+#include "ResourceMag.h"
 #include "Prototype_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance);
@@ -62,9 +63,14 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	if (nullptr == m_pTransformPipeline)
 		return E_FAIL;
 
-	m_pUIManager = CUIManager::Create();
+	m_pUIManager = CUIManager::Create(*ppDeviceOut, *ppContextOut);
 	if (nullptr == m_pUIManager)
 		return E_FAIL;
+
+	m_pResourceMag = CResourceMag::Create(*ppDeviceOut, *ppContextOut);
+	if (nullptr == m_pResourceMag)
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -290,6 +296,9 @@ const _float4* CGameInstance::Get_CamPosition() const
 {
 	return m_pTransformPipeline->Get_CamPosition();
 }
+#pragma endregion
+
+#pragma region UI
 void CGameInstance::AddCanvasUI(CUICanvas* pCanvas)
 {
 	if (nullptr == m_pUIManager)
@@ -314,6 +323,85 @@ CUIObject* CGameInstance::Get_UI(const _wstring& canvasName, const _wstring& uiN
 		return nullptr;
 	return m_pUIManager->GetUI(canvasName, uiName);
 }
+void CGameInstance::ClearUI()
+{
+	if (nullptr == m_pUIManager)
+		return;
+	m_pUIManager->ClearCanvas();
+}
+#pragma endregion
+
+#pragma region RESOURCE_MANAGER
+CShader* CGameInstance::GetShader(const _wstring& key, _bool bIsStatic)
+{
+	if (bIsStatic)
+	{
+		return m_pResourceMag->GetShader(key);
+	}
+	else
+	{
+		return m_pResourceMag->GetDynamicShader(key);
+	}
+}
+
+CTexture* CGameInstance::GetTexture(const _wstring& key, _bool bIsStatic)
+{
+	if (bIsStatic)
+	{
+		return m_pResourceMag->GetTexture(key);
+	}
+	else
+	{
+		return m_pResourceMag->GetDynamicTexture(key);
+	}
+}
+
+CVIBuffer* CGameInstance::GetBuffer(const _wstring& key, _bool bIsStatic)
+{
+	if (bIsStatic)
+	{
+		return m_pResourceMag->GetBuffer(key);
+	}
+	else
+	{
+		return m_pResourceMag->GetDynamicBuffer(key);
+	}
+}
+
+
+CShader* CGameInstance::LoadShader(const _wstring& key, const _wstring& vsPath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements, _bool bIsStatic)
+{
+	if (bIsStatic)
+	{
+		return m_pResourceMag->LoadShader(key, vsPath, pElements, iNumElements);
+	}
+	else
+	{
+		return m_pResourceMag->LoadDynamicShader(key, vsPath, pElements, iNumElements);
+	}
+}
+CTexture* CGameInstance::LoadTexture(const _wstring& key, const _wstring& filePath, _bool bIsStatic, _uint iNumTextrues)
+{
+	if (bIsStatic)
+	{
+		return m_pResourceMag->LoadTexture(key, filePath, iNumTextrues);
+	}
+	else
+	{
+		return m_pResourceMag->LoadDynamicTexture(key, filePath, iNumTextrues);
+	}
+}
+CVIBuffer* CGameInstance::LoadBuffer(const _wstring& key, BUFFER_TYPE eType, _bool bIsStatic)
+{
+	if (bIsStatic)
+	{
+		return m_pResourceMag->LoadBuffer(key, eType);
+	}
+	else
+	{
+		return m_pResourceMag->LoadDynamicBuffer(key, eType);
+	}
+}
 #pragma endregion
 
 
@@ -326,6 +414,8 @@ void CGameInstance::Release_Engine()
 	Safe_Release(m_pTransformPipeline);
 
 	Safe_Release(m_pUIManager);
+
+	Safe_Release(m_pResourceMag);
 
 	Safe_Release(m_pInput_Device);
 

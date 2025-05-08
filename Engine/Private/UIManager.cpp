@@ -1,7 +1,14 @@
 #include "UIManager.h"
+#include "UIImage.h"
+#include "UIButton.h"
+#include "UIProgressBar.h"
 
-CUIManager::CUIManager()
+CUIManager::CUIManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: m_pDevice{ pDevice },
+	m_pContext{ pContext }
 {
+	Safe_AddRef(m_pDevice);
+	Safe_AddRef(m_pContext);
 }
 
 void CUIManager::Update_UI(_float fTimeDelta)
@@ -60,7 +67,6 @@ void CUIManager::AddCanvasUI(CUICanvas* pUI)
 	if (iter == m_mapCanvasUI.end())
 	{
 		m_mapCanvasUI.emplace(pUI->Get_Name(), pUI);
-		Safe_AddRef(pUI);
 	}
 }
 
@@ -111,15 +117,35 @@ CUIObject* CUIManager::GetUI(const _wstring& canvasName, const _wstring& uiName)
 	return nullptr;
 }
 
-HRESULT CUIManager::Initialize()
+CUIObject* CUIManager::CreateUI(CUIObject::UIOBJECT_DESC* pDesc)
 {
-	return S_OK;
+	if (nullptr == pDesc)
+		return nullptr;
+
+	CUIObject* pUI = nullptr;
+	switch (pDesc->eUIType)
+	{
+	case UI_TYPE::IMAGE:
+		pUI = CUIImage::Create(m_pDevice, m_pContext);
+		break;
+	case UI_TYPE::BUTTON:
+		pUI = CUIButton::Create(m_pDevice, m_pContext);
+		break;
+	case UI_TYPE::BAR:
+		pUI = CUIProgressBar::Create(m_pDevice, m_pContext);
+		break;
+	}
+	if (nullptr == pUI)
+		return nullptr;
+	if (FAILED(pUI->Initialize(pDesc)))
+		return nullptr;
+	return pUI;
 }
 
-CUIManager* CUIManager::Create()
+CUIManager* CUIManager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CUIManager* pInstance = new CUIManager();
-	if (FAILED(pInstance->Initialize()))
+	CUIManager* pInstance = new CUIManager(pDevice, pContext);
+	if (!pInstance)
 	{
 		MSG_BOX("CUIManager Created Failed");
 		Safe_Release(pInstance);
@@ -132,8 +158,10 @@ void CUIManager::Free()
 	__super::Free();
 	for (auto& Pair : m_mapCanvasUI)
 	{
-
 		Safe_Release(Pair.second);
 	}
 	m_mapCanvasUI.clear();
+	Safe_Release(m_pDevice);
+	Safe_Release(m_pContext);
+	
 }

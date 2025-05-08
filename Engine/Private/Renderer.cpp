@@ -19,8 +19,6 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pRende
 
 	m_RenderObjects[ToIndex(eRenderGroup)].push_back(pRenderObject);
 
-	Safe_AddRef(pRenderObject);
-
 	return S_OK;
 }
 
@@ -53,8 +51,6 @@ HRESULT CRenderer::Render_Priority()
 	{
 		if (nullptr != pGameObject)
 			pGameObject->Render();
-
-		Safe_Release(pGameObject);
 	}
 	m_RenderObjects[ToIndex(RENDERGROUP::PRIORITY)].clear();
 
@@ -68,7 +64,6 @@ HRESULT CRenderer::Render_NonBlend()
 		if (nullptr != pGameObject)
 			pGameObject->Render();
 
-		Safe_Release(pGameObject);
 	}
 	m_RenderObjects[ToIndex(RENDERGROUP::NONBLEND)].clear();
 
@@ -91,8 +86,6 @@ HRESULT CRenderer::Render_Blend()
 	{
 		if (nullptr != pGameObject)
 			pGameObject->Render();
-
-		Safe_Release(pGameObject);
 	}
 	m_RenderObjects[ToIndex(RENDERGROUP::BLEND)].clear();
 
@@ -105,8 +98,6 @@ HRESULT CRenderer::Render_UI()
 	{
 		if (nullptr != pGameObject)
 			pGameObject->Render();
-
-		Safe_Release(pGameObject);
 	}
 	m_RenderObjects[ToIndex(RENDERGROUP::UI)].clear();
 

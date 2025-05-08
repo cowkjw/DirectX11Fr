@@ -55,17 +55,20 @@ HRESULT CBackGround::Render()
 
 HRESULT CBackGround::Ready_Components()
 {
-	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	///* For.Com_Shader */
+	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
+	//	TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	//	return E_FAIL;
+
+	///* For.Com_Texture */
+	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::LOGO), TEXT("Prototype_Component_Texture_BackGround"),
+	//	TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+	//	return E_FAIL;
+
+	if (FAILED(CGameObject::Add_Component(TEXT("Com_Texture"), m_pGameInstance->GetTexture(TEXT("TitleBack"), true), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
-	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
-		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
-		return E_FAIL;
-	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(ToIndex(LEVEL::LOGO), TEXT("Prototype_Component_Texture_BackGround"),
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+
+	if (FAILED(CGameObject::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxPosTex"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	return S_OK;

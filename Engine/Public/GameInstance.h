@@ -90,6 +90,17 @@ public:
 	void RemoveCanvasUI(const _wstring& canvasName);
 	void RemoveUI(const _wstring& canvasName, const _wstring& uiName);
 	class CUIObject* Get_UI(const _wstring& canvasName, const _wstring& uiName);
+	void ClearUI();
+#pragma endregion
+
+#pragma region RESOURCE_MANAGER
+	class CShader* GetShader(const _wstring& key, _bool bIsStatic);
+	class CTexture* GetTexture(const _wstring& key, _bool bIsStatic);
+	class CVIBuffer* GetBuffer(const _wstring& key, _bool bIsStatic);
+
+	class CShader* LoadShader(const _wstring& key, const _wstring& vsPath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements, _bool bIsStatic);
+	class CTexture* LoadTexture(const _wstring& key, const _wstring& filePath, _bool bIsStatic, _uint iNumTextrues = 1);
+	class CVIBuffer* LoadBuffer(const _wstring& key, BUFFER_TYPE eType, _bool bIsStatic);
 #pragma endregion
 
 
@@ -106,6 +117,7 @@ private:
 	class CInput_Device* m_pInput_Device = { nullptr };
 	class CTransformPipeline* m_pTransformPipeline = { nullptr };
 	class CUIManager* m_pUIManager = { nullptr };
+	class CResourceMag* m_pResourceMag = { nullptr };
 
 public:
 	void Release_Engine();

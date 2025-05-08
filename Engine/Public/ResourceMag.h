@@ -1,0 +1,71 @@
+#pragma once
+#include "Base.h"
+
+BEGIN_NAMESPACE(Engine)
+
+class CShader;
+class CTexture;
+class CVIBuffer;
+
+class CResourceMag final : public CBase
+{
+private:
+	CResourceMag(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CResourceMag() = default;
+
+public:
+	// 동적 리소스 등록
+
+	void RegisterDynamicShader(const _wstring& key, CShader* pShader);
+	void RegisterDynamicTexture(const _wstring& key, CTexture* pTexture);
+	void RegisterDynamicBuffer(const _wstring& key, CVIBuffer* pBuffer);
+
+
+    // 정적 리소스 등록
+    void RegisterStaticShader(const _wstring& key, CShader* pShader);
+    void RegisterStaticTexture(const _wstring& key, CTexture* pTexture);
+    void RegisterStaticBuffer(const _wstring& key, CVIBuffer* pBuffer);
+
+    // 정적 리소스 로드 
+    CShader* LoadShader(const _wstring& key, const _wstring& vsPath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements);
+    CTexture* LoadTexture(const _wstring& key, const _wstring& filePath,_uint iNumTextrues = 1);
+    CVIBuffer* LoadBuffer(const _wstring& key, BUFFER_TYPE eType);
+
+    // 동적 리소스 로드
+	CShader* LoadDynamicShader(const _wstring& key, const _wstring& vsPath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements);
+	CTexture* LoadDynamicTexture(const _wstring& key, const _wstring& filePath, _uint iNumTextrues = 1);
+	CVIBuffer* LoadDynamicBuffer(const _wstring& key, BUFFER_TYPE eType);
+
+	// 정적 리소스 가져오기
+    CShader* GetShader(const _wstring& key);
+    CTexture* GetTexture(const _wstring& key);
+    CVIBuffer* GetBuffer(const _wstring& key);
+
+	// 동적 리소스 가져오기
+	CShader* GetDynamicShader(const _wstring& key);
+	CTexture* GetDynamicTexture(const _wstring& key);
+	CVIBuffer* GetDynamicBuffer(const _wstring& key);
+
+
+    // 레벨 언로드 시 동적 리소스만 삭제
+    void Clear();
+
+	HRESULT Initialize();
+private:
+
+    unordered_map<_wstring, CShader*>   m_staticShaders;
+    unordered_map<_wstring, CTexture*>  m_staticTextures;
+    unordered_map<_wstring, CVIBuffer*>   m_staticBuffers;
+
+    unordered_map<_wstring, CShader*>   m_dynamicShaders;
+    unordered_map<_wstring, CTexture*>  m_dynamicTextures;
+    unordered_map<_wstring, CVIBuffer*>   m_dynamicBuffers;
+
+	ID3D11Device* m_pDevice = { nullptr };
+	ID3D11DeviceContext* m_pContext = { nullptr };
+public:
+	static CResourceMag* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual void Free();
+};
+END_NAMESPACE
+

@@ -1,16 +1,12 @@
 #pragma once
-#include "UIImage.h"   
-BEGIN_NAMESPACE(Engine)
-class ENGINE_DLL CUIButton : public CUIImage
-{
-public:
-	typedef struct tButtonDesc : public UIOBJECT_DESC
-	{
-		function<void()> OnClick;
-	}BUTTON_DESC;
+#include "UIObject.h"   
 
+BEGIN_NAMESPACE(Engine)
+class CUIImage;
+class ENGINE_DLL CUIButton : public CUIObject
+{
 private:
-	CUIButton(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HWND hWnd);
+	CUIButton(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUIButton(const CUIButton& Prototype);
 	virtual ~CUIButton() = default;
 public:
@@ -28,10 +24,10 @@ private:
 	function<void()> m_OnClick;
 	_bool m_bHovered = false;
 	_bool m_bPressed = false;
-	CTexture* m_pHoverTexture{ nullptr };
+	CUIImage* m_pButtonImage{ nullptr };
 
 public:
-	static CUIButton* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,const _float4& vColor, function<void()> onClick);
+	static CUIButton* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

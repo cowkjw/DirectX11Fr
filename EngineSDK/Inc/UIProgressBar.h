@@ -1,6 +1,6 @@
 #pragma once
 #include "UIObject.h"   
-#include "Texture.h"
+
 
 BEGIN_NAMESPACE(Engine)
 class ENGINE_DLL CUIProgressBar : public CUIObject
@@ -24,7 +24,7 @@ public:
 private:
 	_float      m_fMaxValue{ 1.f };
 	_float      m_fCurValue{ 1.f };
-	vector<CTexture*> m_vecTextures;
+	vector<class CTexture*> m_vecTextures;
 public:
 	static CUIProgressBar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;

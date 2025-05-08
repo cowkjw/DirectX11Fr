@@ -9,7 +9,13 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CLevel_GamePlay::Initialize()
 {
+	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Terrain"),
+		ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_BackGround")))
+		return E_FAIL;
 
+	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
+		ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_Camera")))
+		return E_FAIL;
 	return S_OK;
 }
 

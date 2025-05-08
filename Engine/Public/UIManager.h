@@ -6,7 +6,7 @@ BEGIN_NAMESPACE(Engine)
 class CUIManager final : public CBase
 {
 private:
-	CUIManager();
+	CUIManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CUIManager() = default;
 
 public:
@@ -23,15 +23,15 @@ public:
 	void RemoveUI(const _wstring& canvasName, const _wstring& uiName);
 	void ClearCanvas();
 	CUIObject* GetUI(const _wstring& canvasName,const _wstring& uiName);
-
-
-public:
-	HRESULT Initialize();
+	CUIObject* CreateUI(CUIObject::UIOBJECT_DESC* pDesc);
 
 private:
 	unordered_map<_wstring, CUICanvas*> m_mapCanvasUI;
+	ID3D11Device* m_pDevice = { nullptr };	
+	ID3D11DeviceContext* m_pContext = { nullptr };
+
 public:
-	static CUIManager* Create();
+	static CUIManager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 
 };

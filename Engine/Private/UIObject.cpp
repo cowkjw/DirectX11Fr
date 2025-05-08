@@ -1,4 +1,5 @@
 #include "UIObject.h"
+#include <VIBuffer_Rect.h>
 
 CUIObject::CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
@@ -46,6 +47,11 @@ HRESULT CUIObject::Initialize(void* pArg)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fX - ViewportDesc.Width * 0.5f, -m_fY + ViewportDesc.Height * 0.5f, 0.f, 1.f));
 
 
+	m_pVIBufferCom = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pVIBufferCom)
+		return E_FAIL;
+	m_Components.emplace(L"Com_VIBuffer", m_pVIBufferCom);
+
 	return S_OK;
 }
 
@@ -70,6 +76,4 @@ HRESULT CUIObject::Render()
 void CUIObject::Free()
 {
 	__super::Free();
-
-
 }

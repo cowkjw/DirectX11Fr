@@ -67,6 +67,9 @@
     <Filter Include="01.GameObject\UI\Title\Background">
       <UniqueIdentifier>{8a7f108f-d75a-41ab-9bca-099ad870fc62}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.GameObject\Terrain">
+      <UniqueIdentifier>{6dd72460-15cb-40a9-8f5d-8ca2b1029a41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -137,6 +140,9 @@
     </ClInclude>
     <ClInclude Include="..\public\TitleCanvas.h">
       <Filter>01.GameObject\UI\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>01.GameObject\Terrain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -210,9 +216,15 @@
     <ClCompile Include="..\private\TitleCanvas.cpp">
       <Filter>01.GameObject\UI\Title</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Terrain.cpp">
+      <Filter>01.GameObject\Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTex.hlsl">
+      <Filter>100.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxNorTex.hlsl">
       <Filter>100.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

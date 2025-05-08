@@ -25,9 +25,6 @@ HRESULT CUIImage::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
-
 	return S_OK;
 }
 
@@ -41,7 +38,7 @@ void CUIImage::Update(_float fTimeDelta)
 
 void CUIImage::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::PRIORITY, this);
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this);
 }
 
 HRESULT CUIImage::Render()

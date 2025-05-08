@@ -38,13 +38,9 @@ HRESULT CTitleCanvas::Ready_ChildUI()
 	BackGroundDesc.strName = L"BackGround";
 
 	auto pBackGround = CBackGround::Create(m_pDevice, m_pContext);
-	if (!pBackGround || FAILED(pBackGround->Initialize(&BackGroundDesc)))
-	{
-		Safe_Release(pBackGround);
+	if (nullptr == pBackGround)
 		return E_FAIL;
-	}
-
-	this->AddChildUI(pBackGround, &BackGroundDesc);
+	AddChildUI(pBackGround, &BackGroundDesc);
 
 	return S_OK;
 }
@@ -74,4 +70,9 @@ CGameObject* CTitleCanvas::Clone(void* pArg)
 void CTitleCanvas::Free()
 {
 	__super::Free();
+	for (auto& pChild : m_vecChildUIObjects)
+	{
+		Safe_Release(pChild);
+	}
+	m_vecChildUIObjects.clear();
 }

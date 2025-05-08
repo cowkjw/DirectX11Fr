@@ -68,11 +68,10 @@ void CUICanvas::AddChildUI(CUIObject* pChildUI, void* pArg)
 {
 	if (nullptr == pChildUI)
 		return;
-	Safe_AddRef(pChildUI);
 	pChildUI->Initialize(pArg);
 	m_vecChildUIObjects.push_back(pChildUI);
 	pChildUI->SetParent(this);
-	pChildUI->SetSortingOrder(m_iSortingOrder + 1);
+	pChildUI->SetSortingOrder(m_iSortingOrder++);
 	SortChildUI();
 }
 
@@ -136,5 +135,4 @@ void CUICanvas::Free()
 	{
 		Safe_Release(pChild);
 	}
-	m_vecChildUIObjects.clear();
 }

@@ -4,11 +4,9 @@
 BEGIN_NAMESPACE(Engine)
 class CShader;
 class CTexture;
-class CVIBuffer_Rect;
 
 class ENGINE_DLL CUIImage : public CUIObject
 {
-
 protected:
 	CUIImage(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUIImage(const CUIImage& Prototype);
@@ -23,9 +21,8 @@ public:
 protected:
 	CShader* m_pShaderCom = { nullptr };
 	CTexture* m_pTextureCom = { nullptr };
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-private:
+protected:
 	virtual HRESULT Ready_Components();
 public:
 	static CUIImage* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -173,6 +173,7 @@
     <ClInclude Include="..\public\Observer.h" />
     <ClInclude Include="..\public\ObserverManager.h" />
     <ClInclude Include="..\Public\TaskNode.h" />
+    <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\TitleCanvas.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\ObserverManager.cpp" />
+    <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\TitleCanvas.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
@@ -208,6 +210,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTex.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

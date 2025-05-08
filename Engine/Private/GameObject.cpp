@@ -46,6 +46,19 @@ HRESULT CGameObject::Add_Component(_uint iPrototypeLevelIndex, const _wstring& s
 	return S_OK;
 }
 
+HRESULT CGameObject::Add_Component(const _wstring& strComponentTag,CComponent* pComponent, CComponent** ppOut)
+{
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	m_Components.emplace(strComponentTag, pComponent);
+
+	*ppOut = pComponent;
+	Safe_AddRef(pComponent);
+
+	return S_OK;
+}
+
 HRESULT CGameObject::Initialize_Prototype()
 {
 

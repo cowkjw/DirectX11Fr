@@ -45,6 +45,8 @@ public:
 	void Go_Left(_float fTimeDelta);
 	void Follow_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance);
 
+	void Turn(_fvector vAxis, _float fTimeDelta);
+
 public:
 	_matrix Get_WorldMatrix_Inverse() const
 	{

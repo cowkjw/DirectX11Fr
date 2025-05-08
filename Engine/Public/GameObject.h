@@ -44,6 +44,7 @@ public:
 
 protected:
 	HRESULT Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg = nullptr);
+	HRESULT Add_Component(const _wstring& strComponentTag, CComponent* pComponent, CComponent** ppOut);
 
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };

@@ -35,6 +35,7 @@ void CLevel_Loading::Update(_float fTimeDelta)
 
 	if (m_pGameInstance->IsKeyPressed(VK_SPACE))
 	{
+		m_pGameInstance->ClearUI();
 		if (true == m_pLoader->isFinished())
 		{
 			CLevel* pLevel = { nullptr };

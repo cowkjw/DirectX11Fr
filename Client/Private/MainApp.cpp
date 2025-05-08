@@ -58,21 +58,20 @@ HRESULT CMainApp::Start_Level(LEVEL eStartLevel)
 }
 
 HRESULT CMainApp::Ready_Prototype_Component()
-{	/* For.Prototype_Component_VIBuffer_Rect*/
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
-		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+{	
+	
+	///* For.Prototype_Component_VIBuffer_Rect*/
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
+	//	CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
 
-	/* For.Prototype_Component_Shader_VtxPosTex */
-	D3D11_INPUT_ELEMENT_DESC		Elements[] =
-	{
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-	};
+	m_pGameInstance->LoadShader(TEXT("Shader_VtxPosTex"), TEXT("../Asset/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements,true);
+	m_pGameInstance->LoadShader(TEXT("Shader_VtxNorTex"), TEXT("../Asset/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements,true);
 
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Asset/ShaderFiles/Shader_VtxPosTex.hlsl"), Elements, 2))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
+	//	CShader::Create(m_pDevice, m_pContext, TEXT("../Asset/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements))))
+	//	return E_FAIL;
+
 	return S_OK;
 }
 

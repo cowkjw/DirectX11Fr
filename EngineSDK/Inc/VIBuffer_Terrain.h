@@ -2,7 +2,7 @@
 #include "VIBuffer.h"
 
 BEGIN_NAMESPACE(Engine)
-class CVIBuffer_Terrain :public CVIBuffer
+class ENGINE_DLL CVIBuffer_Terrain :public CVIBuffer
 {
 private:
 	CVIBuffer_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

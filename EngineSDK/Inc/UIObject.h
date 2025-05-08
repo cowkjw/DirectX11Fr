@@ -13,6 +13,12 @@ public:
 	typedef struct tagUIObjectDesc : public CGameObject::GAMEOBJECT_DESC
 	{
 		_float			fX, fY, fSizeX, fSizeY;
+		_wstring strTexturePath;
+		_wstring strTextureTag;
+		_uint iSortingOrder;
+		_uint iLevel;
+		UI_TYPE eUIType;
+
 	}UIOBJECT_DESC;
 protected:
 	CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -39,8 +45,9 @@ protected:
 
 	/* 직교 투영을 위한 행렬. */
 	_float4x4		m_ViewMatrix{}, m_ProjMatrix{};
-	CUIObject*      m_pParent{ nullptr };
 	_uint       m_iSortingOrder{0UL};
+	class CVIBuffer_Rect* m_pVIBufferCom{ nullptr };
+	CUIObject*      m_pParent{ nullptr };
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
