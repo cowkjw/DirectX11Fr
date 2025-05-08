@@ -9,7 +9,7 @@ class CRenderer final : public CBase
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CRenderer() = default;
-
+	HRESULT Initialize();
 public:
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
 	HRESULT Draw();
@@ -18,6 +18,7 @@ public:
 private:
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };
+	ID3D11DepthStencilState*	m_pNoDepthState{ nullptr };
 
 private:
 	list<class CGameObject*>	m_RenderObjects[ToIndex(RENDERGROUP::END)];

@@ -10,12 +10,13 @@ private:
 	virtual ~CUIManager() = default;
 
 public:
+	HRESULT Initialize();
 	void Update_UI(_float fTimeDelta);
 private:
 	void Priority_Update(_float fTimeDelta) ;
 	void Update(_float fTimeDelta) ;
 	void Late_Update(_float fTimeDelta) ;
-	void Render() ;
+
 
 public:
 	void AddCanvasUI(CUICanvas* pUI);
@@ -29,7 +30,6 @@ private:
 	unordered_map<_wstring, CUICanvas*> m_mapCanvasUI;
 	ID3D11Device* m_pDevice = { nullptr };	
 	ID3D11DeviceContext* m_pContext = { nullptr };
-
 public:
 	static CUIManager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

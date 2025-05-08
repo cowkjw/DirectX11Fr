@@ -11,12 +11,16 @@ CUIManager::CUIManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	Safe_AddRef(m_pContext);
 }
 
+HRESULT CUIManager::Initialize()
+{
+	return S_OK;
+}
+
 void CUIManager::Update_UI(_float fTimeDelta)
 {
 	Priority_Update(fTimeDelta);
 	Update(fTimeDelta);
 	Late_Update(fTimeDelta);
-	Render();
 }
 
 void CUIManager::Priority_Update(_float fTimeDelta)
@@ -49,15 +53,6 @@ void CUIManager::Late_Update(_float fTimeDelta)
 	}
 }
 
-void CUIManager::Render()
-{
-	for (auto& Pair : m_mapCanvasUI)
-	{
-		CUICanvas* pCanvasUI = Pair.second;
-		if (pCanvasUI && pCanvasUI->IsActive())
-			pCanvasUI->Render();
-	}
-}
 
 void CUIManager::AddCanvasUI(CUICanvas* pUI)
 {
@@ -145,7 +140,7 @@ CUIObject* CUIManager::CreateUI(CUIObject::UIOBJECT_DESC* pDesc)
 CUIManager* CUIManager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CUIManager* pInstance = new CUIManager(pDevice, pContext);
-	if (!pInstance)
+	if (pInstance->Initialize())
 	{
 		MSG_BOX("CUIManager Created Failed");
 		Safe_Release(pInstance);
@@ -163,5 +158,4 @@ void CUIManager::Free()
 	m_mapCanvasUI.clear();
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
-	
 }

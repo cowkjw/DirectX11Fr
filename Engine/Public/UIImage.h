@@ -21,9 +21,11 @@ public:
 protected:
 	CShader* m_pShaderCom = { nullptr };
 	CTexture* m_pTextureCom = { nullptr };
+	_wstring m_strTextureKey{};
+	_wstring m_strShaderKey{};
 
 protected:
-	virtual HRESULT Ready_Components();
+	HRESULT Ready_Components();
 public:
 	static CUIImage* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;

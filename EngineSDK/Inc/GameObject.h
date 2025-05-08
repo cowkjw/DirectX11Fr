@@ -10,6 +10,7 @@ class ENGINE_DLL CGameObject abstract : public CBase
 	{
 		_wstring strName;
 		_wstring strTag;
+
 	}GAMEOBJECT_DESC;
 
 protected:

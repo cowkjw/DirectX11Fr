@@ -36,8 +36,36 @@ HRESULT CTitleCanvas::Ready_ChildUI()
 	BackGroundDesc.fSizeX = g_iWinSizeX;
 	BackGroundDesc.fSizeY = g_iWinSizeY;
 	BackGroundDesc.strName = L"BackGround";
+	BackGroundDesc.strShaderKey = L"Shader_VtxPosTex";
+	BackGroundDesc.strTextureKey = L"TitleBack";
 
 	auto pBackGround = CBackGround::Create(m_pDevice, m_pContext);
+	if (nullptr == pBackGround)
+		return E_FAIL;
+	AddChildUI(pBackGround, &BackGroundDesc);
+
+	BackGroundDesc.fX = g_iWinSizeX * 0.5f;
+	BackGroundDesc.fY = g_iWinSizeY * 0.5f;
+	BackGroundDesc.fSizeX = g_iWinSizeX*0.5f;
+	BackGroundDesc.fSizeY = g_iWinSizeY*0.5f;
+	BackGroundDesc.strName = L"TitleEffect";
+	BackGroundDesc.strShaderKey = L"Shader_VtxPosTex";
+	BackGroundDesc.strTextureKey = L"TitleEffect";
+
+	pBackGround = CBackGround::Create(m_pDevice, m_pContext);
+	if (nullptr == pBackGround)
+		return E_FAIL;
+	AddChildUI(pBackGround, &BackGroundDesc);
+
+	BackGroundDesc.fX = g_iWinSizeX * 0.8f;
+	BackGroundDesc.fY = g_iWinSizeY * 0.3f;
+	BackGroundDesc.fSizeX = g_iWinSizeX * 0.3f;
+	BackGroundDesc.fSizeY = g_iWinSizeY * 0.3f;
+	BackGroundDesc.strName = L"TitleLogo";
+	BackGroundDesc.strShaderKey = L"Shader_VtxPosTex";
+	BackGroundDesc.strTextureKey = L"TitleLogo";
+
+	pBackGround = CBackGround::Create(m_pDevice, m_pContext);
 	if (nullptr == pBackGround)
 		return E_FAIL;
 	AddChildUI(pBackGround, &BackGroundDesc);

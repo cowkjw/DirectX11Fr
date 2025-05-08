@@ -25,6 +25,13 @@ HRESULT CUIImage::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	UIOBJECT_DESC* pDesc = static_cast<UIOBJECT_DESC*>(pArg);
+	m_strTextureKey = pDesc->strTextureKey;
+	m_strShaderKey = pDesc->strShaderKey;
+
+	if (FAILED(Ready_Components()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -69,6 +76,11 @@ HRESULT CUIImage::Render()
 
 HRESULT CUIImage::Ready_Components()
 {
+	if (FAILED(CGameObject::Add_Component(TEXT("Com_Texture"), m_pGameInstance->GetTexture(m_strTextureKey, true), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		return E_FAIL;
+
+	if (FAILED(CGameObject::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(m_strShaderKey, true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		return E_FAIL;
 	return S_OK;
 }
 

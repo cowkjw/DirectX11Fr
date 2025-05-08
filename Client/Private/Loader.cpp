@@ -83,8 +83,9 @@ HRESULT CLoader::Loading_For_Logo()
 	//	CTexture::Create(m_pDevice, m_pContext, TEXT("../Asset/Resources/Textures/Lang_Title_Char.png")))))
 	//	return E_FAIL;
 
-	m_pGameInstance->LoadTexture(TEXT("TitleBack"), TEXT("../Asset/Resources/Textures/Lang_Title_Char.png"),true);
- 	m_pGameInstance->LoadTexture(TEXT("TitleEffect"), TEXT("../Asset/Resources/Textures/Back_Eff.png"),true);
+	m_pGameInstance->LoadTexture(TEXT("TitleBack"), TEXT("../Asset/Resources/Textures/Title/Lang_Title_Char.png"),true);
+ 	m_pGameInstance->LoadTexture(TEXT("TitleEffect"), TEXT("../Asset/Resources/Textures/Title/Back_Eff.png"),true);
+ 	m_pGameInstance->LoadTexture(TEXT("TitleLogo"), TEXT("../Asset/Resources/Textures/Title/TitleLogo.png"),true);
 
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));

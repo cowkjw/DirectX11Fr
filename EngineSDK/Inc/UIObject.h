@@ -13,8 +13,8 @@ public:
 	typedef struct tagUIObjectDesc : public CGameObject::GAMEOBJECT_DESC
 	{
 		_float			fX, fY, fSizeX, fSizeY;
-		_wstring strTexturePath;
-		_wstring strTextureTag;
+		_wstring strTextureKey;
+		_wstring strShaderKey;
 		_uint iSortingOrder;
 		_uint iLevel;
 		UI_TYPE eUIType;

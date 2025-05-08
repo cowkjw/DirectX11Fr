@@ -11,6 +11,21 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	
 }
 
+HRESULT CRenderer::Initialize()
+{
+	D3D11_DEPTH_STENCIL_DESC dsDesc{};
+	dsDesc.DepthEnable = FALSE;                         // ±íÀÌ Å×½ºÆ® ²û
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;    // ±íÀÌ ¹öÆÛ¿¡ ¾²±â ²û
+	dsDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;        // Ç×»ó Å×½ºÆ® Åë°ú
+	dsDesc.StencilEnable = FALSE;                         // ½ºÅÙ½Ç ²¨µµ ¹«¹æ
+
+	HRESULT hr = m_pDevice->CreateDepthStencilState(&dsDesc, &m_pNoDepthState);
+	if (FAILED(hr))
+		return hr;
+	Safe_AddRef(m_pNoDepthState);
+	return S_OK;
+}
+
 HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pRenderObject)
 {
 	if (eRenderGroup >=	RENDERGROUP::END ||
@@ -94,11 +109,13 @@ HRESULT CRenderer::Render_Blend()
 
 HRESULT CRenderer::Render_UI()
 {
+	m_pContext->OMSetDepthStencilState(m_pNoDepthState, 0);
 	for (auto& pGameObject : m_RenderObjects[ToIndex(RENDERGROUP::UI)])
 	{
 		if (nullptr != pGameObject)
 			pGameObject->Render();
 	}
+	m_pContext->OMSetDepthStencilState(nullptr, 0);
 	m_RenderObjects[ToIndex(RENDERGROUP::UI)].clear();
 
 	return S_OK;
@@ -106,7 +123,14 @@ HRESULT CRenderer::Render_UI()
 
 CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	return new CRenderer(pDevice, pContext);
+	CRenderer* pInstance = new CRenderer(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize()))
+	{
+		MSG_BOX("Failed to Created CRenderer");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
 }
 
 void CRenderer::Free()
@@ -115,6 +139,7 @@ void CRenderer::Free()
 
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+	Safe_Release(m_pNoDepthState);
 
 	for (auto& ObjectList : m_RenderObjects)
 	{
