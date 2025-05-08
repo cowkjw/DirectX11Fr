@@ -54,6 +54,8 @@ namespace Engine
 		return static_cast<unsigned int>(e);
 	}
 
-
-
+	inline wstring StringToWString(const string& str)
+	{
+		return wstring(str.begin(), str.end());
+	}
 }

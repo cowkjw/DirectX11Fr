@@ -2,6 +2,7 @@
 
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include <JsonLoader.h>
 CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::Get_Instance() }
 {
@@ -65,8 +66,15 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	//	CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
 	//	return E_FAIL;
 
-	m_pGameInstance->LoadShader(TEXT("Shader_VtxPosTex"), TEXT("../Asset/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements,true);
-	m_pGameInstance->LoadShader(TEXT("Shader_VtxNorTex"), TEXT("../Asset/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements,true);
+	//m_pGameInstance->LoadShader(TEXT("Shader_VtxPosTex"), TEXT("../Asset/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements,true);
+	//m_pGameInstance->LoadShader(TEXT("Shader_VtxNorTex"), TEXT("../Asset/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements,true);
+
+	CJsonLoader jsonLoader;
+	jsonLoader.Load_Shaders("../Asset/Json/Shaders.json", [&]() {
+		// 이곳에 로드 후 처리할 작업을 추가합니다.
+		});
+
+	jsonLoader.Free();
 
 	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
 	//	CShader::Create(m_pDevice, m_pContext, TEXT("../Asset/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements))))

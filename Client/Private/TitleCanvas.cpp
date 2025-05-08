@@ -39,7 +39,7 @@ HRESULT CTitleCanvas::Ready_ChildUI()
 	BackGroundDesc.strShaderKey = L"Shader_VtxPosTex";
 	BackGroundDesc.strTextureKey = L"TitleBack";
 
-	auto pBackGround = CBackGround::Create(m_pDevice, m_pContext);
+	auto pBackGround = CUIImage::Create(m_pDevice, m_pContext);
 	if (nullptr == pBackGround)
 		return E_FAIL;
 	AddChildUI(pBackGround, &BackGroundDesc);
@@ -52,7 +52,7 @@ HRESULT CTitleCanvas::Ready_ChildUI()
 	BackGroundDesc.strShaderKey = L"Shader_VtxPosTex";
 	BackGroundDesc.strTextureKey = L"TitleEffect";
 
-	pBackGround = CBackGround::Create(m_pDevice, m_pContext);
+	pBackGround = CUIImage::Create(m_pDevice, m_pContext);
 	if (nullptr == pBackGround)
 		return E_FAIL;
 	AddChildUI(pBackGround, &BackGroundDesc);
@@ -65,7 +65,7 @@ HRESULT CTitleCanvas::Ready_ChildUI()
 	BackGroundDesc.strShaderKey = L"Shader_VtxPosTex";
 	BackGroundDesc.strTextureKey = L"TitleLogo";
 
-	pBackGround = CBackGround::Create(m_pDevice, m_pContext);
+	pBackGround = CUIImage::Create(m_pDevice, m_pContext);
 	if (nullptr == pBackGround)
 		return E_FAIL;
 	AddChildUI(pBackGround, &BackGroundDesc);

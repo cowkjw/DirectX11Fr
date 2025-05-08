@@ -70,6 +70,9 @@
     <Filter Include="01.GameObject\Terrain">
       <UniqueIdentifier>{6dd72460-15cb-40a9-8f5d-8ca2b1029a41}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96.Json\JsonFiles">
+      <UniqueIdentifier>{e3310f4d-b774-4282-93e1-5dbb9c1a302c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -227,5 +230,13 @@
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxNorTex.hlsl">
       <Filter>100.ShaderFiles</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Asset\Json\Shaders.json">
+      <Filter>96.Json\JsonFiles</Filter>
+    </None>
+    <None Include="..\Asset\Json\Textures.json">
+      <Filter>96.Json\JsonFiles</Filter>
+    </None>
   </ItemGroup>
 </Project>

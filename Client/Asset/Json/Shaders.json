@@ -1,0 +1,16 @@
+{
+  "shaders": [
+    {
+      "key": "Shader_VtxPosTex",
+      "path": "../Asset/ShaderFiles/Shader_VtxPosTex.hlsl",
+      "layout": "VTXPOSTEX",
+      "static": true
+    },
+    {
+      "key": "Shader_VtxNorTex",
+      "path": "../Asset/ShaderFiles/Shader_VtxNorTex.hlsl",
+      "layout": "VTXNORTEX",
+      "static": true
+    }
+  ]
+}

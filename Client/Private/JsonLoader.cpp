@@ -1,5 +1,14 @@
 #include "JsonLoader.h"
+#include "UIImage.h"
+#include "UIButton.h"
 #include "GameInstance.h"
+
+CJsonLoader::CJsonLoader()
+	: m_pGameInstance{ CGameInstance::Get_Instance() }
+{
+	Safe_AddRef(m_pGameInstance);
+}
+
 
 _int CJsonLoader::CountPrototypes(const string& filePath) const
 {
@@ -22,17 +31,95 @@ _int CJsonLoader::CountPrototypes(const string& filePath) const
 
 HRESULT CJsonLoader::Load_Prototypes(const string& filePath, function<void()> onEntryLoaded)
 {
-	/*ifstream file(filePath);
-	if (!file.is_open())
-	{
-		return E_FAIL;
-	}
+  
 
-	json j;
-	file >> j;*/
+    return S_OK;
+}
 
+HRESULT CJsonLoader::Load_Shaders(const string& filePath, function<void()> onEntryLoaded)
+{
+    ifstream ifs(filePath);
+    if (!ifs.is_open())
+        return E_FAIL;
 
-	return S_OK;
+    json j;
+    try { ifs >> j; }
+    catch (json::parse_error&)
+    {
+        return E_FAIL;
+    }
+    if (j.contains("shaders") && j["shaders"].is_array())
+    {
+        for (auto& entry : j["shaders"])
+        {
+            string key = entry.value("key", "");
+            string path = entry.value("path", "");
+            string layout = entry.value("layout", "");
+            _bool  isStatic = entry.value("static", false);
+
+            if (key.empty() || path.empty() || layout.empty())
+                continue;
+
+            // layout 문자열에 따라 입력 레이아웃 요소 선택
+            const D3D11_INPUT_ELEMENT_DESC* pElems = nullptr;
+            _uint                              iNum = 0;
+
+            if (layout == "VTXPOSTEX") {
+                pElems = VTXPOSTEX::Elements;
+                iNum = VTXPOSTEX::iNumElements;
+            }
+            else if (layout == "VTXNORTEX") {
+                pElems = VTXNORTEX::Elements;
+                iNum = VTXNORTEX::iNumElements;
+            }
+
+            // LoadShader(키, 파일경로, 레이아웃, 요소 개수, useEffect)
+            m_pGameInstance->LoadShader(
+                StringToWString(key).c_str(),
+                StringToWString(path).c_str(),
+                pElems,
+                iNum,
+                isStatic
+            );
+        }
+    }
+    return S_OK;
+}
+
+HRESULT CJsonLoader::Load_Textures(const string& filePath, function<void()> onEntryLoaded)
+{
+    ifstream ifs(filePath);
+    if (!ifs.is_open())
+        return E_FAIL;
+
+    json j;
+    try { ifs >> j; }
+    catch (json::parse_error&)
+    {
+        return E_FAIL;
+    }
+
+    if (j.contains("textures") && j["textures"].is_array())
+    {
+        for (auto& entry : j["textures"])
+        {
+            string key = entry.value("key", "");
+            string path = entry.value("path", "");
+            _uint iNumTextures = entry.value("numTextures", 1);
+            _bool  isStatic = entry.value("static", false);
+
+            if (key.empty() || path.empty())
+                continue;
+
+            m_pGameInstance->LoadTexture(
+                StringToWString(key).c_str(),
+                StringToWString(path).c_str(),
+                isStatic,
+                iNumTextures
+            );
+        }
+    }
+    return S_OK;
 }
 
 void CJsonLoader::Free()

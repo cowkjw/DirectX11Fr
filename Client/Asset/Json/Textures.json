@@ -1,0 +1,22 @@
+{
+  "textures": [
+    {
+      "key": "TitleBack",
+      "path": "../Asset/Resources/Textures/Title/Lang_Title_Char.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "TitleEffect",
+      "path": "../Asset/Resources/Textures/Title/Back_Eff.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "TitleLogo",
+      "path": "../Asset/Resources/Textures/Title/TitleLogo.png",
+      "numTextures": 1,
+      "static": true
+    }
+  ]
+}

@@ -213,6 +213,10 @@
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTex.hlsl" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Asset\Json\Shaders.json" />
+    <None Include="..\Asset\Json\Textures.json" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

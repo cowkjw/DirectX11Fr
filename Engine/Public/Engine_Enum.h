@@ -9,5 +9,6 @@ namespace Engine
 	enum class TRANSNFORM { VIEW, PROJECTION, END };
 	enum class UI_TYPE { IMAGE, BUTTON, BAR,CANVAS };
 	enum class BUFFER_TYPE { RECT, CUBE, TERRAIN };
+	enum class RESOURCE_TYPE { TEXTURE, SHADER };
 	
 }
