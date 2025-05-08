@@ -31,9 +31,6 @@
     <Filter Include="01.GameObject\UI">
       <UniqueIdentifier>{3813ae51-6983-476e-a1f2-d743909a5d65}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.GameObject\UI\00. Background">
-      <UniqueIdentifier>{8a7f108f-d75a-41ab-9bca-099ad870fc62}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.IMGUI">
       <UniqueIdentifier>{2c474aa3-3a5a-4932-b610-5b8c1043248f}</UniqueIdentifier>
     </Filter>
@@ -60,6 +57,15 @@
     </Filter>
     <Filter Include="01.GameObject\Camera">
       <UniqueIdentifier>{3bd1a25e-c673-4d5a-a90d-73e72e1874aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\UI\Title">
+      <UniqueIdentifier>{e00df5a4-83b1-472d-8e6c-11eaa79bea02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\UI\Title\Logo">
+      <UniqueIdentifier>{88258f5c-51ed-409a-8f3a-180a732a9cb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\UI\Title\Background">
+      <UniqueIdentifier>{8a7f108f-d75a-41ab-9bca-099ad870fc62}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -100,7 +106,7 @@
       <Filter>97.IMGUI\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BackGround.h">
-      <Filter>01.GameObject\UI\00. Background</Filter>
+      <Filter>01.GameObject\UI\Title\Background</Filter>
     </ClInclude>
     <ClInclude Include="..\public\JsonLoader.h">
       <Filter>96.Json</Filter>
@@ -128,6 +134,9 @@
     </ClInclude>
     <ClInclude Include="..\public\FreeCamera.h">
       <Filter>01.GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TitleCanvas.h">
+      <Filter>01.GameObject\UI\Title</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -187,7 +196,7 @@
       <Filter>97.IMGUI\Lib</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp">
-      <Filter>01.GameObject\UI\00. Background</Filter>
+      <Filter>01.GameObject\UI\Title\Background</Filter>
     </ClCompile>
     <ClCompile Include="..\private\JsonLoader.cpp">
       <Filter>96.Json</Filter>
@@ -197,6 +206,9 @@
     </ClCompile>
     <ClCompile Include="..\private\FreeCamera.cpp">
       <Filter>01.GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TitleCanvas.cpp">
+      <Filter>01.GameObject\UI\Title</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

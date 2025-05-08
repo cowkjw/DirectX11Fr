@@ -2,9 +2,9 @@
 #include "UIObject.h"
 
 BEGIN_NAMESPACE(Engine)
-class ENGINE_DLL CUICanvas final : public CUIObject
+class ENGINE_DLL CUICanvas : public CUIObject
 {
-private:
+protected:
 	CUICanvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUICanvas(const CUICanvas& Prototype);
 	virtual ~CUICanvas() = default;
@@ -29,7 +29,7 @@ private:
 	vector<CUIObject*> m_vecChildUIObjects;
 public:
 	static CUICanvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CUIObject* Clone(void* pArg) override;
+	CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };
 END_NAMESPACE

@@ -39,8 +39,8 @@ protected:
 
 	/* 직교 투영을 위한 행렬. */
 	_float4x4		m_ViewMatrix{}, m_ProjMatrix{};
-	CUIObject* m_pParent{ nullptr };
-	_uint       m_iSortingOrder = 0;
+	CUIObject*      m_pParent{ nullptr };
+	_uint       m_iSortingOrder{0UL};
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

@@ -173,6 +173,7 @@
     <ClInclude Include="..\public\Observer.h" />
     <ClInclude Include="..\public\ObserverManager.h" />
     <ClInclude Include="..\Public\TaskNode.h" />
+    <ClInclude Include="..\public\TitleCanvas.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\ObserverManager.cpp" />
+    <ClCompile Include="..\private\TitleCanvas.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>

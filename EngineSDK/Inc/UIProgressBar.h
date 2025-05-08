@@ -27,7 +27,7 @@ private:
 	vector<CTexture*> m_vecTextures;
 public:
 	static CUIProgressBar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CUIObject* Clone(void* pArg) override;
+	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };
 END_NAMESPACE

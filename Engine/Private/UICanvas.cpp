@@ -118,7 +118,7 @@ CUICanvas* CUICanvas::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 	return pInstance;
 }
 
-CUIObject* CUICanvas::Clone(void* pArg)
+CGameObject* CUICanvas::Clone(void* pArg)
 {
 	CUICanvas* pInstance = new CUICanvas(*this);
 	if (FAILED(pInstance->Initialize(pArg)))

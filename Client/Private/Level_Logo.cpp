@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "BackGround.h"
-#include "UICanvas.h"
+#include "TitleCanvas.h"
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		: CLevel { pDevice, pContext }
 {
@@ -57,9 +57,9 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _wstring strLayerTag)
     CanvasDesc.fY = g_iWinSizeY * 0.5f;
     CanvasDesc.fSizeX = g_iWinSizeX;
     CanvasDesc.fSizeY = g_iWinSizeY;
-    CanvasDesc.strName = L"Canvas";
+    CanvasDesc.strName = L"TitleCanvas";
 
-    auto pUICanvas = CUICanvas::Create(m_pDevice, m_pContext);
+    auto pUICanvas = CTitleCanvas::Create(m_pDevice, m_pContext);
     if (!pUICanvas)
         return E_FAIL;
 
@@ -68,27 +68,6 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _wstring strLayerTag)
         Safe_Release(pUICanvas);
         return E_FAIL;
     }
-
-    CUIImage::UIOBJECT_DESC BackGroundDesc{};
-    BackGroundDesc.fX = g_iWinSizeX * 0.5f;
-    BackGroundDesc.fY = g_iWinSizeY * 0.5f;
-    BackGroundDesc.fSizeX = g_iWinSizeX;
-    BackGroundDesc.fSizeY = g_iWinSizeY;
-    BackGroundDesc.strName = L"BackGround";
-
-    auto pBackGround = CBackGround::Create(m_pDevice, m_pContext);
-    if (!pBackGround || FAILED(pBackGround->Initialize(&BackGroundDesc)))
-    {
-        Safe_Release(pBackGround);
-        Safe_Release(pUICanvas);
-        return E_FAIL;
-    }
-
-    pUICanvas->AddChildUI(pBackGround, &BackGroundDesc);
-
-
-
-
     m_pGameInstance->AddCanvasUI(pUICanvas);
 
     return S_OK;

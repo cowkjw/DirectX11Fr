@@ -32,7 +32,7 @@ private:
 
 public:
 	static CUIButton* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,const _float4& vColor, function<void()> onClick);
-	CUIObject* Clone(void* pArg) override;
+	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };
 END_NAMESPACE
