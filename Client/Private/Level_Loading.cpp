@@ -2,6 +2,7 @@
 
 
 #include "Level_GamePlay.h"
+#include "Level_Editor.h"
 #include "Level_Logo.h"
 #include "Loader.h"
 
@@ -47,6 +48,9 @@ void CLevel_Loading::Update(_float fTimeDelta)
 				break;
 			case LEVEL::GAMEPLAY:
 				pLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
+				break;
+			case LEVEL::EDITOR:
+				pLevel = CLevel_Editor::Create(m_pDevice, m_pContext);
 				break;
 			}
 

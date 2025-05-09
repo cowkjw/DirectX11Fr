@@ -73,6 +73,9 @@
     <Filter Include="96.Json\JsonFiles">
       <UniqueIdentifier>{e3310f4d-b774-4282-93e1-5dbb9c1a302c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00.Levels\Editor">
+      <UniqueIdentifier>{6f8dd69a-e1d3-44a5-8fcd-acc07d1baf5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -146,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>01.GameObject\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Editor.h">
+      <Filter>00.Levels\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +227,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp">
       <Filter>01.GameObject\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Editor.cpp">
+      <Filter>00.Levels\Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
