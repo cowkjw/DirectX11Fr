@@ -1,5 +1,6 @@
 #include "TitleCanvas.h"
 #include "BackGround.h"
+#include <UIButton.h>
 
 CTitleCanvas::CTitleCanvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUICanvas(pDevice, pContext)
@@ -22,6 +23,7 @@ HRESULT CTitleCanvas::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_strName = L"TitleCanvas";
 	if (FAILED(Ready_ChildUI()))
 		return E_FAIL;
 
@@ -61,14 +63,14 @@ HRESULT CTitleCanvas::Ready_ChildUI()
 	BackGroundDesc.fY = g_iWinSizeY * 0.3f;
 	BackGroundDesc.fSizeX = g_iWinSizeX * 0.3f;
 	BackGroundDesc.fSizeY = g_iWinSizeY * 0.3f;
-	BackGroundDesc.strName = L"TitleLogo";
+	BackGroundDesc.strName = L"StartButton";
 	BackGroundDesc.strShaderKey = L"Shader_VtxPosTex";
 	BackGroundDesc.strTextureKey = L"TitleLogo";
 
-	pBackGround = CUIImage::Create(m_pDevice, m_pContext);
-	if (nullptr == pBackGround)
+	auto pStartButton = CUIButton::Create(m_pDevice, m_pContext);
+	if (nullptr == pStartButton)
 		return E_FAIL;
-	AddChildUI(pBackGround, &BackGroundDesc);
+	AddChildUI(pStartButton, &BackGroundDesc);
 
 	return S_OK;
 }

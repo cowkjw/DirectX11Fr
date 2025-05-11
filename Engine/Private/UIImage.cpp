@@ -29,6 +29,10 @@ HRESULT CUIImage::Initialize(void* pArg)
 	m_strTextureKey = pDesc->strTextureKey;
 	m_strShaderKey = pDesc->strShaderKey;
 
+	if (m_strShaderKey.empty()|| m_strTextureKey.empty())
+		return E_FAIL;
+		
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
@@ -58,7 +62,7 @@ HRESULT CUIImage::Render()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_iTextureIndex)))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Begin(0)))
@@ -78,6 +82,8 @@ HRESULT CUIImage::Ready_Components()
 {
 	if (FAILED(CGameObject::Add_Component(TEXT("Com_Texture"), m_pGameInstance->GetTexture(m_strTextureKey, true), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
+
+	m_iNumTextures = m_pTextureCom->Get_NumTextures();
 
 	if (FAILED(CGameObject::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(m_strShaderKey, true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;

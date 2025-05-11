@@ -4,6 +4,7 @@
 #include "Level_Loading.h"
 #include "BackGround.h"
 #include "TitleCanvas.h"
+#include <UIButton.h>
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		: CLevel { pDevice, pContext }
 {
@@ -15,18 +16,29 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
+
+ auto pStartButton = dynamic_cast<CUIButton*>(m_pGameInstance->Get_UI(TEXT("TitleCanvas"), TEXT("StartButton")));
+
+ if (pStartButton)
+ {
+	 pStartButton->Set_OnClick([this]() {
+		 StartGamePlay();
+		 });
+ }
+
+
 	return S_OK;
 }
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
 
-	if (m_pGameInstance->IsKeyPressed(VK_SPACE))
+	/*if (m_pGameInstance->IsKeyPressed(VK_SPACE))
 	{
 		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
 			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY))))
 			return;
-	}
+	}*/
 
 	if (m_pGameInstance->IsKeyPressed('E'))
 	{
@@ -78,6 +90,13 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _wstring strLayerTag)
     m_pGameInstance->AddCanvasUI(pUICanvas);
 
     return S_OK;
+}
+
+void CLevel_Logo::StartGamePlay()
+{
+	if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
+		CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY))))
+		return;
 }
 
 

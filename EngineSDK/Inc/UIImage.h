@@ -18,11 +18,17 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+public:
+	void Set_TextureIndex(_uint iIndex) {
+		if (m_iNumTextures > iIndex)
+			m_iTextureIndex = iIndex; }
 protected:
 	CShader* m_pShaderCom = { nullptr };
 	CTexture* m_pTextureCom = { nullptr };
 	_wstring m_strTextureKey{};
 	_wstring m_strShaderKey{};
+	_uint m_iNumTextures{ 0 };
+	_uint m_iTextureIndex{ 0 };
 
 protected:
 	HRESULT Ready_Components();

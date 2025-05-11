@@ -17,6 +17,8 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void Set_OnClick(function<void()> OnClick) { m_OnClick = OnClick; }
 private:
 	void CheckMouseOver();
 
@@ -25,6 +27,7 @@ private:
 	_bool m_bHovered = false;
 	_bool m_bPressed = false;
 	CUIImage* m_pButtonImage{ nullptr };
+	CUIImage* m_pButtonImageHover{ nullptr };
 
 public:
 	static CUIButton* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
