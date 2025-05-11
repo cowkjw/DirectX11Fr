@@ -22,7 +22,6 @@ HRESULT CRenderer::Initialize()
 	HRESULT hr = m_pDevice->CreateDepthStencilState(&dsDesc, &m_pNoDepthState);
 	if (FAILED(hr))
 		return hr;
-	Safe_AddRef(m_pNoDepthState);
 	return S_OK;
 }
 
@@ -139,6 +138,7 @@ void CRenderer::Free()
 
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+	m_pContext->OMSetDepthStencilState(nullptr, 0);
 	Safe_Release(m_pNoDepthState);
 
 	for (auto& ObjectList : m_RenderObjects)

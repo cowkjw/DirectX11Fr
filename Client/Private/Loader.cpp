@@ -65,6 +65,9 @@ HRESULT CLoader::Loading()
 	case LEVEL::GAMEPLAY:
 		hr = Loading_For_GamePlay();
 		break;
+	case LEVEL::EDITOR:
+		hr = Loading_For_Editor();
+		break;
 	}
 	LeaveCriticalSection(&m_CriticalSection);
 
@@ -196,6 +199,23 @@ HRESULT CLoader::Loading_For_GamePlay()
 	m_isFinished = true;
 
 	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Editor()
+{
+	//CJsonLoader jsonLoader;
+	//jsonLoader.Load_Textures("../Asset/Json/Textures.json", [&]() {
+	//	// 이곳에 로드 후 처리할 작업을 추가합니다.
+	//	});
+
+	//jsonLoader.Free();
+
+
+	/* For.Prototype_GameObject_Camera_Free */
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::EDITOR), TEXT("Prototype_GameObject_Camera_Free"),
+		CFreeCamera::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	m_isFinished = true;
 
 	return S_OK;
 }

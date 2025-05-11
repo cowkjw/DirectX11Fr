@@ -53,6 +53,8 @@ public:
 		return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix));
 	}
 
+	const auto& Get_WorldMatrix()  { return m_WorldMatrix; } // float4x4
+
 public:
 	void LookAt(_fvector vAt);
 

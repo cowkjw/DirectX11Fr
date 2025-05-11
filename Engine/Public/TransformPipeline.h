@@ -15,9 +15,9 @@ private:
 	virtual ~CTransformPipeline() = default;
 
 public:
-	void Set_Transform(TRANSNFORM eState, _fmatrix TransformMatrix);
-	const _float4x4* Get_Transform_Float4x4(TRANSNFORM eState) const;
-	const _matrix Get_Transform_Matrix(TRANSNFORM eState) const;
+	void Set_Transform(TRANSFORM eState, _fmatrix TransformMatrix);
+	const _float4x4* Get_Transform_Float4x4(TRANSFORM eState) const;
+	const _matrix Get_Transform_Matrix(TRANSFORM eState) const;
 	const _float4* Get_CamPosition() const;
 
 
@@ -25,8 +25,8 @@ public:
 	void Update();
 
 private:
-	_float4x4				m_TransformationMatrices[ToIndex(TRANSNFORM::END)] = {};
-	_float4x4				m_TransformationMatrixInverse[ToIndex(TRANSNFORM::END)] = {};
+	_float4x4				m_TransformationMatrices[ToIndex(TRANSFORM::END)] = {};
+	_float4x4				m_TransformationMatrixInverse[ToIndex(TRANSFORM::END)] = {};
 	_float4					m_vCamPosition = {};
 
 public:

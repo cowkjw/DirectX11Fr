@@ -44,6 +44,7 @@ private:
 public:
 	HRESULT Loading_For_Logo();
 	HRESULT Loading_For_GamePlay();
+	HRESULT Loading_For_Editor();
 
 
 public:

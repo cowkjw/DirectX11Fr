@@ -15,6 +15,9 @@ HRESULT CLevel_Editor::Initialize()
 		return E_FAIL;
 
 
+	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::EDITOR), TEXT("Prototype_GameObject_Camera_Free"),
+		ToIndex(LEVEL::EDITOR), TEXT("Layer_Camera")))
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -27,12 +30,12 @@ void CLevel_Editor::Update(_float fTimeDelta)
 
 HRESULT CLevel_Editor::Render()
 {
-	SetWindowText(g_hWnd, TEXT("에디터 레벨입니다."));
-
 	if (nullptr == m_pIMGUIMag)
 		return E_FAIL;
 	if (FAILED(m_pIMGUIMag->Render()))
 		return E_FAIL;
+
+	SetWindowText(g_hWnd, TEXT("에디터 레벨입니다."));
 
 	return S_OK;
 }
@@ -54,5 +57,7 @@ CLevel_Editor* CLevel_Editor::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
 void CLevel_Editor::Free()
 {
 	__super::Free();
+	Safe_Release(m_pIMGUIMag);
+
 
 }

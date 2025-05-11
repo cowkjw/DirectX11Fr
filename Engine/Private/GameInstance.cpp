@@ -82,7 +82,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 
 	//m_pPicking->Update();
 
-	m_pFrustumCull->Update(*m_pTransformPipeline->Get_Transform_Float4x4(TRANSNFORM::VIEW), *m_pTransformPipeline->Get_Transform_Float4x4(TRANSNFORM::PROJECTION));
+	m_pFrustumCull->Update(*m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::VIEW), *m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::PROJECTION));
 	m_pObject_Manager->Update(fTimeDelta);	
 	m_pObject_Manager->Late_Update(fTimeDelta);
 
@@ -279,16 +279,16 @@ void CGameInstance::Update_Input()
 #pragma endregion
 
 
-#pragma region TRANSNFORM_PIPELINE
-void CGameInstance::Set_Transform(TRANSNFORM eState, _fmatrix TransformMatrix)
+#pragma region TRANSFORM_PIPELINE
+void CGameInstance::Set_Transform(TRANSFORM eState, _fmatrix TransformMatrix)
 {
 	m_pTransformPipeline->Set_Transform(eState, TransformMatrix);
 }
-const _float4x4* CGameInstance::Get_Transform_Float4x4(TRANSNFORM eState) const
+const _float4x4* CGameInstance::Get_Transform_Float4x4(TRANSFORM eState) const
 {
 	return m_pTransformPipeline->Get_Transform_Float4x4(eState);
 }
-const _matrix CGameInstance::Get_Transform_Matrix(TRANSNFORM eState) const
+const _matrix CGameInstance::Get_Transform_Matrix(TRANSFORM eState) const
 {
 	return m_pTransformPipeline->Get_Transform_Matrix(eState);
 }

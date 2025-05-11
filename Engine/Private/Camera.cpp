@@ -60,8 +60,8 @@ void CCamera::Late_Update(_float fTimeDelta)
 
 HRESULT CCamera::Update_Camera()
 {
-	m_pGameInstance->Set_Transform(TRANSNFORM::VIEW ,m_pTransformCom->Get_WorldMatrix_Inverse());
-	m_pGameInstance->Set_Transform(TRANSNFORM::PROJECTION, XMMatrixPerspectiveFovLH(m_fFov, m_fAspect, m_fNear, m_fFar));
+	m_pGameInstance->Set_Transform(TRANSFORM::VIEW ,m_pTransformCom->Get_WorldMatrix_Inverse());
+	m_pGameInstance->Set_Transform(TRANSFORM::PROJECTION, XMMatrixPerspectiveFovLH(m_fFov, m_fAspect, m_fNear, m_fFar));
 
 	return S_OK;
 }

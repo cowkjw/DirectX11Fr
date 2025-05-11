@@ -7,7 +7,7 @@ class CGameInstance;
 END_NAMESPACE
 
 BEGIN_NAMESPACE(Client)
-
+class CUIController;
 class CIMGUIMag final : public CBase
 {
 private:
@@ -23,6 +23,7 @@ private:
 	CGameInstance* m_pGameInstance = {nullptr };
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
+	CUIController* m_pUIController{ nullptr };
 
 public:
 	static CIMGUIMag* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

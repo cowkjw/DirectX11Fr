@@ -26,6 +26,8 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
+	virtual void RenderInspector() {};
+
 	virtual void OnEnable() {};
 	virtual void OnDisable() {};
 
@@ -42,6 +44,7 @@ public:
 	CComponent* Get_Component(const _wstring& strComponentTag);
 
 	const _wstring& Get_Name() const { return m_strName; }
+	void Set_Name(const _wstring& name) { m_strName = name; }
 
 protected:
 	HRESULT Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg = nullptr);
@@ -50,7 +53,7 @@ protected:
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };
-	class CGameInstance* m_pGameInstance = { nullptr };
+	class CGameInstance*		m_pGameInstance = { nullptr };
 
 	CTransform*			m_pTransformCom = { nullptr };
 	map<const _wstring, class CComponent*>		m_Components;

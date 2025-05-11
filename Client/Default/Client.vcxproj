@@ -162,6 +162,7 @@
     <ClInclude Include="..\Public\Client_Function.h" />
     <ClInclude Include="..\Public\CompositeNode.h" />
     <ClInclude Include="..\public\FreeCamera.h" />
+    <ClInclude Include="..\public\Gizmo.h" />
     <ClInclude Include="..\public\IMGUIMag.h" />
     <ClInclude Include="..\public\JsonLoader.h" />
     <ClInclude Include="..\Public\Level_Editor.h" />
@@ -176,12 +177,18 @@
     <ClInclude Include="..\Public\TaskNode.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\TitleCanvas.h" />
+    <ClInclude Include="..\public\UIController.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\External Libraries\ImGuizmo-master\GraphEditor.cpp" />
+    <ClCompile Include="..\..\External Libraries\ImGuizmo-master\ImCurveEdit.cpp" />
+    <ClCompile Include="..\..\External Libraries\ImGuizmo-master\ImGradient.cpp" />
+    <ClCompile Include="..\..\External Libraries\ImGuizmo-master\ImGuizmo.cpp" />
+    <ClCompile Include="..\..\External Libraries\ImGuizmo-master\ImSequencer.cpp" />
     <ClCompile Include="..\..\External Libraries\imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="..\..\External Libraries\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="..\..\External Libraries\imgui\imgui.cpp" />
@@ -191,6 +198,7 @@
     <ClCompile Include="..\..\External Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\private\FreeCamera.cpp" />
+    <ClCompile Include="..\private\Gizmo.cpp" />
     <ClCompile Include="..\private\IMGUIMag.cpp" />
     <ClCompile Include="..\private\JsonLoader.cpp" />
     <ClCompile Include="..\Private\Level_Editor.cpp" />
@@ -202,6 +210,7 @@
     <ClCompile Include="..\private\ObserverManager.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\TitleCanvas.cpp" />
+    <ClCompile Include="..\private\UIController.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>

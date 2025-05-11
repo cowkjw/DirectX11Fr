@@ -21,6 +21,7 @@ public:
 	void AddChildUI(CUIObject* pChildUI,void* pArg = nullptr);
 	CUIObject* GetChildUI(const _wstring& uiName);
 	void RemoveChildUI(const _wstring& uiName);
+	auto& GetChildren() { return  m_vecChildUIObjects; }
 	
 private:
 	void SortChildUI();

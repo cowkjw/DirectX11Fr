@@ -58,4 +58,21 @@ namespace Engine
 	{
 		return wstring(str.begin(), str.end());
 	}
+
+	inline string WStringToString(const wstring& w) {
+		int size = ::WideCharToMultiByte(
+			CP_UTF8, 0,
+			w.c_str(), -1,
+			nullptr, 0,
+			nullptr, nullptr
+		);
+		string s(size, 0);
+		::WideCharToMultiByte(
+			CP_UTF8, 0,
+			w.c_str(), -1,
+			&s[0], size,
+			nullptr, nullptr
+		);
+		return s;
+	}
 }

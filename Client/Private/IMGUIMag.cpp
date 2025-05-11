@@ -1,4 +1,5 @@
 #include "IMGUIMag.h"
+#include "UIController.h"
 #include "GameInstance.h"
 
 CIMGUIMag::CIMGUIMag(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -17,12 +18,18 @@ HRESULT CIMGUIMag::Initialize()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();               // ImGui 컨텍스트 생성
 	ImGui::StyleColorsDark();             // 다크 테마 설정
-
+	//ImGuiIO& io = ImGui::GetIO();
+	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable   // ★ 도킹 활성화
+	//	| ImGuiConfigFlags_ViewportsEnable; // (선택) 여러 뷰포트
 	if (!ImGui_ImplWin32_Init(g_hWnd))   
 		return E_FAIL;
 	if (!ImGui_ImplDX11_Init(m_pDevice, m_pContext))
 		return E_FAIL;
 
+	m_pUIController = CUIController::Create(m_pDevice, m_pContext);
+	if (m_pUIController == nullptr)
+		return E_FAIL;
+	printf("Dear ImGui %s\n", ImGui::GetVersion());
 	return S_OK;
 }
 
@@ -35,7 +42,10 @@ void CIMGUIMag::Update(_float fTimeDelta)
 
 HRESULT CIMGUIMag::Render()
 {
-	ImGui::ShowDemoWindow();
+	//ImGui::ShowDemoWindow();
+
+	m_pUIController->Render();
+
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
     return S_OK;
@@ -62,6 +72,7 @@ void CIMGUIMag::Free()
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 
+	Safe_Release(m_pUIController);
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pGameInstance);
