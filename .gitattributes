@@ -1,2 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+Engine/ThirdPartyLib/PhysXDebug/*.dll filter=lfs diff=lfs merge=lfs -text
+Engine/ThirdPartyLib/PhysXRelease/*.dll filter=lfs diff=lfs merge=lfs -text

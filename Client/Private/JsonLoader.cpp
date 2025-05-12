@@ -73,10 +73,10 @@ HRESULT CJsonLoader::Load_Shaders(const string& filePath, function<void()> onEnt
                 iNum = VTXNORTEX::iNumElements;
             }
 
-            // LoadShader(키, 파일경로, 레이아웃, 요소 개수, useEffect)
+            // LoadShader(키, 파일경로, 레이아웃, 요소 개수, static)
             m_pGameInstance->LoadShader(
-                StringToWString(key).c_str(),
-                StringToWString(path).c_str(),
+                StringToWString(key),
+                StringToWString(path),
                 pElems,
                 iNum,
                 isStatic

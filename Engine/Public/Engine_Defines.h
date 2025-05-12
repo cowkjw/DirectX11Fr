@@ -12,6 +12,7 @@
 
 #include "Fx11/d3dx11effect.h"
 #include <d3dcompiler.h>
+#include "PhysX/PxPhysicsAPI.h"
 using namespace DirectX;
 
 #include <string>
