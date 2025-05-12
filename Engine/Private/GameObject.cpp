@@ -121,6 +121,11 @@ void CGameObject::Free()
 		Safe_Release(Pair.second);
 	m_Components.clear();
 
+	for (auto& pChild : m_vecChildren)
+	{
+		Safe_Release(pChild);
+	}
+
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
 }

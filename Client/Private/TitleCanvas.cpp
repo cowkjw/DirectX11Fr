@@ -44,7 +44,8 @@ HRESULT CTitleCanvas::Ready_ChildUI()
 	auto pBackGround = CUIImage::Create(m_pDevice, m_pContext);
 	if (nullptr == pBackGround)
 		return E_FAIL;
-	AddChildUI(pBackGround, &BackGroundDesc);
+	pBackGround->Initialize(&BackGroundDesc);
+	AddChildUI(pBackGround);
 
 	BackGroundDesc.fX = g_iWinSizeX * 0.5f;
 	BackGroundDesc.fY = g_iWinSizeY * 0.5f;
@@ -57,7 +58,8 @@ HRESULT CTitleCanvas::Ready_ChildUI()
 	pBackGround = CUIImage::Create(m_pDevice, m_pContext);
 	if (nullptr == pBackGround)
 		return E_FAIL;
-	AddChildUI(pBackGround, &BackGroundDesc);
+	pBackGround->Initialize(&BackGroundDesc);
+	AddChildUI(pBackGround);
 
 	BackGroundDesc.fX = g_iWinSizeX * 0.8f;
 	BackGroundDesc.fY = g_iWinSizeY * 0.3f;
@@ -70,8 +72,8 @@ HRESULT CTitleCanvas::Ready_ChildUI()
 	auto pStartButton = CUIButton::Create(m_pDevice, m_pContext);
 	if (nullptr == pStartButton)
 		return E_FAIL;
-	AddChildUI(pStartButton, &BackGroundDesc);
-
+	pStartButton->Initialize(&BackGroundDesc);
+	AddChildUI(pStartButton);
 	return S_OK;
 }
 
@@ -100,9 +102,9 @@ CGameObject* CTitleCanvas::Clone(void* pArg)
 void CTitleCanvas::Free()
 {
 	__super::Free();
-	for (auto& pChild : m_vecChildUIObjects)
+	for (auto& pChild :  m_vecChildren)
 	{
 		Safe_Release(pChild);
 	}
-	m_vecChildUIObjects.clear();
+	m_vecChildren.clear();
 }

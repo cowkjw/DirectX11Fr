@@ -129,6 +129,8 @@ void CGameInstance::Clear(_uint iLevelIndex)
 
 	/* 특정 레벨의 원형객을 삭제한다. */
 	m_pPrototype_Manager->Clear(iLevelIndex);
+
+	m_pResourceMag->Clear();
 }
 
 
@@ -401,6 +403,14 @@ CVIBuffer* CGameInstance::LoadBuffer(const _wstring& key, BUFFER_TYPE eType, _bo
 	{
 		return m_pResourceMag->LoadDynamicBuffer(key, eType);
 	}
+}
+const vector<_wstring>& CGameInstance::GetShaderKeys(_bool bIsStatic) const
+{
+	return m_pResourceMag->GetShaderKeys(bIsStatic);
+}
+const vector<_wstring>& CGameInstance::GetTextureKeys(_bool bIsStatic) const
+{
+	return m_pResourceMag->GetTextureKeys(bIsStatic);
 }
 #pragma endregion
 

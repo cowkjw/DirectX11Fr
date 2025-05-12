@@ -15,7 +15,7 @@ CUIButton::CUIButton(const CUIButton& Prototype)
 
 HRESULT CUIButton::Initialize_Prototype()
 {
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT CUIButton::Initialize(void* pArg)
@@ -26,17 +26,17 @@ HRESULT CUIButton::Initialize(void* pArg)
 	m_pButtonImage = CUIImage::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pButtonImage)
 		return E_FAIL;
-	if(FAILED(m_pButtonImage->Initialize(pArg))) // ½¦ÀÌ´õ¶û ÅØ½ºÃÄ Å° ÇÒ´ç 
+	if (FAILED(m_pButtonImage->Initialize(pArg))) // ½¦ÀÌ´õ¶û ÅØ½ºÃÄ Å° ÇÒ´ç 
 		return E_FAIL;
 	Safe_AddRef(m_pButtonImage);
-    return S_OK;
+	return S_OK;
 }
 
 void CUIButton::Priority_Update(_float fTimeDelta)
 {
 	CheckMouseOver();
-	if(m_pButtonImage)
-	m_pButtonImage->Priority_Update(fTimeDelta);
+	if (m_pButtonImage)
+		m_pButtonImage->Priority_Update(fTimeDelta);
 }
 
 void CUIButton::Update(_float fTimeDelta)
@@ -56,7 +56,8 @@ void CUIButton::Late_Update(_float fTimeDelta)
 		if (m_pGameInstance->IsMousePressed(0))
 		{
 			m_bPressed = true;
-			m_OnClick();
+			if (m_OnClick)
+				m_OnClick();
 		}
 		else
 		{
@@ -69,19 +70,19 @@ HRESULT CUIButton::Render()
 {
 	if (m_pButtonImage)
 		m_pButtonImage->Render();
-    return S_OK;
+	return S_OK;
 }
 
 void CUIButton::CheckMouseOver()
 {
-    POINT pt = m_pGameInstance->GetMousePos();
+	POINT pt = m_pGameInstance->GetMousePos();
 
-    _float left = m_fX - m_fSizeX * 0.5f;
-    _float right = m_fX + m_fSizeX * 0.5f;
-    _float top = m_fY - m_fSizeY * 0.5f;
-    _float bottom = m_fY + m_fSizeY * 0.5f;
+	_float left = m_fX - m_fSizeX * 0.5f;
+	_float right = m_fX + m_fSizeX * 0.5f;
+	_float top = m_fY - m_fSizeY * 0.5f;
+	_float bottom = m_fY + m_fSizeY * 0.5f;
 
-    m_bHovered = (pt.x >= left && pt.x <= right && pt.y >= top && pt.y <= bottom);
+	m_bHovered = (pt.x >= left && pt.x <= right && pt.y >= top && pt.y <= bottom);
 }
 
 CUIButton* CUIButton::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

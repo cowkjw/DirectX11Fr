@@ -34,10 +34,9 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void SetParent(CUIObject* pParent) { m_pParent = pParent; }
 	void SetSortingOrder(_uint iSorting) { m_iSortingOrder = iSorting; }
 	_uint GetSortingOrder() { return m_iSortingOrder; }
-	CUIObject* GetParent() { return m_pParent; }
+
 
 protected:
 	/* 뷰포트 상의 유아이의 중심위치 fX, fY, 사이즈 fSiuzeX, fSizeY */
@@ -47,7 +46,6 @@ protected:
 	_float4x4		m_ViewMatrix{}, m_ProjMatrix{};
 	_uint       m_iSortingOrder{0UL};
 	class CVIBuffer_Rect* m_pVIBufferCom{ nullptr };
-	CUIObject*      m_pParent{ nullptr };
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

@@ -46,6 +46,28 @@ public:
 	const _wstring& Get_Name() const { return m_strName; }
 	void Set_Name(const _wstring& name) { m_strName = name; }
 
+	void SetParent(CGameObject* pParent) { m_pParent = pParent; }
+	CGameObject* GetParent() { return m_pParent; }
+	auto GetChildren() const { return m_vecChildren; }
+	void AddChild(CGameObject* pGameObject)
+	{
+		if (!pGameObject) return;
+		m_vecChildren.push_back(pGameObject);
+		pGameObject->SetParent(this);
+	}
+	void RemoveChild(CGameObject* pGameObject)
+	{
+		auto newEnd = remove_if(m_vecChildren.begin(), m_vecChildren.end(),
+			[&](CGameObject* child) { return child == pGameObject; });
+		if (newEnd != m_vecChildren.end())
+		{
+			m_vecChildren.erase(newEnd, m_vecChildren.end());
+			pGameObject->SetParent(nullptr);
+		}
+	}
+
+	CTransform* GetTransform() const { return m_pTransformCom; }
+
 protected:
 	HRESULT Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg = nullptr);
 	HRESULT Add_Component(const _wstring& strComponentTag, CComponent* pComponent, CComponent** ppOut);
@@ -62,6 +84,10 @@ protected:
 	_bool m_bIsCloned = { false };
 	_wstring m_strName{};
 	_wstring m_strTag;
+
+	CGameObject* m_pParent{ nullptr };
+	vector<CGameObject*> m_vecChildren;
+
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;

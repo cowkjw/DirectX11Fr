@@ -203,12 +203,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 HRESULT CLoader::Loading_For_Editor()
 {
-	//CJsonLoader jsonLoader;
-	//jsonLoader.Load_Textures("../Asset/Json/Textures.json", [&]() {
-	//	// 이곳에 로드 후 처리할 작업을 추가합니다.
-	//	});
+	CJsonLoader jsonLoader;
+	jsonLoader.Load_Textures("../Asset/Json/Textures.json", [&]() {
+		// 이곳에 로드 후 처리할 작업을 추가합니다.
+		});
 
-	//jsonLoader.Free();
+	jsonLoader.Free();
 
 
 	/* For.Prototype_GameObject_Camera_Free */

@@ -60,7 +60,7 @@ namespace Engine
 	}
 
 	inline string WStringToString(const wstring& w) {
-		int size = ::WideCharToMultiByte(
+	/*	int size = ::WideCharToMultiByte(
 			CP_UTF8, 0,
 			w.c_str(), -1,
 			nullptr, 0,
@@ -73,6 +73,10 @@ namespace Engine
 			&s[0], size,
 			nullptr, nullptr
 		);
+		return s;*/
+		wstring_convert<codecvt_utf8<wchar_t>> converter;
+		string s = converter.to_bytes(w);
 		return s;
+
 	}
 }

@@ -14,7 +14,7 @@ public:
 
     enum class Operation { TRANSLATE, ROTATE, SCALE };
 
-    static void Manipulate(CTransform* pTransform, Operation op = Operation::TRANSLATE, const _float* snap = nullptr);
+    static void Manipulate(CTransform* pTransform, Operation op, _bool isOrtho, const _float* snap = nullptr);
 };
 
 

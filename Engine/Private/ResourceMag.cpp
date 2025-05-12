@@ -18,6 +18,7 @@ void CResourceMag::RegisterDynamicShader(const _wstring& key, CShader* pShader)
 	if (iter == m_dynamicShaders.end())
 	{
 		m_dynamicShaders.emplace(key, pShader);
+		m_DynamicShaderKeyList.push_back(key);
 	}
 	else
 	{
@@ -32,6 +33,7 @@ void CResourceMag::RegisterDynamicTexture(const _wstring& key, CTexture* pTextur
 	if (iter == m_dynamicTextures.end())
 	{
 		m_dynamicTextures.emplace(key, pTexture);
+		m_DynamicTextureKeyList.push_back(key);
 	}
 	else
 	{
@@ -61,6 +63,7 @@ void CResourceMag::RegisterStaticShader(const _wstring& key, CShader* pShader)
 	if (iter == m_staticShaders.end())
 	{
 		m_staticShaders.emplace(key, pShader);
+		m_StaticShaderKeyList.push_back(key);
 	}
 	else
 	{
@@ -75,6 +78,7 @@ void CResourceMag::RegisterStaticTexture(const _wstring& key, CTexture* pTexture
 	if (iter == m_staticTextures.end())
 	{
 		m_staticTextures.emplace(key, pTexture);
+		m_StaticTextureKeyList.push_back(key);
 	}
 	else
 	{

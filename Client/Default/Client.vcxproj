@@ -177,7 +177,7 @@
     <ClInclude Include="..\Public\TaskNode.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\TitleCanvas.h" />
-    <ClInclude Include="..\public\UIController.h" />
+    <ClInclude Include="..\public\EditorManager.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -210,7 +210,7 @@
     <ClCompile Include="..\private\ObserverManager.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\TitleCanvas.cpp" />
-    <ClCompile Include="..\private\UIController.cpp" />
+    <ClCompile Include="..\private\EditorManager.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -57,7 +57,6 @@ void CLevel_Logo::Update(_float fTimeDelta)
 		SetWindowTextA(g_hWnd, buf);
 	}
 
-	int a = 0;
 
 }
 

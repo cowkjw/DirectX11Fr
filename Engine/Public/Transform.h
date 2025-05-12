@@ -55,6 +55,8 @@ public:
 
 	const auto& Get_WorldMatrix()  { return m_WorldMatrix; } // float4x4
 
+	void Set_WorldMatrix(_float4x4 worldMatrix) { m_WorldMatrix = worldMatrix; }
+
 public:
 	void LookAt(_fvector vAt);
 

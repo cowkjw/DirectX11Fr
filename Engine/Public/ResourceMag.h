@@ -14,6 +14,9 @@ private:
 	virtual ~CResourceMag() = default;
 
 public:
+
+    HRESULT Initialize();
+
 	// 동적 리소스 등록
 
 	void RegisterDynamicShader(const _wstring& key, CShader* pShader);
@@ -50,7 +53,11 @@ public:
     // 레벨 언로드 시 동적 리소스만 삭제
     void Clear();
 
-	HRESULT Initialize();
+    const vector<_wstring>& GetShaderKeys(_bool bIsStatic = true) const { return  bIsStatic ? m_StaticShaderKeyList  : m_DynamicShaderKeyList; }
+    const vector<_wstring>& GetTextureKeys(_bool bIsStatic = true) const { return  bIsStatic ? m_StaticTextureKeyList : m_DynamicTextureKeyList; }
+
+
+
 private:
 
     unordered_map<_wstring, CShader*>   m_staticShaders;
@@ -60,6 +67,12 @@ private:
     unordered_map<_wstring, CShader*>   m_dynamicShaders;
     unordered_map<_wstring, CTexture*>  m_dynamicTextures;
     unordered_map<_wstring, CVIBuffer*>   m_dynamicBuffers;
+    
+    vector<_wstring> m_StaticShaderKeyList;
+    vector<_wstring> m_DynamicShaderKeyList;
+
+    vector<_wstring> m_StaticTextureKeyList;
+    vector<_wstring> m_DynamicTextureKeyList;
 
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };

@@ -23,6 +23,8 @@ using namespace DirectX;
 #include <algorithm>
 #include <shobjidl.h> // IFileOpenDialog 사용을 위한 헤더
 #include <set>
+#include <codecvt> // for wstring_convert
+#include <locale>  // for codecvt_utf8
 #include <unordered_map>
 #include <unordered_set>
 

@@ -38,6 +38,7 @@ namespace Client
 extern HWND g_hWnd;
 extern HINSTANCE g_hInst;
 
+
 using namespace ImGui;
 using namespace Client;
 using json = nlohmann::json;

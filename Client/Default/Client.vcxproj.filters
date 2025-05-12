@@ -156,7 +156,7 @@
     <ClInclude Include="..\Public\Level_Editor.h">
       <Filter>00.Levels\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UIController.h">
+    <ClInclude Include="..\public\EditorManager.h">
       <Filter>97.IMGUI\Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Gizmo.h">
@@ -240,7 +240,7 @@
     <ClCompile Include="..\Private\Level_Editor.cpp">
       <Filter>00.Levels\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UIController.cpp">
+    <ClCompile Include="..\private\EditorManager.cpp">
       <Filter>97.IMGUI\Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Gizmo.cpp">

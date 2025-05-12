@@ -2,49 +2,60 @@
 #include "Transform.h"
 #include "GameInstance.h"
 
-void CGizmo::Manipulate(CTransform* pTransform, Operation op, const _float* snap)
+void CGizmo::Manipulate(CTransform* pTransform, Operation op, _bool isOrtho, const _float* snap)
 {
     if (!pTransform) return;
 
-    ImGui::NewFrame();
     ImGuizmo::BeginFrame();
-
     auto& io = ImGui::GetIO();
-    ImGuizmo::SetOrthographic(false);
+
+    // 투영 모드 설정
+    ImGuizmo::SetOrthographic(isOrtho);
     ImGuizmo::SetDrawlist();
     ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 
-    static auto pGameIns = CGameInstance::Get_Instance();
+    _float matV[16], matP[16], matW[16];
 
-    _float matW[16], matV[16], matP[16];
-
-
-    XMMATRIX xmView = pGameIns->Get_Transform_Matrix(TRANSFORM::VIEW);
-    XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(matV), xmView);
-
-    // proj
-    XMMATRIX xmProj = pGameIns->Get_Transform_Matrix(TRANSFORM::PROJECTION);
-    XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(matP), xmProj);
-   // memcpy(matW, &pTransform->GetMatrix(), sizeof(matW));
+    // 1) 뷰 매트릭스
+    XMMATRIX xmV = isOrtho
+        ? XMMatrixIdentity()   // UI용, 혹은 별도 직교 뷰
+        : CGameInstance::Get_Instance()->Get_Transform_Matrix(TRANSFORM::VIEW);
+    XMStoreFloat4x4((XMFLOAT4X4*)matV, xmV);
 
 
+    // 2) 프로젝션 매트릭스
+    if (isOrtho)
+    {
+        // 화면 픽셀 크기에 딱 맞춘 직교 매트릭스
+        _float w = io.DisplaySize.x, h = io.DisplaySize.y;
+        XMMATRIX xmP = XMMatrixOrthographicLH(w, h, 0.1f, 1.f);
+        XMStoreFloat4x4((XMFLOAT4X4*)matP, xmP);
+    }
+    else
+    {
+        XMMATRIX xmP = CGameInstance::Get_Instance()->Get_Transform_Matrix(TRANSFORM::PROJECTION);
+        XMStoreFloat4x4((XMFLOAT4X4*)matP, xmP);
+    }
+
+    XMFLOAT4X4 worldF4x4 = pTransform->Get_WorldMatrix();
+    XMMATRIX   xmW = XMLoadFloat4x4(&worldF4x4);
+
+    //  - XMStoreFloat4x4 로 matW 에 써 줍니다.
+    XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(matW), xmW);
+
+    // 4) 조작 모드
     ImGuizmo::OPERATION gizOp =
-        (op == Operation::TRANSLATE) ? ImGuizmo::TRANSLATE :
-        (op == Operation::ROTATE) ? ImGuizmo::ROTATE :
+        op == Operation::TRANSLATE ? ImGuizmo::TRANSLATE :
+        op == Operation::ROTATE ? ImGuizmo::ROTATE :
         ImGuizmo::SCALE;
 
-    ImGuizmo::Manipulate(
-        matV, matP,
-        gizOp,
-        ImGuizmo::LOCAL,
-        matW,
-        nullptr,
-        snap
-    );
+    ImGuizmo::Manipulate(matV, matP, gizOp, ImGuizmo::WORLD, matW, nullptr, snap);
 
-    //if (ImGuizmo::IsUsing()) {
-    //    _float4x4 newW;
-    //    memcpy(&newW, matW, sizeof(newW));
-    //    pTransform->SetMatrix(newW);
-    //}
+    // 5) 드래그 중이면 트랜스폼에 반영
+    if (ImGuizmo::IsUsing())
+    {
+        XMFLOAT4X4 newW;
+        memcpy(&newW, matW, sizeof(newW));
+        pTransform->Set_WorldMatrix(newW);
+    }
 }
