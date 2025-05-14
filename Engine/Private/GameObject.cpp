@@ -42,6 +42,7 @@ HRESULT CGameObject::Add_Component(_uint iPrototypeLevelIndex, const _wstring& s
 	*ppOut = pComponent;
 
 	Safe_AddRef(pComponent);
+	pComponent->SetOwner(this);
 
 	return S_OK;
 }
@@ -55,7 +56,7 @@ HRESULT CGameObject::Add_Component(const _wstring& strComponentTag,CComponent* p
 
 	*ppOut = pComponent;
 	Safe_AddRef(pComponent);
-
+	pComponent->SetOwner(this);
 	return S_OK;
 }
 

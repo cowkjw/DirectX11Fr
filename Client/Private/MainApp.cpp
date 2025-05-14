@@ -80,6 +80,23 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	//	CShader::Create(m_pDevice, m_pContext, TEXT("../Asset/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements))))
 	//	return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_BoxCollider"),
+		CBoxCollider::Create(m_pDevice, m_pContext,m_pGameInstance->GetPhysics(),m_pGameInstance->GetDefaultMaterial(), PxVec3(0.5f)))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_CapsuleCollider"),
+		CCapsuleCollider::Create(m_pDevice, m_pContext, m_pGameInstance->GetPhysics(), m_pGameInstance->GetDefaultMaterial(), 0.5f,0.5f))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_SphereCollider"),
+		CSphereCollider::Create(m_pDevice, m_pContext, m_pGameInstance->GetPhysics(), m_pGameInstance->GetDefaultMaterial(),0.5f))))
+		return E_FAIL;
+
+	PxTransform transform = PxTransform(PxVec3(0.f, 0.f, 0.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_RigidBody"),
+		CRigidBody::Create(m_pDevice, m_pContext, m_pGameInstance->GetPhysics(), m_pGameInstance->GetDefaultMaterial(), transform))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

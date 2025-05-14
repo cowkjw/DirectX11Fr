@@ -36,6 +36,7 @@ public:
 #pragma region PROTOTYPE_MANAGER
 	HRESULT Add_Prototype(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, class CBase* pPrototype);
 	CBase* Clone_Prototype(PROTOTYPE ePrototypeType, _uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, void* pArg = nullptr);
+	map<const _wstring, class CBase*>* Get_Prototypes(_uint iLevelIndex);
 #pragma endregion
 
 #pragma region OBJECT_MANAGER
@@ -106,6 +107,15 @@ public:
 	const vector<_wstring>& GetTextureKeys(_bool bIsStatic = true) const;
 #pragma endregion
 
+#pragma region PHYSX
+	PxPhysics* GetPhysics() const;
+	PxScene* GetScene() const;
+	PxMaterial* GetDefaultMaterial();
+	PxRigidStatic* CreateRigidStatic(const PxTransform& transform);
+	PxRigidDynamic* CreateRigidDynamic(const PxTransform& transform);
+	void RegisterCollider(CPhysXCollider* pCol);
+	void UnregisterCollider(CPhysXCollider* pCol);
+#pragma endregion
 
 
 private:
@@ -121,6 +131,7 @@ private:
 	class CTransformPipeline* m_pTransformPipeline = { nullptr };
 	class CUIManager* m_pUIManager = { nullptr };
 	class CResourceMag* m_pResourceMag = { nullptr };
+	class CPhysXMag* m_pPhysXManager = { nullptr };
 
 public:
 	void Release_Engine();

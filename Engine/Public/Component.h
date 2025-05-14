@@ -18,6 +18,7 @@ public:
 public:
 	_bool IsActive() const { return m_bIsActive; }
 	void SetActive(_bool bActive) {	m_bIsActive = bActive;}
+	void SetOwner(class CGameObject* pOwner);
 
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };
@@ -25,6 +26,7 @@ protected:
 
 	_bool						m_isCloned = { false };
 	_bool m_bIsActive{ true };
+	class CGameObject* m_pOwner{ nullptr };
 public:
 	virtual CComponent* Clone(void* pArg) = 0;
 	virtual void Free() override;

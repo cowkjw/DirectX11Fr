@@ -79,6 +79,21 @@
     <Filter Include="97.IMGUI\Controller">
       <UniqueIdentifier>{4db6cc2d-11bf-4a93-899d-898eb0260ce8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.IMGUI\Pannel">
+      <UniqueIdentifier>{0a67f351-599a-4f4e-a930-10f91c05ba69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.IMGUI\Pannel\Hierarchy">
+      <UniqueIdentifier>{23e38147-90f4-45af-89d5-6554aff7c45e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.IMGUI\Pannel\Inspector">
+      <UniqueIdentifier>{947cc780-9cf5-498a-adf5-975fc0133363}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.IMGUI\Pannel\Toolbar">
+      <UniqueIdentifier>{e9b77cf9-ef29-4bc3-81f5-1ad80a760c47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Character">
+      <UniqueIdentifier>{56da4df4-d9d8-45f1-b628-c8d1edd1c187}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -156,11 +171,26 @@
     <ClInclude Include="..\Public\Level_Editor.h">
       <Filter>00.Levels\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\EditorManager.h">
-      <Filter>97.IMGUI\Controller</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Gizmo.h">
       <Filter>97.IMGUI\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Pannel.h">
+      <Filter>97.IMGUI\Pannel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Hierarchy.h">
+      <Filter>97.IMGUI\Pannel\Hierarchy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\InspectorPannel.h">
+      <Filter>97.IMGUI\Pannel\Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Toolbar.h">
+      <Filter>97.IMGUI\Pannel\Toolbar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EditorManager.h">
+      <Filter>97.IMGUI\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BaseCharacter.h">
+      <Filter>01.GameObject\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -240,9 +270,6 @@
     <ClCompile Include="..\Private\Level_Editor.cpp">
       <Filter>00.Levels\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\EditorManager.cpp">
-      <Filter>97.IMGUI\Controller</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Gizmo.cpp">
       <Filter>97.IMGUI\Controller</Filter>
     </ClCompile>
@@ -261,12 +288,33 @@
     <ClCompile Include="..\..\External Libraries\ImGuizmo-master\ImSequencer.cpp">
       <Filter>97.IMGUI\Lib</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Pannel.cpp">
+      <Filter>97.IMGUI\Pannel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Hierarchy.cpp">
+      <Filter>97.IMGUI\Pannel\Hierarchy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\InspectorPannel.cpp">
+      <Filter>97.IMGUI\Pannel\Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Toolbar.cpp">
+      <Filter>97.IMGUI\Pannel\Toolbar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EditorManager.cpp">
+      <Filter>97.IMGUI\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BaseCharacter.cpp">
+      <Filter>01.GameObject\Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTex.hlsl">
       <Filter>100.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxNorTex.hlsl">
+      <Filter>100.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxMesh.hlsl">
       <Filter>100.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

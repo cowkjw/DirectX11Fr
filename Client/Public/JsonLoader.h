@@ -16,6 +16,7 @@ public:
     HRESULT Load_Prototypes(  const string& filePath, function<void()> onEntryLoaded);
 	HRESULT Load_Shaders(const string& filePath, function<void()> onEntryLoaded);
 	HRESULT Load_Textures(const string& filePath, function<void()> onEntryLoaded);
+	HRESULT Load_Objects(const string& filePath, function<void()> onEntryLoaded);
 
 private:
 	CGameInstance* m_pGameInstance = { nullptr };   

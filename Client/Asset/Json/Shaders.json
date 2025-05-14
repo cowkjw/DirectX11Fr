@@ -11,6 +11,12 @@
       "path": "../Asset/ShaderFiles/Shader_VtxNorTex.hlsl",
       "layout": "VTXNORTEX",
       "static": true
+    },
+    {
+      "key": "Shader_VtxMesh",
+      "path": "../Asset/ShaderFiles/Shader_VtxMesh.hlsl",
+      "layout": "VTXMESH",
+      "static": true
     }
   ]
 }

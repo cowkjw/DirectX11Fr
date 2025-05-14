@@ -2,6 +2,7 @@
 
 //#include "Picking.h"
 #include "Renderer.h"
+#include "PhysXMag.h"
 #include "Level_Manager.h"
 #include "Timer_Manager.h"
 #include "Graphic_Device.h"
@@ -72,11 +73,17 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 		return E_FAIL;
 
 
+	m_pPhysXManager = CPhysXMag::Create(thread::hardware_concurrency());
+	if (nullptr == m_pPhysXManager)
+		return E_FAIL;
+
+
 	return S_OK;
 }
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
+	m_pPhysXManager->Update(fTimeDelta);
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 	m_pTransformPipeline->Update();
 
@@ -162,6 +169,10 @@ HRESULT CGameInstance::Add_Prototype(_uint iPrototypeLevelIndex, const _wstring&
 CBase* CGameInstance::Clone_Prototype(PROTOTYPE ePrototypeType, _uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, void* pArg)
 {
 	return m_pPrototype_Manager->Clone_Prototype(ePrototypeType, iPrototypeLevelIndex, strPrototypeTag, pArg);
+}
+map<const _wstring, class CBase*>* CGameInstance::Get_Prototypes(_uint iLevelIndex)
+{
+	return m_pPrototype_Manager->Get_Prototypes(iLevelIndex);
 }
 #pragma endregion
 
@@ -412,14 +423,48 @@ const vector<_wstring>& CGameInstance::GetTextureKeys(_bool bIsStatic) const
 {
 	return m_pResourceMag->GetTextureKeys(bIsStatic);
 }
+
 #pragma endregion
 
-
-
+#pragma region PHYSX
+PxPhysics* CGameInstance::GetPhysics() const
+{
+	return m_pPhysXManager->GetPhysics();
+}
+PxScene* CGameInstance::GetScene() const
+{
+	return m_pPhysXManager->GetScene();
+}
+PxMaterial* CGameInstance::GetDefaultMaterial()
+{
+	return m_pPhysXManager->GetDefaultMaterial();
+}
+PxRigidStatic* CGameInstance::CreateRigidStatic(const PxTransform& transform)
+{
+	return m_pPhysXManager->CreateRigidStatic(transform);
+}
+PxRigidDynamic* CGameInstance::CreateRigidDynamic(const PxTransform& transform)
+{
+	return m_pPhysXManager->CreateRigidDynamic(transform);
+}
+void CGameInstance::RegisterCollider(CPhysXCollider* pCol)
+{
+	if (nullptr == m_pPhysXManager)
+		return;
+	m_pPhysXManager->RegisterCollider(pCol);
+}
+void CGameInstance::UnregisterCollider(CPhysXCollider* pCol)
+{
+	if (nullptr == m_pPhysXManager)
+		return;
+	m_pPhysXManager->UnregisterCollider(pCol);
+}
+#pragma endregion
 
 void CGameInstance::Release_Engine()
 {
 	//Safe_Release(m_pPicking);
+	Safe_Release(m_pPhysXManager);
 
 	Safe_Release(m_pTransformPipeline);
 

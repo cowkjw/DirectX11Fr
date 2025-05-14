@@ -72,6 +72,27 @@ HRESULT CJsonLoader::Load_Shaders(const string& filePath, function<void()> onEnt
                 pElems = VTXNORTEX::Elements;
                 iNum = VTXNORTEX::iNumElements;
             }
+            else if (layout == "VTXMESH")
+            {
+				pElems = VTXMESH::Elements;
+				iNum = VTXMESH::iNumElements;
+			}
+			//else if (layout == "VTXANIM") {
+			//	pElems = VTXANIM::Elements;
+			//	iNum = VTXANIM::iNumElements;
+			//}
+			//else if (layout == "VTXBONE") {
+			//	pElems = VTXBONE::Elements;
+			//	iNum = VTXBONE::iNumElements;
+			//}
+			//else if (layout == "VTXCOLLIDER") {
+			//	pElems = VTXCOLLIDER::Elements;
+			//	iNum = VTXCOLLIDER::iNumElements;
+			//}
+            else
+            {
+                continue; // 지원하지 않는 레이아웃인 경우
+            }
 
             // LoadShader(키, 파일경로, 레이아웃, 요소 개수, static)
             m_pGameInstance->LoadShader(

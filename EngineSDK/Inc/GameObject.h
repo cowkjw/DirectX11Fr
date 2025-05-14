@@ -42,6 +42,7 @@ public:
 	}
 
 	CComponent* Get_Component(const _wstring& strComponentTag);
+	const map<const _wstring, class CComponent*>& GetComponents() const { return m_Components; }
 
 	const _wstring& Get_Name() const { return m_strName; }
 	void Set_Name(const _wstring& name) { m_strName = name; }
@@ -67,10 +68,11 @@ public:
 	}
 
 	CTransform* GetTransform() const { return m_pTransformCom; }
-
-protected:
-	HRESULT Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg = nullptr);
 	HRESULT Add_Component(const _wstring& strComponentTag, CComponent* pComponent, CComponent** ppOut);
+	HRESULT Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg = nullptr);
+
+	void SetPrototypeLevel(_uint iPrototypeLevel) { m_iPrototypeLevel = iPrototypeLevel; }
+	void SetCreateLevel(_uint iCreateLevel) { m_iCreateLevel = iCreateLevel; }
 
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };
@@ -83,7 +85,9 @@ protected:
 	_bool m_bIsPooled{ false };
 	_bool m_bIsCloned = { false };
 	_wstring m_strName{};
-	_wstring m_strTag;
+	_wstring m_strTag{};
+	_uint m_iPrototypeLevel{ 0 };
+	_uint m_iCreateLevel{ 0 };
 
 	CGameObject* m_pParent{ nullptr };
 	vector<CGameObject*> m_vecChildren;

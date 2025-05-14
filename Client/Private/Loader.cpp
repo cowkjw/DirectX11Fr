@@ -7,6 +7,7 @@
 #include "UICanvas.h"
 #include "Terrain.h"
 #include "JsonLoader.h"
+#include "BaseCharacter.h"
 
 //#include "player.h"
 //#include "Effect.h"
@@ -137,10 +138,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	m_pGameInstance->LoadTexture(TEXT("Terrain"), TEXT("../Asset/Resources/Textures/Terrain/Tile%d.dds"), true,2);
 
-	///* For.Prototype_Component_Texture_Player */
-	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Player"),
-	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_2D, TEXT("../Bin/Resources/Textures/Player/Player0.png"), 1))))
-	//	return E_FAIL;
+	_matrix		PreTransformMatrix = XMMatrixIdentity();
+
+	/* For.Prototype_Component_Model_Fiona */
+	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixRotationX(XMConvertToRadians(-90.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.fbx", PreTransformMatrix))))
+		return E_FAIL;
 
 	///* For.Prototype_Component_Texture_Sky */
 	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
@@ -179,6 +183,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CFreeCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Monster */
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Character"),
+		CBaseCharacter::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	///* For.Prototype_GameObject_Player */
 	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Player"),
 	//	CPlayer::Create(m_pGraphic_Device))))
@@ -214,6 +223,18 @@ HRESULT CLoader::Loading_For_Editor()
 	/* For.Prototype_GameObject_Camera_Free */
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::EDITOR), TEXT("Prototype_GameObject_Camera_Free"),
 		CFreeCamera::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	_matrix		PreTransformMatrix = XMMatrixIdentity();
+
+	/* For.Prototype_Component_Model_Fiona */
+	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationX(XMConvertToRadians(-90.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.fbx", PreTransformMatrix))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Monster */
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Character"),
+		CBaseCharacter::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	m_isFinished = true;
 

@@ -16,6 +16,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
 		ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_Camera")))
 		return E_FAIL;
+
+	if (FAILED(Ready_Layer_TestCharacter(TEXT("Layer_Character"))))
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -27,6 +30,15 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 HRESULT CLevel_GamePlay::Render()
 {
 	SetWindowText(g_hWnd, TEXT("게임플레이 레벨입니다."));
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_TestCharacter(const _wstring strLayerTag)
+{
+	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Character"),
+		ToIndex(LEVEL::GAMEPLAY), strLayerTag))
+		return E_FAIL;
 
 	return S_OK;
 }

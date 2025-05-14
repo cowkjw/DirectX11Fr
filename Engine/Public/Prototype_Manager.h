@@ -2,10 +2,15 @@
 
 #include "VIBuffer_Terrain.h"
 //#include "VIBuffer_Cube.h"
+#include "CapsuleCollider.h"
+#include "SphereCollider.h"
 #include "VIBuffer_Rect.h"
+#include "BoxCollider.h"
+#include "RigidBody.h"
 #include "Transform.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "Model.h"
 
 /* 1. 원형객체를 보관한다. */
 /* 1_1. 원형객체의 타입( CGameObject, CComponent )에 크게 영향을 받지 않는다. */
@@ -24,6 +29,11 @@ public:
 	HRESULT Add_Prototype(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, class CBase* pPrototype);
 	CBase* Clone_Prototype(PROTOTYPE ePrototypeType, _uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, void* pArg);
 	void Clear(_uint iLevelIndex);
+
+	map<const _wstring, class CBase*>* Get_Prototypes(_uint iLevelIndex)
+	{
+		return &m_pPrototypes[iLevelIndex];
+	}
 private:
 	_uint										m_iNumLevels = {};
 	map<const _wstring, class CBase*>*			m_pPrototypes = { nullptr };

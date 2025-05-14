@@ -50,6 +50,9 @@ CGameObject* CObject_Manager::Add_GameObject(_uint iPrototypeLevelIndex, const _
 	else
 		pLayer->Add_GameObject(pGameObject);
 
+	// 레벨 인덱스와 프로토타입 레벨 인덱스를 설정. (나중에 저장을 위함)
+	pGameObject->SetPrototypeLevel(iPrototypeLevelIndex);
+	pGameObject->SetCreateLevel(iLevelIndex);
 	return pGameObject;
 }
 
