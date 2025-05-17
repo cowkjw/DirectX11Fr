@@ -5,6 +5,7 @@
 CUIButton::CUIButton(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUIObject{ pDevice, pContext }
 {
+	m_eUIType = UI_TYPE::BUTTON;
 }
 
 
@@ -15,6 +16,7 @@ CUIButton::CUIButton(const CUIButton& Prototype)
 
 HRESULT CUIButton::Initialize_Prototype()
 {
+
 	return S_OK;
 }
 
@@ -47,6 +49,7 @@ void CUIButton::Update(_float fTimeDelta)
 
 void CUIButton::Late_Update(_float fTimeDelta)
 {
+	CGameObject::Late_Update(fTimeDelta);
 	if (m_pButtonImage)
 		m_pButtonImage->Late_Update(fTimeDelta);
 

@@ -7,6 +7,7 @@
 CUIImage::CUIImage(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUIObject{ pDevice, pContext }
 {
+	m_eUIType = UI_TYPE::IMAGE;
 }
 
 CUIImage::CUIImage(const CUIImage& Prototype)
@@ -49,6 +50,7 @@ void CUIImage::Update(_float fTimeDelta)
 
 void CUIImage::Late_Update(_float fTimeDelta)
 {
+	CGameObject::Late_Update(fTimeDelta);
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this);
 }
 
@@ -77,6 +79,17 @@ HRESULT CUIImage::Render()
 	return S_OK;
 
 }
+
+json CUIImage::Serialize()
+{
+	json j = CUIObject::Serialize();
+	j["TextureKey"] = WStringToString(m_strTextureKey);
+	j["ShaderKey"] = WStringToString(m_strShaderKey);
+	j["NumTextures"] = m_iNumTextures;
+	j["TextureIndex"] = m_iTextureIndex;
+	return j;
+}
+
 
 HRESULT CUIImage::Ready_Components()
 {

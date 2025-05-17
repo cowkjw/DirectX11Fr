@@ -31,6 +31,9 @@ public:
     }
     PxVec3 GetLocalOffset() const { return m_vLocalOffset; }
 
+	virtual json Serialize() override;
+	virtual void Deserialize(const json& j) override;
+
 protected:
     PxPhysics* m_pPhysics = nullptr;
     PxShape* m_pShape = nullptr;

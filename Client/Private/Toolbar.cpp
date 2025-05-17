@@ -7,6 +7,7 @@
 #include <EditorManager.h>
 #include <BaseCharacter.h>
 
+
 CToolbar::CToolbar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CPannel(pDevice, pContext)
 {
@@ -19,6 +20,8 @@ HRESULT CToolbar::Initialize()
 	SetLevelEnumToString();
     m_ShaderKeys = m_pGameInstance->GetShaderKeys();
     m_TextureKeys = m_pGameInstance->GetTextureKeys();
+    m_FilePathBuf[0] = '\0';
+
     return S_OK;
 }
 
@@ -169,11 +172,11 @@ void CToolbar::DrawToolbar()
         CGameObject* obj = nullptr;
         if (isUI)
         {
-            if (m_CurrentPrototype == "Canvas") obj = CUICanvas::Create(m_pDevice, m_pContext);
-            else if (m_CurrentPrototype == "Button") obj = CUIButton::Create(m_pDevice, m_pContext);
-            else if (m_CurrentPrototype == "Image")  obj = CUIImage::Create(m_pDevice, m_pContext);
-            else if (m_CurrentPrototype == "Bar")    obj = CUIProgressBar::Create(m_pDevice, m_pContext);
-            if (obj) obj->Initialize(&uiDesc);
+			
+            if (m_CurrentPrototype == "Canvas") obj = m_pGameInstance->CreateUI(&uiDesc, UI_TYPE::CANVAS);
+            else if (m_CurrentPrototype == "Button") obj = m_pGameInstance->CreateUI(&uiDesc, UI_TYPE::BUTTON);
+            else if (m_CurrentPrototype == "Image")  obj = m_pGameInstance->CreateUI(&uiDesc, UI_TYPE::IMAGE);
+            else if (m_CurrentPrototype == "Bar")    obj = m_pGameInstance->CreateUI(&uiDesc, UI_TYPE::BAR);
         }
         else
         {
@@ -189,12 +192,67 @@ void CToolbar::DrawToolbar()
         if (obj) 
         {
             CEditorManager::m_vecSceneObjects.push_back(obj);
-            if (auto pCanvas = dynamic_cast<CUICanvas*>(obj))
-            {
-                m_pGameInstance->AddCanvasUI(pCanvas);
-            }
         }
     }
+
+
+    ImGui::Separator();
+    ImGui::InputText("Scene Path", m_FilePathBuf, IM_ARRAYSIZE(m_FilePathBuf), ImGuiInputTextFlags_ReadOnly);
+    ImGui::SameLine();
+    if (ImGui::Button("..."))  // 파일 다이얼로그 버튼
+    {
+        // OPENFILENAME 구조체 초기화
+        OPENFILENAMEA ofn{};
+        ofn.lStructSize = sizeof(ofn);
+        ofn.hwndOwner = GetActiveWindow();           // ImGui 창의 HWND를 넘겨주세요
+        ofn.lpstrFilter = "JSON Files\0*.json\0All Files\0*.*\0";
+        ofn.lpstrFile = m_FilePathBuf;               // 선택된 파일 경로 버퍼
+        ofn.nMaxFile = sizeof(m_FilePathBuf);
+        ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
+
+        // 열기 대화상자 표시
+        if (GetOpenFileNameA(&ofn))
+        {
+            // m_FilePathBuf가 선택된 파일 경로로 업데이트됩니다.
+        }
+    }
+
+    // Save 버튼 클릭 시
+    if (ImGui::Button("Save Scene"))
+    {
+        std::string path(m_FilePathBuf);
+        if (path.empty() || FAILED(m_JsonLoader.Save_Objects(path, []() {})))
+            ImGui::OpenPopup("Save Error");
+
+        if (ImGui::BeginPopup("Save Error"))
+        {
+            ImGui::Text("파일을 저장할 수 없습니다.\n경로를 확인하세요.");
+            ImGui::EndPopup();
+        }
+    }
+
+    ImGui::SameLine();
+
+    // Load 버튼 클릭 시
+    if (ImGui::Button("Load Scene"))
+    {
+        string path(m_FilePathBuf);
+        if (path.empty())
+        {
+            ImGui::OpenPopup("Load Error");
+        }
+        else
+        {
+			m_JsonLoader.Load_Objects(path, []() {});
+        }
+
+        if (ImGui::BeginPopup("Load Error"))
+        {
+            ImGui::Text("파일을 불러올 수 없습니다.\n경로 또는 포맷을 확인하세요.");
+            ImGui::EndPopup();
+        }
+    }
+
 
     ImGui::End();
 }

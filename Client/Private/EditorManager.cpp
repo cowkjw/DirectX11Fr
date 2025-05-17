@@ -26,7 +26,8 @@ CEditorManager::CEditorManager(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 HRESULT CEditorManager::Initialize()
 {
-  
+	CEditorManager::m_pSelectedObject = nullptr;
+    CEditorManager::m_vecSceneObjects.clear();
 	m_vecPannels.push_back(CHierarchy::Create(m_pDevice, m_pContext));
 	m_vecPannels.push_back(CInspectorPannel::Create(m_pDevice, m_pContext));
 	m_vecPannels.push_back(CToolbar::Create(m_pDevice, m_pContext));

@@ -21,6 +21,7 @@ public:
 	HRESULT Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppContextOut);
 	void Update_Engine(_float fTimeDelta);
 	void Clear(_uint iLevelIndex);
+	void ClearObejcts(_uint iLevelIndex);
 	HRESULT Begin_Draw();
 	HRESULT Draw();
 	HRESULT End_Draw();
@@ -91,6 +92,7 @@ public:
 	void RemoveCanvasUI(const _wstring& canvasName);
 	void RemoveUI(const _wstring& canvasName, const _wstring& uiName);
 	class CUIObject* Get_UI(const _wstring& canvasName, const _wstring& uiName);
+	CGameObject* CreateUI(void* pDesc, UI_TYPE eUIType);
 	void ClearUI();
 #pragma endregion
 

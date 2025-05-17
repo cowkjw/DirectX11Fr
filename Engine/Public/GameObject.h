@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Transform.h"
-
+#include "Serializable.h"
 BEGIN_NAMESPACE(Engine)
 
-class ENGINE_DLL CGameObject abstract : public CBase
+class ENGINE_DLL CGameObject abstract : public CBase, public ISerializable
 { public:
 	typedef struct tagGameObjectDesc : public CTransform::TRANSFORM_DESC
 	{
@@ -30,6 +30,9 @@ public:
 
 	virtual void OnEnable() {};
 	virtual void OnDisable() {};
+
+	virtual json Serialize() override;
+	virtual void Deserialize(const json& j) override;
 
 public:
 	_bool IsActive() const { return m_bIsActive; }
@@ -67,12 +70,17 @@ public:
 		}
 	}
 
+	_uint GetID() const { return m_uID; }
+
 	CTransform* GetTransform() const { return m_pTransformCom; }
 	HRESULT Add_Component(const _wstring& strComponentTag, CComponent* pComponent, CComponent** ppOut);
 	HRESULT Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg = nullptr);
 
 	void SetPrototypeLevel(_uint iPrototypeLevel) { m_iPrototypeLevel = iPrototypeLevel; }
 	void SetCreateLevel(_uint iCreateLevel) { m_iCreateLevel = iCreateLevel; }
+
+	void SetProtoTypeTag(const _wstring& strPrototypeTag) { m_strPrototypeTag = strPrototypeTag; }
+	const _wstring& GetProtoTypeTag() const { return m_strPrototypeTag; }
 
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };
@@ -86,11 +94,15 @@ protected:
 	_bool m_bIsCloned = { false };
 	_wstring m_strName{};
 	_wstring m_strTag{};
+	_wstring m_strPrototypeTag{};
 	_uint m_iPrototypeLevel{ 0 };
 	_uint m_iCreateLevel{ 0 };
 
 	CGameObject* m_pParent{ nullptr };
 	vector<CGameObject*> m_vecChildren;
+
+	static _uint s_uNextID;
+	_uint        m_uID = 0;
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

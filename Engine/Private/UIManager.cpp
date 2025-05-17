@@ -112,13 +112,13 @@ CUIObject* CUIManager::GetUI(const _wstring& canvasName, const _wstring& uiName)
 	return nullptr;
 }
 
-CUIObject* CUIManager::CreateUI(CUIObject::UIOBJECT_DESC* pDesc)
+CGameObject* CUIManager::CreateUI(CUIObject::UIOBJECT_DESC* pDesc, UI_TYPE eUIType)
 {
 	if (nullptr == pDesc)
 		return nullptr;
 
 	CUIObject* pUI = nullptr;
-	switch (pDesc->eUIType)
+	switch (eUIType)
 	{
 	case UI_TYPE::IMAGE:
 		pUI = CUIImage::Create(m_pDevice, m_pContext);
@@ -128,6 +128,11 @@ CUIObject* CUIManager::CreateUI(CUIObject::UIOBJECT_DESC* pDesc)
 		break;
 	case UI_TYPE::BAR:
 		pUI = CUIProgressBar::Create(m_pDevice, m_pContext);
+		break;
+	case UI_TYPE::CANVAS:
+		pUI = CUICanvas::Create(m_pDevice, m_pContext);
+		if (pUI)
+		   AddCanvasUI(static_cast<CUICanvas*>(pUI));
 		break;
 	}
 	if (nullptr == pUI)
@@ -140,7 +145,7 @@ CUIObject* CUIManager::CreateUI(CUIObject::UIOBJECT_DESC* pDesc)
 CUIManager* CUIManager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CUIManager* pInstance = new CUIManager(pDevice, pContext);
-	if (pInstance->Initialize())
+	if (FAILED(pInstance->Initialize()))
 	{
 		MSG_BOX("CUIManager Created Failed");
 		Safe_Release(pInstance);

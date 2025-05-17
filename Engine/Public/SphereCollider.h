@@ -13,6 +13,9 @@ public:
 	HRESULT Initialize(void* pArg) override;
 	void RenderInspector(IInspector& inspector) override;
 	void DebugDraw() override;
+
+	json Serialize() override;
+	void Deserialize(const json& j) override;
 private:
 	_float m_fRadius = 0.5f;
 

@@ -61,6 +61,40 @@ void CSphereCollider::DebugDraw()
 {
 }
 
+json CSphereCollider::Serialize()
+{
+	json j = CPhysXCollider::Serialize();
+	j["Type"] = "SphereCollider";
+	j["Radius"] = m_fRadius;
+	return j;
+}
+
+void CSphereCollider::Deserialize(const json& j)
+{
+	CPhysXCollider::Deserialize(j);
+	if (j.contains("Radius"))
+	{
+		auto radius = j["Radius"];
+		m_fRadius = radius;
+	}
+	if (j.contains("Offset"))
+	{
+		auto offset = j["Offset"];
+		m_vLocalOffset = PxVec3(offset[0], offset[1], offset[2]);
+	}
+	if (m_pShape && m_pActor)
+	{
+		m_pActor->detachShape(*m_pShape);
+		m_pShape->release();
+		m_pShape = m_pPhysics->createShape(PxSphereGeometry(m_fRadius), *m_pMaterial);
+		m_pShape->setLocalPose(PxTransform(m_vLocalOffset));
+		m_pActor->attachShape(*m_pShape);
+		// 트리거 플래그 재적용
+		SetTrigger(m_bIsTrigger);
+		m_pShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, m_bIsTrigger);
+	}
+}
+
 CSphereCollider* CSphereCollider::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, PxPhysics* pPhysx, PxMaterial* pDefaultMat, _float radius)
 {
     CSphereCollider* pInstance = new CSphereCollider(pDevice, pContext);

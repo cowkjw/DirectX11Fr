@@ -22,6 +22,8 @@ public:
 	void Set_TextureIndex(_uint iIndex) {
 		if (m_iNumTextures > iIndex)
 			m_iTextureIndex = iIndex; }
+
+	virtual json Serialize() override;
 protected:
 	CShader* m_pShaderCom = { nullptr };
 	CTexture* m_pTextureCom = { nullptr };

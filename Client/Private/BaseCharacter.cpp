@@ -46,6 +46,7 @@ void CBaseCharacter::Update(_float fTimeDelta)
 
 void CBaseCharacter::Late_Update(_float fTimeDelta)
 {
+	CGameObject::Late_Update(fTimeDelta);
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
 }
 

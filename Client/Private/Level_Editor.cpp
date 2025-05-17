@@ -15,8 +15,8 @@ HRESULT CLevel_Editor::Initialize()
 		return E_FAIL;
 
 
-	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::EDITOR), TEXT("Prototype_GameObject_Camera_Free"),
-		ToIndex(LEVEL::EDITOR), TEXT("Layer_Camera")))
+	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::STATIC), TEXT("Prototype_GameObject_Camera_Free"),
+		ToIndex(LEVEL::STATIC), TEXT("Layer_Camera")))
 		return E_FAIL;
 	return S_OK;
 }

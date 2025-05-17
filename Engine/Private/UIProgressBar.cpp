@@ -3,6 +3,7 @@
 CUIProgressBar::CUIProgressBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUIObject{ pDevice, pContext }
 {
+	m_eUIType = UI_TYPE::BAR;
 }
 
 CUIProgressBar::CUIProgressBar(const CUIProgressBar& Prototype)
@@ -12,12 +13,12 @@ CUIProgressBar::CUIProgressBar(const CUIProgressBar& Prototype)
 
 HRESULT CUIProgressBar::Initialize_Prototype()
 {
-    return E_NOTIMPL;
+    return S_OK;
 }
 
 HRESULT CUIProgressBar::Initialize(void* pArg)
 {
-    return E_NOTIMPL;
+    return S_OK;
 }
 
 void CUIProgressBar::Priority_Update(_float fTimeDelta)
@@ -30,7 +31,9 @@ void CUIProgressBar::Update(_float fTimeDelta)
 
 void CUIProgressBar::Late_Update(_float fTimeDelta)
 {
+	CGameObject::Late_Update(fTimeDelta);
 }
+
 
 HRESULT CUIProgressBar::Render()
 {

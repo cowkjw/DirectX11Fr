@@ -1,6 +1,9 @@
 #include "GameObject.h"
 #include "GameInstance.h"
 
+
+_uint CGameObject::s_uNextID = 0;
+
 CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
 	, m_pContext{ pContext }
@@ -9,6 +12,7 @@ CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pContext);
 	Safe_AddRef(m_pDevice);
+	m_uID = s_uNextID++;
 }
 
 CGameObject::CGameObject(const CGameObject& Prototype)
@@ -20,6 +24,7 @@ CGameObject::CGameObject(const CGameObject& Prototype)
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pContext);
 	Safe_AddRef(m_pDevice);
+	m_uID = s_uNextID++;
 }
 
 CComponent* CGameObject::Get_Component(const _wstring& strComponentTag)
@@ -43,6 +48,9 @@ HRESULT CGameObject::Add_Component(_uint iPrototypeLevelIndex, const _wstring& s
 
 	Safe_AddRef(pComponent);
 	pComponent->SetOwner(this);
+	pComponent->SetPrototypeLevel(iPrototypeLevelIndex);
+	pComponent->SetCreateLevel(m_iCreateLevel);
+	pComponent->SetProtoTypeTag(strPrototypeTag);
 
 	return S_OK;
 }
@@ -102,13 +110,65 @@ void CGameObject::Update(_float fTimeDelta)
 
 void CGameObject::Late_Update(_float fTimeDelta)
 {
+	if (m_pTransformCom&&m_pTransformCom->IsDirty())
+	{
+		for (auto& child : m_vecChildren)
+		{
+			if(child&&child->IsActive())
+				child->GetTransform()->FlllowParent(m_pTransformCom);
 
+		}
+		m_pTransformCom->SetDirty(false);
+	}
 }
 
 HRESULT CGameObject::Render()
 {
 
 	return S_OK;
+}
+
+json CGameObject::Serialize()
+{
+	json j;
+	j["ID"] = m_uID;
+	j["parentId"] = m_pParent ? m_pParent->GetID() : 0;
+	j["name"] = WStringToString(m_strName);
+	j["tag"] = WStringToString(m_strTag);
+	j["ProtoTypeTag"] = WStringToString(m_strPrototypeTag);
+	j["isActive"] = m_bIsActive;
+	j["ProtoLevel"] = m_iPrototypeLevel;
+	j["CreateLevel"] = m_iCreateLevel;
+	// Serialize components
+	for (const auto& pair : m_Components)
+	{
+		if (pair.second)
+		{
+			json componentJson = pair.second->Serialize();
+			j["components"][WStringToString(pair.first)] = componentJson;
+		}
+	}
+	return j;
+}
+
+void CGameObject::Deserialize(const json& j)
+{
+	m_uID = j["ID"].get<_uint>();
+	m_strName = StringToWString(j["name"].get<string>());
+	m_strTag = StringToWString(j["tag"].get<string>());
+	m_strPrototypeTag = StringToWString(j["ProtoTypeTag"].get<string>());
+	m_iPrototypeLevel = j["ProtoLevel"].get<_uint>();
+	m_iCreateLevel = j["CreateLevel"].get<_uint>();
+	m_bIsActive = j["isActive"].get<_bool>();
+	// Deserialize components
+	//for (auto& pair : m_Components)
+	//{
+	//	auto iter = j["components"].find(WStringToString(pair.first));
+	//	if (iter != j["components"].end())
+	//	{
+	//		pair.second->Deserialize(iter.value());
+	//	}
+	//}
 }
 
 void CGameObject::Free()

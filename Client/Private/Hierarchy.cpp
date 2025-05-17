@@ -55,7 +55,7 @@ void CHierarchy::DrawHierarchy()
         }
 
         // 캔버스에만 드롭 가능
-        if (isCanvas && ImGui::BeginDragDropTarget())
+        if (isUI&&isCanvas && ImGui::BeginDragDropTarget())
         {
             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_OBJ"))
             {
@@ -70,6 +70,25 @@ void CHierarchy::DrawHierarchy()
 
                     // 새 부모에 추가
                     static_cast<CUICanvas*>(obj)->AddChildUI(static_cast<CUIObject*>(dragged));
+                }
+            }
+            ImGui::EndDragDropTarget();
+        }
+        else if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_OBJ"))
+            {
+                CGameObject* dragged = *(CGameObject**)payload->Data;
+                if (dragged->GetParent() != obj)
+                {
+                    // 이전 부모에서 제거
+                    if (auto* oldP = dragged->GetParent())
+                        oldP->RemoveChild(dragged);
+                    else
+                        EraseFromVector(dragged);
+
+                    // 새 부모에 추가
+                    obj->AddChild(dragged);
                 }
             }
             ImGui::EndDragDropTarget();

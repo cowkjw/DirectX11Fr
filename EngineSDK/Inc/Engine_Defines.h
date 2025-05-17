@@ -45,7 +45,7 @@ using namespace std;
 #include "Engine_Typedef.h"
 
 #include "../../External Libraries/json.hpp"
-
+using json = nlohmann::json;
 namespace Engine
 {
 	const _wstring	g_strTransformTag = TEXT("Com_Transform");

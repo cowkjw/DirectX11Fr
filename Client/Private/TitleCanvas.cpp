@@ -40,6 +40,7 @@ HRESULT CTitleCanvas::Ready_ChildUI()
 	BackGroundDesc.strName = L"BackGround";
 	BackGroundDesc.strShaderKey = L"Shader_VtxPosTex";
 	BackGroundDesc.strTextureKey = L"TitleBack";
+	BackGroundDesc.iLevel = 3;
 
 	auto pBackGround = CUIImage::Create(m_pDevice, m_pContext);
 	if (nullptr == pBackGround)
@@ -54,6 +55,7 @@ HRESULT CTitleCanvas::Ready_ChildUI()
 	BackGroundDesc.strName = L"TitleEffect";
 	BackGroundDesc.strShaderKey = L"Shader_VtxPosTex";
 	BackGroundDesc.strTextureKey = L"TitleEffect";
+	BackGroundDesc.iLevel = 3;
 
 	pBackGround = CUIImage::Create(m_pDevice, m_pContext);
 	if (nullptr == pBackGround)
@@ -68,6 +70,7 @@ HRESULT CTitleCanvas::Ready_ChildUI()
 	BackGroundDesc.strName = L"StartButton";
 	BackGroundDesc.strShaderKey = L"Shader_VtxPosTex";
 	BackGroundDesc.strTextureKey = L"TitleLogo";
+	BackGroundDesc.iLevel = 3;
 
 	auto pStartButton = CUIButton::Create(m_pDevice, m_pContext);
 	if (nullptr == pStartButton)

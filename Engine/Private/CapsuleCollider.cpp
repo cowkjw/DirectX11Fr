@@ -56,6 +56,46 @@ void CCapsuleCollider::DebugDraw()
 {
 }
 
+json CCapsuleCollider::Serialize()
+{
+	json j = CPhysXCollider::Serialize();
+	j["Type"] = "CapsuleCollider";
+	j["Radius"] = m_fRadius;
+	j["HalfHeight"] = m_fHalfHeight;
+	return j;
+}
+
+void CCapsuleCollider::Deserialize(const json& j)
+{
+	CPhysXCollider::Deserialize(j);
+	if (j.contains("Radius") && j.contains("HalfHeight"))
+	{
+		auto radius = j["Radius"];
+		auto halfHeight = j["HalfHeight"];
+		m_fRadius = radius;
+		m_fHalfHeight = halfHeight;
+		// 이전 Shape 제거
+		if (m_pShape && m_pActor)
+		{
+			m_pActor->detachShape(*m_pShape);
+			m_pShape->release();
+			m_pShape = nullptr;
+		}
+		// 새 Shape 생성
+		m_pShape = m_pPhysics->createShape(
+			PxCapsuleGeometry(m_fRadius, m_fHalfHeight),
+			*m_pMaterial
+		);
+		m_pShape->setLocalPose(PxTransform(m_vLocalOffset));
+		// 트리거 플래그 재적용
+		SetTrigger(m_bIsTrigger);
+		m_pShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, m_bIsTrigger);
+		// 액터가 있으면 붙여주기
+		if (m_pActor)
+			m_pActor->attachShape(*m_pShape);
+	}
+}
+
 CCapsuleCollider* CCapsuleCollider::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, PxPhysics* pPhysx, PxMaterial* pDefaultMat, _float radius, _float halfHeight)
 {
     CCapsuleCollider* pInstance = new CCapsuleCollider(pDevice, pContext);

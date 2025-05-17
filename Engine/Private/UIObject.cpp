@@ -29,6 +29,7 @@ HRESULT CUIObject::Initialize(void* pArg)
 	m_fY = pDesc->fY;
 	m_fSizeX = pDesc->fSizeX;
 	m_fSizeY = pDesc->fSizeY;
+	m_iCreateLevel = pDesc->iLevel;
 
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -71,6 +72,17 @@ HRESULT CUIObject::Render()
 {
 
 	return S_OK;
+}
+
+json CUIObject::Serialize()
+{
+	json j = CGameObject::Serialize();
+	j["UI"] = true;
+	j["SortingOrder"] = m_iSortingOrder;
+	j["Position"] = { m_fX, m_fY };
+	j["Size"] = { m_fSizeX, m_fSizeY };
+	j["UIType"] = static_cast<int>(m_eUIType);
+	return j;
 }
 
 void CUIObject::Free()

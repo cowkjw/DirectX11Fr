@@ -12,13 +12,11 @@ class ENGINE_DLL CUIObject abstract : public CGameObject
 public:
 	typedef struct tagUIObjectDesc : public CGameObject::GAMEOBJECT_DESC
 	{
-		_float			fX, fY, fSizeX, fSizeY;
+		_float	 fX, fY, fSizeX, fSizeY;
 		_wstring strTextureKey;
 		_wstring strShaderKey;
 		_uint iSortingOrder;
 		_uint iLevel;
-		UI_TYPE eUIType;
-
 	}UIOBJECT_DESC;
 protected:
 	CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -37,6 +35,7 @@ public:
 	void SetSortingOrder(_uint iSorting) { m_iSortingOrder = iSorting; }
 	_uint GetSortingOrder() { return m_iSortingOrder; }
 
+	virtual json Serialize() override;
 
 protected:
 	/* 뷰포트 상의 유아이의 중심위치 fX, fY, 사이즈 fSiuzeX, fSizeY */
@@ -45,6 +44,7 @@ protected:
 	/* 직교 투영을 위한 행렬. */
 	_float4x4		m_ViewMatrix{}, m_ProjMatrix{};
 	_uint       m_iSortingOrder{0UL};
+	UI_TYPE     m_eUIType{ UI_TYPE::END };
 	class CVIBuffer_Rect* m_pVIBufferCom{ nullptr };
 
 public:

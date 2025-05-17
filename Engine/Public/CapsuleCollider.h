@@ -12,6 +12,9 @@ public:
 	HRESULT Initialize_Prototype(PxPhysics* pPhysx, PxMaterial* pDefaultMat, _float radius, _float halfHeight);
 	void RenderInspector(IInspector& inspector) override;
 	void DebugDraw() override;
+
+	json Serialize() override;
+	void Deserialize(const json& j) override;
 private:
 	_float m_fRadius = 0.5f;
 	_float m_fHalfHeight = 1.0f;

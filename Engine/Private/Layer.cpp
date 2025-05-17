@@ -30,7 +30,7 @@ void CLayer::Priority_Update(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject&&pGameObject->IsActive())
 			pGameObject->Priority_Update(fTimeDelta);
 
 	}
@@ -41,7 +41,7 @@ void CLayer::Update(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject && pGameObject->IsActive())
 			pGameObject->Update(fTimeDelta);
 
 	}
@@ -51,7 +51,7 @@ void CLayer::Late_Update(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject && pGameObject->IsActive())
 			pGameObject->Late_Update(fTimeDelta);
 
 	}

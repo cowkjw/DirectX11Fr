@@ -47,6 +47,12 @@ public:
 
 	void Turn(_fvector vAxis, _float fTimeDelta);
 
+	void FlllowParent(const CTransform* pParentTransform);
+
+
+	json Serialize() override;
+	void Deserialize(const json& j) override;
+
 public:
 	_matrix Get_WorldMatrix_Inverse() const
 	{
@@ -55,7 +61,13 @@ public:
 
 	const auto& Get_WorldMatrix()  { return m_WorldMatrix; } // float4x4
 
-	void Set_WorldMatrix(_float4x4 worldMatrix) { m_WorldMatrix = worldMatrix; }
+	void Set_WorldMatrix(_float4x4 worldMatrix) {
+		m_bDirty = true;
+		m_WorldMatrix = worldMatrix;
+	}
+
+	_bool IsDirty() const { return m_bDirty; }
+	void SetDirty(_bool bDirty) { m_bDirty = bDirty; }
 
 public:
 	void LookAt(_fvector vAt);
@@ -67,6 +79,7 @@ private:
 	_float4x4				m_WorldMatrix = {};
 	_float					m_fSpeedPerSec = {};
 	_float					m_fRotationPerSec = {};
+	_bool					m_bDirty = false;
 
 
 public:

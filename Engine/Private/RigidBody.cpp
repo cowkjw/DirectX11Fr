@@ -61,6 +61,32 @@ void CRigidBody::RenderInspector(IInspector& inspector)
     }
 }
 
+json CRigidBody::Serialize()
+{
+	
+	json j = CComponent::Serialize();
+	j["isKinematic"] = m_bIsKinematic;
+	j["useGravity"] = m_bUseGravity;
+	j["mass"] = m_fMass;
+	return j;
+}
+
+void CRigidBody::Deserialize(const json& j)
+{
+	CComponent::Deserialize(j);
+	if (j.contains("isKinematic"))
+		m_bIsKinematic = j["isKinematic"].get<_bool>();
+	if (j.contains("useGravity"))
+		m_bUseGravity = j["useGravity"].get<_bool>();
+	if (j.contains("mass"))
+		m_fMass = j["mass"].get<_float>();
+	if (m_pDynamic)
+	{
+		m_pDynamic->setMass(m_fMass);
+		m_pDynamic->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !m_bUseGravity);
+	}
+}
+
 CRigidBody* CRigidBody::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, PxPhysics* pPhysx, PxMaterial* pMat, const PxTransform& transform)
 {
     CRigidBody* pInstance = new CRigidBody(pDevice, pContext);

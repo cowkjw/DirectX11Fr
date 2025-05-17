@@ -19,6 +19,7 @@ class CEditorManager final : public CBase
 	friend class CInspectorPannel;
 	friend class CHierarchy;
 	friend class CToolbar;
+	friend class CJsonLoader;
 private:
 	CEditorManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CEditorManager() = default;
@@ -27,7 +28,6 @@ public:
 	HRESULT Initialize();
 	void Update(_float fTimeDelta);
 	HRESULT Render();
-
 private:
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };

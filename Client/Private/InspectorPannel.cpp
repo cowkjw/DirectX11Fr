@@ -100,6 +100,13 @@ void CInspectorPannel::DrawInspector()
         return;
     }
 
+	_bool bIsActive = CEditorManager::m_pSelectedObject->IsActive();
+	// 활성화 체크박스
+	if (ImGui::Checkbox("Active", &bIsActive))
+	{
+		CEditorManager::m_pSelectedObject->SetActive(bIsActive);
+	}
+
     // 이름 편집
     char nameBuf[128];
 

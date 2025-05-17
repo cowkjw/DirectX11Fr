@@ -83,7 +83,7 @@
       <Filter>01.Utility\03.Components\Buffer\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TransformPipeline.h">
-      <Filter>06. Pipeline</Filter>
+      <Filter>01.Utility\06. Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Camera.h">
       <Filter>01.Utility\02.GameObject\Camera</Filter>
@@ -138,6 +138,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Material.h">
       <Filter>01.Utility\03.Components\Model\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Serializable.h">
+      <Filter>01.Utility\98. Json</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -208,7 +211,7 @@
       <Filter>01.Utility\03.Components\Buffer\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TransformPipeline.cpp">
-      <Filter>06. Pipeline</Filter>
+      <Filter>01.Utility\06. Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Camera.cpp">
       <Filter>01.Utility\02.GameObject\Camera</Filter>
@@ -260,6 +263,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Mesh.cpp">
       <Filter>01.Utility\03.Components\Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Serializable.cpp">
+      <Filter>01.Utility\98. Json</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -341,9 +347,6 @@
     <Filter Include="01.Utility\03.Components\Buffer\Terrain">
       <UniqueIdentifier>{5655ddf7-e4be-476e-a931-3edb1c06ec48}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06. Pipeline">
-      <UniqueIdentifier>{21393b79-8252-4971-b1a1-b4fb015cd1c3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\02.GameObject\Camera">
       <UniqueIdentifier>{c44c0464-5d0c-487c-b1b4-f5f904c8d782}</UniqueIdentifier>
     </Filter>
@@ -388,6 +391,12 @@
     </Filter>
     <Filter Include="01.Utility\03.Components\Model\Mesh">
       <UniqueIdentifier>{6d79e7aa-3222-40ee-9310-1bb62494e037}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06. Pipeline">
+      <UniqueIdentifier>{21393b79-8252-4971-b1a1-b4fb015cd1c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\98. Json">
+      <UniqueIdentifier>{8f0f473d-72c0-417a-a468-440c8c262008}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

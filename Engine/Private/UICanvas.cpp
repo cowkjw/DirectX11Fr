@@ -3,6 +3,7 @@
 CUICanvas::CUICanvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUIObject(pDevice, pContext)
 {
+	m_eUIType = UI_TYPE::CANVAS;
 }
 
 CUICanvas::CUICanvas(const CUICanvas& Prototype)
@@ -13,6 +14,7 @@ CUICanvas::CUICanvas(const CUICanvas& Prototype)
 
 HRESULT CUICanvas::Initialize_Prototype()
 {
+
 	return S_OK;
 }
 

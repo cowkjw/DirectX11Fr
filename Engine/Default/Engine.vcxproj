@@ -177,6 +177,7 @@
     <ClInclude Include="..\Public\Renderer.h" />
     <ClInclude Include="..\public\ResourceMag.h" />
     <ClInclude Include="..\public\RigidBody.h" />
+    <ClInclude Include="..\public\Serializable.h" />
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\SphereCollider.h" />
     <ClInclude Include="..\Public\Texture.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="..\Private\Renderer.cpp" />
     <ClCompile Include="..\private\ResourceMag.cpp" />
     <ClCompile Include="..\private\RigidBody.cpp" />
+    <ClCompile Include="..\private\Serializable.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\SphereCollider.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />

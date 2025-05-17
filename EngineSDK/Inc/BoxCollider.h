@@ -12,6 +12,8 @@ public:
 	HRESULT Initialize_Prototype(PxPhysics* pPhysx, PxMaterial* pDefaultMat, const PxVec3& extents);
 	void RenderInspector(IInspector& inspector) override;
 	void DebugDraw() override;
+	json Serialize() override;
+	void Deserialize(const json& j) override;
 private:
 	PxVec3 m_vHalfExtents = PxVec3(0.5f);
 

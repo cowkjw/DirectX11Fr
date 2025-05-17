@@ -7,7 +7,7 @@ namespace Engine
 	enum class STATE { RIGHT, UP, LOOK, POSITION, END };
 	enum class MOUSEBUTTON { LEFT, RIGHT};
 	enum class TRANSFORM { VIEW, PROJECTION,ORTHO, END };
-	enum class UI_TYPE { IMAGE, BUTTON, BAR,CANVAS };
+	enum class UI_TYPE { IMAGE, BUTTON, BAR,CANVAS ,END};
 	enum class BUFFER_TYPE { RECT, CUBE, TERRAIN };
 	enum class RESOURCE_TYPE { TEXTURE, SHADER };
 	enum class MODEL { NONANIM, ANIM };

@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "BackGround.h"
+#include "JsonLoader.h"
 #include "TitleCanvas.h"
 #include <UIButton.h>
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -13,7 +14,7 @@ CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_Logo::Initialize()
 {
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+	/*if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
 
@@ -24,8 +25,12 @@ HRESULT CLevel_Logo::Initialize()
 	 pStartButton->Set_OnClick([this]() {
 		 StartGamePlay();
 		 });
- }
+ }*/
 
+	CJsonLoader jsonLoader;
+	jsonLoader.Load_Objects("../Asset/Json/LogoObjects.json", [&]() {
+		// 이곳에 로드 후 처리할 작업을 추가합니다.
+		});
 
 	return S_OK;
 }

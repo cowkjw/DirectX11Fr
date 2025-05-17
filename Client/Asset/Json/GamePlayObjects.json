@@ -1,0 +1,136 @@
+[
+    {
+        "CreateLevel": 3,
+        "ID": 8,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "UI": true,
+        "UIType": 3,
+        "components": {
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -640.0,
+                    360.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "Canvas",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 9,
+        "NumTextures": 1,
+        "Position": [
+            140.0,
+            292.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "TitleBack",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -303.99,
+                    72.99,
+                    0.20
+                ],
+                "Scale": [
+                    100.0,
+                    100.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "Image",
+        "parentId": 8,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 10,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Character",
+        "components": {
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    20.14
+                ],
+                "Scale": [
+                    0.10,
+                    0.10,
+                    0.10
+                ]
+            }
+        },
+        "isActive": true,
+        "name": "BaseCharacter",
+        "parentId": 0,
+        "tag": ""
+    }
+]

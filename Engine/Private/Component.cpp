@@ -38,6 +38,24 @@ void CComponent::SetOwner(CGameObject* pOwner)
 	}
 }
 
+json CComponent::Serialize()
+{
+	json j;
+	j["ComponentTag"] = WStringToString(m_strPrototypeTag);
+	j["ComponentLevel"] = m_iPrototypeLevel;
+	j["ComponentCreateLevel"] = m_iCreateLevel;
+	j["IsActive"] = m_bIsActive;
+	return j;
+}
+
+void CComponent::Deserialize(const json& j)
+{
+	m_strPrototypeTag = StringToWString(j["ComponentTag"].get<string>());
+	m_iPrototypeLevel = j["ComponentLevel"].get<_uint>();
+	m_iCreateLevel = j["ComponentCreateLevel"].get<_uint>();
+	m_bIsActive = j["IsActive"].get<_bool>();
+}
+
 
 
 void CComponent::Free()

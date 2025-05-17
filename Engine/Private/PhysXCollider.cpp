@@ -148,6 +148,31 @@ void CPhysXCollider::RenderInspector(IInspector& inspector)
 }
 
 
+json CPhysXCollider::Serialize()
+{
+	json j = CComponent::Serialize();
+	j["localOffset"] = { m_vLocalOffset.x, m_vLocalOffset.y, m_vLocalOffset.z };
+	j["isTrigger"] = m_bIsTrigger;
+
+	return j;
+}
+
+void CPhysXCollider::Deserialize(const json& j)
+{
+	CComponent::Deserialize(j);
+	if (j.contains("localOffset"))
+	{
+		auto& offset = j["localOffset"];
+		m_vLocalOffset.x = offset[0];
+		m_vLocalOffset.y = offset[1];
+		m_vLocalOffset.z = offset[2];
+	}
+	if (j.contains("isTrigger"))
+	{
+		m_bIsTrigger = j["isTrigger"];
+	}
+}
+
 CComponent* CPhysXCollider::Clone(void* pArg)
 {
 	CPhysXCollider* pInstance = new CPhysXCollider(*this);

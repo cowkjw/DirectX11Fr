@@ -24,6 +24,12 @@ public:
     }
 
     void RenderInspector(IInspector& inspector);
+	virtual json Serialize() override;
+	virtual void Deserialize(const json& j) override;
+	void SetMass(_float fMass) { m_fMass = fMass; }
+	_float GetMass() const { return m_fMass; }
+	void SetUseGravity(_bool bUseGravity) { m_bUseGravity = bUseGravity; }
+	_bool GetUseGravity() const { return m_bUseGravity; }
 
 private:
     PxRigidDynamic* m_pDynamic = nullptr;   // 물리 엔진 RigidDynamic 객체

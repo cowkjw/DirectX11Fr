@@ -140,6 +140,11 @@ void CGameInstance::Clear(_uint iLevelIndex)
 	m_pResourceMag->Clear();
 }
 
+void CGameInstance::ClearObejcts(_uint iLevelIndex)
+{/* 특정 레벨의 객체을 삭제한다. */
+	m_pObject_Manager->Clear(iLevelIndex);
+}
+
 
 _float CGameInstance::Compute_Random_Normal()
 {
@@ -177,7 +182,7 @@ map<const _wstring, class CBase*>* CGameInstance::Get_Prototypes(_uint iLevelInd
 #pragma endregion
 
 #pragma region OBJECT_MANAGER
-CGameObject* CGameInstance::Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLevelIndex, const _wstring& strLayerTag, void* pArg)
+CGameObject* CGameInstance::Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLevelIndex, const _wstring& strLayerTag, void* pArg )
 {
 	return m_pObject_Manager->Add_GameObject(iPrototypeLevelIndex, strPrototypeTag, iLevelIndex, strLayerTag, pArg);
 }
@@ -335,6 +340,10 @@ CUIObject* CGameInstance::Get_UI(const _wstring& canvasName, const _wstring& uiN
 	if (nullptr == m_pUIManager)
 		return nullptr;
 	return m_pUIManager->GetUI(canvasName, uiName);
+}
+CGameObject* CGameInstance::CreateUI(void* pDesc, UI_TYPE eUIType)
+{
+	return m_pUIManager->CreateUI(static_cast<CUIObject::UIOBJECT_DESC*>(pDesc), eUIType);
 }
 void CGameInstance::ClearUI()
 {
