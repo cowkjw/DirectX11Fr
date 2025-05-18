@@ -47,6 +47,7 @@ void CUICanvas::Update(_float fTimeDelta)
 
 void CUICanvas::Late_Update(_float fTimeDelta)
 {
+	CGameObject::Late_Update(fTimeDelta);
 	for (auto& pChild : m_vecChildren)
 	{
 		if (pChild && pChild->IsActive())

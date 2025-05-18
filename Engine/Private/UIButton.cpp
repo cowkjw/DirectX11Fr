@@ -31,6 +31,7 @@ HRESULT CUIButton::Initialize(void* pArg)
 	if (FAILED(m_pButtonImage->Initialize(pArg))) // 쉐이더랑 텍스쳐 키 할당 
 		return E_FAIL;
 	Safe_AddRef(m_pButtonImage);
+	AddChild(m_pButtonImage);
 	return S_OK;
 }
 

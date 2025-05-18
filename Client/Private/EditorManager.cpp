@@ -31,21 +31,27 @@ HRESULT CEditorManager::Initialize()
 	m_vecPannels.push_back(CHierarchy::Create(m_pDevice, m_pContext));
 	m_vecPannels.push_back(CInspectorPannel::Create(m_pDevice, m_pContext));
 	m_vecPannels.push_back(CToolbar::Create(m_pDevice, m_pContext));
+
+	_uint windowWidth = g_iWinSizeX;
+	_uint windowHeight = g_iWinSizeY;
+    if (FAILED(m_pGameInstance->CreateRenderTarget(
+       windowWidth, windowWidth,
+        &m_pGameTex, &m_pGameRTV, &m_pGameSRV, DXGI_FORMAT_B8G8R8A8_UNORM)))
+        return E_FAIL;
     return S_OK;
 }
 
 void CEditorManager::Update(_float fTimeDelta)
 {
 
-    if (m_pGameInstance->IsKeyPressed(VK_F2) && m_pSelectedObject)
-    {
-        // F2 처리 로직
-    }
     if (m_pSelectedObject)
     {
-        if (m_pGameInstance->IsKeyPressed('W')) GizmoOp = CGizmo::Operation::TRANSLATE;
-        if (m_pGameInstance->IsKeyPressed('R')) GizmoOp = CGizmo::Operation::ROTATE;
-        if (m_pGameInstance->IsKeyPressed('E')) GizmoOp = CGizmo::Operation::SCALE;
+        if (m_pGameInstance->IsKeyPressed('W')) 
+            GizmoOp = CGizmo::Operation::TRANSLATE;
+        if (m_pGameInstance->IsKeyPressed('R')) 
+            GizmoOp = CGizmo::Operation::ROTATE;
+        if (m_pGameInstance->IsKeyPressed('E')) 
+            GizmoOp = CGizmo::Operation::SCALE;
     }
 
     for (auto& pannel : m_vecPannels)
@@ -57,18 +63,54 @@ void CEditorManager::Update(_float fTimeDelta)
 
 HRESULT CEditorManager::Render()
 {
+
+    ID3D11RenderTargetView* pOldRTV = nullptr;
+    ID3D11DepthStencilView* pDSV = nullptr;
+    m_pContext->OMGetRenderTargets(1, &pOldRTV, &pDSV);
+
+   /* m_pContext->OMSetRenderTargets(1, &m_pGameRTV, pDSV);
+    _float4 vColor = _float4(0.f, 0.f, 1.f, 1.f);
+    m_pContext->ClearRenderTargetView(m_pGameRTV, (_float*)&vColor);*/
+
 	for (auto& pannel : m_vecPannels)
 	{
 		if (pannel)
 			pannel->Render();
 	}
 
+    static _float snapTranslate[3] = { 1.f, 1.f, 1.f };    // 1-unit 단위로 이동 스냅
+    static _float snapRotate[3] = { 15.f,15.f,15.f };     // 15° 단위 회전 스냅
+    static _float snapScale[3] = { 0.1f,0.1f,0.1f };     // 0.1 단위 스케일 스냅
+
     if (m_pSelectedObject)
-        CGizmo::Manipulate(
-            m_pSelectedObject->GetTransform(),
-            GizmoOp,
-            m_bOrthoGizmo
-        );
+    {
+
+    CGizmo::Manipulate(
+        m_pSelectedObject->GetTransform(),
+        GizmoOp,   // TRANSLATE, ROTATE, SCALE 중 선택
+        m_bOrthoGizmo,                  // 원근(proj)모드
+        snapTranslate,
+        snapRotate,
+        snapScale
+    );
+    }
+
+    //m_pContext->OMSetRenderTargets(1, &pOldRTV, pDSV);
+    //m_pContext->ClearRenderTargetView(pOldRTV, reinterpret_cast<const float*>(&vColor));
+
+
+    _uint windowWidth = g_iWinSizeX;
+    _uint windowHeight = g_iWinSizeY;
+    ImGui::Begin("Scene View");
+    ImGui::Image(
+        (ImTextureID) m_pGameSRV,
+        ImVec2((float)windowWidth, (float)windowHeight)
+    );
+    ImGui::End();
+
+    // 6) Cleanup
+    Safe_Release(pOldRTV);
+    Safe_Release(pDSV);
 
     return S_OK;
 }
@@ -97,4 +139,7 @@ void CEditorManager::Free()
 	for (auto& pannel : m_vecPannels)
 		Safe_Release(pannel);
 	m_vecPannels.clear();
+	Safe_Release(m_pGameTex);
+	Safe_Release(m_pGameRTV);
+	Safe_Release(m_pGameSRV);
 }

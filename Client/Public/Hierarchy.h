@@ -21,6 +21,7 @@ private:
 	void DrawHierarchy();      // ¾À ±×·¡ÇÁ
 	void DrawChildHierarchy(CGameObject* parent);
 	void EraseFromVector(CGameObject* pObj);
+	void RemoveAndDelete(CGameObject* obj);
 
 public:
 	static CHierarchy* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

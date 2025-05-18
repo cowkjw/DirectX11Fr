@@ -29,6 +29,17 @@ public:
 	_float Compute_Random_Normal();
 	_float Compute_Random(_float fMin, _float fMax);
 
+#pragma region GRAPHIC
+	HRESULT CreateRenderTarget(
+		_uint width,
+		_uint height,
+		ID3D11Texture2D** outTexture,
+		ID3D11RenderTargetView** outRTV,
+		ID3D11ShaderResourceView** outSRV,
+		DXGI_FORMAT format
+	);
+#pragma endregion
+
 #pragma region LEVEL_MANAGER
 public:
 	HRESULT Change_Level(_uint iLevelIndex, class CLevel* pNewLevel);
@@ -43,6 +54,8 @@ public:
 #pragma region OBJECT_MANAGER
 	class CGameObject* Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLevelIndex, const _wstring& strLayerTag, void* pArg = nullptr);
 	CComponent* Get_Component(_uint iLevelIndex, const _wstring& strLayerTag, const _wstring& strComponentTag, _uint iIndex = 0);
+	HRESULT Delete_GameObject(_uint iLevelIndex, CGameObject* pGameObject);
+	HRESULT Delete_GameObjectByName(_uint iLevelIndex, const _wstring& strName);
 #pragma endregion
 
 #pragma region RENDERER

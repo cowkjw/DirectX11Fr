@@ -232,11 +232,15 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxAnimMesh.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTex.hlsl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Asset\Json\GamePlayObjects.json" />
+    <None Include="..\Asset\Json\LogoObjects.json" />
+    <None Include="..\Asset\Json\Object_PrototypeTag.json" />
     <None Include="..\Asset\Json\Shaders.json" />
     <None Include="..\Asset\Json\Textures.json" />
   </ItemGroup>

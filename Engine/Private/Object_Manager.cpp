@@ -57,6 +57,24 @@ CGameObject* CObject_Manager::Add_GameObject(_uint iPrototypeLevelIndex, const _
 	return pGameObject;
 }
 
+void CObject_Manager::Delete_GameObject(_uint iLevelIndex, CGameObject* pGameObject)
+{
+	if (nullptr == pGameObject)
+		return;
+	CLayer* pLayer = Find_Layer(iLevelIndex, pGameObject->Get_Name());
+	if (nullptr == pLayer)
+		return;
+	pLayer->Remove_GameObject(pGameObject);
+}
+
+void CObject_Manager::Delete_GameObjectByName(_uint iLevelIndex, const _wstring& stName)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, stName);
+	if (nullptr == pLayer)
+		return;
+	pLayer->Remove_GameObjectByName(stName);
+}
+
 void CObject_Manager::Priority_Update(_float fTimeDelta)
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)

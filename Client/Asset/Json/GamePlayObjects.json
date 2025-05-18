@@ -26,6 +26,11 @@
                     360.0,
                     0.0
                 ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
                 "Scale": [
                     1.0,
                     1.0,
@@ -83,9 +88,14 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    -303.99,
-                    72.99,
-                    0.20
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Scale": [
                     100.0,
@@ -101,7 +111,7 @@
             }
         },
         "isActive": true,
-        "name": "Image",
+        "name": "TestImage",
         "parentId": 8,
         "tag": ""
     },
@@ -117,9 +127,14 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    0.0,
-                    0.0,
-                    20.14
+                    -6.09,
+                    -0.61,
+                    18.79
+                ],
+                "Rotation": [
+                    53.29,
+                    24.60,
+                    -73.40
                 ],
                 "Scale": [
                     0.10,

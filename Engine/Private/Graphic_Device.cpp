@@ -102,6 +102,75 @@ HRESULT CGraphic_Device::Present()
 	return m_pSwapChain->Present(0, 0);	
 }
 
+HRESULT CGraphic_Device::CreateRenderTarget(UINT width, UINT height, ID3D11Texture2D** outTexture, ID3D11RenderTargetView** outRTV, ID3D11ShaderResourceView** outSRV, DXGI_FORMAT format)
+{
+	if (!m_pDevice)
+		return E_FAIL;
+
+	// 1) Texture2D 积己
+	D3D11_TEXTURE2D_DESC td = {};
+	td.Width = width;
+	td.Height = height;
+	td.MipLevels = 1;
+	td.ArraySize = 1;
+	td.Format = format;
+	td.SampleDesc.Count = 1;
+	td.Usage = D3D11_USAGE_DEFAULT;
+	td.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+
+	HRESULT hr = m_pDevice->CreateTexture2D(&td, nullptr, outTexture);
+	if (FAILED(hr)) 
+		return hr;
+
+	// 2) RTV 积己
+	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+	rtvDesc.Format = td.Format;
+	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	hr = m_pDevice->CreateRenderTargetView(*outTexture, &rtvDesc, outRTV);
+	if (FAILED(hr)) 
+		return hr;
+
+	// 3) SRV 积己 (ImGui::Image 殿俊 荤侩)
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Format = td.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+	hr = m_pDevice->CreateShaderResourceView(*outTexture, &srvDesc, outSRV);
+	return hr;
+}
+
+HRESULT CGraphic_Device::CreateSceneViewRT(_uint width, _uint height, DXGI_FORMAT format)
+{
+	// 1) Texture2D
+	D3D11_TEXTURE2D_DESC td = {};
+	td.Width = width;
+	td.Height = height;
+	td.MipLevels = 1;
+	td.ArraySize = 1;
+	td.Format = format;
+	td.SampleDesc.Count = 1;
+	td.Usage = D3D11_USAGE_DEFAULT;
+	td.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+
+	HRESULT hr = m_pDevice->CreateTexture2D(&td, nullptr, &m_pSceneViewTex);
+	if (FAILED(hr)) return hr;
+
+	// 2) RTV
+	D3D11_RENDER_TARGET_VIEW_DESC rtd = {};
+	rtd.Format = td.Format;
+	rtd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	hr = m_pDevice->CreateRenderTargetView(m_pSceneViewTex, &rtd, &m_pSceneViewRTV);
+	if (FAILED(hr)) return hr;
+
+	// 3) SRV
+	D3D11_SHADER_RESOURCE_VIEW_DESC srd = {};
+	srd.Format = td.Format;
+	srd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srd.Texture2D.MipLevels = 1;
+	hr = m_pDevice->CreateShaderResourceView(m_pSceneViewTex, &srd, &m_pSceneViewSRV);
+	return hr;
+}
+
 
 HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, _bool isWindowed, _uint iWinCX, _uint iWinCY)
 {

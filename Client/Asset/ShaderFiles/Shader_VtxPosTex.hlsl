@@ -48,7 +48,7 @@ VS_OUT VS_MAIN(VS_IN In)
     
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     Out.vTexcoord = In.vTexcoord;    
-    
+
     return Out;
 }
 
@@ -92,7 +92,8 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out;    
     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord); 
-    
+    if (Out.vColor.a < 0.09f)
+        discard;
     return Out;    
 }
 

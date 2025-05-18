@@ -17,6 +17,12 @@
       "path": "../Asset/ShaderFiles/Shader_VtxMesh.hlsl",
       "layout": "VTXMESH",
       "static": true
+    },
+    {
+      "key": "Shader_VtxAnimMesh",
+      "path": "../Asset/ShaderFiles/Shader_VtxAnimMesh.hlsl",
+      "layout": "VTXANIMMESH",
+      "static": true
     }
   ]
 }

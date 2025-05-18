@@ -122,6 +122,15 @@ void CGameObject::Late_Update(_float fTimeDelta)
 	}
 }
 
+void CGameObject::AddChild(CGameObject* pGameObject)
+{
+	if (nullptr == pGameObject)
+		return;
+	m_vecChildren.push_back(pGameObject);
+	pGameObject->SetParent(this);
+	m_pTransformCom->Set_Parent(pGameObject);
+}
+
 HRESULT CGameObject::Render()
 {
 

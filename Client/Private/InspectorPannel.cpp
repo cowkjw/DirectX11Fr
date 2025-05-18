@@ -117,13 +117,13 @@ void CInspectorPannel::DrawInspector()
     // Transform 편집
     CTransform* trans = CEditorManager::m_pSelectedObject->GetTransform();
     _vector pos = trans->Get_State(STATE::POSITION);
-    // XMFLOAT3 rot = trans->GetRotation();
+     _float3 rot = trans->Get_EulerAngles();
     _float3 scl = trans->Get_Scaled();
     // 슬라이드 거리 설정
     if (ImGui::DragFloat3("Position", reinterpret_cast<_float*>(&pos), 0.1f, -10000.f, 10000.f))
         trans->Set_State(STATE::POSITION, pos);
-    /*  if (ImGui::InputFloat3("Rotation", reinterpret_cast<float*>(&rot)))
-          trans->SetRotation(rot);*/
+      if (ImGui::DragFloat3("Rotation", reinterpret_cast<float*>(&rot), 0.1f, -10000.f, 10000.f))
+          trans->Rotate_EulerAngles(rot);
     if (ImGui::DragFloat3("Scale", reinterpret_cast<_float*>(&scl), 0.1f, 0.1f, 1000.f))
         trans->Scaling(scl);
 

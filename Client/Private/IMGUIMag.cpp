@@ -37,6 +37,7 @@ void CIMGUIMag::Update(_float fTimeDelta)
 	ImGui_ImplWin32_NewFrame();
 	ImGui_ImplDX11_NewFrame();
 	ImGui::NewFrame();
+	m_pEditorMag->Update(fTimeDelta);
 }
 
 HRESULT CIMGUIMag::Render()

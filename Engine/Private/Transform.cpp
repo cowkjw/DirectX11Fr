@@ -1,5 +1,5 @@
 #include "Transform.h"
-
+#include "GameObject.h"
 #include "Shader.h"
 
 CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -108,6 +108,37 @@ void CTransform::Follow_Target(_fvector vTarget, _float fTimeDelta, _float fMinD
 	m_bDirty = true;
 }
 
+void CTransform::Rotate_EulerAngles(const _float3& vEulerAngles)
+{
+	m_vEulerAngles = vEulerAngles;
+
+	// 2) Degree → Radian 변환 후 쿼터니언 생성
+	XMVECTOR q = XMQuaternionRotationRollPitchYaw(
+		XMConvertToRadians(vEulerAngles.x),  // Pitch (X축 회전)
+		XMConvertToRadians(vEulerAngles.y),  // Yaw   (Y축 회전)
+		XMConvertToRadians(vEulerAngles.z)   // Roll  (Z축 회전)
+	);
+
+	// 3) 쿼터니언 → 회전 행렬
+	XMMATRIX matRotation = XMMatrixRotationQuaternion(q);
+
+	// 4) 현재 스케일 가져오기
+	_float3 vScale = Get_Scaled();
+
+	// 5) 로컬 축 벡터(1,0,0),(0,1,0),(0,0,1)를 회전 & 스케일
+	XMVECTOR right = XMVector3TransformNormal(XMVectorSet(1, 0, 0, 0), matRotation) * vScale.x;
+	XMVECTOR up = XMVector3TransformNormal(XMVectorSet(0, 1, 0, 0), matRotation) * vScale.y;
+	XMVECTOR look = XMVector3TransformNormal(XMVectorSet(0, 0, 1, 0), matRotation) * vScale.z;
+
+	// 6) 상태 벡터에 반영
+	Set_State(STATE::RIGHT, right);
+	Set_State(STATE::UP, up);
+	Set_State(STATE::LOOK, look);
+
+	// 7) 월드매트릭스 재생성 플래그
+	m_bDirty = true;
+}
+
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 {
 	_matrix			RotationMatrix = XMMatrixRotationAxis(vAxis, m_fRotationPerSec * fTimeDelta);
@@ -120,36 +151,16 @@ void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 
 void CTransform::FlllowParent(const CTransform* pParentTransform)
 {
-	if (nullptr == pParentTransform)
-		return;
+	if (!pParentTransform) return;
+
+ // 1) 부모 월드
 	XMMATRIX parentW = XMLoadFloat4x4(&pParentTransform->m_WorldMatrix);
-
-	// 2) 자식 로컬 정보
-	//   - 스케일
-	XMFLOAT3 localScale = Get_Scaled();            // { sx, sy, sz }
-	//   - 위치
-	XMVECTOR localPos = Get_State(STATE::POSITION);
-
-	// 3) 부모 축(회전+스케일) 꺼내기
-	XMVECTOR parentRight = parentW.r[0];  // 부모 X축 벡터 (이미 스케일 포함)
-	XMVECTOR parentUp = parentW.r[1];
-	XMVECTOR parentLook = parentW.r[2];
-
-	// 4) 월드 위치 계산
-	XMVECTOR worldPos = XMVector3TransformCoord(localPos, parentW);
-
-	// 5) 월드 축 계산 (부모 축(normalize) × 자식 로컬 스케일)
-	XMVECTOR worldRight = XMVectorScale(XMVector3Normalize(parentRight), localScale.x);
-	XMVECTOR worldUp = XMVectorScale(XMVector3Normalize(parentUp), localScale.y);
-	XMVECTOR worldLook = XMVectorScale(XMVector3Normalize(parentLook), localScale.z);
-
-	// 6) 최종 월드 매트릭스 구성 & 저장
-	XMMATRIX world;
-	world.r[0] = worldRight;  // X축
-	world.r[1] = worldUp;     // Y축
-	world.r[2] = worldLook;   // Z축
-	world.r[3] = worldPos;    // 위치
-	XMStoreFloat4x4(&m_WorldMatrix, world);
+	// 2) 저장된 로컬
+	XMMATRIX localM = XMLoadFloat4x4(&m_LocalMatrix);
+	// 3) 월드 = local × 부모월드
+	XMMATRIX worldM = XMMatrixMultiply(localM, parentW);
+	// 4) 결과 저장
+	XMStoreFloat4x4(&m_WorldMatrix, worldM);
 }
 
 json CTransform::Serialize()
@@ -158,6 +169,10 @@ json CTransform::Serialize()
 	XMFLOAT3 p;
 	XMStoreFloat3(&p, Get_State(STATE::POSITION));
 	j["Position"] = { p.x, p.y, p.z };
+
+
+	
+	j["Rotation"] = { m_vEulerAngles.x, m_vEulerAngles.y, m_vEulerAngles.z };
 
 	XMFLOAT3 s = Get_Scaled();
 	j["Scale"] = { s.x, s.y, s.z };
@@ -171,6 +186,23 @@ void CTransform::Deserialize(const json& j)
 	// 월드 매트릭스 초기화
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 
+	_matrix s{}, r{}, t{}, w{};
+	// 2) 스케일 복원 (축 방향을 정규화한 뒤, 스칼라로 스케일)
+	if (j.contains("Scale"))
+	{
+		_float3 vScale = {
+			j["Scale"][0].get<_float>(),
+			j["Scale"][1].get<_float>(),
+			j["Scale"][2].get<_float>()
+		};
+		s = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
+	//	Scaling(vScale);
+	}
+
+	// 2) 회전 복원
+
+
+
 	// 1) 위치 복원
 	if (j.contains("Position"))
 	{
@@ -180,23 +212,61 @@ void CTransform::Deserialize(const json& j)
 			j["Position"][2].get<_float>()
 		};
 
-		XMVECTOR vecPosition = XMLoadFloat3(&vPosition);
+		//XMVECTOR vecPosition = XMLoadFloat3(&vPosition);
 
-		// 3) w를 1.0f 로 설정해야 할 경우
-		vecPosition = XMVectorSetW(vecPosition, 1.0f);
-		Set_State(STATE::POSITION, vecPosition);
+		//// 3) w를 1.0f 로 설정해야 할 경우
+		//vecPosition = XMVectorSetW(vecPosition, 1.0f);
+		//Set_State(STATE::POSITION, vecPosition);
+
+		t = XMMatrixTranslation(
+			vPosition.x, vPosition.y, vPosition.z
+		);
 	}
 
-	// 2) 스케일 복원 (축 방향을 정규화한 뒤, 스칼라로 스케일)
-	if (j.contains("Scale"))
-	{
-		_float3 vScale = {
-			j["Scale"][0].get<_float>(),
-			j["Scale"][1].get<_float>(),
-			j["Scale"][2].get<_float>()
-		};
+	
 
-		Scaling(vScale);
+	if (j.contains("Rotation"))
+	{
+		_float3 vRotation = {
+			j["Rotation"][0].get<_float>(),
+			j["Rotation"][1].get<_float>(),
+			j["Rotation"][2].get<_float>()
+		};
+		r = XMMatrixRotationRollPitchYaw(
+			XMConvertToRadians(vRotation.x),
+			XMConvertToRadians(vRotation.y),
+			XMConvertToRadians(vRotation.z)
+		);
+			m_vEulerAngles = vRotation;
+
+		w = s * r * t;
+	}
+	else
+	{
+		// 회전이 없을 경우
+		w= s * t;
+	}
+	XMStoreFloat4x4(&m_WorldMatrix, w);
+
+}
+
+void CTransform::Set_Parent(CGameObject* pParent)
+{
+	if (pParent)
+	{
+		auto pTransform = pParent->GetTransform();
+
+		if (pTransform)
+		{
+			XMMATRIX parentW = XMLoadFloat4x4(&pTransform->m_WorldMatrix);
+			// 3) 내 현재(세계) 월드 행렬 불러오기
+			XMMATRIX myW = XMLoadFloat4x4(&m_WorldMatrix);
+			// 4) 로컬 행렬 = myW × inv(parentW)
+			XMMATRIX invPW = pTransform->Get_WorldMatrix_Inverse();
+			XMMATRIX localM = XMMatrixMultiply(myW, invPW);
+			// 5) m_LocalMatrix 에 저장
+			XMStoreFloat4x4(&m_LocalMatrix, localM);
+		}
 	}
 }
 
@@ -212,6 +282,38 @@ void CTransform::LookAt(_fvector vAt)
 	Set_State(STATE::UP, XMVector3Normalize(vUp) * vScaled.y);
 	Set_State(STATE::LOOK, XMVector3Normalize(vLook) * vScaled.z);
 	m_bDirty = true;
+}
+
+void CTransform::UpdateEulerAngles()
+{
+	_vector scale, quat, translation;
+	XMMatrixDecompose(&scale, &quat, &translation, XMLoadFloat4x4(&m_WorldMatrix));
+
+	// 2) 쿼터니언을 XMFLOAT4 로
+	_float4 q;
+	XMStoreFloat4(&q, quat);
+
+	// 3) quaternion → Euler (radian) (Pitch=X, Yaw=Y, Roll=Z)
+
+	_float sinr_cosp = 2.0f * (q.w * q.x + q.y * q.z);
+	_float cosr_cosp = 1.0f - 2.0f * (q.x * q.x + q.y * q.y);
+	_float roll = atan2f(sinr_cosp, cosr_cosp);
+
+	_float sinp = 2.0f * (q.w * q.y - q.z * q.x);
+	_float pitch;
+	if (fabsf(sinp) >= 1.0f)
+		pitch = copysignf(XM_PI / 2.0f, sinp); // gimbal lock
+	else
+		pitch = asinf(sinp);
+
+	_float siny_cosp = 2.0f * (q.w * q.z + q.x * q.y);
+	_float cosy_cosp = 1.0f - 2.0f * (q.y * q.y + q.z * q.z);
+	_float yaw = atan2f(siny_cosp, cosy_cosp);
+
+	// 4) 라디안 → 도(°) 변환해서 저장
+	m_vEulerAngles.x = XMConvertToDegrees(pitch);
+	m_vEulerAngles.y = XMConvertToDegrees(yaw);
+	m_vEulerAngles.z = XMConvertToDegrees(roll);
 }
 
 HRESULT CTransform::Bind_ShaderResource(CShader* pShader, const _char* pConstantName)

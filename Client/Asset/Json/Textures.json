@@ -17,6 +17,36 @@
       "path": "../Asset/Resources/Textures/Title/TitleLogo.png",
       "numTextures": 1,
       "static": true
+    },
+    {
+      "key": "TitleBase",
+      "path": "../Asset/Resources/Textures/Title/Title_Base.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "TitleInfo_Base",
+      "path": "../Asset/Resources/Textures/Title/Info_Base.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Title_Select",
+      "path": "../Asset/Resources/Textures/Title/Title_Select.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "TitleBack_Light",
+      "path": "../Asset/Resources/Textures/Title/Back_Light.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "TitleBgBase",
+      "path": "../Asset/Resources/Textures/Title/BgBase_Title.png",
+      "numTextures": 1,
+      "static": true
     }
   ]
 }

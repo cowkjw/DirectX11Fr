@@ -57,6 +57,40 @@ void CLayer::Late_Update(_float fTimeDelta)
 	}
 }
 
+void CLayer::Remove_GameObject(CGameObject* pGameObject)
+{
+	if (nullptr == pGameObject)
+		return;
+	auto newEnd = remove_if(m_GameObjects.begin(), m_GameObjects.end(),
+		[&](CGameObject* child) { return child == pGameObject; });
+	if (newEnd != m_GameObjects.end())
+	{
+		m_GameObjects.erase(newEnd, m_GameObjects.end());
+		for (auto& child : pGameObject->GetChildren())
+		{
+			if (child)
+				child->SetParent(nullptr);
+		}
+		Safe_Release(pGameObject);
+	}
+}
+
+void CLayer::Remove_GameObjectByName(const _wstring& strName)
+{
+	auto newEnd = remove_if(m_GameObjects.begin(), m_GameObjects.end(),
+		[&](CGameObject* child) { return child->Get_Name() == strName; });
+	if (newEnd != m_GameObjects.end())
+	{
+		m_GameObjects.erase(newEnd, m_GameObjects.end());
+		for (auto& child : (*newEnd)->GetChildren())
+		{
+			if (child)
+				child->SetParent(nullptr);
+		}
+		Safe_Release(*newEnd);
+	}
+}
+
 CLayer* CLayer::Create()
 {
 	return new CLayer();

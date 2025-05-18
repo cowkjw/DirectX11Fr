@@ -79,10 +79,11 @@ HRESULT CJsonLoader::Load_Shaders(const string& filePath, function<void()> onEnt
 				pElems = VTXMESH::Elements;
 				iNum = VTXMESH::iNumElements;
 			}
-			//else if (layout == "VTXANIM") {
-			//	pElems = VTXANIM::Elements;
-			//	iNum = VTXANIM::iNumElements;
-			//}
+			else if (layout == "VTXANIMMESH") 
+            {
+				pElems = VTXANIMMESH::Elements;
+				iNum = VTXANIMMESH::iNumElements;
+			}
 			//else if (layout == "VTXBONE") {
 			//	pElems = VTXBONE::Elements;
 			//	iNum = VTXBONE::iNumElements;
@@ -222,7 +223,6 @@ HRESULT CJsonLoader::Load_Objects(const string& filePath, function<void()> onEnt
             {
                 CGameObject* pParent = itParent->second;
                 pParent->AddChild(pChild);
-                pChild->SetParent(pParent);
                 continue;
             }
         }
@@ -238,8 +238,6 @@ HRESULT CJsonLoader::Load_Objects(const string& filePath, function<void()> onEnt
             continue;
 
 		FactoryComponent(pObj, entry);
-
-      
     }
 
     return S_OK;
@@ -351,6 +349,8 @@ void CJsonLoader::FactoryUI(CUIObject** pObjOut, const json& j)
 		wstring name = StringToWString(j["name"].get<std::string>());
 		UI_TYPE uiType = static_cast<UI_TYPE>(j["UIType"].get<_int>());
 
+
+		uiDesc.strName = name;
 		uiDesc.fX = j["Position"][0].get<_float>();
 		uiDesc.fY = j["Position"][1].get<_float>();
 		uiDesc.fSizeX = j["Size"][0].get<_float>();

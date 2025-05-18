@@ -20,6 +20,8 @@ public:
 	void Priority_Update(_float fTimeDelta);
 	void Update(_float fTimeDelta);
 	void Late_Update(_float fTimeDelta);
+	void Remove_GameObject(class CGameObject* pGameObject);
+	void Remove_GameObjectByName(const _wstring& strName);
 private:
 	list<class CGameObject*>			m_GameObjects;
 

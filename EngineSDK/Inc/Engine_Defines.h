@@ -49,6 +49,7 @@ using json = nlohmann::json;
 namespace Engine
 {
 	const _wstring	g_strTransformTag = TEXT("Com_Transform");
+	const _uint g_iMaxNumBones = 512;
 }
 using namespace Engine;
 

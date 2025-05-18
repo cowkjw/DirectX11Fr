@@ -45,6 +45,7 @@ public:
 	void Go_Left(_float fTimeDelta);
 	void Follow_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance);
 
+	void Rotate_EulerAngles(const _float3& vEulerAngles);
 	void Turn(_fvector vAxis, _float fTimeDelta);
 
 	void FlllowParent(const CTransform* pParentTransform);
@@ -52,6 +53,8 @@ public:
 
 	json Serialize() override;
 	void Deserialize(const json& j) override;
+
+	void Set_Parent(CGameObject* pParent);
 
 public:
 	_matrix Get_WorldMatrix_Inverse() const
@@ -61,22 +64,29 @@ public:
 
 	const auto& Get_WorldMatrix()  { return m_WorldMatrix; } // float4x4
 
+	const _float3& Get_EulerAngles() const { return m_vEulerAngles; }
+
 	void Set_WorldMatrix(_float4x4 worldMatrix) {
 		m_bDirty = true;
 		m_WorldMatrix = worldMatrix;
 	}
 
+	void LookAt(_fvector vAt);
+
+
 	_bool IsDirty() const { return m_bDirty; }
 	void SetDirty(_bool bDirty) { m_bDirty = bDirty; }
+	void UpdateEulerAngles();
 
-public:
-	void LookAt(_fvector vAt);
+private:
 
 public:
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);
 
 private:
 	_float4x4				m_WorldMatrix = {};
+	_float4x4				m_LocalMatrix = {};
+	_float3					m_vEulerAngles{};
 	_float					m_fSpeedPerSec = {};
 	_float					m_fRotationPerSec = {};
 	_bool					m_bDirty = false;

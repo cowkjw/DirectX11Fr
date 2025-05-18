@@ -19,6 +19,8 @@ public:
 public:
 	HRESULT Initialize(_uint iNumLevels);
 	class CGameObject* Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLevelIndex, const _wstring& strLayerTag, void* pArg);
+	void Delete_GameObject(_uint iLevelIndex,class CGameObject* pGameObject);
+	void Delete_GameObjectByName(_uint iLevelIndex,const _wstring& stName);
 	void Priority_Update(_float fTimeDelta);
 	void Update(_float fTimeDelta);
 	void Late_Update(_float fTimeDelta);

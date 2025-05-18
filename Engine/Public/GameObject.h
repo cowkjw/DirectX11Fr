@@ -53,12 +53,7 @@ public:
 	void SetParent(CGameObject* pParent) { m_pParent = pParent; }
 	CGameObject* GetParent() { return m_pParent; }
 	auto GetChildren() const { return m_vecChildren; }
-	void AddChild(CGameObject* pGameObject)
-	{
-		if (!pGameObject) return;
-		m_vecChildren.push_back(pGameObject);
-		pGameObject->SetParent(this);
-	}
+	void AddChild(CGameObject* pGameObject);
 	void RemoveChild(CGameObject* pGameObject)
 	{
 		auto newEnd = remove_if(m_vecChildren.begin(), m_vecChildren.end(),
@@ -78,6 +73,8 @@ public:
 
 	void SetPrototypeLevel(_uint iPrototypeLevel) { m_iPrototypeLevel = iPrototypeLevel; }
 	void SetCreateLevel(_uint iCreateLevel) { m_iCreateLevel = iCreateLevel; }
+	_uint GetPrototypeLevel() const { return m_iPrototypeLevel; }
+	_uint GetCreateLevel() const { return m_iCreateLevel; }
 
 	void SetProtoTypeTag(const _wstring& strPrototypeTag) { m_strPrototypeTag = strPrototypeTag; }
 	const _wstring& GetProtoTypeTag() const { return m_strPrototypeTag; }

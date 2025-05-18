@@ -131,14 +131,15 @@ CGameObject* CUIManager::CreateUI(CUIObject::UIOBJECT_DESC* pDesc, UI_TYPE eUITy
 		break;
 	case UI_TYPE::CANVAS:
 		pUI = CUICanvas::Create(m_pDevice, m_pContext);
-		if (pUI)
-		   AddCanvasUI(static_cast<CUICanvas*>(pUI));
 		break;
 	}
 	if (nullptr == pUI)
 		return nullptr;
 	if (FAILED(pUI->Initialize(pDesc)))
 		return nullptr;
+
+	if (eUIType == UI_TYPE::CANVAS)
+		AddCanvasUI(static_cast<CUICanvas*>(pUI));
 	return pUI;
 }
 

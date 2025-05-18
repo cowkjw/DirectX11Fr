@@ -37,6 +37,10 @@ private:
 	static _bool m_bOrthoGizmo;
 	vector<CPannel*> m_vecPannels;
 
+	ID3D11Texture2D * m_pGameTex = nullptr;
+	ID3D11RenderTargetView * m_pGameRTV = nullptr;
+	ID3D11ShaderResourceView * m_pGameSRV = nullptr;
+
 public:
 	static CEditorManager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

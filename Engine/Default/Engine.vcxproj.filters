@@ -142,6 +142,9 @@
     <ClInclude Include="..\public\Serializable.h">
       <Filter>01.Utility\98. Json</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bone.h">
+      <Filter>01.Utility\03.Components\Model\Bone</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -266,6 +269,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Serializable.cpp">
       <Filter>01.Utility\98. Json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bone.cpp">
+      <Filter>01.Utility\03.Components\Model\Bone</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -397,6 +403,9 @@
     </Filter>
     <Filter Include="01.Utility\98. Json">
       <UniqueIdentifier>{8f0f473d-72c0-417a-a468-440c8c262008}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Model\Bone">
+      <UniqueIdentifier>{cdca7487-3656-42ea-bba8-45d29b9f2f55}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

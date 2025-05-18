@@ -17,11 +17,15 @@ public:
 	}
 
 	HRESULT Bind_Material(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint iTextureIndex = 0);
+	HRESULT Bind_Bone_Matrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
 
 public:
 	virtual HRESULT Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix);
 	virtual HRESULT Initialize(void* pArg);
 	virtual HRESULT Render(_uint iMeshIndex);
+
+public:
+	HRESULT Play_Animation(_float fTimeDelta);
 
 private:
 	Assimp::Importer		m_Importer;	
@@ -37,7 +41,11 @@ private:
 	_uint						m_iNumMaterials = {};
 	vector<class CMaterial*>	m_Materials;
 
+	vector<class CBone*>			m_Bones; // 전체 본의 개수
+
+
 public:
+	HRESULT Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex);
 	HRESULT Ready_Meshes();
 	HRESULT Ready_Materials(const _char* pModelFilePath);
 public:
@@ -45,4 +53,5 @@ public:
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };
+
 END_NAMESPACE

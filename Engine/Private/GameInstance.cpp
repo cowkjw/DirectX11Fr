@@ -156,6 +156,15 @@ _float CGameInstance::Compute_Random(_float fMin, _float fMax)
 	return fMin + (fMax - fMin) * Compute_Random_Normal();	
 }
 
+#pragma region GRAPHIC
+
+HRESULT CGameInstance::CreateRenderTarget(UINT width, UINT height, ID3D11Texture2D** outTexture, ID3D11RenderTargetView** outRTV, ID3D11ShaderResourceView** outSRV, DXGI_FORMAT format)
+{
+	return m_pGraphic_Device->CreateRenderTarget(width, height, outTexture, outRTV, outSRV, format);
+}
+
+#pragma endregion
+
 #pragma region LEVEL_MANAGER
 
 HRESULT CGameInstance::Change_Level(_uint iLevelIndex, CLevel* pNewLevel)
@@ -191,6 +200,20 @@ CComponent* CGameInstance::Get_Component(_uint iLevelIndex, const _wstring& strL
 {
 	return m_pObject_Manager->Get_Component(iLevelIndex, strLayerTag, strComponentTag, iIndex);
 	
+}
+
+HRESULT CGameInstance::Delete_GameObject(_uint iLevelIndex, CGameObject* pGameObject)
+{
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	m_pObject_Manager->Delete_GameObject(iLevelIndex, pGameObject);
+	return S_OK;
+}
+
+HRESULT CGameInstance::Delete_GameObjectByName(_uint iLevelIndex, const _wstring& strName)
+{
+	m_pObject_Manager->Delete_GameObjectByName(iLevelIndex, strName);
+	return S_OK;
 }
 
 #pragma endregion

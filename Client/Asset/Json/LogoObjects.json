@@ -12,7 +12,7 @@
             1.0,
             1.0
         ],
-        "SortingOrder": 2,
+        "SortingOrder": 0,
         "UI": true,
         "UIType": 3,
         "components": {
@@ -22,8 +22,8 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    -640.0,
-                    360.0,
+                    0.0,
+                    0.0,
                     0.0
                 ],
                 "Scale": [
@@ -83,12 +83,12 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    0.0,
+                    -163.99,
                     0.0,
                     0.20
                 ],
                 "Scale": [
-                    1280.0,
+                    953.79,
                     720.0,
                     1.0
                 ]
@@ -102,6 +102,128 @@
         },
         "isActive": true,
         "name": "Background",
+        "parentId": 8,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 11,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "TitleEffect",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    -196.0,
+                    0.20
+                ],
+                "Scale": [
+                    1280.0,
+                    330.39,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "Effect",
+        "parentId": 8,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 2,
+        "ID": 12,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "TitleBgBase",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    449.98,
+                    0.0,
+                    0.20
+                ],
+                "Scale": [
+                    381.60,
+                    720.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "LogoBack",
         "parentId": 8,
         "tag": ""
     },
@@ -120,7 +242,7 @@
             1.0,
             1.0
         ],
-        "SortingOrder": 1,
+        "SortingOrder": 0,
         "TextureIndex": 0,
         "TextureKey": "TitleLogo",
         "UI": true,
@@ -144,8 +266,8 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    370.99,
-                    125.99,
+                    418.98,
+                    167.97,
                     0.20
                 ],
                 "Scale": [

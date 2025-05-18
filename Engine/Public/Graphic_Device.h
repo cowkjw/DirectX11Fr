@@ -30,6 +30,28 @@ public:
 	/* 후면 버퍼를 전면버퍼로 교체한다.(백버퍼를 화면에 직접 보여준다.) */
 	HRESULT Present();
 
+
+	HRESULT CreateRenderTarget(
+		UINT width,
+		UINT height,
+		ID3D11Texture2D** outTexture,
+		ID3D11RenderTargetView** outRTV,
+		ID3D11ShaderResourceView** outSRV,
+		DXGI_FORMAT format
+	);
+
+	HRESULT CreateSceneViewRT(_uint width, _uint height, DXGI_FORMAT format = DXGI_FORMAT_B8G8R8A8_UNORM);
+
+	void BindMainRTV()
+	{
+		m_pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);
+	}
+
+	void BindSceneViewRTV()
+	{
+		m_pDeviceContext->OMSetRenderTargets(1, &m_pSceneViewRTV, m_pDepthStencilView);
+	}
+
 private:	
 	// IDirect3DDevice9* == LPDIRECT3DDEVICE9 == ID3D11Device + ID3D11DeviceContext 	
 
@@ -71,6 +93,12 @@ private:
 	/* ID3D11DepthStencilView : 깊이스텐실 버퍼로서 사용될 수 있는 타입.  */
 	ID3D11RenderTargetView*		m_pBackBufferRTV = { nullptr };
 	ID3D11DepthStencilView*		m_pDepthStencilView = { nullptr };
+
+
+	ID3D11Texture2D* m_pSceneViewTex = nullptr;
+	ID3D11RenderTargetView* m_pSceneViewRTV = nullptr;
+	ID3D11ShaderResourceView* m_pSceneViewSRV = nullptr;
+
 
 private:
 	/* 스왑체인에게 필수적으로 필요한 데이터는 백버퍼가 필요하여 백버퍼를 생성하기위한 정보를 던져준다. */

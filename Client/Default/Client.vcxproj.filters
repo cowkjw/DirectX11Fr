@@ -317,12 +317,24 @@
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxMesh.hlsl">
       <Filter>100.ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxAnimMesh.hlsl">
+      <Filter>100.ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Asset\Json\Shaders.json">
       <Filter>96.Json\JsonFiles</Filter>
     </None>
     <None Include="..\Asset\Json\Textures.json">
+      <Filter>96.Json\JsonFiles</Filter>
+    </None>
+    <None Include="..\Asset\Json\GamePlayObjects.json">
+      <Filter>96.Json\JsonFiles</Filter>
+    </None>
+    <None Include="..\Asset\Json\LogoObjects.json">
+      <Filter>96.Json\JsonFiles</Filter>
+    </None>
+    <None Include="..\Asset\Json\Object_PrototypeTag.json">
       <Filter>96.Json\JsonFiles</Filter>
     </None>
   </ItemGroup>
