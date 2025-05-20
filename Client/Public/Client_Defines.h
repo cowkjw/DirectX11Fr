@@ -12,6 +12,8 @@
 #include "Client_Function.h"
 #include <process.h>
 #include <fstream>
+#include <thread>
+#include <mutex>
 #pragma region IMGUI
 
 #undef new 

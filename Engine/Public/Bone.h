@@ -26,6 +26,9 @@ public:
 		return !strcmp(m_szName, pName);
 	}
 
+public:
+	HRESULT ExportBinary(ofstream& ofs);
+
 private:
 	_char					m_szName[MAX_PATH] = {};
 
@@ -39,6 +42,7 @@ private:
 
 public:
 	static CBone* Create(const aiNode* pAINode, _int iParentBoneIndex);
+	static CBone* CreateByBinary(ifstream& ifs);
 	virtual void Free() override;
 
 };

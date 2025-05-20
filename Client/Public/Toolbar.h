@@ -22,6 +22,7 @@ private:
 	void SetLevelEnumToString();
 	void UpdatePrototypeList();
 	void Get_PrototypeList();
+	void FBXLodaer();
 
 	CGameObject* ClonePrototype(const string& prototypeName, const wstring& instanceName);
 
@@ -39,6 +40,9 @@ private:
 	_char    m_FilePathBuf[260];   // 저장/로딩할 파일 경로
 	CJsonLoader  m_JsonLoader;    // JsonLoader 인스턴스
 
+	mutex m_FbxLoadMutex;
+
+	vector<_wstring> m_FbxFilePaths;
 public:
 	static CToolbar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

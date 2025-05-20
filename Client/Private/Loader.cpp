@@ -138,21 +138,42 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	m_pGameInstance->LoadTexture(TEXT("Terrain"), TEXT("../Asset/Resources/Textures/Terrain/Tile%d.dds"), true,2);
 
-	_matrix		PreTransformMatrix = XMMatrixIdentity();
 
-	/* For.Prototype_Component_Model_Fiona */
-	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixRotationX(XMConvertToRadians(-90.f));
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.fbx", PreTransformMatrix))))
-		return E_FAIL;
 	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
 	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.fbx"))))
 	//	return E_FAIL;
+
+	_matrix		PreTransformMatrix = XMMatrixIdentity();
+
+	///* For.Prototype_Component_Model_Fiona */
+	//PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixRotationX(XMConvertToRadians(-90.f));
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.fbx", PreTransformMatrix))))
+	//	return E_FAIL;
+
 	//PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationX(XMConvertToRadians(-90.f));
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Tanjiro"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Tanjiro/Tanjiro.fbx", PreTransformMatrix))))
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Tanjiro"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Tanjiro/Tanjiro.fbx", PreTransformMatrix))))
+	//	return E_FAIL;
+
+
+	/*if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.bin", PreTransformMatrix))))
+		return E_FAIL;*/
+
+		//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
+		//CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.bin"))))
+		//return E_FAIL;
+
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Tanjiro/A_P0001_V00_C00_AtkAwake01_Cut.bin"))))
 		return E_FAIL;
 
+
+
+	
 	///* For.Prototype_Component_Texture_Sky */
 	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
 	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBE, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))

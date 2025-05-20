@@ -40,6 +40,18 @@ public:
 		DXGI_FORMAT format
 	);
 
+	HRESULT CreateSceneViewRT(_uint width, _uint height, DXGI_FORMAT format = DXGI_FORMAT_B8G8R8A8_UNORM);
+
+	void BindMainRTV()
+	{
+		m_pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);
+	}
+
+	void BindSceneViewRTV()
+	{
+		m_pDeviceContext->OMSetRenderTargets(1, &m_pSceneViewRTV, m_pDepthStencilView);
+	}
+
 private:	
 	// IDirect3DDevice9* == LPDIRECT3DDEVICE9 == ID3D11Device + ID3D11DeviceContext 	
 
@@ -83,6 +95,9 @@ private:
 	ID3D11DepthStencilView*		m_pDepthStencilView = { nullptr };
 
 
+	ID3D11Texture2D* m_pSceneViewTex = nullptr;
+	ID3D11RenderTargetView* m_pSceneViewRTV = nullptr;
+	ID3D11ShaderResourceView* m_pSceneViewSRV = nullptr;
 
 
 private:

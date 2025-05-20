@@ -31,6 +31,8 @@ void CBone::Update_CombinedTransformationMatrix(const vector<CBone*>& Bones, _fm
 
 }
 
+
+
 CBone* CBone::Create(const aiNode* pAINode, _int iParentBoneIndex)
 {
 	CBone* pInstance = new CBone();
@@ -42,6 +44,44 @@ CBone* CBone::Create(const aiNode* pAINode, _int iParentBoneIndex)
 	}
 
 	return pInstance;
+}
+
+HRESULT CBone::ExportBinary(ofstream& ofs)
+{
+	uint32_t nameLen = (uint32_t)strlen(m_szName);
+	ofs.write((char*)&nameLen, sizeof(nameLen));
+	ofs.write(m_szName, nameLen);
+	ofs.write((char*)&m_iParentBoneIndex, sizeof(m_iParentBoneIndex));
+	ofs.write((char*)&m_TransformationMatrix, sizeof(_float4x4));
+
+	return S_OK;
+}
+
+CBone* CBone::CreateByBinary(ifstream& ifs)
+{
+	// 1) 이름 길이 + 이름 읽기
+	uint32_t nameLen;
+	ifs.read(reinterpret_cast<char*>(&nameLen), sizeof(nameLen));
+	std::string name(nameLen, '\0');
+	ifs.read(&name[0], nameLen);
+
+	// 2) 부모 인덱스 읽기
+	int32_t parentIndex;
+	ifs.read(reinterpret_cast<char*>(&parentIndex), sizeof(parentIndex));
+
+	// 3) 변환 행렬 읽기
+	_float4x4 tm;
+	ifs.read(reinterpret_cast<char*>(&tm), sizeof(_float4x4));
+
+	// 4) 객체 생성 및 멤버 설정 :contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}
+	CBone* pBone = new CBone();
+	strcpy_s(pBone->m_szName, nameLen + 1, name.c_str());
+	pBone->m_iParentBoneIndex = parentIndex;
+	pBone->m_TransformationMatrix = tm;
+	// 초기 Combined 매트릭스는 Identity
+	XMStoreFloat4x4(&pBone->m_CombinedTransformationMatrix, XMMatrixIdentity());
+
+	return pBone;
 }
 
 void CBone::Free()

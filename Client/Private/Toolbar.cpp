@@ -32,6 +32,7 @@ void CToolbar::Update(_float fTimeDelta)
 HRESULT CToolbar::Render()
 {
 	DrawToolbar();
+    FBXLodaer();
 	return S_OK;
 }
 
@@ -305,6 +306,68 @@ void CToolbar::Get_PrototypeList()
 			m_pPrototypes.push_back({});
         }
 	}
+}
+
+void CToolbar::FBXLodaer()
+{
+    ImGui::Begin("Loader");
+
+	static _bool isAnimation = false;
+
+    vector<wchar_t> buffer(8192);
+
+    if (ImGui::Button("Add FBX Files")) {
+        OPENFILENAMEW ofn{};
+        ofn.lStructSize = sizeof(ofn);
+        ofn.hwndOwner = GetActiveWindow();
+        ofn.lpstrFilter = L"FBX Files\0*.fbx\0All Files\0*.*\0";
+        ofn.lpstrFile = buffer.data();
+        ofn.nMaxFile = static_cast<DWORD>(buffer.size());
+        ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
+        if (GetOpenFileNameW(&ofn)) {
+            m_FbxFilePaths.clear();
+            wchar_t* ptr = buffer.data();
+            std::wstring dir = ptr;
+            ptr += dir.size() + 1;
+            if (*ptr == L'\0') {
+                // 단일 파일 선택
+                m_FbxFilePaths.push_back(dir);
+            }
+            else {
+                // 다중 파일 선택
+                while (*ptr) {
+                    std::wstring file = ptr;
+                    ptr += file.size() + 1;
+                    m_FbxFilePaths.push_back(dir + L"\\" + file);
+                }
+            }
+        }
+    }
+
+    // 선택된 FBX 목록 표시
+    if (ImGui::CollapsingHeader("Selected FBX Files")) {
+        for (const auto& path : m_FbxFilePaths) {
+            // 간단히 UTF-16을 ANSI로 변환하여 출력
+            std::string utf8(path.begin(), path.end());
+            ImGui::TextUnformatted(utf8.c_str());
+        }
+    }
+
+	// 애니메이션 체크박스
+    
+	ImGui::Checkbox("Animation", &isAnimation);
+
+    // FBX 로드 버튼
+    if (ImGui::Button("Load FBX Files"))
+    {
+        for (const auto& path : m_FbxFilePaths) 
+        {
+			string pathStr = WStringToString(path);
+			CModel::Create(m_pDevice, m_pContext, isAnimation ? MODEL::ANIM : MODEL::NONANIM, pathStr.c_str());
+        }
+    }
+
+    ImGui::End();
 }
 
 CGameObject* CToolbar::ClonePrototype(const string& prototypeName, const wstring& instanceName)

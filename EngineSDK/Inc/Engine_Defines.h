@@ -35,6 +35,8 @@ using namespace physx;
 #include <locale>  // for codecvt_utf8
 #include <unordered_map>
 #include <unordered_set>
+#include<iostream>
+#include<fstream>
 
 using namespace std;
 

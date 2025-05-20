@@ -42,6 +42,7 @@ void CBaseCharacter::Priority_Update(_float fTimeDelta)
 
 void CBaseCharacter::Update(_float fTimeDelta)
 {
+	m_pModelCom->Play_Animation(fTimeDelta);
 }
 
 void CBaseCharacter::Late_Update(_float fTimeDelta)
@@ -62,10 +63,25 @@ HRESULT CBaseCharacter::Render()
 
 	_uint		iNumMesh = m_pModelCom->Get_NumMeshes();
 
-	for (_uint i = 0; i < iNumMesh; i++)
+	//for (_uint i = 0; i < iNumMesh; i++)
+	//{
+	//	if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
+	//		return E_FAIL;
+
+	//	if (FAILED(m_pShaderCom->Begin(0)))
+	//		return E_FAIL;
+
+	//	if (FAILED(m_pModelCom->Render(i)))
+	//		return E_FAIL;
+	//}
+
+
+	for (size_t i = 0; i < iNumMesh; i++)
 	{
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
 			return E_FAIL;
+
+		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
 
 		if (FAILED(m_pShaderCom->Begin(0)))
 			return E_FAIL;
@@ -85,8 +101,12 @@ HRESULT CBaseCharacter::Ready_Components()
 	//	TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 	//	return E_FAIL;
 
-	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxMesh"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	//if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxMesh"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	//	return E_FAIL;
+
+	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxAnimMesh"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
+
 
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),

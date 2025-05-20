@@ -57,6 +57,10 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const aiMesh* pAIMesh, const ve
 	if (FAILED(m_pDevice->CreateBuffer(&IBBufferDesc, &IBInitialData, &m_pIB)))
 		return E_FAIL;
 
+	size_t ibBytes = m_iNumIndices * m_iIndexStride;
+	m_RawIB.resize(ibBytes);
+	memcpy(m_RawIB.data(), pIndices, ibBytes);
+
 	Safe_Delete_Array(pIndices);
 
 
@@ -67,6 +71,59 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const aiMesh* pAIMesh, const ve
 
 HRESULT CMesh::Initialize(void* pArg)
 {
+	return S_OK;
+}
+
+HRESULT CMesh::Initialize_FromData(const void* pVertexData, UINT vertexCount, UINT vertexStride, const void* pIndexData, UINT indexCount, UINT indexStride, _bool isAnim, const vector<class CBone*>& bones, const _fmatrix& PreTransformMatrix)
+{
+	m_iNumVertices = vertexCount;
+	m_iVertexStride = vertexStride;
+	m_iNumIndices = indexCount;
+	m_iIndexStride = indexStride;
+	m_iNumVertexBuffers = 1;
+	m_ePrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
+
+	// VB 생성
+	D3D11_BUFFER_DESC vbDesc{};
+	vbDesc.ByteWidth = vertexCount * vertexStride;
+	vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbDesc.Usage = D3D11_USAGE_DEFAULT;
+	vbDesc.StructureByteStride = vertexStride;
+
+	D3D11_SUBRESOURCE_DATA vbInit{};
+	vbInit.pSysMem = pVertexData;
+	if (FAILED(m_pDevice->CreateBuffer(&vbDesc, &vbInit, &m_pVB)))
+		return E_FAIL;
+
+	// IB 생성
+	D3D11_BUFFER_DESC ibDesc{};
+	ibDesc.ByteWidth = indexCount * indexStride;
+	ibDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibDesc.Usage = D3D11_USAGE_DEFAULT;
+	ibDesc.StructureByteStride = indexStride;
+
+	D3D11_SUBRESOURCE_DATA ibInit{};
+	ibInit.pSysMem = pIndexData;
+	if (FAILED(m_pDevice->CreateBuffer(&ibDesc, &ibInit, &m_pIB)))
+		return E_FAIL;
+
+	// m_pVertexPositions 채우기 (PreTransformMatrix 적용)
+	m_pVertexPositions = new _float3[vertexCount];
+	if (isAnim) {
+		auto verts = reinterpret_cast<const VTXANIMMESH*>(pVertexData);
+		for (UINT i = 0; i < vertexCount; ++i)
+			m_pVertexPositions[i] = verts[i].vPosition;
+	}
+	else {
+		auto verts = reinterpret_cast<const VTXMESH*>(pVertexData);
+		for (UINT i = 0; i < vertexCount; ++i) {
+			XMVECTOR pos = XMLoadFloat3(&verts[i].vPosition);
+			pos = XMVector3TransformCoord(pos, XMLoadFloat4x4(reinterpret_cast<const XMFLOAT4X4*>(&PreTransformMatrix)));
+			XMStoreFloat3(&m_pVertexPositions[i], pos);
+		}
+	}
+
 	return S_OK;
 }
 
@@ -108,6 +165,11 @@ HRESULT CMesh::Ready_NonAnim_Mesh(const aiMesh* pAIMesh, _fmatrix PreTransformMa
 
 	if (FAILED(m_pDevice->CreateBuffer(&VBBufferDesc, &VBInitialData, &m_pVB)))
 		return E_FAIL;
+
+
+		size_t vbBytes = m_iNumVertices * m_iVertexStride;
+		m_RawVB.resize(vbBytes);
+		memcpy(m_RawVB.data(), pVertices, vbBytes);
 
 	Safe_Delete_Array(pVertices);
 
@@ -247,6 +309,11 @@ HRESULT CMesh::Ready_Anim_Mesh(const aiMesh* pAIMesh, const vector<class CBone*>
 	if (FAILED(m_pDevice->CreateBuffer(&VBBufferDesc, &VBInitialData, &m_pVB)))
 		return E_FAIL;
 
+
+	size_t vbBytes = m_iNumVertices * m_iVertexStride;
+	m_RawVB.resize(vbBytes);
+	memcpy(m_RawVB.data(), pVertices, vbBytes);
+
 	Safe_Delete_Array(pVertices);
 
 	return S_OK;
@@ -266,6 +333,29 @@ HRESULT CMesh::Bind_Bone_Matrices(CShader* pShader, const _char* pConstantName, 
 	return pShader->Bind_Matrices(pConstantName, m_BoneMatrices, m_iNumBones);	
 }
 
+HRESULT CMesh::ExportBinary(ofstream& ofs)
+{
+	WriteUInt(ofs, 0x4D534845);  // 'MSHE'
+	WriteUInt(ofs, (uint32_t)m_iNumVertices);
+	WriteUInt(ofs, (uint32_t)m_iVertexStride);
+	WriteUInt(ofs, (uint32_t)m_iNumIndices);
+	WriteUInt(ofs, (uint32_t)m_iIndexStride);
+	WriteUInt(ofs, (uint32_t)m_iNumVertexBuffers);
+	uint32_t nameLen = (uint32_t)strlen(m_szName);
+	WriteUInt(ofs, nameLen);
+	ofs.write(m_szName, nameLen);
+	WriteUInt(ofs, m_iMaterialIndex);
+	WriteUInt(ofs, (_uint)m_iNumBones);
+	WriteUInt(ofs, (_uint)m_BoneIndices.size());
+	for (auto& idx : m_BoneIndices) WriteUInt(ofs, idx);
+	for (auto& mat : m_OffsetMatrices) {
+		ofs.write(reinterpret_cast<const char*>(&mat), sizeof(XMFLOAT4X4));
+	}
+	ofs.write(reinterpret_cast<const char*>(m_RawVB.data()), m_RawVB.size());
+	ofs.write(reinterpret_cast<const char*>(m_RawIB.data()), m_RawIB.size());
+	return S_OK;
+}
+
 CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const aiMesh* pAIMesh, const vector<class CBone*>& Bones, _fmatrix PreTransformMatrix)
 {
 	CMesh* pInstance = new CMesh(pDevice, pContext);
@@ -278,6 +368,133 @@ CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL
 
 	return pInstance;
 }
+
+CMesh* CMesh::CreateByBinary(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ifstream& ifs, const vector<CBone*>& bones, const _fmatrix& PreTransformMatrix)
+{
+	//uint32_t magic;
+	//ifs.read(reinterpret_cast<char*>(&magic), sizeof(magic));
+	//if (magic != 0x4D534845) // 'MSHE'
+	//	return nullptr;
+
+	//// 메타데이터 읽기
+	//uint32_t numVertices, vertexStride, numIndices, indexStride, numVBs;
+	//ifs.read(reinterpret_cast<char*>(&numVertices), sizeof(numVertices));
+	//ifs.read(reinterpret_cast<char*>(&vertexStride), sizeof(vertexStride));
+	//ifs.read(reinterpret_cast<char*>(&numIndices), sizeof(numIndices));
+	//ifs.read(reinterpret_cast<char*>(&indexStride), sizeof(indexStride));
+	//ifs.read(reinterpret_cast<char*>(&numVBs), sizeof(numVBs));
+
+	//// 이름
+	//uint32_t nameLen;
+	//ifs.read(reinterpret_cast<char*>(&nameLen), sizeof(nameLen));
+	//std::string name(nameLen, '\0');
+	//ifs.read(&name[0], nameLen);
+
+	//// 재질 인덱스
+	//uint32_t materialIndex;
+	//ifs.read(reinterpret_cast<char*>(&materialIndex), sizeof(materialIndex));
+
+	//// 본 인덱스 정보
+	//uint32_t boneCount, boneIdxCount;
+	//ifs.read(reinterpret_cast<char*>(&boneCount), sizeof(boneCount));
+	//ifs.read(reinterpret_cast<char*>(&boneIdxCount), sizeof(boneIdxCount));
+	//std::vector<int> boneIndices(boneIdxCount);
+	//for (uint32_t i = 0; i < boneIdxCount; ++i)
+	//	ifs.read(reinterpret_cast<char*>(&boneIndices[i]), sizeof(boneIndices[i]));
+
+	//// raw 버텍스·인덱스 읽기
+	//std::vector<uint8_t> vbRaw(numVertices * vertexStride);
+	//ifs.read(reinterpret_cast<char*>(vbRaw.data()), vbRaw.size());
+	//std::vector<uint8_t> ibRaw(numIndices * indexStride);
+	//ifs.read(reinterpret_cast<char*>(ibRaw.data()), ibRaw.size());
+
+	//// 인스턴스 생성
+	//CMesh* pMesh = new CMesh(pDevice, pContext);
+	//strcpy_s(pMesh->m_szName, nameLen + 1, name.c_str());
+	//pMesh->m_iMaterialIndex = materialIndex;
+	//if (boneCount > 1) {
+	//	pMesh->m_BoneIndices = boneIndices;
+	//}
+
+	//// 공통 초기화
+	//_bool isAnim = (boneCount > 1);
+	//if (FAILED(pMesh->Initialize_FromData(
+	//	vbRaw.data(), numVertices, vertexStride,
+	//	ibRaw.data(), numIndices, indexStride,
+	//	isAnim, bones, PreTransformMatrix))) {
+	//	Safe_Release(pMesh);
+	//}
+
+	uint32_t magic;
+	ifs.read(reinterpret_cast<char*>(&magic), sizeof(magic));
+	if (magic != 0x4D534845) // 'MSHE'
+		return nullptr;
+
+	// 메타데이터 읽기
+	uint32_t numVertices, vertexStride, numIndices, indexStride, numVBs;
+	ifs.read(reinterpret_cast<char*>(&numVertices), sizeof(numVertices));
+	ifs.read(reinterpret_cast<char*>(&vertexStride), sizeof(vertexStride));
+	ifs.read(reinterpret_cast<char*>(&numIndices), sizeof(numIndices));
+	ifs.read(reinterpret_cast<char*>(&indexStride), sizeof(indexStride));
+	ifs.read(reinterpret_cast<char*>(&numVBs), sizeof(numVBs));
+
+	// 이름
+	uint32_t nameLen;
+	ifs.read(reinterpret_cast<char*>(&nameLen), sizeof(nameLen));
+	string name(nameLen, '\0');
+	ifs.read(&name[0], nameLen);
+
+	// 재질 인덱스
+	uint32_t materialIndex;
+	ifs.read(reinterpret_cast<char*>(&materialIndex), sizeof(materialIndex));
+
+	// 본 정보 개수
+	uint32_t boneCount, boneIdxCount;
+	ifs.read(reinterpret_cast<char*>(&boneCount), sizeof(boneCount));
+	ifs.read(reinterpret_cast<char*>(&boneIdxCount), sizeof(boneIdxCount));
+
+	// 본 인덱스 읽기
+	vector<int> boneIndices(boneIdxCount);
+	for (uint32_t i = 0; i < boneIdxCount; ++i)
+		ifs.read(reinterpret_cast<char*>(&boneIndices[i]), sizeof(boneIndices[i]));
+
+	// ★ 누락된 부분: 오프셋 매트릭스 읽기
+	vector<XMFLOAT4X4> offsetMatrices(boneIdxCount);
+	for (uint32_t i = 0; i < boneIdxCount; ++i) {
+		ifs.read(reinterpret_cast<char*>(&offsetMatrices[i]), sizeof(XMFLOAT4X4));
+	}
+
+	// 버텍스·인덱스 RAW 데이터 읽기
+	vector<uint8_t> vbRaw(numVertices * vertexStride);
+	ifs.read(reinterpret_cast<char*>(vbRaw.data()), vbRaw.size());
+	vector<uint8_t> ibRaw(numIndices * indexStride);
+	ifs.read(reinterpret_cast<char*>(ibRaw.data()), ibRaw.size());
+
+	// 인스턴스 생성 및 필드 설정
+	CMesh* pMesh = new CMesh(pDevice, pContext);
+	// 이름 복사
+	strcpy_s(pMesh->m_szName, nameLen + 1, name.c_str());
+	// 메타 설정
+	pMesh->m_iMaterialIndex = materialIndex;
+	pMesh->m_iNumBones = boneCount;           // 본 개수
+	pMesh->m_iNumVertexBuffers = numVBs;              // VB 개수
+	// 본 인덱스·오프셋 매트릭스 복사
+	pMesh->m_BoneIndices = boneIndices;
+	pMesh->m_OffsetMatrices = offsetMatrices;
+
+	// 실제 버퍼 생성
+	bool isAnim = (boneCount > 1);
+	if (FAILED(pMesh->Initialize_FromData(
+		vbRaw.data(), numVertices, vertexStride,
+		ibRaw.data(), numIndices, indexStride,
+		isAnim, bones, PreTransformMatrix)))
+	{
+		Safe_Release(pMesh);
+	}
+
+	return pMesh;
+}
+
 
 CComponent* CMesh::Clone(void* pArg)
 {

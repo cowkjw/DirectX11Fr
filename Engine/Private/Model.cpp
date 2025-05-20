@@ -12,14 +12,14 @@ CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CModel::CModel(const CModel& Prototype)
-	: CComponent { Prototype }	
-	, m_iNumMeshes { Prototype.m_iNumMeshes }
-	, m_Meshes { Prototype.m_Meshes }
-	, m_iNumMaterials { Prototype.m_iNumMaterials }
-	, m_Materials { Prototype.m_Materials }
-	, m_eType { Prototype.m_eType }
-	, m_PreTransformMatrix { Prototype.m_PreTransformMatrix }
-	, m_Bones { Prototype.m_Bones }
+	: CComponent{ Prototype }
+	, m_iNumMeshes{ Prototype.m_iNumMeshes }
+	, m_Meshes{ Prototype.m_Meshes }
+	, m_iNumMaterials{ Prototype.m_iNumMaterials }
+	, m_Materials{ Prototype.m_Materials }
+	, m_eType{ Prototype.m_eType }
+	, m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
+	, m_Bones{ Prototype.m_Bones }
 {
 	for (auto& pBone : m_Bones)
 		Safe_AddRef(pBone);
@@ -35,28 +35,28 @@ CModel::CModel(const CModel& Prototype)
 HRESULT CModel::Bind_Material(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint iTextureIndex)
 {
 	if (iMeshIndex >= m_iNumMeshes)
-		return E_FAIL;		
+		return E_FAIL;
 
 	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
 
 	if (iMaterialIndex >= m_iNumMaterials)
 		return E_FAIL;
 
-	return m_Materials[iMaterialIndex]->Bind_ShaderResource(pShader, pConstantName, eType, iTextureIndex);	
+	return m_Materials[iMaterialIndex]->Bind_ShaderResource(pShader, pConstantName, eType, iTextureIndex);
 }
 
 HRESULT CModel::Bind_Bone_Matrices(CShader* pShader, const _char* pConstantName, _uint iMeshIndex)
 {
-	return m_Meshes[iMeshIndex]->Bind_Bone_Matrices(pShader, pConstantName, m_Bones);	
+	return m_Meshes[iMeshIndex]->Bind_Bone_Matrices(pShader, pConstantName, m_Bones);
 }
 
 HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
-{	
+{
 
 	_uint		iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
-	
-	if (MODEL::NONANIM == eType)
-		iFlag |= aiProcess_PreTransformVertices; // 정점들을 로컬 상에서 초기화해준다.
+
+	//if (MODEL::NONANIM == eType)
+	//	iFlag |= aiProcess_PreTransformVertices; // 정점들을 로컬 상에서 초기화해준다.
 
 	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
 
@@ -79,17 +79,108 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	return S_OK;
 }
 
+HRESULT CModel::Initialize_PrototypeByBinary(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
+{
+	std::ifstream ifs(pModelFilePath, std::ios::binary);
+	if (!ifs.is_open())
+		return E_FAIL;
+
+	// 1) 헤더 매직 ('MBIN') :contentReference[oaicite:6]{index=6}:contentReference[oaicite:7]{index=7}
+	uint32_t magic;
+	ifs.read(reinterpret_cast<char*>(&magic), sizeof(magic));
+	if (magic != 0x4D42494E) // 'MBIN'
+		return E_FAIL;
+
+	// 2) Materials
+	uint32_t matCount;
+	ifs.read(reinterpret_cast<char*>(&matCount), sizeof(matCount));
+	std::vector<CMaterial*> materials;
+	materials.reserve(matCount);
+	for (uint32_t i = 0; i < matCount; ++i)
+		materials.push_back(CMaterial::CreateByBinary(m_pDevice, m_pContext, ifs));
+
+	// 3) Bones
+	uint32_t boneCount;
+	ifs.read(reinterpret_cast<char*>(&boneCount), sizeof(boneCount));
+	std::vector<CBone*> bones;
+	bones.reserve(boneCount);
+	for (uint32_t i = 0; i < boneCount; ++i)
+		bones.push_back(CBone::CreateByBinary(ifs));
+
+	// 4) Meshes
+	uint32_t meshCount;
+	ifs.read(reinterpret_cast<char*>(&meshCount), sizeof(meshCount));
+	std::vector<CMesh*> meshes;
+	meshes.resize(meshCount);
+	for (uint32_t i = 0; i < meshCount; ++i)
+		meshes[i] = CMesh::CreateByBinary(m_pDevice, m_pContext, ifs, bones, PreTransformMatrix);
+
+	// 5) 모델 타입
+	uint32_t type;
+	ifs.read(reinterpret_cast<char*>(&type), sizeof(type));
+
+	this->m_Materials = materials;
+	this->m_iNumMaterials = (uint32_t)materials.size();
+	this->m_Bones = bones;
+	this->m_iNumMeshes = meshCount;
+	this->m_Meshes = meshes;
+	this->m_eType = static_cast<MODEL>(type);
+	XMStoreFloat4x4(&this->m_PreTransformMatrix, XMMatrixIdentity());
+
+	return S_OK;
+}
+
 HRESULT CModel::Initialize(void* pArg)
 {
 	return S_OK;
 }
 
 HRESULT CModel::Render(_uint iMeshIndex)
-{	
+{
 	m_Meshes[iMeshIndex]->Bind_Buffers();
-	m_Meshes[iMeshIndex]->Render();	
+	m_Meshes[iMeshIndex]->Render();
 
 	return S_OK;
+}
+
+HRESULT CModel::ExportBinary(const _char* pFilePath, MODEL eType)
+{
+
+
+	ofstream ofs(pFilePath, ios::binary);
+	if (!ofs) return E_FAIL;
+
+	// 헤더(고유 매직 넘버)
+	uint32_t magic = 0x4D42494E; // 'MBIN'
+	ofs.write((char*)&magic, sizeof(magic));
+
+	// 1) Materials
+	ofs.write((char*)&m_iNumMaterials, sizeof(m_iNumMaterials));
+	for (auto& mat : m_Materials)
+		mat->ExportBinary(ofs);
+
+	// 2) Bones
+	uint32_t boneCount = (uint32_t)m_Bones.size();
+	ofs.write((char*)&boneCount, sizeof(boneCount));
+	for (auto& bone : m_Bones)
+		bone->ExportBinary(ofs);
+
+	// 3) Meshes (필요하다면)
+	ofs.write((char*)&m_iNumMeshes, sizeof(m_iNumMeshes));
+	for (auto& mesh : m_Meshes)
+		mesh->ExportBinary(ofs);
+
+	uint32_t type = (uint32_t)eType;
+	ofs.write((char*)&type, sizeof(type));
+
+	if (eType == MODEL::ANIM)
+	{
+		// 애니메이션 관련 데이터 저장
+	}
+
+
+	return S_OK;
+
 }
 
 HRESULT CModel::Play_Animation(_float fTimeDelta)
@@ -109,12 +200,12 @@ HRESULT CModel::Play_Animation(_float fTimeDelta)
 
 
 HRESULT CModel::Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex)
-{	
+{
 	CBone* pBone = CBone::Create(pAINode, iParentBoneIndex);
 	if (nullptr == pBone)
 		return E_FAIL;
 
-	m_Bones.push_back(pBone);	
+	m_Bones.push_back(pBone);
 
 	_int		iParentIndex = m_Bones.size() - 1;
 
@@ -166,6 +257,25 @@ CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MOD
 		Safe_Release(pInstance);
 	}
 
+	// Export the model to binary format
+	string filePath = pModelFilePath;
+	if (filePath.find(".fbx") != string::npos)
+	{
+		filePath.replace(filePath.find(".fbx"), 4, ".bin");
+	}
+	pInstance->ExportBinary(filePath.c_str(), eType);
+
+	return pInstance;
+}
+
+CModel* CModel::CreateByBinary(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
+{
+	CModel* pInstance = new CModel(pDevice, pContext);
+	if (FAILED(pInstance->Initialize_PrototypeByBinary(eType, pModelFilePath, PreTransformMatrix)))
+	{
+		MSG_BOX("Failed to Created : CModel");
+		Safe_Release(pInstance);
+	}
 	return pInstance;
 }
 
@@ -186,13 +296,16 @@ void CModel::Free()
 {
 	__super::Free();
 
+	for (auto& pBone : m_Bones)
+		Safe_Release(pBone);
+
 	for (auto& pMaterial : m_Materials)
 		Safe_Release(pMaterial);
 
 	for (auto& pMesh : m_Meshes)
 		Safe_Release(pMesh);
 
-	
+
 	m_Meshes.clear();
 
 	m_Importer.FreeScene();

@@ -79,4 +79,14 @@ namespace Engine
 		return s;
 
 	}
+
+
+	inline void WriteUInt(std::ofstream& ofs, uint32_t v) {
+		ofs.write(reinterpret_cast<const char*>(&v), sizeof(v));
+	}
+	inline uint32_t ReadUInt(std::ifstream& ifs) {
+		uint32_t v;
+		ifs.read(reinterpret_cast<char*>(&v), sizeof(v));
+		return v;
+	}
 }

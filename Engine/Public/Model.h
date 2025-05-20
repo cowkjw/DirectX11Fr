@@ -21,8 +21,12 @@ public:
 
 public:
 	virtual HRESULT Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix);
+	virtual HRESULT Initialize_PrototypeByBinary(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix);
 	virtual HRESULT Initialize(void* pArg);
 	virtual HRESULT Render(_uint iMeshIndex);
+
+public:
+	HRESULT ExportBinary(const _char* pFilePath,MODEL eType);
 
 public:
 	HRESULT Play_Animation(_float fTimeDelta);
@@ -50,6 +54,7 @@ public:
 	HRESULT Ready_Materials(const _char* pModelFilePath);
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());
+	static CModel* CreateByBinary(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };
