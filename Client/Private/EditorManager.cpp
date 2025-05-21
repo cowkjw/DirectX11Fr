@@ -5,6 +5,7 @@
 #include "UICanvas.h"
 #include "UIButton.h"
 #include "UIImage.h"
+#include "Mesh.h"
 #include "Gizmo.h"
 
 CGameObject* CEditorManager::m_pSelectedObject = nullptr;
@@ -14,63 +15,142 @@ using Gizmo = CGizmo;
 Gizmo::Operation GizmoOp{ CGizmo::Operation::TRANSLATE };
 
 CEditorManager::CEditorManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    : m_pDevice{ pDevice }
-    , m_pContext{ pContext }
-    , m_pGameInstance{ CGameInstance::Get_Instance() }
+	: m_pDevice{ pDevice }
+	, m_pContext{ pContext }
+	, m_pGameInstance{ CGameInstance::Get_Instance() }
 {
-    Safe_AddRef(m_pGameInstance);
-    Safe_AddRef(m_pContext);
-    Safe_AddRef(m_pDevice);
+	Safe_AddRef(m_pGameInstance);
+	Safe_AddRef(m_pContext);
+	Safe_AddRef(m_pDevice);
 }
 
 
 HRESULT CEditorManager::Initialize()
 {
 	CEditorManager::m_pSelectedObject = nullptr;
-    CEditorManager::m_vecSceneObjects.clear();
+	CEditorManager::m_vecSceneObjects.clear();
 	m_vecPannels.push_back(CHierarchy::Create(m_pDevice, m_pContext));
 	m_vecPannels.push_back(CInspectorPannel::Create(m_pDevice, m_pContext));
 	m_vecPannels.push_back(CToolbar::Create(m_pDevice, m_pContext));
 
 	_uint windowWidth = g_iWinSizeX;
 	_uint windowHeight = g_iWinSizeY;
-    if (FAILED(m_pGameInstance->CreateRenderTarget(
-       windowWidth, windowWidth,
-        &m_pGameTex, &m_pGameRTV, &m_pGameSRV, DXGI_FORMAT_B8G8R8A8_UNORM)))
-        return E_FAIL;
-    return S_OK;
+
+	return S_OK;
 }
 
 void CEditorManager::Update(_float fTimeDelta)
 {
+	//if (m_pGameInstance->IsMousePressed(0))
+	//{
+	//	list<CGameObject*> ObjectList;
+	//	for (const auto& obj : m_vecSceneObjects)
+	//	{
+	//		if (obj && obj->IsActive())
+	//		{
+	//			_float3 vPickedPos{};
+	//			auto pModel =dynamic_cast<CModel*>(obj->Get_Component(TEXT("Com_Model")));
+	//			if (pModel)
+	//			{
+	//				auto Meshes = pModel->Get_Meshes();
+	//				for (auto pMesh : Meshes)
+	//				{
+	//					auto pBuffer = static_cast<CVIBuffer*>(pMesh);
+	//					if (pBuffer&& pBuffer->Compute_PickedPosition(obj->GetTransform()->Get_WorldMatrix_Inverse(), vPickedPos))
+	//					{
+	//						ObjectList.push_back(obj);
+	//					}
+	//			
+	//				}
+	//			}
+	//		}
+	//	}
+	//	ObjectList.sort([](CGameObject* pA, CGameObject* pB) {
+	//		return pA->GetTransform()->Get_WorldMatrix_Inverse().r[3].m128_f32[2] < pB->GetTransform()->Get_WorldMatrix_Inverse().r[3].m128_f32[2];
+	//		});
 
-    if (m_pSelectedObject)
-    {
-        if (m_pGameInstance->IsKeyPressed('W')) 
-            GizmoOp = CGizmo::Operation::TRANSLATE;
-        if (m_pGameInstance->IsKeyPressed('R')) 
-            GizmoOp = CGizmo::Operation::ROTATE;
-        if (m_pGameInstance->IsKeyPressed('E')) 
-            GizmoOp = CGizmo::Operation::SCALE;
-    }
+	//	if (!ObjectList.empty())
+	//	{
+	//		m_pSelectedObject = ObjectList.front();
+	//	}
 
-    for (auto& pannel : m_vecPannels)
-    {
-        if (pannel)
-            pannel->Update(fTimeDelta);
-    }
+	//}
+
+	if (m_pGameInstance->IsMousePressed(0))
+	{
+		std::vector<std::pair<float, CGameObject*>> hitList;
+		XMMATRIX viewMatrix = XMLoadFloat4x4(m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW));
+
+		for (auto* obj : m_vecSceneObjects)
+		{
+			if (!obj || !obj->IsActive())
+				continue;
+
+			auto pModel = dynamic_cast<CModel*>(obj->Get_Component(TEXT("Com_Model")));
+			if (!pModel)
+				continue;
+
+			bool hit = false;
+			_float hitDepth = 0.f;
+
+			// 각 메시마다 픽킹 검사
+			for (auto* rawMesh : pModel->Get_Meshes())
+			{
+				auto* pBuffer = static_cast<CVIBuffer*>(rawMesh);
+				if (!pBuffer)
+					continue;
+
+				_float3 localHit;
+				_matrix invWorld = obj->GetTransform()->Get_WorldMatrix_Inverse();
+				if (pBuffer->Compute_PickedPosition(invWorld, localHit))
+				{
+					// 로컬→월드 좌표 변환
+					XMVECTOR vLocal4 = XMVectorSet(localHit.x, localHit.y, localHit.z, 1.f);
+					XMVECTOR vWorldPos = XMVector4Transform(vLocal4, XMLoadFloat4x4(&obj->GetTransform()->Get_WorldMatrix()));
+					// 월드→뷰 공간 변환
+					XMVECTOR vViewPos = XMVector3TransformCoord(vWorldPos, viewMatrix);
+					// Z값(깊이) 저장
+					hitDepth = XMVectorGetZ(vViewPos);
+
+					hit = true;
+					break;  // 이 오브젝트는 히트했으니 메시 루프 탈출
+				}
+			}
+
+			if (hit)
+			{
+				hitList.emplace_back(hitDepth, obj);
+				// 다음 오브젝트로 바로 넘어가기
+			}
+		}
+
+		if (!hitList.empty())
+		{
+			std::sort(hitList.begin(), hitList.end(),
+				[](auto& A, auto& B) { return A.first < B.first; });
+			m_pSelectedObject = hitList.front().second;
+		}
+	}
+
+	if (m_pSelectedObject)
+	{
+		if (m_pGameInstance->IsKeyPressed('W'))
+			GizmoOp = CGizmo::Operation::TRANSLATE;
+		if (m_pGameInstance->IsKeyPressed('R'))
+			GizmoOp = CGizmo::Operation::ROTATE;
+		if (m_pGameInstance->IsKeyPressed('E'))
+			GizmoOp = CGizmo::Operation::SCALE;
+	}
+
+	for (auto& pannel : m_vecPannels)
+	{
+		if (pannel)
+			pannel->Update(fTimeDelta);
+	}
 }
 
 HRESULT CEditorManager::Render()
 {
-
-    ID3D11RenderTargetView* pOldRTV = nullptr;
-    ID3D11DepthStencilView* pDSV = nullptr;
-    m_pContext->OMGetRenderTargets(1, &pOldRTV, &pDSV);
-
-   /* m_pContext->OMSetRenderTargets(1, &m_pGameRTV, pDSV);
-    _float4 vColor = _float4(0.f, 0.f, 1.f, 1.f);
-    m_pContext->ClearRenderTargetView(m_pGameRTV, (_float*)&vColor);*/
 
 	for (auto& pannel : m_vecPannels)
 	{
@@ -78,68 +158,47 @@ HRESULT CEditorManager::Render()
 			pannel->Render();
 	}
 
-    static _float snapTranslate[3] = { 1.f, 1.f, 1.f };    // 1-unit 단위로 이동 스냅
-    static _float snapRotate[3] = { 15.f,15.f,15.f };     // 15° 단위 회전 스냅
-    static _float snapScale[3] = { 0.1f,0.1f,0.1f };     // 0.1 단위 스케일 스냅
+	static _float snapTranslate[3] = { 1.f, 1.f, 1.f };    // 1-unit 단위로 이동 스냅
+	static _float snapRotate[3] = { 15.f,15.f,15.f };     // 15° 단위 회전 스냅
+	static _float snapScale[3] = { 0.1f,0.1f,0.1f };     // 0.1 단위 스케일 스냅
 
-    if (m_pSelectedObject)
-    {
+	if (m_pSelectedObject)
+	{
 
-    CGizmo::Manipulate(
-        m_pSelectedObject->GetTransform(),
-        GizmoOp,   // TRANSLATE, ROTATE, SCALE 중 선택
-        m_bOrthoGizmo,                  // 원근(proj)모드
-        snapTranslate,
-        snapRotate,
-        snapScale
-    );
-    }
-
-    //m_pContext->OMSetRenderTargets(1, &pOldRTV, pDSV);
-    //m_pContext->ClearRenderTargetView(pOldRTV, reinterpret_cast<const float*>(&vColor));
-
-
-    _uint windowWidth = g_iWinSizeX;
-    _uint windowHeight = g_iWinSizeY;
-    ImGui::Begin("Scene View");
-    ImGui::Image(
-        (ImTextureID) m_pGameSRV,
-        ImVec2((float)windowWidth, (float)windowHeight)
-    );
-    ImGui::End();
-
-    // 6) Cleanup
-    Safe_Release(pOldRTV);
-    Safe_Release(pDSV);
-
-    return S_OK;
+		CGizmo::Manipulate(
+			m_pSelectedObject->GetTransform(),
+			GizmoOp,   // TRANSLATE, ROTATE, SCALE 중 선택
+			m_bOrthoGizmo,                  // 원근(proj)모드
+			snapTranslate,
+			snapRotate,
+			snapScale
+		);
+	}
+	return S_OK;
 }
 
 CEditorManager* CEditorManager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-    CEditorManager* pInstance = new CEditorManager(pDevice, pContext);
-    if (FAILED(pInstance->Initialize()))
-    {
-        MSG_BOX("Failed to Created : CEditorManager");
-        Safe_Release(pInstance);
-    }
-    return pInstance;
+	CEditorManager* pInstance = new CEditorManager(pDevice, pContext);
+	if (FAILED(pInstance->Initialize()))
+	{
+		MSG_BOX("Failed to Created : CEditorManager");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
 }
 
 void CEditorManager::Free()
 {
-    __super::Free();
-    Safe_Release(m_pDevice);
-    Safe_Release(m_pContext);
-    Safe_Release(m_pGameInstance);
+	__super::Free();
+	Safe_Release(m_pDevice);
+	Safe_Release(m_pContext);
+	Safe_Release(m_pGameInstance);
 
-    for (auto* obj : m_vecSceneObjects)
-        Safe_Release(obj);
+	for (auto* obj : m_vecSceneObjects)
+		Safe_Release(obj);
 
 	for (auto& pannel : m_vecPannels)
 		Safe_Release(pannel);
 	m_vecPannels.clear();
-	Safe_Release(m_pGameTex);
-	Safe_Release(m_pGameRTV);
-	Safe_Release(m_pGameSRV);
 }

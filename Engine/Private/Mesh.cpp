@@ -23,7 +23,7 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const aiMesh* pAIMesh, const ve
 	m_iIndexStride = sizeof(_uint);
 	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
 	m_ePrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-
+	m_iNumPritimive = m_iNumIndices / 3;
 
 	HRESULT hr = eType == MODEL::NONANIM ? Ready_NonAnim_Mesh(pAIMesh, PreTransformMatrix) : Ready_Anim_Mesh(pAIMesh, Bones);
 
@@ -39,8 +39,13 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const aiMesh* pAIMesh, const ve
 	IBBufferDesc.StructureByteStride = m_iIndexStride;
 	IBBufferDesc.MiscFlags = 0;
 
-	_uint* pIndices = new _uint[m_iNumIndices];
-	ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);
+	//_uint* pIndices = new _uint[m_iNumIndices];
+	//ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);
+
+	m_pIndices = new _uint[m_iNumIndices];
+	ZeroMemory(m_pIndices, sizeof(_uint) * m_iNumIndices);
+
+	_uint* pIndices = static_cast<_uint*>(m_pIndices);
 
 	_uint	iNumIndices = { 0 };
 
@@ -52,16 +57,16 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const aiMesh* pAIMesh, const ve
 	}
 
 	D3D11_SUBRESOURCE_DATA		IBInitialData{};
-	IBInitialData.pSysMem = pIndices;
+	IBInitialData.pSysMem = m_pIndices;
 
 	if (FAILED(m_pDevice->CreateBuffer(&IBBufferDesc, &IBInitialData, &m_pIB)))
 		return E_FAIL;
 
 	size_t ibBytes = m_iNumIndices * m_iIndexStride;
 	m_RawIB.resize(ibBytes);
-	memcpy(m_RawIB.data(), pIndices, ibBytes);
+	memcpy(m_RawIB.data(), m_pIndices, ibBytes);
 
-	Safe_Delete_Array(pIndices);
+	//Safe_Delete_Array(pIndices);
 
 
 
@@ -74,7 +79,7 @@ HRESULT CMesh::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CMesh::Initialize_FromData(const void* pVertexData, UINT vertexCount, UINT vertexStride, const void* pIndexData, UINT indexCount, UINT indexStride, _bool isAnim, const vector<class CBone*>& bones, const _fmatrix& PreTransformMatrix)
+HRESULT CMesh::Initialize_FromData(void* pVertexData, UINT vertexCount, UINT vertexStride,  void* pIndexData, UINT indexCount, UINT indexStride, _bool isAnim, const vector<class CBone*>& bones, const _fmatrix& PreTransformMatrix)
 {
 	m_iNumVertices = vertexCount;
 	m_iVertexStride = vertexStride;
@@ -83,7 +88,13 @@ HRESULT CMesh::Initialize_FromData(const void* pVertexData, UINT vertexCount, UI
 	m_iNumVertexBuffers = 1;
 	m_ePrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
-
+	m_iNumPritimive = m_iNumIndices / 3;
+	m_pIndices = new _uint[m_iNumIndices];
+	memcpy(
+		m_pIndices,                     // dest
+		pIndexData,                     // src
+		m_iNumIndices * m_iIndexStride  // byte count
+	);
 	// VB 积己
 	D3D11_BUFFER_DESC vbDesc{};
 	vbDesc.ByteWidth = vertexCount * vertexStride;
@@ -108,6 +119,7 @@ HRESULT CMesh::Initialize_FromData(const void* pVertexData, UINT vertexCount, UI
 	if (FAILED(m_pDevice->CreateBuffer(&ibDesc, &ibInit, &m_pIB)))
 		return E_FAIL;
 
+
 	// m_pVertexPositions 盲快扁 (PreTransformMatrix 利侩)
 	m_pVertexPositions = new _float3[vertexCount];
 	if (isAnim) {
@@ -119,7 +131,7 @@ HRESULT CMesh::Initialize_FromData(const void* pVertexData, UINT vertexCount, UI
 		auto verts = reinterpret_cast<const VTXMESH*>(pVertexData);
 		for (UINT i = 0; i < vertexCount; ++i) {
 			XMVECTOR pos = XMLoadFloat3(&verts[i].vPosition);
-			pos = XMVector3TransformCoord(pos, XMLoadFloat4x4(reinterpret_cast<const XMFLOAT4X4*>(&PreTransformMatrix)));
+			//pos = XMVector3TransformCoord(pos, XMLoadFloat4x4(reinterpret_cast<const XMFLOAT4X4*>(&PreTransformMatrix)));
 			XMStoreFloat3(&m_pVertexPositions[i], pos);
 		}
 	}
@@ -483,7 +495,7 @@ CMesh* CMesh::CreateByBinary(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 	pMesh->m_OffsetMatrices = offsetMatrices;
 
 	// 角力 滚欺 积己
-	bool isAnim = (boneCount > 1);
+	_bool isAnim = (boneCount > 1);
 	if (FAILED(pMesh->Initialize_FromData(
 		vbRaw.data(), numVertices, vertexStride,
 		ibRaw.data(), numIndices, indexStride,

@@ -145,6 +145,15 @@
     <ClInclude Include="..\Public\Bone.h">
       <Filter>01.Utility\03.Components\Model\Bone</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Animation.h">
+      <Filter>01.Utility\03.Components\Model\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Channel.h">
+      <Filter>01.Utility\03.Components\Model\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Picking.h">
+      <Filter>01.Utility\07. Picking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -272,6 +281,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bone.cpp">
       <Filter>01.Utility\03.Components\Model\Bone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Animation.cpp">
+      <Filter>01.Utility\03.Components\Model\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Channel.cpp">
+      <Filter>01.Utility\03.Components\Model\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Picking.cpp">
+      <Filter>01.Utility\07. Picking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -406,6 +424,12 @@
     </Filter>
     <Filter Include="01.Utility\03.Components\Model\Bone">
       <UniqueIdentifier>{cdca7487-3656-42ea-bba8-45d29b9f2f55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Model\Animation">
+      <UniqueIdentifier>{62fd396d-48d5-4d26-a37c-3bd227804f38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\07. Picking">
+      <UniqueIdentifier>{083bca1b-9623-4bfb-aa89-352802d9d95b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

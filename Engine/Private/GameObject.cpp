@@ -20,11 +20,18 @@ CGameObject::CGameObject(const CGameObject& Prototype)
 	, m_pContext{ Prototype.m_pContext }
 	, m_pGameInstance{ CGameInstance::Get_Instance() }
 	, m_bIsCloned(true)
+	, m_Components{ Prototype.m_Components }
 {
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pContext);
 	Safe_AddRef(m_pDevice);
 	m_uID = s_uNextID++;
+
+	for (auto& Pair : m_Components)
+	{
+		Safe_AddRef(Pair.second);
+		Pair.second->SetOwner(this);
+	}
 }
 
 CComponent* CGameObject::Get_Component(const _wstring& strComponentTag)
@@ -187,10 +194,10 @@ void CGameObject::Free()
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pTransformCom);
 
+
 	for (auto& Pair : m_Components)
 		Safe_Release(Pair.second);
 	m_Components.clear();
-
 	for (auto& pChild : m_vecChildren)
 	{
 		Safe_Release(pChild);

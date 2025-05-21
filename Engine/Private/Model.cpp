@@ -1,5 +1,6 @@
 #include "Component.h"
 
+#include "Animation.h"
 #include "Material.h"
 #include "Model.h"
 #include "Mesh.h"
@@ -12,24 +13,28 @@ CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CModel::CModel(const CModel& Prototype)
-	: CComponent{ Prototype }
+	: CComponent( Prototype)
 	, m_iNumMeshes{ Prototype.m_iNumMeshes }
 	, m_Meshes{ Prototype.m_Meshes }
 	, m_iNumMaterials{ Prototype.m_iNumMaterials }
 	, m_Materials{ Prototype.m_Materials }
 	, m_eType{ Prototype.m_eType }
 	, m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
-	, m_Bones{ Prototype.m_Bones }
+	, m_AnimationMap{ Prototype.m_AnimationMap }
+	, m_iNumAnimations{ Prototype.m_iNumAnimations }
 {
-	for (auto& pBone : m_Bones)
-		Safe_AddRef(pBone);
+
+	for (auto& pBone : Prototype.m_Bones)
+		m_Bones.push_back(pBone->Clone());
+
+	for (auto& pAnimation : Prototype.m_Animations)
+		m_Animations.push_back(pAnimation->Clone());
 
 	for (auto& pMaterial : m_Materials)
 		Safe_AddRef(pMaterial);
 
 	for (auto& pMesh : m_Meshes)
 		Safe_AddRef(pMesh);
-
 }
 
 HRESULT CModel::Bind_Material(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint iTextureIndex)
@@ -76,12 +81,16 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (FAILED(Ready_Materials(pModelFilePath)))
 		return E_FAIL;
 
+	if (FAILED(Ready_Animations()))
+		return E_FAIL;
+
+
 	return S_OK;
 }
 
 HRESULT CModel::Initialize_PrototypeByBinary(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
-	std::ifstream ifs(pModelFilePath, std::ios::binary);
+	ifstream ifs(pModelFilePath, ios::binary);
 	if (!ifs.is_open())
 		return E_FAIL;
 
@@ -94,7 +103,7 @@ HRESULT CModel::Initialize_PrototypeByBinary(MODEL eType, const _char* pModelFil
 	// 2) Materials
 	uint32_t matCount;
 	ifs.read(reinterpret_cast<char*>(&matCount), sizeof(matCount));
-	std::vector<CMaterial*> materials;
+	vector<CMaterial*> materials;
 	materials.reserve(matCount);
 	for (uint32_t i = 0; i < matCount; ++i)
 		materials.push_back(CMaterial::CreateByBinary(m_pDevice, m_pContext, ifs));
@@ -102,7 +111,7 @@ HRESULT CModel::Initialize_PrototypeByBinary(MODEL eType, const _char* pModelFil
 	// 3) Bones
 	uint32_t boneCount;
 	ifs.read(reinterpret_cast<char*>(&boneCount), sizeof(boneCount));
-	std::vector<CBone*> bones;
+	vector<CBone*> bones;
 	bones.reserve(boneCount);
 	for (uint32_t i = 0; i < boneCount; ++i)
 		bones.push_back(CBone::CreateByBinary(ifs));
@@ -110,7 +119,7 @@ HRESULT CModel::Initialize_PrototypeByBinary(MODEL eType, const _char* pModelFil
 	// 4) Meshes
 	uint32_t meshCount;
 	ifs.read(reinterpret_cast<char*>(&meshCount), sizeof(meshCount));
-	std::vector<CMesh*> meshes;
+	vector<CMesh*> meshes;
 	meshes.resize(meshCount);
 	for (uint32_t i = 0; i < meshCount; ++i)
 		meshes[i] = CMesh::CreateByBinary(m_pDevice, m_pContext, ifs, bones, PreTransformMatrix);
@@ -119,13 +128,29 @@ HRESULT CModel::Initialize_PrototypeByBinary(MODEL eType, const _char* pModelFil
 	uint32_t type;
 	ifs.read(reinterpret_cast<char*>(&type), sizeof(type));
 
+	// 6) 애니메이션
+	if (type== static_cast<uint32_t>(MODEL::ANIM))
+	{
+		uint32_t animCount;
+		ifs.read(reinterpret_cast<char*>(&animCount), sizeof(animCount));
+		for (uint32_t i = 0; i < animCount; ++i)
+		{
+			CAnimation* pAnimation = CAnimation::CreateByBinary(ifs, bones);
+			if (nullptr == pAnimation)
+				return E_FAIL;
+			m_Animations.push_back(pAnimation);
+			//m_AnimationMap[m_Animations.back()->Get_Name()] = m_Animations.size() - 1;
+		}
+		this->m_iNumAnimations = (uint32_t)m_Animations.size();
+	}
+
 	this->m_Materials = materials;
 	this->m_iNumMaterials = (uint32_t)materials.size();
 	this->m_Bones = bones;
 	this->m_iNumMeshes = meshCount;
 	this->m_Meshes = meshes;
 	this->m_eType = static_cast<MODEL>(type);
-	XMStoreFloat4x4(&this->m_PreTransformMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&this->m_PreTransformMatrix, PreTransformMatrix);
 
 	return S_OK;
 }
@@ -176,6 +201,9 @@ HRESULT CModel::ExportBinary(const _char* pFilePath, MODEL eType)
 	if (eType == MODEL::ANIM)
 	{
 		// 애니메이션 관련 데이터 저장
+		ofs.write((char*)&m_iNumAnimations, sizeof(m_iNumAnimations));
+		for (auto& anim : m_Animations)
+			anim->ExportBinary(ofs);
 	}
 
 
@@ -186,6 +214,7 @@ HRESULT CModel::ExportBinary(const _char* pFilePath, MODEL eType)
 HRESULT CModel::Play_Animation(_float fTimeDelta)
 {
 	/* 1. ㅎ녀재 애니메이션에 맞는 뼈의 상태를 읽어와서 뼈의 TrnasformationMatrix를 갱신해준다. */
+	m_Animations[m_iCurrentAnimIndex]->Update_Bones(fTimeDelta, m_Bones, m_isLoop);
 
 
 	/* 2. 전체 뼐르 순회하면서 뼈들의 ColmbinedTransformationMatixf를 부모에서부터 자식으로 갱신해주낟. */
@@ -207,9 +236,9 @@ HRESULT CModel::Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex)
 
 	m_Bones.push_back(pBone);
 
-	_int		iParentIndex = m_Bones.size() - 1;
+	_int		iParentIndex = static_cast<_uint>(m_Bones.size()) - 1;
 
-	for (size_t i = 0; i < pAINode->mNumChildren; i++)
+	for (_uint i = 0; i < pAINode->mNumChildren; i++)
 	{
 		Ready_Bones(pAINode->mChildren[i], iParentIndex);
 	}
@@ -244,6 +273,23 @@ HRESULT CModel::Ready_Materials(const _char* pModelFilePath)
 
 		m_Materials.push_back(pMaterial);
 	}
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Animations()
+{
+	m_iNumAnimations = m_pAIScene->mNumAnimations;
+
+	for (_uint i = 0; i < m_iNumAnimations; i++)
+	{
+		CAnimation* pAnimation = CAnimation::Create(m_pAIScene->mAnimations[i], m_Bones);
+		if (nullptr == pAnimation)
+			return E_FAIL;
+
+		m_Animations.push_back(pAnimation);
+		m_AnimationMap[m_pAIScene->mAnimations[i]->mName.C_Str()] = i;
+	}
+
 	return S_OK;
 }
 
@@ -304,6 +350,9 @@ void CModel::Free()
 
 	for (auto& pMesh : m_Meshes)
 		Safe_Release(pMesh);
+
+	for (auto& pAnimation : m_Animations)
+		Safe_Release(pAnimation);
 
 
 	m_Meshes.clear();

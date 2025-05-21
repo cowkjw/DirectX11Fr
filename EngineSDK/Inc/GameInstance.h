@@ -29,17 +29,6 @@ public:
 	_float Compute_Random_Normal();
 	_float Compute_Random(_float fMin, _float fMax);
 
-#pragma region GRAPHIC
-	HRESULT CreateRenderTarget(
-		_uint width,
-		_uint height,
-		ID3D11Texture2D** outTexture,
-		ID3D11RenderTargetView** outRTV,
-		ID3D11ShaderResourceView** outSRV,
-		DXGI_FORMAT format
-	);
-#pragma endregion
-
 #pragma region LEVEL_MANAGER
 public:
 	HRESULT Change_Level(_uint iLevelIndex, class CLevel* pNewLevel);
@@ -67,12 +56,12 @@ public:
 	HRESULT Add_Timer(const _wstring& strTimerTag);
 	void Update_Timer(const _wstring& strTimerTag);
 #pragma endregion
-//
-//#pragma region PICKING
-//	void Transform_Picking_ToLocalSpace(const _float4x4& WorldMatrixInverse);
-//	_bool Picking_InWorld(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC);
-//	_bool Picking_InLocal(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC);
-//#pragma endregion
+
+#pragma region PICKING
+	void Transform_Picking_ToLocalSpace(const _matrix& WorldMatrixInverse);
+	_bool Picking_InWorld(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC);
+	_bool Picking_InLocal(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC);
+#pragma endregion
 
 
 #pragma region FRUSTUM
@@ -140,7 +129,7 @@ private:
 	class CObject_Manager*		m_pObject_Manager = { nullptr };
 	class CRenderer*			m_pRenderer = { nullptr };
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
-	// class CPicking*				m_pPicking = { nullptr };
+    class CPicking*				m_pPicking = { nullptr };
 	class CFrustumCull* m_pFrustumCull = { nullptr };
 	class CInput_Device* m_pInput_Device = { nullptr };
 	class CTransformPipeline* m_pTransformPipeline = { nullptr };

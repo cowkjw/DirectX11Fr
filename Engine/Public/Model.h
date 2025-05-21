@@ -16,6 +16,19 @@ public:
 		return m_iNumMeshes;
 	}
 
+
+	void Set_Animation(_uint iIndex, _bool isLoop = true) {
+		if (iIndex >= m_iNumAnimations)
+			return;
+		m_iCurrentAnimIndex = iIndex;
+		m_isLoop = isLoop;
+	}
+
+	const vector<class CMesh*>& Get_Meshes() const {
+		return m_Meshes;
+	}
+
+
 	HRESULT Bind_Material(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint iTextureIndex = 0);
 	HRESULT Bind_Bone_Matrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
 
@@ -48,10 +61,17 @@ private:
 	vector<class CBone*>			m_Bones; // 전체 본의 개수
 
 
+	_bool						m_isLoop{};
+	_uint						m_iCurrentAnimIndex = { };
+	_uint						m_iNumAnimations = {};
+	vector<class CAnimation*>	m_Animations;
+	unordered_map<string, _uint> m_AnimationMap;
+
 public:
 	HRESULT Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex);
 	HRESULT Ready_Meshes();
 	HRESULT Ready_Materials(const _char* pModelFilePath);
+	HRESULT Ready_Animations();
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());
 	static CModel* CreateByBinary(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());

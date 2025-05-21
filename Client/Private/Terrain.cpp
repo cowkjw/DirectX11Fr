@@ -43,7 +43,15 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 
 void CTerrain::Update(_float fTimeDelta)
 {
-	
+	if (m_pGameInstance->IsMousePressed(0))
+	{
+
+		_float3		vTmp{};
+		if (m_pVIBufferCom->Compute_PickedPosition(m_pTransformCom->Get_WorldMatrix_Inverse(), vTmp))
+		{
+			int a = 10;
+		}
+	}
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)

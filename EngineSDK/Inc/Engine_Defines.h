@@ -3,6 +3,7 @@
 #pragma warning (disable : 4251)
 
 #include <d3d11.h>
+#include "DirectXCollision.h"
 #include <DirectXMath.h>
 #include "DirectXTK/DDSTextureLoader.h"
 #include "DirectXTK/WICTextureLoader.h"

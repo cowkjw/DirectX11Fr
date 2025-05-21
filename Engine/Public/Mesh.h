@@ -21,10 +21,10 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 
 	HRESULT Initialize_FromData(
-		const void* pVertexData,
+		 void* pVertexData,
 		UINT vertexCount,
 		UINT vertexStride,
-		const void* pIndexData,
+		 void* pIndexData,
 		UINT indexCount,
 		UINT indexStride,
 		_bool isAnim,

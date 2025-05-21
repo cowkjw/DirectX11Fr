@@ -40,6 +40,8 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 	m_iIndexStride = sizeof(_uint);
 	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
 	m_ePrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	m_iNumPritimive = m_iNumIndices / 3;
+
 
 	D3D11_BUFFER_DESC			VBBufferDesc{};
 	VBBufferDesc.ByteWidth = m_iNumVertices * m_iVertexStride;
@@ -88,9 +90,13 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 	IBBufferDesc.StructureByteStride = m_iIndexStride;
 	IBBufferDesc.MiscFlags = 0;
 
-	_uint* pIndices = new _uint[m_iNumIndices];
-	ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);
+	//_uint* pIndices = new _uint[m_iNumIndices];
+	//ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);
 
+	m_pIndices = new _uint[m_iNumIndices];
+	ZeroMemory(m_pIndices, sizeof(_uint) * m_iNumIndices);
+
+	_uint* pIndices = static_cast<_uint*>(m_pIndices);
 	_uint	iNumIndices = { 0 };
 
 	for (_uint i = 0; i < m_iNumVerticesZ - 1; i++)
@@ -117,12 +123,12 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 	}
 
 	D3D11_SUBRESOURCE_DATA		IBInitialData{};
-	IBInitialData.pSysMem = pIndices;
+	IBInitialData.pSysMem = m_pIndices;
 
 	if (FAILED(m_pDevice->CreateBuffer(&IBBufferDesc, &IBInitialData, &m_pIB)))
 		return E_FAIL;
 
-	Safe_Delete_Array(pIndices);
+	//Safe_Delete_Array(pIndices);
 
 
 	CloseHandle(hFile);

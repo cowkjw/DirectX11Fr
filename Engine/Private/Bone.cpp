@@ -84,6 +84,11 @@ CBone* CBone::CreateByBinary(ifstream& ifs)
 	return pBone;
 }
 
+CBone* CBone::Clone()
+{
+	return new CBone(*this);	
+}
+
 void CBone::Free()
 {
 	__super::Free();

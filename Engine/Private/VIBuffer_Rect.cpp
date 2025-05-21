@@ -20,6 +20,7 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 	m_iIndexStride = sizeof(_ushort);
 	m_eIndexFormat = DXGI_FORMAT_R16_UINT;
 	m_ePrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	m_iNumPritimive = m_iNumIndices / 3;
 
 	D3D11_BUFFER_DESC			VBBufferDesc{};
 	VBBufferDesc.ByteWidth = m_iNumVertices * m_iVertexStride;
@@ -67,9 +68,10 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 	IBBufferDesc.StructureByteStride = m_iIndexStride;
 	IBBufferDesc.MiscFlags = 0;
 
-	_ushort* pIndices = new _ushort[m_iNumIndices];
-	ZeroMemory(pIndices, sizeof(_ushort) * m_iNumIndices);
+	m_pIndices = new _ushort[m_iNumIndices];
+	ZeroMemory(m_pIndices, sizeof(_ushort) * m_iNumIndices);
 
+	_ushort* pIndices = static_cast<_ushort*>(m_pIndices);
 	pIndices[0] = 0;
 	pIndices[1] = 1;
 	pIndices[2] = 2;
@@ -79,12 +81,12 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 	pIndices[5] = 3;
 
 	D3D11_SUBRESOURCE_DATA		IBInitialData{};
-	IBInitialData.pSysMem = pIndices;
+	IBInitialData.pSysMem = m_pIndices;
 
 	if (FAILED(m_pDevice->CreateBuffer(&IBBufferDesc, &IBInitialData, &m_pIB)))
 		return E_FAIL;
 
-	Safe_Delete_Array(pIndices);
+//	Safe_Delete_Array(pIndices);
 
 
 

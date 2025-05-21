@@ -20,6 +20,8 @@ CBaseCharacter::CBaseCharacter(const CBaseCharacter& Prototype)
 HRESULT CBaseCharacter::Initialize_Prototype()
 {
 	Ready_Components();
+
+	m_pModelCom->Set_Animation(0, true);
 	return S_OK;
 }
 
@@ -48,6 +50,13 @@ void CBaseCharacter::Update(_float fTimeDelta)
 void CBaseCharacter::Late_Update(_float fTimeDelta)
 {
 	CGameObject::Late_Update(fTimeDelta);
+
+    //_float3 tmp{};  
+    //XMStoreFloat3(&tmp, m_pTransformCom->Get_State(STATE::POSITION));  
+    //if (m_pGameInstance->IsAABBInFrustum(tmp, m_pTransformCom->Get_Scaled()))  
+    //{  
+    //  
+    //}
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
 }
 

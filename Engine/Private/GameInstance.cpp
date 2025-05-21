@@ -1,6 +1,6 @@
 #include "GameInstance.h"
 
-//#include "Picking.h"
+#include "Picking.h"
 #include "Renderer.h"
 #include "PhysXMag.h"
 #include "Level_Manager.h"
@@ -47,9 +47,9 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	if (nullptr == m_pRenderer)
 		return E_FAIL;
 
-	//m_pPicking = CPicking::Create(*ppOut, EngineDesc.hWnd, EngineDesc.iWinSizeX, EngineDesc.iWinSizeY);
-	//if (nullptr == m_pPicking)
-	//	return E_FAIL;
+	m_pPicking = CPicking::Create(*ppDeviceOut, *ppContextOut, EngineDesc.hWnd, EngineDesc.iWinSizeX, EngineDesc.iWinSizeY);
+	if (nullptr == m_pPicking)
+		return E_FAIL;
 
 
 	m_pFrustumCull = CFrustumCull::Create();
@@ -87,7 +87,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 	m_pTransformPipeline->Update();
 
-	//m_pPicking->Update();
+	m_pPicking->Update(*m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::VIEW), *m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::PROJECTION));
 
 	m_pFrustumCull->Update(*m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::VIEW), *m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::PROJECTION));
 	m_pObject_Manager->Update(fTimeDelta);	
@@ -155,15 +155,6 @@ _float CGameInstance::Compute_Random(_float fMin, _float fMax)
 {
 	return fMin + (fMax - fMin) * Compute_Random_Normal();	
 }
-
-#pragma region GRAPHIC
-
-HRESULT CGameInstance::CreateRenderTarget(UINT width, UINT height, ID3D11Texture2D** outTexture, ID3D11RenderTargetView** outRTV, ID3D11ShaderResourceView** outSRV, DXGI_FORMAT format)
-{
-	return m_pGraphic_Device->CreateRenderTarget(width, height, outTexture, outRTV, outSRV, format);
-}
-
-#pragma endregion
 
 #pragma region LEVEL_MANAGER
 
@@ -242,6 +233,21 @@ HRESULT CGameInstance::Add_Timer(const _wstring& strTimerTag)
 void CGameInstance::Update_Timer(const _wstring& strTimerTag)
 {
 	return m_pTimer_Manager->Update(strTimerTag);
+}
+
+void CGameInstance::Transform_Picking_ToLocalSpace(const _matrix& WorldMatrixInverse)
+{
+	m_pPicking->Transform_ToLocalSpace(WorldMatrixInverse);
+}
+
+_bool CGameInstance::Picking_InWorld(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC)
+{
+	return m_pPicking->Picking_InWorld(vPickedPos, vPointA, vPointB, vPointC);
+}
+
+_bool CGameInstance::Picking_InLocal(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC)
+{
+	return m_pPicking->Picking_InLocal(vPickedPos, vPointA, vPointB, vPointC);
 }
 
 #pragma endregion
@@ -495,7 +501,8 @@ void CGameInstance::UnregisterCollider(CPhysXCollider* pCol)
 
 void CGameInstance::Release_Engine()
 {
-	//Safe_Release(m_pPicking);
+	Safe_Release(m_pPicking);
+	
 	Safe_Release(m_pPhysXManager);
 
 	Safe_Release(m_pTransformPipeline);
