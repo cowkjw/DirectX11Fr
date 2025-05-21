@@ -19,11 +19,23 @@ public:
 
 	void ExportBinary(ofstream& ofs);
 
+public:
+	const _float4x4& GetLocalMatrix() const
+	{
+		return m_LocalTransformationMatrix;
+	}
+
+	_uint GetBoneIndex() const
+	{
+		return m_iBoneIndex;
+	}
+
 private:
 	_char				m_szName[MAX_PATH] = {};
 	_uint				m_iNumKeyFrames;
 	vector<KEYFRAME>	m_KeyFrames;
 	_uint				m_iBoneIndex = {};
+	_float4x4 		    m_LocalTransformationMatrix = {};
 	//_uint				m_iCurrentKeyFrameIndex = {};
 	
 

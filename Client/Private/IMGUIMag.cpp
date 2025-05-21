@@ -29,6 +29,8 @@ HRESULT CIMGUIMag::Initialize()
 	m_pEditorMag = CEditorManager::Create(m_pDevice, m_pContext);
 	if (m_pEditorMag == nullptr)
 		return E_FAIL;
+
+	ImNodes::CreateContext();
 	return S_OK;
 }
 
@@ -97,6 +99,7 @@ void CIMGUIMag::Free()
 
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
+	ImNodes::DestroyContext();
 	ImGui::DestroyContext();
 
 	Safe_Release(m_pEditorMag);

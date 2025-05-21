@@ -145,14 +145,20 @@
     <ClInclude Include="..\Public\Bone.h">
       <Filter>01.Utility\03.Components\Model\Bone</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Animation.h">
-      <Filter>01.Utility\03.Components\Model\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Channel.h">
-      <Filter>01.Utility\03.Components\Model\Animation</Filter>
+      <Filter>01.Utility\03.Components\Animation</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Picking.h">
       <Filter>01.Utility\07. Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Animator.h">
+      <Filter>01.Utility\03.Components\Animation\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Animation.h">
+      <Filter>01.Utility\03.Components\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AnimController.h">
+      <Filter>01.Utility\03.Components\Animation\AnimationController</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -283,13 +289,19 @@
       <Filter>01.Utility\03.Components\Model\Bone</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Animation.cpp">
-      <Filter>01.Utility\03.Components\Model\Animation</Filter>
+      <Filter>01.Utility\03.Components\Animation</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Channel.cpp">
-      <Filter>01.Utility\03.Components\Model\Animation</Filter>
+      <Filter>01.Utility\03.Components\Animation</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Picking.cpp">
       <Filter>01.Utility\07. Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Animator.cpp">
+      <Filter>01.Utility\03.Components\Animation\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AnimController.cpp">
+      <Filter>01.Utility\03.Components\Animation\AnimationController</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -425,11 +437,17 @@
     <Filter Include="01.Utility\03.Components\Model\Bone">
       <UniqueIdentifier>{cdca7487-3656-42ea-bba8-45d29b9f2f55}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\03.Components\Model\Animation">
-      <UniqueIdentifier>{62fd396d-48d5-4d26-a37c-3bd227804f38}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\07. Picking">
       <UniqueIdentifier>{083bca1b-9623-4bfb-aa89-352802d9d95b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Animation">
+      <UniqueIdentifier>{62fd396d-48d5-4d26-a37c-3bd227804f38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Animation\Animator">
+      <UniqueIdentifier>{9271d1f1-377a-4a17-b631-750d5850e125}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Animation\AnimationController">
+      <UniqueIdentifier>{8e420046-bebd-4e7c-a1f2-f0baee9a13d0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

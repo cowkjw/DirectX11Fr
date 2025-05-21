@@ -25,7 +25,7 @@ HRESULT CFreeCamera::Initialize(void* pArg)
 	Desc.fNear = 0.1f;
 	Desc.fFar = 500.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
-	Desc.fSpeedPerSec = 10.0f;
+	Desc.fSpeedPerSec = 25.0f;
 	m_strName = TEXT("Camera");
 	m_fMouseSensor = 0.1f;
 	if (FAILED(__super::Initialize(&Desc)))

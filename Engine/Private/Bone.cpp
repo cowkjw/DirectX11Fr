@@ -12,6 +12,8 @@ HRESULT CBone::Initialize(const aiNode* pAINode, _int iParentBoneIndex)
 
 	XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&m_TransformationMatrix))); // 전치 행렬로 변환
 
+	m_LocalBindPoseMatrix = m_TransformationMatrix; // 로컬 행렬 설정 나중에 블렌드에 사용하기
+
 	XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity()); // 나중에 애니메이션 정렬을 위해서 초기화
 
 	m_iParentBoneIndex = iParentBoneIndex; // 내 부모 뼈의 인덱스
@@ -78,6 +80,7 @@ CBone* CBone::CreateByBinary(ifstream& ifs)
 	strcpy_s(pBone->m_szName, nameLen + 1, name.c_str());
 	pBone->m_iParentBoneIndex = parentIndex;
 	pBone->m_TransformationMatrix = tm;
+	pBone->m_LocalBindPoseMatrix = pBone->m_TransformationMatrix; // 로컬 행렬 설정 나중에 블렌드에 사용하기
 	// 초기 Combined 매트릭스는 Identity
 	XMStoreFloat4x4(&pBone->m_CombinedTransformationMatrix, XMMatrixIdentity());
 

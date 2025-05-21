@@ -12,6 +12,7 @@ namespace Engine
 	}ENGINE_DESC;
 
 
+
     typedef struct tagKeyFrame
     {
         /* 행렬이 아닌이유? : 상태와 상태 사이를 보간해주기위해서. */

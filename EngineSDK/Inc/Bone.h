@@ -31,6 +31,7 @@ public:
 		return !strcmp(m_szName, pName);
 	}
 
+	const _float4x4& Get_LocalBindPose() const { return m_LocalBindPoseMatrix; }
 public:
 	HRESULT ExportBinary(ofstream& ofs);
 
@@ -44,6 +45,8 @@ private:
 	_float4x4				m_CombinedTransformationMatrix = {};	
 
 	_int					m_iParentBoneIndex = { -1 };
+
+	_float4x4  m_LocalBindPoseMatrix = {};
 
 public:
 	static CBone* Create(const aiNode* pAINode, _int iParentBoneIndex);

@@ -126,6 +126,7 @@ void CChannel::Update_TransformationMatrix(_uint& currentKeyFrameIndex, _float f
 
 
 	Bones[m_iBoneIndex]->Set_TransformationMatrix(TransformationMatrix);
+	XMStoreFloat4x4(&m_LocalTransformationMatrix, TransformationMatrix);
 }
 
 void CChannel::ExportBinary(ofstream& ofs)

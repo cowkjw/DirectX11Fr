@@ -16,14 +16,10 @@ public:
 		return m_iNumMeshes;
 	}
 
+	const char* GetCurrentAnimName() const;
 
-	void Set_Animation(_uint iIndex, _bool isLoop = true) {
-		if (iIndex >= m_iNumAnimations)
-			return;
-		m_iCurrentAnimIndex = iIndex;
-		m_isLoop = isLoop;
-	}
 
+	void Set_Animation(_uint iIndex, _float fadeDuration = 0.2f, _bool isLoop = false);
 	const vector<class CMesh*>& Get_Meshes() const {
 		return m_Meshes;
 	}
@@ -61,11 +57,14 @@ private:
 	vector<class CBone*>			m_Bones; // 전체 본의 개수
 
 
-	_bool						m_isLoop{};
+	_bool						m_isLoop{false};
 	_uint						m_iCurrentAnimIndex = { };
+	_uint						m_iPrevAnimIndex = { };
 	_uint						m_iNumAnimations = {};
 	vector<class CAnimation*>	m_Animations;
 	unordered_map<string, _uint> m_AnimationMap;
+	class CAnimator* m_pAnimator = { nullptr };
+	_bool m_bChangeAnim = { false };
 
 public:
 	HRESULT Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex);

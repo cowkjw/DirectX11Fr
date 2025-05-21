@@ -1,6 +1,7 @@
 #include "Component.h"
 
 #include "Animation.h"
+#include "Animator.h"
 #include "Material.h"
 #include "Model.h"
 #include "Mesh.h"
@@ -13,7 +14,7 @@ CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CModel::CModel(const CModel& Prototype)
-	: CComponent( Prototype)
+	: CComponent(Prototype)
 	, m_iNumMeshes{ Prototype.m_iNumMeshes }
 	, m_Meshes{ Prototype.m_Meshes }
 	, m_iNumMaterials{ Prototype.m_iNumMaterials }
@@ -21,21 +22,37 @@ CModel::CModel(const CModel& Prototype)
 	, m_eType{ Prototype.m_eType }
 	, m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
 	, m_AnimationMap{ Prototype.m_AnimationMap }
-	, m_iNumAnimations{ Prototype.m_iNumAnimations }
-{
+	, m_iNumAnimations{ Prototype.m_iNumAnimations } {
 
 	for (auto& pBone : Prototype.m_Bones)
 		m_Bones.push_back(pBone->Clone());
 
 	for (auto& pAnimation : Prototype.m_Animations)
-		m_Animations.push_back(pAnimation->Clone());
+		m_Animations.push_back(pAnimation->Clone(m_Bones));
 
 	for (auto& pMaterial : m_Materials)
 		Safe_AddRef(pMaterial);
 
 	for (auto& pMesh : m_Meshes)
 		Safe_AddRef(pMesh);
+
+	if (Prototype.m_pAnimator)
+	{
+		m_pAnimator = Prototype.m_pAnimator->Clone(this, m_Bones);
+		m_pAnimator->Set_CurrentAnim(m_Animations[0]);
+	}
+	else
+	{
+		m_pAnimator = nullptr;
+	}
 }
+
+const char* CModel::GetCurrentAnimName() const
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_Name();
+}
+
+
 
 HRESULT CModel::Bind_Material(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint iTextureIndex)
 {
@@ -84,7 +101,10 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (FAILED(Ready_Animations()))
 		return E_FAIL;
 
-
+	m_pAnimator = CAnimator::Create(this, m_Bones);
+	if (nullptr == m_pAnimator)
+		return E_FAIL;
+	m_pAnimator->Set_CurrentAnim(m_Animations[0]);
 	return S_OK;
 }
 
@@ -129,19 +149,57 @@ HRESULT CModel::Initialize_PrototypeByBinary(MODEL eType, const _char* pModelFil
 	ifs.read(reinterpret_cast<char*>(&type), sizeof(type));
 
 	// 6) 애니메이션
-	if (type== static_cast<uint32_t>(MODEL::ANIM))
+	if (type == static_cast<uint32_t>(MODEL::ANIM))
 	{
-		uint32_t animCount;
-		ifs.read(reinterpret_cast<char*>(&animCount), sizeof(animCount));
-		for (uint32_t i = 0; i < animCount; ++i)
+		//uint32_t animCount;
+		//ifs.read(reinterpret_cast<char*>(&animCount), sizeof(animCount));
+		//for (uint32_t i = 0; i < animCount; ++i)
+		//{
+		//	CAnimation* pAnimation = CAnimation::CreateByBinary(ifs, bones);
+		//	if (nullptr == pAnimation)
+		//		return E_FAIL;
+		//	m_Animations.push_back(pAnimation);
+		//	//m_AnimationMap[m_Animations.back()->Get_Name()] = m_Animations.size() - 1;
+		//}
+		//this->m_iNumAnimations = (uint32_t)m_Animations.size();
+
+		string full = pModelFilePath;
+		size_t pos = full.find_last_of("\\/");
+		string dir = (pos != string::npos) ? full.substr(0, pos + 1) : "./";
+
+		// 1) 검색 패턴 (예: "C:/Models/*.anim.bin")
+		string pattern = dir + "*.anim.bin";
+
+		WIN32_FIND_DATAA findData;
+		HANDLE hFind = FindFirstFileA(pattern.c_str(), &findData);
+		if (hFind != INVALID_HANDLE_VALUE)
 		{
-			CAnimation* pAnimation = CAnimation::CreateByBinary(ifs, bones);
-			if (nullptr == pAnimation)
-				return E_FAIL;
-			m_Animations.push_back(pAnimation);
-			//m_AnimationMap[m_Animations.back()->Get_Name()] = m_Animations.size() - 1;
+			do
+			{
+				// 2) 찾은 파일 이름(build.cFileName)과 디렉터리 결합
+				string animPath = dir + findData.cFileName;
+
+				// 3) 파일 열기
+				ifstream ifs(animPath, ios::binary);
+				if (!ifs.is_open())
+					continue;
+
+				// 4) CAnimation 생성 (bones는 이미 채워져 있음)
+				CAnimation* pAnim = CAnimation::CreateByBinary(ifs, this->m_Bones);
+				if (pAnim)
+				{
+					this->m_Animations.push_back(pAnim);
+					this->m_AnimationMap[pAnim->Get_Name()] =
+						static_cast<uint32_t>(this->m_Animations.size() - 1);
+				}
+
+			} while (FindNextFileA(hFind, &findData));  // 다음 파일 검색
+
+			FindClose(hFind);
 		}
-		this->m_iNumAnimations = (uint32_t)m_Animations.size();
+
+		// 5) 총 개수 업데이트
+		this->m_iNumAnimations = static_cast<uint32_t>(this->m_Animations.size());
 	}
 
 	this->m_Materials = materials;
@@ -151,6 +209,14 @@ HRESULT CModel::Initialize_PrototypeByBinary(MODEL eType, const _char* pModelFil
 	this->m_Meshes = meshes;
 	this->m_eType = static_cast<MODEL>(type);
 	XMStoreFloat4x4(&this->m_PreTransformMatrix, PreTransformMatrix);
+
+
+	m_pAnimator = CAnimator::Create(this, this->m_Bones);
+
+	if (nullptr == m_pAnimator)
+		return E_FAIL;
+
+	m_pAnimator->Set_CurrentAnim(m_Animations[0]);
 
 	return S_OK;
 }
@@ -200,10 +266,26 @@ HRESULT CModel::ExportBinary(const _char* pFilePath, MODEL eType)
 
 	if (eType == MODEL::ANIM)
 	{
-		// 애니메이션 관련 데이터 저장
-		ofs.write((char*)&m_iNumAnimations, sizeof(m_iNumAnimations));
+		//// 애니메이션 관련 데이터 저장
+		//ofs.write((char*)&m_iNumAnimations, sizeof(m_iNumAnimations));
+		//for (auto& anim : m_Animations)
+		//	anim->ExportBinary(ofs);
+
+		string full = pFilePath;
+		size_t pos = full.find_last_of("\\/");
+		string dir = (pos != string::npos) ? full.substr(0, pos + 1) : "";
+
 		for (auto& anim : m_Animations)
-			anim->ExportBinary(ofs);
+		{
+			// animFile = "run.anim.bin"
+			string animFile = anim->Get_Name();
+			string animPath = dir + animFile + ".anim.bin";
+
+			// 실제 애니 바이너리만 Export
+			ofstream aos(animPath, ios::binary);
+			if (aos)
+				anim->ExportBinary(aos);  // CAnimation::ExportBinary
+		}
 	}
 
 
@@ -211,11 +293,35 @@ HRESULT CModel::ExportBinary(const _char* pFilePath, MODEL eType)
 
 }
 
+void CModel::Set_Animation(_uint iIndex, _float fadeDuration, _bool isLoop)
+{
+	if (iIndex >= m_iNumAnimations)
+		return;
+
+	m_iPrevAnimIndex = m_iCurrentAnimIndex;
+	m_iCurrentAnimIndex = iIndex;
+	m_isLoop = isLoop;
+	m_bChangeAnim = true;
+
+	if (m_pAnimator)
+	{
+		if (m_iCurrentAnimIndex == m_iPrevAnimIndex)
+			return;
+		CAnimation* from = m_Animations[m_iPrevAnimIndex];
+		CAnimation* to = m_Animations[m_iCurrentAnimIndex];
+		m_pAnimator->StartTransition(from, to, fadeDuration);
+		m_bChangeAnim = false;
+	}
+}
+
 HRESULT CModel::Play_Animation(_float fTimeDelta)
 {
-	/* 1. ㅎ녀재 애니메이션에 맞는 뼈의 상태를 읽어와서 뼈의 TrnasformationMatrix를 갱신해준다. */
-	m_Animations[m_iCurrentAnimIndex]->Update_Bones(fTimeDelta, m_Bones, m_isLoop);
+	if (m_pAnimator)
+	{
+		m_pAnimator->Update(fTimeDelta);
+	}
 
+	//m_Animations[m_iCurrentAnimIndex]->Update_Bones(fTimeDelta, m_Bones, m_isLoop);
 
 	/* 2. 전체 뼐르 순회하면서 뼈들의 ColmbinedTransformationMatixf를 부모에서부터 자식으로 갱신해주낟. */
 	for (auto& pBone : m_Bones)
@@ -354,6 +460,7 @@ void CModel::Free()
 	for (auto& pAnimation : m_Animations)
 		Safe_Release(pAnimation);
 
+	Safe_Release(m_pAnimator);
 
 	m_Meshes.clear();
 

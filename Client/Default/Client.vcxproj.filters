@@ -306,6 +306,9 @@
     <ClCompile Include="..\private\BaseCharacter.cpp">
       <Filter>01.GameObject\Character</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\External Libraries\imgui\imnodes.cpp">
+      <Filter>97.IMGUI\Lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTex.hlsl">

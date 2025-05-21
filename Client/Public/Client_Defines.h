@@ -19,10 +19,15 @@
 #undef new 
 
 #define IMGUI_DEFINE_MATH_OPERATORS
+
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "../../External Libraries/ImGuizmo-master/ImGuizmo.h"
+#include "imnodes.h"
+#include "imnodes_internal.h"
+
+
 #pragma endregion
 
 //// 이후 다시 new 매크로를 쓰고 싶으면 다시 define해주면 됨
@@ -41,6 +46,7 @@ extern HINSTANCE g_hInst;
 
 
 using namespace ImGui;
+using namespace ImNodes;
 using namespace Client;
 
 

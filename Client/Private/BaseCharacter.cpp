@@ -21,7 +21,7 @@ HRESULT CBaseCharacter::Initialize_Prototype()
 {
 	Ready_Components();
 
-	m_pModelCom->Set_Animation(0, true);
+	m_pModelCom->Set_Animation(0);
 	return S_OK;
 }
 
@@ -35,16 +35,37 @@ HRESULT CBaseCharacter::Initialize(void* pArg)
 
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
+
 	return S_OK;
 }
 
 void CBaseCharacter::Priority_Update(_float fTimeDelta)
 {
+	static _uint iAnim = 0;
+	if (m_pGameInstance->IsKeyPressed('N'))
+	{
+		m_pModelCom->Set_Animation(iAnim,0.25f);
+		iAnim++;
+	}
+
+	if (m_pGameInstance->IsKeyPressed('M'))
+	{
+		m_pModelCom->Set_Animation(iAnim,0.25f);
+	iAnim = max(0,iAnim-1);
+	}
 }
 
 void CBaseCharacter::Update(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta);
+
+
+	{
+		const char* cur = m_pModelCom->GetCurrentAnimName();
+		char buf[MAX_PATH];
+		sprintf_s(buf, "현재 애니메이션: %s", cur);
+		SetWindowTextA(g_hWnd, buf);
+	}
 }
 
 void CBaseCharacter::Late_Update(_float fTimeDelta)

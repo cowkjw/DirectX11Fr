@@ -202,6 +202,7 @@
     <ClCompile Include="..\..\External Libraries\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\..\External Libraries\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\..\External Libraries\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\..\External Libraries\imgui\imnodes.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseCharacter.cpp" />
     <ClCompile Include="..\private\FreeCamera.cpp" />

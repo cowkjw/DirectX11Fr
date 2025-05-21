@@ -174,7 +174,70 @@ HRESULT CEditorManager::Render()
 			snapScale
 		);
 	}
+
+	TestNodes();
 	return S_OK;
+}
+static int node_id_a = 1;
+static int node_id_b = 2;
+static int link_id = 100;
+void CEditorManager::TestNodes()
+{
+	ImGui::Begin("node editor");
+	ImNodes::BeginNodeEditor();
+
+	// ┌─────────── Node A ───────────┐
+	ImNodes::BeginNode(node_id_a);
+	{
+		ImNodes::BeginNodeTitleBar();
+		ImGui::TextUnformatted("State: Idle");
+		ImNodes::EndNodeTitleBar();
+
+		// 입력 핀 (pin id = 10)
+		ImNodes::BeginInputAttribute(10);
+		ImGui::Text("in");
+		ImNodes::EndInputAttribute();
+
+		// 내용 영역
+		ImGui::Text("Animation Clip: Idle.fbx");
+
+		// 출력 핀 (pin id = 11)
+		ImNodes::BeginOutputAttribute(11);
+		ImGui::Indent(40);
+		ImGui::Text("out");
+		ImNodes::EndOutputAttribute();
+	}
+	ImNodes::EndNode();
+	// └──────────────────────────────┘
+
+	// ┌─────────── Node B ───────────┐
+	ImNodes::BeginNode(node_id_b);
+	{
+		ImNodes::BeginNodeTitleBar();
+		ImGui::TextUnformatted("State: Run");
+		ImNodes::EndNodeTitleBar();
+
+		ImNodes::BeginInputAttribute(20);
+		ImGui::Text("in");
+		ImNodes::EndInputAttribute();
+
+		ImGui::Text("Animation Clip: Run.fbx");
+
+		ImNodes::BeginOutputAttribute(21);
+		ImGui::Indent(40);
+		ImGui::Text("out");
+		ImNodes::EndOutputAttribute();
+	}
+	ImNodes::EndNode();
+	// └──────────────────────────────┘
+
+	// 2) 노드 간 연결 (link_id=100, from pin 11 → to pin 20)
+	ImNodes::Link(link_id, 11, 20);
+
+	// 3) 노드 에디터 종료
+	ImNodes::EndNodeEditor();
+
+	ImGui::End();
 }
 
 CEditorManager* CEditorManager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

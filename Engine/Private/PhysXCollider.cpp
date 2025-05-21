@@ -119,21 +119,6 @@ void CPhysXCollider::DebugDraw()
 {
 	if (!m_bDebugDrawEnabled || !m_pOwner) return;
 	auto* transform = m_pOwner->GetTransform();
-	//Matrix world = transform->Get_WorldMatrix();
-	//// Shape 유형별로 와이어프레임 드로우 호출 (예시)
-	//// Box: 반쪽 Extents를 2배한 전체 Extents 사용
-	//if (auto* box = dynamic_cast<CBoxCollider*>(this)) {
-	//	Vector3 half = box->m_vHalfExtents;
-	//	Renderer::DrawWireBox(world, half * 2.0f);  // 전체 Extents
-	//}
-	//// Sphere: 반지름 사용
-	//if (auto* sphere = dynamic_cast<CSphereCollider*>(this)) {
-	//	Renderer::DrawWireSphere(world, sphere->m_fRadius);
-	//}
-	//// Capsule: 반지름 및 높이 사용
-	//if (auto* cap = dynamic_cast<CCapsuleCollider*>(this)) {
-	//	Renderer::DrawWireCapsule(world, cap->m_fRadius, cap->m_fHalfHeight);
-	//}
 }
 
 void CPhysXCollider::RenderInspector(IInspector& inspector)
