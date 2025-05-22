@@ -31,7 +31,7 @@ public:
 	void SetCurrentTrackPosition(_float fCurrentTrackPosition) { m_fCurrentTrackPosition = fCurrentTrackPosition; }
 	void SetCurrentKeyFrameIndices(_uint iIndex, _uint iKeyFrameIndex) { m_CurrentKeyFrameIndices[iIndex] = iKeyFrameIndex; }
 
-	_float GetCurrentKeyFrameIndices(_uint iIndex) { return m_CurrentKeyFrameIndices[iIndex]; }
+	_uint GetCurrentKeyFrameIndices(_uint iIndex) { return m_CurrentKeyFrameIndices[iIndex]; }
 	_float GetDuration() { return m_fDuration; }
 	_float GetTickPerSecond() { return m_fTickPerSecond; }
 	_float GetCurrentTrackPosition() { return m_fCurrentTrackPosition; }

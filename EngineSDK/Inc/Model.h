@@ -16,12 +16,12 @@ public:
 		return m_iNumMeshes;
 	}
 
-	const char* GetCurrentAnimName() const;
-
-
-	void Set_Animation(_uint iIndex, _float fadeDuration = 0.2f, _bool isLoop = false);
 	const vector<class CMesh*>& Get_Meshes() const {
 		return m_Meshes;
+	}
+
+	const vector<class CBone*>& Get_Bones() const {
+		return m_Bones;
 	}
 
 
@@ -39,6 +39,27 @@ public:
 
 public:
 	HRESULT Play_Animation(_float fTimeDelta);
+
+
+	_uint Get_NumAnimations() const { return m_iNumAnimations; }
+	vector<class CAnimation*> GetAnimations() { return m_Animations; }
+	class CAnimation* GetAnimationClip(_uint iIndex) 
+	{
+		if (iIndex >= m_iNumAnimations)
+			return nullptr;
+		return m_Animations[iIndex];
+	}
+	class CAnimation* GetAnimationClipByName(const string& name)
+	{
+		auto it = m_AnimationMap.find(name);
+		if (it != m_AnimationMap.end())
+			return m_Animations[it->second];
+		return nullptr;
+	}
+
+	// imgui¿ë
+	unordered_map<string, _uint> GetAnimationMap() { return m_AnimationMap; }
+	unordered_map<_uint, string> GetAnimationNameMap() { return m_AnimationNameMap; }
 
 private:
 	Assimp::Importer		m_Importer;	
@@ -63,6 +84,7 @@ private:
 	_uint						m_iNumAnimations = {};
 	vector<class CAnimation*>	m_Animations;
 	unordered_map<string, _uint> m_AnimationMap;
+	unordered_map<_uint, string> m_AnimationNameMap;
 	class CAnimator* m_pAnimator = { nullptr };
 	_bool m_bChangeAnim = { false };
 

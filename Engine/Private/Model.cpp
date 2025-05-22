@@ -22,7 +22,9 @@ CModel::CModel(const CModel& Prototype)
 	, m_eType{ Prototype.m_eType }
 	, m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
 	, m_AnimationMap{ Prototype.m_AnimationMap }
-	, m_iNumAnimations{ Prototype.m_iNumAnimations } {
+	,m_AnimationNameMap{Prototype.m_AnimationNameMap}
+	, m_iNumAnimations{ Prototype.m_iNumAnimations } 
+{
 
 	for (auto& pBone : Prototype.m_Bones)
 		m_Bones.push_back(pBone->Clone());
@@ -35,22 +37,8 @@ CModel::CModel(const CModel& Prototype)
 
 	for (auto& pMesh : m_Meshes)
 		Safe_AddRef(pMesh);
-
-	if (Prototype.m_pAnimator)
-	{
-		m_pAnimator = Prototype.m_pAnimator->Clone(this, m_Bones);
-		m_pAnimator->Set_CurrentAnim(m_Animations[0]);
-	}
-	else
-	{
-		m_pAnimator = nullptr;
-	}
 }
 
-const char* CModel::GetCurrentAnimName() const
-{
-	return m_Animations[m_iCurrentAnimIndex]->Get_Name();
-}
 
 
 
@@ -101,10 +89,10 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (FAILED(Ready_Animations()))
 		return E_FAIL;
 
-	m_pAnimator = CAnimator::Create(this, m_Bones);
-	if (nullptr == m_pAnimator)
-		return E_FAIL;
-	m_pAnimator->Set_CurrentAnim(m_Animations[0]);
+	//m_pAnimator = CAnimator::Create(this, m_Bones);
+	//if (nullptr == m_pAnimator)
+	//	return E_FAIL;
+	//m_pAnimator->Set_CurrentAnim(m_Animations[0]);
 	return S_OK;
 }
 
@@ -191,6 +179,7 @@ HRESULT CModel::Initialize_PrototypeByBinary(MODEL eType, const _char* pModelFil
 					this->m_Animations.push_back(pAnim);
 					this->m_AnimationMap[pAnim->Get_Name()] =
 						static_cast<uint32_t>(this->m_Animations.size() - 1);
+					this->m_AnimationNameMap[static_cast<uint32_t>(this->m_Animations.size() - 1)] = pAnim->Get_Name();
 				}
 
 			} while (FindNextFileA(hFind, &findData));  // 다음 파일 검색
@@ -211,12 +200,12 @@ HRESULT CModel::Initialize_PrototypeByBinary(MODEL eType, const _char* pModelFil
 	XMStoreFloat4x4(&this->m_PreTransformMatrix, PreTransformMatrix);
 
 
-	m_pAnimator = CAnimator::Create(this, this->m_Bones);
+	//m_pAnimator = CAnimator::Create(this, this->m_Bones);
 
-	if (nullptr == m_pAnimator)
-		return E_FAIL;
+	//if (nullptr == m_pAnimator)
+	//	return E_FAIL;
 
-	m_pAnimator->Set_CurrentAnim(m_Animations[0]);
+	//m_pAnimator->Set_CurrentAnim(m_Animations[0]);
 
 	return S_OK;
 }
@@ -293,33 +282,12 @@ HRESULT CModel::ExportBinary(const _char* pFilePath, MODEL eType)
 
 }
 
-void CModel::Set_Animation(_uint iIndex, _float fadeDuration, _bool isLoop)
-{
-	if (iIndex >= m_iNumAnimations)
-		return;
-
-	m_iPrevAnimIndex = m_iCurrentAnimIndex;
-	m_iCurrentAnimIndex = iIndex;
-	m_isLoop = isLoop;
-	m_bChangeAnim = true;
-
-	if (m_pAnimator)
-	{
-		if (m_iCurrentAnimIndex == m_iPrevAnimIndex)
-			return;
-		CAnimation* from = m_Animations[m_iPrevAnimIndex];
-		CAnimation* to = m_Animations[m_iCurrentAnimIndex];
-		m_pAnimator->StartTransition(from, to, fadeDuration);
-		m_bChangeAnim = false;
-	}
-}
-
 HRESULT CModel::Play_Animation(_float fTimeDelta)
 {
-	if (m_pAnimator)
-	{
-		m_pAnimator->Update(fTimeDelta);
-	}
+	//if (m_pAnimator)
+	//{
+	//	m_pAnimator->Update(fTimeDelta);
+	//}
 
 	//m_Animations[m_iCurrentAnimIndex]->Update_Bones(fTimeDelta, m_Bones, m_isLoop);
 
@@ -331,7 +299,6 @@ HRESULT CModel::Play_Animation(_float fTimeDelta)
 
 	return S_OK;
 }
-
 
 
 HRESULT CModel::Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex)

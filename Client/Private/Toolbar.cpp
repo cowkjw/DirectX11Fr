@@ -348,7 +348,7 @@ void CToolbar::FBXLodaer()
     if (ImGui::CollapsingHeader("Selected FBX Files")) {
         for (const auto& path : m_FbxFilePaths) {
             // 간단히 UTF-16을 ANSI로 변환하여 출력
-            std::string utf8(path.begin(), path.end());
+			string utf8 = wstring_convert<codecvt_utf8<wchar_t>>().to_bytes(path);
             ImGui::TextUnformatted(utf8.c_str());
         }
     }

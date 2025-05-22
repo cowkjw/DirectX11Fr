@@ -11,5 +11,6 @@ namespace Engine
 	enum class BUFFER_TYPE { RECT, CUBE, TERRAIN };
 	enum class RESOURCE_TYPE { TEXTURE, SHADER };
 	enum class MODEL { NONANIM, ANIM };
+	enum class ParamType { Bool, Trigger, Float, Int };
 	
 }

@@ -25,6 +25,7 @@ namespace Engine
     }KEYFRAME;
 
 
+
 	typedef struct tagVector : public XMFLOAT3
 	{
         tagVector() : XMFLOAT3(0.f, 0.f, 0.f) {}

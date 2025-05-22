@@ -149,6 +149,54 @@ void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 	m_bDirty = true;
 }
 
+void CTransform::RotateToDirection(_fvector dir)
+{
+	if (XMVector3Equal(dir, XMVectorZero()))
+		return;
+
+	// 2) 정규화된 목표 방향
+	_vector target = XMVector3Normalize(dir);
+
+	// 3) 현재 전방(LOOK) 벡터
+	_vector forward = XMVector3Normalize(Get_State(STATE::LOOK));
+
+	// 4) 축(axis) = forward × target
+	_vector axis = XMVector3Cross(forward, target);
+
+	// 5) 평행(또는 반평행) 체크
+	if (XMVector3Equal(axis, XMVectorZero()))
+	{
+		// 반평행(180°)이면 Up 축을 사용, 같은 방향이면 회전 불필요
+		_float d = XMVectorGetX(XMVector3Dot(forward, target));
+		if (d < 0.f)
+			axis = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+		else
+			return;
+	}
+
+	axis = XMVector3Normalize(axis);
+
+	// 6) 회전 각도 계산
+	_float dot = XMVectorGetX(XMVector3Dot(forward, target));
+	dot = dot < -1.f ? -1.f : (dot > 1.f ? 1.f : dot);
+	_float angle = acosf(dot);
+
+	// 7) 쿼터니언 회전 매트릭스
+	_vector q = XMQuaternionRotationAxis(axis, angle);
+	_matrix R = XMMatrixRotationQuaternion(q);
+
+	// 8) 현재 로컬 축(ROW)들에 적용
+	_vector newRight = XMVector4Transform(Get_State(STATE::RIGHT), R);
+	_vector newUp = XMVector4Transform(Get_State(STATE::UP), R);
+	_vector newLook = XMVector4Transform(Get_State(STATE::LOOK), R);
+
+	Set_State(STATE::RIGHT, newRight);
+	Set_State(STATE::UP, newUp);
+	Set_State(STATE::LOOK, newLook);
+
+	m_bDirty = true;
+}
+
 void CTransform::FlllowParent(const CTransform* pParentTransform)
 {
 	if (!pParentTransform) return;

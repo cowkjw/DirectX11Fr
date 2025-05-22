@@ -37,8 +37,8 @@ HRESULT CAnimation::Initialize(const aiAnimation* pAIAnimation, const vector<cla
 	/* 이 애니메이션이 컨트롤해야하는 뼈의 갯수 */
 	m_iNumChannels = pAIAnimation->mNumChannels;
 
-	m_fTickPerSecond = pAIAnimation->mTicksPerSecond;
-	m_fDuration = pAIAnimation->mDuration;
+	m_fTickPerSecond = static_cast<_float>(pAIAnimation->mTicksPerSecond);
+	m_fDuration = static_cast<_float>(pAIAnimation->mDuration);
 
 
 	m_CurrentKeyFrameIndices.resize(m_iNumChannels);

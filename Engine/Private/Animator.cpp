@@ -1,15 +1,48 @@
 #include "Animator.h"
+#include "AnimController.h"
 #include "Model.h"
 #include "Bone.h"
 
-CAnimator::CAnimator()
+CAnimator::CAnimator(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CComponent{ pDevice, pContext }
+	, m_pModel{ nullptr }
+	, m_pCurrentAnim{ nullptr }
+	, m_Blend{}
 {
 }
 
-HRESULT CAnimator::Initialize(CModel* pModel, const vector<class CBone*>& Bones)
+CAnimator::CAnimator(const CAnimator& Prototype)
+	: CComponent(Prototype)
+	, m_pModel{ Prototype.m_pModel }
+	, m_pCurrentAnim{ Prototype.m_pCurrentAnim }
+	, m_Blend{ Prototype.m_Blend }
+	, m_Bones{ Prototype.m_Bones }
+	, m_pAnimController{ Prototype.m_pAnimController }
+	, m_iCurrentAnimIndex{ Prototype.m_iCurrentAnimIndex }
+	, m_iPrevAnimIndex{ Prototype.m_iPrevAnimIndex }
 {
-	m_pModel = pModel;
-	m_Bones = Bones;
+
+}
+
+HRESULT CAnimator::Initialize_Prototype()
+{
+	return S_OK;
+}
+
+HRESULT CAnimator::Initialize(void* pArg)
+{
+	if (pArg == nullptr)
+		return E_FAIL;
+
+	m_pModel = static_cast<CModel*>(pArg);
+
+	m_Bones = m_pModel->Get_Bones();
+
+	m_pAnimController = CAnimController::Create();
+	if (m_pAnimController == nullptr)
+		return E_FAIL;
+	m_pAnimController->SetAnimator(this);
+
 	return S_OK;
 }
 
@@ -20,7 +53,7 @@ void CAnimator::Update(_float fDeltaTime)
 		// 블렌드 중이 아니면 그냥 현재 애니메이션만 업데이트
 		if (m_pCurrentAnim == nullptr)
 			return;
-		m_pCurrentAnim->Update_Bones(fDeltaTime, m_Bones, m_Blend.isLoop);
+		m_bIsFinished =  m_pCurrentAnim->Update_Bones(fDeltaTime, m_Bones, m_Blend.isLoop);
 	}
 	else
 	{
@@ -33,8 +66,12 @@ void CAnimator::Play(_uint iAnimIndex, _bool isLoop)
 
 }
 
-void CAnimator::CrossFade(_uint iAnimIndex, _float blendDuration, _bool isLoop)
+void CAnimator::PlayClip(CAnimation* pAnim, _bool isLoop)
 {
+	if (pAnim == nullptr)
+		return;
+	m_pCurrentAnim = pAnim;
+	m_Blend.active = false;
 }
 
 void CAnimator::StartTransition(CAnimation* from, CAnimation* to, _float duration)
@@ -51,14 +88,34 @@ void CAnimator::StartTransition(CAnimation* from, CAnimation* to, _float duratio
 	m_Blend.dstAnim->ResetTrack();
 }
 
-void CAnimator::UpdateBlend(_float fDeltaTime)
+void CAnimator::Set_Animation(_uint iIndex, _float fadeDuration, _bool isLoop)
 {
-	m_Blend.elapsed += fDeltaTime;
+	if (m_pModel && iIndex >= m_pModel->Get_NumAnimations())
+		return;
+	m_iPrevAnimIndex = m_iCurrentAnimIndex;
+
+	if (m_iPrevAnimIndex != iIndex)
+	{
+		StartTransition(
+			m_pModel->GetAnimationClip(m_iPrevAnimIndex),
+			m_pModel->GetAnimationClip(iIndex),
+			fadeDuration);
+		m_iCurrentAnimIndex = iIndex;
+		return;
+	}
+
+	m_pCurrentAnim = m_pModel->GetAnimationClip(iIndex);
+	m_Blend.active = false;
+}
+
+void CAnimator::UpdateBlend(_float fTimeDelta)
+{
+	m_Blend.elapsed += fTimeDelta;
 	_float t = min(m_Blend.elapsed / m_Blend.duration, 1.f);
 
 	//  두 애니메이션을 각자 업데이트 (루프 모드 유지)
-	m_Blend.srcAnim->Update_Bones(fDeltaTime, m_Bones, m_Blend.srcAnim->Get_isLoop());
-	m_Blend.dstAnim->Update_Bones(fDeltaTime, m_Bones, m_Blend.dstAnim->Get_isLoop());
+	m_Blend.srcAnim->Update_Bones(fTimeDelta, m_Bones, m_Blend.srcAnim->Get_isLoop());
+	m_Blend.dstAnim->Update_Bones(fTimeDelta, m_Bones, m_Blend.dstAnim->Get_isLoop());
 	for (size_t i = 0; i < m_Bones.size(); ++i)
 	{
 		_matrix srcM = m_Blend.srcAnim->GetBoneMatrix(static_cast<_uint>(i));
@@ -88,10 +145,18 @@ void CAnimator::UpdateBlend(_float fDeltaTime)
 	}
 }
 
-CAnimator* CAnimator::Create(CModel* pModel, const vector<class CBone*>& Bones)
+const char* CAnimator::GetCurrentAnimName() const
 {
-	CAnimator* pInstance = new CAnimator();
-	if (FAILED(pInstance->Initialize(pModel, Bones)))
+	if (m_pCurrentAnim == nullptr)
+		return nullptr;
+	return m_pCurrentAnim->Get_Name();
+}
+
+
+CAnimator* CAnimator::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CAnimator* pInstance = new CAnimator(pDevice,pContext);
+	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CAnimator");
 		Safe_Release(pInstance);
@@ -99,10 +164,10 @@ CAnimator* CAnimator::Create(CModel* pModel, const vector<class CBone*>& Bones)
 	return pInstance;
 }
 
-CAnimator* CAnimator::Clone(CModel* pModel, const vector<class CBone*>& Bones)
+CComponent* CAnimator::Clone(void* pArg)
 {
 	CAnimator* pInstance = new CAnimator(*this);
-	if (FAILED(pInstance->Initialize(pModel, Bones)))
+	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CAnimator");
 		Safe_Release(pInstance);
@@ -113,5 +178,5 @@ CAnimator* CAnimator::Clone(CModel* pModel, const vector<class CBone*>& Bones)
 void CAnimator::Free()
 {
 	__super::Free();
-
+	Safe_Release(m_pAnimController); // 모델은 다른 곳에서 해제하므로 해제하지 않음
 }

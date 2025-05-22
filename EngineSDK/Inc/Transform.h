@@ -47,6 +47,7 @@ public:
 
 	void Rotate_EulerAngles(const _float3& vEulerAngles);
 	void Turn(_fvector vAxis, _float fTimeDelta);
+	void RotateToDirection(_fvector dir);
 
 	void FlllowParent(const CTransform* pParentTransform);
 
@@ -78,6 +79,8 @@ public:
 	void SetDirty(_bool bDirty) { m_bDirty = bDirty; }
 	void UpdateEulerAngles();
 
+	_float Get_SpeedPerSec() const { return m_fSpeedPerSec; }
+	_float Get_RotationPerSec() const { return m_fRotationPerSec; }
 private:
 
 public:

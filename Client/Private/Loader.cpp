@@ -7,6 +7,7 @@
 #include "UICanvas.h"
 #include "Terrain.h"
 #include "JsonLoader.h"
+#include "Weapon.h"
 #include "BaseCharacter.h"
 
 //#include "player.h"
@@ -147,9 +148,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_Component_Model_Fiona */
 	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.fbx", PreTransformMatrix))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_KoujuroWeapon"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Weapon/KoujuroWeapon.bin", PreTransformMatrix))))
+		return E_FAIL;
 
 	//PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationX(XMConvertToRadians(-90.f));
 	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Tanjiro"),
@@ -211,10 +212,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CFreeCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_Monster */
+	/* For.Prototype_GameObject_Character */
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Character"),
 		CBaseCharacter::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	/* For.Prototype_GameObject_KoujuroWeapon */
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_KoujuroWeapon"),
+		CWeapon::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	///* For.Prototype_GameObject_Player */
 	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Player"),

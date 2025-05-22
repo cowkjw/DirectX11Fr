@@ -4,7 +4,6 @@
 BEGIN_NAMESPACE(Engine)
 class CShader;
 class CModel;
-class CAnimator;
 class CRigidBody;
 class CPhysXCollider;
 class CBoxCollider;
@@ -12,15 +11,13 @@ class CCapsuleCollider;
 class CSphereCollider;
 END_NAMESPACE
 
-BEGIN_NAMESPACE(Client)	
-class CBaseCharacter : public CGameObject
+BEGIN_NAMESPACE(Client)
+class CWeapon : public CGameObject
 {
-public:
-	enum class CSTATE { IDLE, MOVE, ATTACK, SKILL, HURT, DIE };
 protected:
-	CBaseCharacter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CBaseCharacter(const CBaseCharacter& Prototype);
-	virtual ~CBaseCharacter() = default;
+	CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CWeapon(const CWeapon& Prototype);
+	virtual ~CWeapon() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -29,26 +26,16 @@ public:
 	virtual void Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
-
-protected:
-	virtual void Ready_Animation();
-
-protected:
+private:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	CCapsuleCollider* m_pColliderCom = { nullptr };
-	CAnimator* m_pAnimatroCom = { nullptr };
 
-protected:
+private:
 	virtual HRESULT Ready_Components();
 
-protected:
-	_float m_fMaxHP{ 0.f };           // 최대 체력
-	_float m_fCurrentHP{ 0.f };       // 현재 체력
-	_float m_fStamina{ 0.f };         // 스태미나(호흡력)
-
 public:
-	static CBaseCharacter* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CWeapon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 

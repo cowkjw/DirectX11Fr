@@ -94,6 +94,9 @@
     <Filter Include="01.GameObject\Character">
       <UniqueIdentifier>{56da4df4-d9d8-45f1-b628-c8d1edd1c187}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.GameObject\Character\Weapon">
+      <UniqueIdentifier>{bc1af78d-efe2-4685-b42d-38a2116b34c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -191,6 +194,9 @@
     </ClInclude>
     <ClInclude Include="..\public\BaseCharacter.h">
       <Filter>01.GameObject\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Weapon.h">
+      <Filter>01.GameObject\Character\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -308,6 +314,9 @@
     </ClCompile>
     <ClCompile Include="..\..\External Libraries\imgui\imnodes.cpp">
       <Filter>97.IMGUI\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Weapon.cpp">
+      <Filter>01.GameObject\Character\Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

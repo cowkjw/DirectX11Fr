@@ -97,6 +97,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CRigidBody::Create(m_pDevice, m_pContext, m_pGameInstance->GetPhysics(), m_pGameInstance->GetDefaultMaterial(), transform))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Animator"),
+		CAnimator::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
