@@ -60,6 +60,16 @@ HRESULT CModel::Bind_Bone_Matrices(CShader* pShader, const _char* pConstantName,
 	return m_Meshes[iMeshIndex]->Bind_Bone_Matrices(pShader, pConstantName, m_Bones);
 }
 
+CBone* CModel::Get_Bone(const _char* pBoneName)
+{
+	auto it = find_if(m_Bones.begin(), m_Bones.end(),
+		[&](CBone* pBone) { return pBone->Compare_Name(pBoneName); });
+
+	if (it != m_Bones.end())
+		return *it;
+	return nullptr;
+}
+
 HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
 

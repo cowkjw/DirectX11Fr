@@ -21,6 +21,7 @@ public:
 	class CGameObject* Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLevelIndex, const _wstring& strLayerTag, void* pArg);
 	void Delete_GameObject(_uint iLevelIndex,class CGameObject* pGameObject);
 	void Delete_GameObjectByName(_uint iLevelIndex,const _wstring& stName);
+	class CGameObject* Find_GameObjectByName(_uint iLevelIndex, const _wstring& strName);
 	void Priority_Update(_float fTimeDelta);
 	void Update(_float fTimeDelta);
 	void Late_Update(_float fTimeDelta);

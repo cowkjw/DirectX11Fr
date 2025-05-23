@@ -45,6 +45,7 @@ public:
 	CComponent* Get_Component(_uint iLevelIndex, const _wstring& strLayerTag, const _wstring& strComponentTag, _uint iIndex = 0);
 	HRESULT Delete_GameObject(_uint iLevelIndex, CGameObject* pGameObject);
 	HRESULT Delete_GameObjectByName(_uint iLevelIndex, const _wstring& strName);
+	class CGameObject* Find_GameObjectByName(_uint iLevelIndex, const _wstring& strName);
 #pragma endregion
 
 #pragma region RENDERER

@@ -46,11 +46,50 @@ void CWeapon::Priority_Update(_float fTimeDelta)
 
 void CWeapon::Update(_float fTimeDelta)
 {
+
 }
 
 void CWeapon::Late_Update(_float fTimeDelta)
 {
-	CGameObject::Late_Update(fTimeDelta);
+	//CGameObject::Late_Update(fTimeDelta);
+	if (m_pBoneSocket)
+	{
+		_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
+		_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
+		_matrix wepaonLocal = m_pTransformCom->Get_WorldMatrix_Inverse();
+		 _matrix world = XMMatrixMultiply(XMLoadFloat4x4(&boneLocal), XMLoadFloat4x4(&parentWorld));
+		 _matrix weaponWorld = XMMatrixMultiply(wepaonLocal, world);
+	//_matrix World = XMMatrixMultiply(XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix()),XMLoadFloat4x4(m_pBoneSocket->Get_CombinedTransformationMatrix()) );
+		_float4x4 WorldMatrix{};
+		XMStoreFloat4x4(&WorldMatrix, world);
+		m_pTransformCom->Set_WorldMatrix(WorldMatrix);
+	//	m_pTransformCom->Set_WorldMatrix();
+
+	}
+	
+	//if (m_pBoneSocket)
+	//{
+	//	// 캐릭터 루트(부모)의 월드 행렬
+	//	_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
+
+	//	// 손 본의 로컬 행렬 (애니메이션에서 나온 CombinedTransformation)
+	//	_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
+
+	//	// 무기의 로컬 오프셋 (초기 배치 조정용, 일반적으로 회전+위치)
+	//	//_matrix weaponLocal = m_pTransformCom->Get_LocalMatrix(); // ← 새로 만들어야 함
+
+	//	// 손 본의 월드 행렬 = 손 본 로컬 × 캐릭터 월드
+	//	_matrix handWorld = XMLoadFloat4x4(&boneLocal) * XMLoadFloat4x4(&parentWorld);
+
+	//	// 무기 월드 = 무기 로컬 × 손 본의 월드
+	////	_matrix weaponWorld = weaponLocal * handWorld;
+
+	//	// 적용
+	//	_float4x4 finalMat{};
+	//	XMStoreFloat4x4(&finalMat, weaponWorld);
+	//	m_pTransformCom->Set_WorldMatrix(finalMat);
+	//}
+
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
 }
 

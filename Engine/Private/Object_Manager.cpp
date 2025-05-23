@@ -75,6 +75,14 @@ void CObject_Manager::Delete_GameObjectByName(_uint iLevelIndex, const _wstring&
 	pLayer->Remove_GameObjectByName(stName);
 }
 
+CGameObject* CObject_Manager::Find_GameObjectByName(_uint iLevelIndex, const _wstring& strName)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, strName);
+	if (nullptr == pLayer)
+		return nullptr;
+	return pLayer->Find_GameObjectByName(strName);
+}
+
 void CObject_Manager::Priority_Update(_float fTimeDelta)
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)

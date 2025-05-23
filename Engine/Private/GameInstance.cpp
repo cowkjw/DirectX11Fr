@@ -207,6 +207,11 @@ HRESULT CGameInstance::Delete_GameObjectByName(_uint iLevelIndex, const _wstring
 	return S_OK;
 }
 
+CGameObject* CGameInstance::Find_GameObjectByName(_uint iLevelIndex, const _wstring& strName)
+{
+	return m_pObject_Manager->Find_GameObjectByName(iLevelIndex, strName);
+}
+
 #pragma endregion
 
 #pragma region RENDERER

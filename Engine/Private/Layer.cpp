@@ -91,6 +91,15 @@ void CLayer::Remove_GameObjectByName(const _wstring& strName)
 	}
 }
 
+CGameObject* CLayer::Find_GameObjectByName(const _wstring& strName)
+{
+	auto iter = find_if(m_GameObjects.begin(), m_GameObjects.end(),
+		[&](CGameObject* pGameObject) { return pGameObject->Get_Name() == strName; });
+	if (iter != m_GameObjects.end())
+		return *iter;
+	return nullptr;
+}
+
 CLayer* CLayer::Create()
 {
 	return new CLayer();

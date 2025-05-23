@@ -4,6 +4,7 @@
 BEGIN_NAMESPACE(Engine)
 class CShader;
 class CModel;
+class CBone;
 class CRigidBody;
 class CPhysXCollider;
 class CBoxCollider;
@@ -26,10 +27,17 @@ public:
 	virtual void Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
+	
+public:
+	void Set_BoneSocket(CBone* pBoneSocket) {
+		m_pBoneSocket = pBoneSocket;
+	}
+
 private:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	CCapsuleCollider* m_pColliderCom = { nullptr };
+	CBone* m_pBoneSocket = { nullptr };
 
 private:
 	virtual HRESULT Ready_Components();

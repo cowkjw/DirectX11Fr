@@ -29,7 +29,9 @@ public:
 	virtual void Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
-
+	
+public:
+	void Set_Weapon(const char* boneName, class CWeapon* pWeapon);
 protected:
 	virtual void Ready_Animation();
 
@@ -46,6 +48,7 @@ protected:
 	_float m_fMaxHP{ 0.f };           // 최대 체력
 	_float m_fCurrentHP{ 0.f };       // 현재 체력
 	_float m_fStamina{ 0.f };         // 스태미나(호흡력)
+	class CWeapon* m_pWeapon{ nullptr }; // 무기
 
 public:
 	static CBaseCharacter* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

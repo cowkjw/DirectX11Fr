@@ -1,5 +1,6 @@
 #include "Level_GamePlay.h"
 #include "GameInstance.h"
+#include <Weapon.h>
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -36,14 +37,16 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_Layer_TestCharacter(const _wstring strLayerTag)
 {
+
+ 	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_KoujuroWeapon"),
+		ToIndex(LEVEL::GAMEPLAY), TEXT("Weapon")))
+		return E_FAIL;
+
 	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Character"),
 		ToIndex(LEVEL::GAMEPLAY), strLayerTag))
 		return E_FAIL;
 
 
-	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_KoujuroWeapon"),
-		ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_Weapon")))
-		return E_FAIL;
 	return S_OK;
 }
 

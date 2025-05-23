@@ -1,6 +1,7 @@
 #include "BaseCharacter.h"
 #include "GameInstance.h"
 #include "Animation.h"
+#include "Weapon.h"	
 
 using AniCon = CAnimController::Condition;
 CBaseCharacter::CBaseCharacter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -17,6 +18,7 @@ CBaseCharacter::CBaseCharacter(const CBaseCharacter& Prototype)
 	, m_fMaxHP{ Prototype.m_fMaxHP }
 	, m_fCurrentHP{ Prototype.m_fCurrentHP }
 	, m_fStamina{ Prototype.m_fStamina }
+	, m_pWeapon{ Prototype.m_pWeapon }
 {
 }
 
@@ -42,6 +44,14 @@ HRESULT CBaseCharacter::Initialize(void* pArg)
 	Ready_Animation();
 
 
+	CGameObject* pWeapon = m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("Weapon"));
+
+	Set_Weapon("R_Hand_1", dynamic_cast<CWeapon*>(pWeapon));
+
+	if (m_pWeapon)
+	{
+		m_pWeapon->SetParent(this);
+	}
 	return S_OK;
 }
 
@@ -140,6 +150,17 @@ void CBaseCharacter::Update(_float fTimeDelta)
 	_bool bGuard = m_pGameInstance->IsKeyDown('O');
 	m_pAnimatroCom->SetBool("Guard", bGuard);
 
+	// 공격중일 때는 이동 막기
+	_bool bAttack = m_pAnimatroCom->CheckBool("Attacking");
+
+	if (auto pAnim = m_pAnimatroCom->GetCurrentAnim())
+	{
+		if (m_pAnimatroCom->GetAnimController()->GetCurrentState()->stateName.find("attack")==string::npos)
+		{
+			m_pAnimatroCom->SetBool("Attacking", false);
+			bAttack = false;
+		}
+	}
 	if (!bGuard)
 	{
 		// 2) 이동 방향 벡터 계산 (월드 기준이 아닌 로컬 축 사용 가능)
@@ -149,10 +170,10 @@ void CBaseCharacter::Update(_float fTimeDelta)
 		if (m_pGameInstance->IsKeyDown(VK_LEFT))  dir += XMVectorSet(-1.f, 0.f, 0.f, 0.f);
 		if (m_pGameInstance->IsKeyDown(VK_RIGHT)) dir += XMVectorSet(1.f, 0.f, 0.f, 0.f);
 
-		bool bMoving = !XMVector3Equal(dir, XMVectorZero());
+		_bool bMoving = !XMVector3Equal(dir, XMVectorZero());
 		m_pAnimatroCom->SetBool("Move", bMoving);
 
-		if (bMoving&&!m_pAnimatroCom->CheckTrigger("Attack"))
+		if (bMoving&&!bAttack)
 		{
 			// 2-1) 입력 방향으로 회전 (쿼터니언)
 			m_pTransformCom->RotateToDirection(dir);
@@ -178,13 +199,19 @@ void CBaseCharacter::Update(_float fTimeDelta)
 			// idle 상태에서 다른 트리거 처리 예: DashAttack
 			if (m_pGameInstance->IsKeyPressed('L'))
 				m_pAnimatroCom->SetTrigger("DashAttack");
+
+			if(m_pGameInstance->IsKeyPressed('I')) 
+				m_pAnimatroCom->SetTrigger("FlameTiger");
 		}
 
 		// 점프/공격
 		if (m_pGameInstance->IsKeyPressed(VK_SPACE))
 			m_pAnimatroCom->SetTrigger("Jump");
 		if (m_pGameInstance->IsKeyPressed('J'))
+		{
 			m_pAnimatroCom->SetTrigger("Attack");
+			m_pAnimatroCom->SetBool("Attacking", true);
+		}
 	}
 	else
 	{
@@ -198,7 +225,9 @@ void CBaseCharacter::Update(_float fTimeDelta)
 	m_pModelCom->Play_Animation(fTimeDelta);
 
 
-	if(m_pAnimatroCom)
+
+
+	if (m_pAnimatroCom)
 	{
 		const char* cur = m_pAnimatroCom->GetCurrentAnimName();
 		char buf[MAX_PATH];
@@ -258,8 +287,19 @@ HRESULT CBaseCharacter::Render()
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}
-
 	return S_OK;
+}
+
+void CBaseCharacter::Set_Weapon(const char* boneName, CWeapon* pWeapon)
+{
+	m_pWeapon = pWeapon;
+
+	CBone* pBoneRHand = m_pModelCom->Get_Bone(boneName);
+
+	if (pBoneRHand && m_pWeapon)
+	{
+		m_pWeapon->Set_BoneSocket(pBoneRHand);
+	}
 }
 
 void CBaseCharacter::Ready_Animation()
@@ -324,8 +364,8 @@ void CBaseCharacter::Ready_Animation()
 	{
 		auto name = "A_P0012_V00_C00_BaseGuard01_" + to_string(i);
 		auto a = m_pModelCom->GetAnimationClipByName(name.c_str());
-		
-		if(i==1)
+
+		if (i == 1)
 			a->SetLoop(true);
 		else
 			a->SetLoop(false);
@@ -375,13 +415,20 @@ void CBaseCharacter::Ready_Animation()
 	size_t stepRightIdx2 = ctrl->AddState("stepRight2", animStep6, 7);
 
 
+	// A_P0012_V00_C00_AtkSkl02 염호
+	auto skillDefault = m_pModelCom->GetAnimationClipByName("A_P0012_V00_C00_AtkSkl02");
+	skillDefault->SetLoop(false);
+	size_t skillDefaultIdx = ctrl->AddState("FlameTiger", skillDefault, 8);
+
 	// 3) 파라미터(Parameter) 등록
 	m_pAnimatroCom->AddBool("Move");
 	m_pAnimatroCom->AddTrigger("Jump");
 	m_pAnimatroCom->AddTrigger("Attack");
+	m_pAnimatroCom->AddBool("Attacking");
 	m_pAnimatroCom->AddBool("Guard");
 	m_pAnimatroCom->AddTrigger("RisingScorchingSun");
-	m_pAnimatroCom->AddTrigger("DashAttack");	
+	m_pAnimatroCom->AddTrigger("FlameTiger");
+	m_pAnimatroCom->AddTrigger("DashAttack");
 	m_pAnimatroCom->AddTrigger("StepBack");
 	m_pAnimatroCom->AddTrigger("StepFront");
 	m_pAnimatroCom->AddTrigger("StepLeft");
@@ -397,7 +444,7 @@ void CBaseCharacter::Ready_Animation()
 	// Idle → Run 
 	CAnimController::Condition cSpeedUp{ "Move", CAnimController::EOp::IsTrue, 0.1f };
 	ctrl->AddTransition(idleIdx, runIdx, cSpeedUp, 0.2f);
-	ctrl->AddTransition(runEndIdx, runIdx, cSpeedUp,0.1f);
+	ctrl->AddTransition(runEndIdx, runIdx, cSpeedUp, 0.1f);
 	// Run → RunEnd 
 	CAnimController::Condition cSpeedDown{ "Move", CAnimController::EOp::IsFalse, 0.1f };
 	ctrl->AddTransition(runIdx, runEndIdx, cSpeedDown, 0.2f);
@@ -489,6 +536,10 @@ void CBaseCharacter::Ready_Animation()
 	ctrl->AddTransition(guardSkill0Idx, guardSkill1Idx, cFin, 0.1f);
 	ctrl->AddTransition(guardSkill1Idx, guardSkill2Idx, cFin, 0.1f);
 	ctrl->AddTransition(guardSkill2Idx, idleIdx, cFin, 0.1f);
+
+	CAnimController::Condition cFlameTiger{ "FlameTiger", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(idleIdx, skillDefaultIdx, cFlameTiger, 0.2f);
+	ctrl->AddTransition(skillDefaultIdx, idleIdx, cFin);
 
 	CAnimController::Condition DashAttack{ "DashAttack", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(idleIdx, dashAttackIdx, DashAttack, 0.1f);
