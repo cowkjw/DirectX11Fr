@@ -57,7 +57,6 @@ CLevel_Editor* CLevel_Editor::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
 void CLevel_Editor::Free()
 {
 	__super::Free();
+	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pIMGUIMag);
-
-
 }

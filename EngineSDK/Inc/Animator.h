@@ -88,6 +88,11 @@ public:
         p.bTriggered = true;
     }
 
+	void ResetTrigger(const string& name) {
+		auto& p = m_Params[name];
+		p.bTriggered = false;
+	}
+
 	void SetInt(const string& name, _int v) {
 		auto& p = m_Params[name];
 		p.iValue = v;

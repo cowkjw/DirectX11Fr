@@ -1,0 +1,29 @@
+{
+  "models": [
+    {
+      "tag": "SmallStone",
+      "path": "../Asset/Resources/Models/Map/SmallStone.bin",
+      "Anim": false
+    },
+    {
+      "tag": "FarBackground",
+      "path": "../Asset/Resources/Models/Map/FarBackground.bin",
+      "Anim": false
+    },
+    {
+      "tag": "Grass1",
+      "path": "../Asset/Resources/Models/Map/Grass1.bin",
+      "Anim": false
+    },
+    {
+      "tag": "FarBackground2",
+      "path": "../Asset/Resources/Models/Map/FarBackground2.bin",
+      "Anim": false
+    },
+    {
+      "tag": "Sky",
+      "path": "../Asset/Resources/Models/Map/Sky.bin",
+      "Anim": false
+    }
+  ]
+}

@@ -90,6 +90,16 @@ void CAnimController::AddTransition(size_t fromIdx, size_t toIdx, const Conditio
 		});
 }
 
+void CAnimController::SetState(const string& name)
+{
+	auto state = FindState(name);
+	if (state)
+	{
+		m_CurrentStateIdx = state->clipIndex;
+		m_pAnimator->PlayClip(state->clip);
+	}
+}
+
 CAnimController* CAnimController::Create()
 {
 	CAnimController* pInstance = new CAnimController();

@@ -6,8 +6,8 @@ Texture2D g_DiffuseTexture;
 sampler DefaultSampler = sampler_state
 {
     filter = min_mag_mip_linear;
-    AddressU = clamp;
-    AddressV = clamp;
+    AddressU = wrap;
+    AddressV = wrap;
 
 };
 

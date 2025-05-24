@@ -424,6 +424,18 @@ CVIBuffer* CGameInstance::GetBuffer(const _wstring& key, _bool bIsStatic)
 	}
 }
 
+CModel* CGameInstance::GetModel(const _wstring& key, _bool bIsStatic)
+{
+	if (bIsStatic)
+	{
+		return m_pResourceMag->GetModel(key);
+	}
+	else
+	{
+		return m_pResourceMag->GetDynamicModel(key);
+	}
+}
+
 
 CShader* CGameInstance::LoadShader(const _wstring& key, const _wstring& vsPath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements, _bool bIsStatic)
 {
@@ -458,6 +470,17 @@ CVIBuffer* CGameInstance::LoadBuffer(const _wstring& key, BUFFER_TYPE eType, _bo
 		return m_pResourceMag->LoadDynamicBuffer(key, eType);
 	}
 }
+CModel* CGameInstance::LoadModel(const _wstring& key, const _wstring& filePath, MODEL eType, _matrix preMatrix, _bool bIsStatic)
+{
+	if (bIsStatic)
+	{
+		return m_pResourceMag->LoadModel(key, filePath, eType, preMatrix);
+	}
+	else
+	{
+		return m_pResourceMag->LoadDynamicModel(key, filePath, eType, preMatrix);
+	}
+}
 const vector<_wstring>& CGameInstance::GetShaderKeys(_bool bIsStatic) const
 {
 	return m_pResourceMag->GetShaderKeys(bIsStatic);
@@ -465,6 +488,11 @@ const vector<_wstring>& CGameInstance::GetShaderKeys(_bool bIsStatic) const
 const vector<_wstring>& CGameInstance::GetTextureKeys(_bool bIsStatic) const
 {
 	return m_pResourceMag->GetTextureKeys(bIsStatic);
+}
+
+const vector<_wstring>& CGameInstance::GetModelKeys(_bool bIsStatic) const
+{
+	return m_pResourceMag->GetModelKeys(bIsStatic);
 }
 
 #pragma endregion

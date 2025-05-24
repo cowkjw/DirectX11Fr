@@ -2,6 +2,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "VIBuffer.h"
+#include "Model.h"
 #include <VIBuffer_Rect.h>
 
 CResourceMag::CResourceMag(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -56,6 +57,22 @@ void CResourceMag::RegisterDynamicBuffer(const _wstring& key, CVIBuffer* pBuffer
 	}
 }
 
+void CResourceMag::RegisterDynamicModel(const _wstring& key, CModel* pModel)
+{
+	auto iter = m_dynamicModels.find(key);
+	if (iter == m_dynamicModels.end())
+	{
+		m_dynamicModels.emplace(key, pModel);
+		m_DynamicModelKeyList.push_back(key);
+	}
+	else
+	{
+		Safe_Release(iter->second);
+		iter->second = pModel;
+	}
+
+}
+
 
 void CResourceMag::RegisterStaticShader(const _wstring& key, CShader* pShader)
 {
@@ -98,6 +115,21 @@ void CResourceMag::RegisterStaticBuffer(const _wstring& key, CVIBuffer* pBuffer)
 	{
 		Safe_Release(iter->second);
 		iter->second = pBuffer;
+	}
+}
+
+void CResourceMag::RegisterStaticModel(const _wstring& key, CModel* pModel)
+{
+	auto iter = m_staticModels.find(key);
+	if (iter == m_staticModels.end())
+	{
+		m_staticModels.emplace(key, pModel);
+		m_StaticModelKeyList.push_back(key);
+	}
+	else
+	{
+		Safe_Release(iter->second);
+		iter->second = pModel;
 	}
 }
 
@@ -156,6 +188,20 @@ CVIBuffer* CResourceMag::LoadBuffer(const _wstring& key, BUFFER_TYPE eType)
 	return nullptr;
 }
 
+CModel* CResourceMag::LoadModel(const _wstring& key, const _wstring& filePath,MODEL eType, _matrix preMatrix)
+{
+	auto iter = m_staticModels.find(key);
+	if (iter != m_staticModels.end())
+	{
+		return iter->second;
+	}
+	CModel* pModel = CModel::CreateByBinary(m_pDevice, m_pContext, eType, WStringToString(filePath).c_str(), preMatrix);
+	if (nullptr == pModel)
+		return nullptr;
+	RegisterStaticModel(key, pModel);
+	return pModel;
+}
+
 CShader* CResourceMag::LoadDynamicShader(const _wstring& key, const _wstring& vsPath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {
 
@@ -208,6 +254,20 @@ CVIBuffer* CResourceMag::LoadDynamicBuffer(const _wstring& key, BUFFER_TYPE eTyp
 	return nullptr;
 }
 
+CModel* CResourceMag::LoadDynamicModel(const _wstring& key, const _wstring& filePath, MODEL eType, _matrix preMatrix)
+{
+	auto iter = m_dynamicModels.find(key);
+	if (iter != m_dynamicModels.end())
+	{
+		return iter->second;
+	}
+	CModel* pModel = CModel::CreateByBinary(m_pDevice, m_pContext, eType, WStringToString(filePath).c_str(), preMatrix);
+	if (nullptr == pModel)
+		return nullptr;
+	RegisterDynamicModel(key, pModel);
+	return pModel;
+}
+
 CShader* CResourceMag::GetShader(const _wstring& key)
 {
 	auto iter = m_staticShaders.find(key);
@@ -241,6 +301,17 @@ CVIBuffer* CResourceMag::GetBuffer(const _wstring& key)
     return nullptr;
 }
 
+CModel* CResourceMag::GetModel(const _wstring& key)
+{
+	auto iter = m_staticModels.find(key);
+	if (iter != m_staticModels.end())
+	{
+		Safe_AddRef(iter->second);
+		return iter->second;
+	}
+	return nullptr;
+}
+
 CShader* CResourceMag::GetDynamicShader(const _wstring& key)
 {
 	auto iter = m_dynamicShaders.find(key);
@@ -267,6 +338,17 @@ CVIBuffer* CResourceMag::GetDynamicBuffer(const _wstring& key)
 {
 	auto iter = m_dynamicBuffers.find(key);
 	if (iter != m_dynamicBuffers.end())
+	{
+		Safe_AddRef(iter->second);
+		return iter->second;
+	}
+	return nullptr;
+}
+
+CModel* CResourceMag::GetDynamicModel(const _wstring& key)
+{
+	auto iter = m_dynamicModels.find(key);
+	if (iter != m_dynamicModels.end())
 	{
 		Safe_AddRef(iter->second);
 		return iter->second;
@@ -344,6 +426,16 @@ void CResourceMag::Free()
 	}
 	m_dynamicBuffers.clear();
 
+	for (auto& Pair : m_staticModels)
+	{
+		Safe_Release(Pair.second);
+	}
+	m_staticModels.clear();
+	for (auto& Pair : m_dynamicModels)
+	{
+		Safe_Release(Pair.second);
+	}
+	m_dynamicModels.clear();
 
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);

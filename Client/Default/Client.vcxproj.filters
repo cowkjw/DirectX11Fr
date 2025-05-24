@@ -49,12 +49,6 @@
     <Filter Include="100.ShaderFiles">
       <UniqueIdentifier>{a3db1018-9645-49e1-8060-77e418525ea8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="94.Observer">
-      <UniqueIdentifier>{b3d8b20a-4967-4f84-9398-fcf865468851}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="94.Observer\Manager">
-      <UniqueIdentifier>{92058b1c-a767-43d8-b243-ec80e04019d1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.GameObject\Camera">
       <UniqueIdentifier>{3bd1a25e-c673-4d5a-a90d-73e72e1874aa}</UniqueIdentifier>
     </Filter>
@@ -96,6 +90,54 @@
     </Filter>
     <Filter Include="01.GameObject\Character\Weapon">
       <UniqueIdentifier>{bc1af78d-efe2-4685-b42d-38a2116b34c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern">
+      <UniqueIdentifier>{520c1b25-a507-471e-8105-7381c9ab6029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\Observer">
+      <UniqueIdentifier>{b3d8b20a-4967-4f84-9398-fcf865468851}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\Observer\Manager">
+      <UniqueIdentifier>{92058b1c-a767-43d8-b243-ec80e04019d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\Command">
+      <UniqueIdentifier>{03b1b549-24d9-4813-85d5-d3143224d6a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\Command\InputBuffer">
+      <UniqueIdentifier>{386fb701-fd26-47e1-aaa1-c1d1746feaac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Map">
+      <UniqueIdentifier>{b7eebf25-9f77-463c-b9c0-c0db03096c48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Map\Sky">
+      <UniqueIdentifier>{ec9e8e1d-d065-42b1-9e80-8b9dbfe268b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\State">
+      <UniqueIdentifier>{1372cab8-4be7-42e8-a3e1-a763bf2999de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\State\DefaultState">
+      <UniqueIdentifier>{eb0226f0-0b0c-4736-a995-ff22779b5703}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\State\DefaultState\Attack">
+      <UniqueIdentifier>{d27db8d2-fb06-46c5-bde3-58e723300e37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\State\DefaultState\Skill">
+      <UniqueIdentifier>{a42dfe84-5740-4fe2-bc15-e969cc39059e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\State\DefaultState\Guard">
+      <UniqueIdentifier>{6086a9c3-57a2-40ac-a3b2-aa1dc36ef2d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\State\DefaultState\Idle">
+      <UniqueIdentifier>{0417aef2-6192-45fb-a131-ec5c5ba1e35c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\State\DefaultState\Jump">
+      <UniqueIdentifier>{90b732b9-3830-45f6-b94a-cb605e82c58a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\State\DefaultState\Move">
+      <UniqueIdentifier>{fe00cddf-d025-4629-a2dd-d048e6242095}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Map\Env">
+      <UniqueIdentifier>{381f44e4-6f46-4507-9244-457f7d1e2ffb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -157,10 +199,10 @@
       <Filter>95.BehaivorTree</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ObserverManager.h">
-      <Filter>94.Observer\Manager</Filter>
+      <Filter>94. Pattern\Observer\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Observer.h">
-      <Filter>94.Observer</Filter>
+      <Filter>94. Pattern\Observer</Filter>
     </ClInclude>
     <ClInclude Include="..\public\FreeCamera.h">
       <Filter>01.GameObject\Camera</Filter>
@@ -197,6 +239,63 @@
     </ClInclude>
     <ClInclude Include="..\public\Weapon.h">
       <Filter>01.GameObject\Character\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\State.h">
+      <Filter>94. Pattern\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Command.h">
+      <Filter>94. Pattern\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\InputBuffer.h">
+      <Filter>94. Pattern\Command\InputBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateAttack3.h">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateAttack2.h">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateAttack1.h">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateSkill0.h">
+      <Filter>94. Pattern\State\DefaultState\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateGuard.h">
+      <Filter>94. Pattern\State\DefaultState\Guard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateIdle.h">
+      <Filter>94. Pattern\State\DefaultState\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateJump.h">
+      <Filter>94. Pattern\State\DefaultState\Jump</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateAttack4.h">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateAttackUp.h">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateAttackDown.h">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateMove.h">
+      <Filter>94. Pattern\State\DefaultState\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateSkill2.h">
+      <Filter>94. Pattern\State\DefaultState\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateJumpAttack.h">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateSkill1.h">
+      <Filter>94. Pattern\State\DefaultState\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sky.h">
+      <Filter>01.GameObject\Map\Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Environment.h">
+      <Filter>01.GameObject\Map\Env</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -262,7 +361,7 @@
       <Filter>96.Json</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ObserverManager.cpp">
-      <Filter>94.Observer\Manager</Filter>
+      <Filter>94. Pattern\Observer\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\FreeCamera.cpp">
       <Filter>01.GameObject\Camera</Filter>
@@ -318,6 +417,60 @@
     <ClCompile Include="..\private\Weapon.cpp">
       <Filter>01.GameObject\Character\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\State.cpp">
+      <Filter>94. Pattern\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\InputBuffer.cpp">
+      <Filter>94. Pattern\Command\InputBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateAttack3.cpp">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateAttack2.cpp">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateAttack1.cpp">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateSkill0.cpp">
+      <Filter>94. Pattern\State\DefaultState\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateGuard.cpp">
+      <Filter>94. Pattern\State\DefaultState\Guard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateIdle.cpp">
+      <Filter>94. Pattern\State\DefaultState\Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateJump.cpp">
+      <Filter>94. Pattern\State\DefaultState\Jump</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateMove.cpp">
+      <Filter>94. Pattern\State\DefaultState\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateAttack4.cpp">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateAttackUp.cpp">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateAttackDown.cpp">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateSkill2.cpp">
+      <Filter>94. Pattern\State\DefaultState\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateJumpAttack.cpp">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateSkill1.cpp">
+      <Filter>94. Pattern\State\DefaultState\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sky.cpp">
+      <Filter>01.GameObject\Map\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Environment.cpp">
+      <Filter>01.GameObject\Map\Env</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTex.hlsl">
@@ -347,6 +500,12 @@
       <Filter>96.Json\JsonFiles</Filter>
     </None>
     <None Include="..\Asset\Json\Object_PrototypeTag.json">
+      <Filter>96.Json\JsonFiles</Filter>
+    </None>
+    <None Include="..\Asset\Json\Models.json">
+      <Filter>96.Json\JsonFiles</Filter>
+    </None>
+    <None Include="..\Asset\Json\GamePlayBackgroundObj.json">
       <Filter>96.Json\JsonFiles</Filter>
     </None>
   </ItemGroup>

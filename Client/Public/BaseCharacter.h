@@ -32,6 +32,10 @@ public:
 	
 public:
 	void Set_Weapon(const char* boneName, class CWeapon* pWeapon);
+	class CAnimator* Get_Animator() { return m_pAnimatroCom; }
+	void ChangeState(class IState* pState);
+	class CInputBuffer* GetInputBuffer() { return m_pInputBuffer; }
+	void HandleInput();
 protected:
 	virtual void Ready_Animation();
 
@@ -40,6 +44,7 @@ protected:
 	CModel* m_pModelCom = { nullptr };
 	CCapsuleCollider* m_pColliderCom = { nullptr };
 	CAnimator* m_pAnimatroCom = { nullptr };
+	class IState* m_pState = { nullptr };
 
 protected:
 	virtual HRESULT Ready_Components();
@@ -49,6 +54,9 @@ protected:
 	_float m_fCurrentHP{ 0.f };       // 현재 체력
 	_float m_fStamina{ 0.f };         // 스태미나(호흡력)
 	class CWeapon* m_pWeapon{ nullptr }; // 무기
+
+	class CInputBuffer* m_pInputBuffer{ nullptr }; // 입력 버퍼 (커맨드 패턴)
+	_float m_fTotalTime{ 0.f }; // 총 시간 
 
 public:
 	static CBaseCharacter* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

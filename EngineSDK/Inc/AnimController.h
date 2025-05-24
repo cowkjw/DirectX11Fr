@@ -64,6 +64,7 @@ public:
 
 	void AddTransition(size_t fromIdx, size_t toIdx, const Condition& cond, _float duration = 0.2f);
 
+	void SetState(const string& name);
 	const vector<AnimState>& GetStates() const { return m_States; }
 	const vector<Transition>& GetTransitions() const { return m_Transitions; }
 public:

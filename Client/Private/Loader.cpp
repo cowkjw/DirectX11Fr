@@ -8,7 +8,9 @@
 #include "Terrain.h"
 #include "JsonLoader.h"
 #include "Weapon.h"
+#include "Sky.h"
 #include "BaseCharacter.h"
+#include "Environment.h"
 
 //#include "player.h"
 //#include "Effect.h"
@@ -136,6 +138,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Terrain"),
 	//	CTexture::Create(m_pDevice, m_pContext, TEXT("../Asset/Resources/Textures/Terrain/Tile%d.dds"), 2))))
 	//	return E_FAIL;
+	CJsonLoader jsonLoader;
+
+	jsonLoader.Load_Models("../Asset/Json/Models.json", [&]() {
+		// 이곳에 로드 후 처리할 작업을 추가합니다.
+		});
+	jsonLoader.Free();
 
 	m_pGameInstance->LoadTexture(TEXT("Terrain"), TEXT("../Asset/Resources/Textures/Terrain/Tile%d.dds"), true,2);
 
@@ -167,6 +175,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 		//return E_FAIL;
 
 
+		//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Sky"),
+		//CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Map/Sky.fbx", PreTransformMatrix))))
+		//return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Sky"),
+			CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Map/Sky.bin", PreTransformMatrix))))
+			return E_FAIL;
 
 	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
 	//	CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Tanjiro/A_P0001_V00_C00_AtkAwake01_Cut.bin"))))
@@ -200,7 +215,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	lstrcpy(m_szLoadingText, TEXT("사운드을(를) 로딩중입니다."));
 
-
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Envirnoment"),
+		CEnvironment::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 	//lstrcpy(m_szLoadingText, TEXT("원형객체을(를) 로딩중입니다."));
 	/* For.Prototype_GameObject_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Terrain"),
@@ -221,6 +238,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_KoujuroWeapon"),
 		CWeapon::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	///* For.Prototype_GameObject_Sky */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sky"),
+	//	CSky::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+
 
 
 	///* For.Prototype_GameObject_Player */
@@ -253,6 +276,10 @@ HRESULT CLoader::Loading_For_Editor()
 		// 이곳에 로드 후 처리할 작업을 추가합니다.
 		});
 
+	jsonLoader.Load_Models("../Asset/Json/Models.json", [&]() {
+		// 이곳에 로드 후 처리할 작업을 추가합니다.
+		});
+
 	jsonLoader.Free();
 
 
@@ -268,9 +295,13 @@ HRESULT CLoader::Loading_For_Editor()
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.bin", PreTransformMatrix))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_Monster */
+	/* For.Prototype_GameObject_Character */
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Character"),
 		CBaseCharacter::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Envirnoment"),
+		CEnvironment::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	m_isFinished = true;
 

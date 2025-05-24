@@ -1,0 +1,278 @@
+[
+    {
+        "CreateLevel": 3,
+        "ID": 9,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.40,
+                    0.40,
+                    0.40
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Sky",
+        "name": "Sky",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 10,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.5,
+                    2.08,
+                    1.5
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "FarBackground",
+        "name": "FarBackground",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 11,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.20,
+                    1.78,
+                    1.20
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "FarBackground2",
+        "name": "FarBackground2",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 12,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    61.84,
+                    0.0,
+                    -48.16
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass1",
+        "name": "Grass1",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 13,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -56.47,
+                    0.0,
+                    -88.60
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass1",
+        "name": "Grass1",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 14,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -101.04,
+                    0.0,
+                    -36.50
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass1",
+        "name": "Grass1",
+        "parentId": 0,
+        "tag": ""
+    }
+]

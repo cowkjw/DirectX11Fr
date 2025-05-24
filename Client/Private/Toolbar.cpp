@@ -6,6 +6,7 @@
 #include <GameInstance.h>
 #include <EditorManager.h>
 #include <BaseCharacter.h>
+#include <Environment.h>
 
 
 CToolbar::CToolbar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -20,6 +21,7 @@ HRESULT CToolbar::Initialize()
 	SetLevelEnumToString();
     m_ShaderKeys = m_pGameInstance->GetShaderKeys();
     m_TextureKeys = m_pGameInstance->GetTextureKeys();
+	m_ModelKeys = m_pGameInstance->GetModelKeys();
     m_FilePathBuf[0] = '\0';
 
     return S_OK;
@@ -123,6 +125,23 @@ void CToolbar::DrawToolbar()
     else
     {
         ImGui::InputText("Instance Name", m_NameBuf, IM_ARRAYSIZE(m_NameBuf));
+
+        if (ImGui::BeginCombo("Model Key", m_ModelKey.c_str()))
+        {
+            for (size_t i = 0; i < m_ModelKeys.size(); ++i)
+            {
+                // 벡터에서 꺼낸 wstring을 string으로 변환
+                string key = WStringToString(m_ModelKeys[i]);
+                _bool selected = (StringToWString(m_ModelKey) == m_ModelKeys[i]);
+                if (ImGui::Selectable(key.c_str(), selected))
+                {
+                    m_ModelKey = WStringToString(m_ModelKeys[i]);
+                }
+                if (selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
     }
 
     for (auto& kv : m_LevelStringMap)
@@ -370,17 +389,34 @@ void CToolbar::FBXLodaer()
     ImGui::End();
 }
 
-CGameObject* CToolbar::ClonePrototype(const string& prototypeName, const wstring& instanceName)
+CGameObject* CToolbar::ClonePrototype(const string& prototypeName, const wstring& instanceName, void* pArg)
 {
     auto& protoMap = m_pPrototypes[m_iCurrentSelectedLevel];
     auto it = protoMap.find(StringToWString(prototypeName));
     if (it == protoMap.end())
         return nullptr;
+
+    if (dynamic_cast<CEnvironment*>(it->second))
+    {
+		CEnvironment::ENVIRONMENT_DESC envDesc;
+		envDesc.strModelTag = StringToWString(m_ModelKey);
+		envDesc.strName = instanceName;
+		CGameObject* pClone = m_pGameInstance->Add_GameObject(
+			m_iCurrentSelectedLevel,
+			StringToWString(prototypeName),
+			m_iCurrentSelectedLevel,
+			instanceName,
+			&envDesc
+		);
+		return pClone;
+    }
+
     CGameObject* pClone = m_pGameInstance->Add_GameObject(
         m_iCurrentSelectedLevel,
         StringToWString(prototypeName),
         m_iCurrentSelectedLevel,
-        instanceName
+        instanceName,
+		pArg ? pArg : nullptr
     );
     return pClone;
 

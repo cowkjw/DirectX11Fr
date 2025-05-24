@@ -24,7 +24,7 @@ private:
 	void Get_PrototypeList();
 	void FBXLodaer();
 
-	CGameObject* ClonePrototype(const string& prototypeName, const wstring& instanceName);
+	CGameObject* ClonePrototype(const string& prototypeName, const wstring& instanceName,void* pArg = nullptr);
 
 private:
 	//unordered_map<string, CGameObject*> m_PrototypeMap;
@@ -34,6 +34,7 @@ private:
 	_uint	         m_iCurrentSelectedLevel{ 0 };
 	vector<_wstring> m_ShaderKeys;
 	vector<_wstring> m_TextureKeys;
+	vector<_wstring> m_ModelKeys;
 	vector<map<const _wstring, class CBase*>> m_pPrototypes;
 	_char         m_NameBuf[128] = "";
 
@@ -41,6 +42,7 @@ private:
 	CJsonLoader  m_JsonLoader;    // JsonLoader 인스턴스
 
 	mutex m_FbxLoadMutex;
+	string m_ModelKey;
 
 	vector<_wstring> m_FbxFilePaths;
 public:

@@ -1,5 +1,6 @@
 #include "Level_GamePlay.h"
 #include "GameInstance.h"
+#include "JsonLoader.h"
 #include <Weapon.h>
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -10,9 +11,21 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CLevel_GamePlay::Initialize()
 {
+	CJsonLoader jsonLoader;
+	jsonLoader.Load_Objects("../Asset/Json/GamePlayBackgroundObj.json", [&]() {
+		// 이곳에 로드 후 처리할 작업을 추가합니다.
+		});
+	jsonLoader.Free();
 	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Terrain"),
 		ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_BackGround")))
 		return E_FAIL;
+
+	/*if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sky"),
+		ToIndex(LEVEL::GAMEPLAY), TEXT("Sky")))
+		return E_FAIL;*/
+
+
+
 
 	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
 		ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_Camera")))
