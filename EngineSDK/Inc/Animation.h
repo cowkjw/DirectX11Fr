@@ -35,6 +35,10 @@ public:
 	_float GetDuration() { return m_fDuration; }
 	_float GetTickPerSecond() { return m_fTickPerSecond; }
 	_float GetCurrentTrackPosition() { return m_fCurrentTrackPosition; }
+	_float GetClipLength() const
+	{
+		return m_fDuration / m_fTickPerSecond;
+	}
 
 public:
 	void ResetTrack()

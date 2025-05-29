@@ -1,58 +1,97 @@
 #include "BoxCollider.h"
+#include "GameObject.h"
+#include <SphereCollider.h>
+#include "CapsuleCollider.h"
 
 CBoxCollider::CBoxCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CPhysXCollider(pDevice, pContext)
+	: CCollider(pDevice, pContext)
+	, m_vHalfExtents(1.f, 1.f, 1.f) // 기본값 설정
 {
 }
 
 CBoxCollider::CBoxCollider(const CBoxCollider& Prototype)
-	: CPhysXCollider(Prototype),
-	m_vHalfExtents(Prototype.m_vHalfExtents)
-
+	: CCollider(Prototype)
+	, m_vHalfExtents(Prototype.m_vHalfExtents) 
 {
 }
 
-HRESULT CBoxCollider::Initialize_Prototype(PxPhysics* pPhysx, PxMaterial* pDefaultMat, const PxVec3& extents)
+HRESULT CBoxCollider::Initialize_Prototype(const _float3 vHalfExtents)
 {
-	if (FAILED(__super::Initialize_Prototype(pPhysx, pDefaultMat)))
-		return E_FAIL;
-	m_vHalfExtents = extents;
-	m_pPhysics = pPhysx;
-	m_pMaterial = pDefaultMat;
-	m_pShape = pPhysx->createShape(PxBoxGeometry(m_vHalfExtents), *m_pMaterial);
-	m_pShape->setFlag(PxShapeFlag::eVISUALIZATION, true);
+	m_vHalfExtents = vHalfExtents;
 	return S_OK;
+}
+
+HRESULT CBoxCollider::Initialize(void* pArg)
+{
+	if (m_pOwner)
+	{
+		auto pTransform = m_pOwner->GetTransform();
+		if (pTransform)
+		{
+			_vector pos = pTransform->Get_State(STATE::POSITION);
+			XMVECTOR center = XMVectorSetW(pos, 0.f); // W를 0으로 설정하여 위치 벡터로 사용
+			XMVECTOR quat = pTransform->Get_RotationQuaternion();
+			XMStoreFloat3(&Box.Center, center);
+			Box.Extents = m_vHalfExtents;
+			XMStoreFloat4(reinterpret_cast<XMFLOAT4*>(&Box.Orientation), quat);
+		}
+		else
+		{
+			return E_FAIL; // Transform이 없으면 초기화 실패
+		}
+	}
+	__super::Initialize(pArg);
+	return S_OK;
+}
+
+void CBoxCollider::Update()
+{
+	if (m_pOwner)
+	{
+		auto pTransform = m_pOwner->GetTransform();
+		if (pTransform)
+		{
+			_vector pos = pTransform->Get_State(STATE::POSITION);
+			XMVECTOR center = XMVectorSetW(pos, 0.f); // W를 0으로 설정하여 위치 벡터로 사용
+			XMVECTOR quat = pTransform->Get_RotationQuaternion();
+			XMStoreFloat3(&Box.Center, center);
+			Box.Extents = m_vHalfExtents;
+			XMStoreFloat4(reinterpret_cast<XMFLOAT4*>(&Box.Orientation), quat);
+		}
+	}
 }
 
 void CBoxCollider::RenderInspector(IInspector& inspector)
 {
-	if (inspector.TreeNode("Box Collider")) {
-		_float ext[3] = { m_vHalfExtents.x, m_vHalfExtents.y, m_vHalfExtents.z };
+	if (inspector.TreeNode("Box Collider"))
+	{
 		_bool changed = false;
-		// Drag controls
-		if (inspector.DragFloat3("Half Extents", ext, 0.1f)) changed = true;
-
-		_float off[3] = { m_vLocalOffset.x, m_vLocalOffset.y, m_vLocalOffset.z };
-		if (inspector.DragFloat3("Offset", off, 0.1f))
+		_float3 halfExtents = { m_vHalfExtents.x, m_vHalfExtents.y, m_vHalfExtents.z };
+		if (inspector.DragFloat3("Half Extents", &halfExtents.x, 0.1f))
 		{
-			m_vLocalOffset = PxVec3(off[0], off[1], off[2]);
+			m_vHalfExtents = halfExtents;
 			changed = true;
 		}
-		if (changed) {
-			for (int i = 0; i < 3; ++i)
-				ext[i] = (ext[i] > 0.1f ? ext[i] : 0.1f);
-			if (m_pShape && m_pActor)
-				m_pActor->detachShape(*m_pShape);
-			m_pShape->release();
-
-			m_vHalfExtents = PxVec3(ext[0], ext[1], ext[2]);
-			m_pShape = m_pPhysics->createShape(PxBoxGeometry(m_vHalfExtents), *m_pMaterial);
-			m_pShape->setLocalPose(PxTransform(m_vLocalOffset));  // 바로 반영
-			m_pActor->attachShape(*m_pShape);
-		}
-		CPhysXCollider::RenderInspector(inspector);
+		CCollider::RenderInspector(inspector);
 		inspector.TreePop();
 	}
+}
+
+_bool CBoxCollider::Intersects(CCollider* other)
+{
+	other->Update();
+	if (Box.Intersects(dynamic_cast<CBoxCollider*>(other)->Box)) return true;
+	else if (auto sphere = dynamic_cast<CSphereCollider*>(other))
+	{
+		return Box.Intersects(sphere->GetBoundingSphere());
+	}
+	else if (auto capsule = dynamic_cast<CCapsuleCollider*>(other))
+	{
+		if (capsule->GetBoundingCapsuleA().Intersects(Box) ||
+			capsule->GetBoundingCapsuleB().Intersects(Box))
+			return true;
+	}
+	return false;
 }
 
 void CBoxCollider::DebugDraw()
@@ -61,7 +100,7 @@ void CBoxCollider::DebugDraw()
 
 json CBoxCollider::Serialize()
 {
-	json j = CPhysXCollider::Serialize();
+	json j = CCollider::Serialize();
 	j["Type"] = "BoxCollider";
 	j["HalfExtents"] = { m_vHalfExtents.x, m_vHalfExtents.y, m_vHalfExtents.z };
 
@@ -70,42 +109,24 @@ json CBoxCollider::Serialize()
 
 void CBoxCollider::Deserialize(const json& j)
 {
-	CPhysXCollider::Deserialize(j);
+	CCollider::Deserialize(j);
 	if (j.contains("HalfExtents"))
 	{
 		auto halfExtents = j["HalfExtents"];
-		m_vHalfExtents = PxVec3(halfExtents[0], halfExtents[1], halfExtents[2]);
-
-		// 이전 Shape 제거
-		if (m_pShape && m_pActor)
+		if (halfExtents.is_array() && halfExtents.size() == 3)
 		{
-			m_pActor->detachShape(*m_pShape);
-			m_pShape->release();
-			m_pShape = nullptr;
+			m_vHalfExtents.x = halfExtents[0].get<_float>();
+			m_vHalfExtents.y = halfExtents[1].get<_float>();
+			m_vHalfExtents.z = halfExtents[2].get<_float>();
 		}
-
-		// 새 Shape 생성
-		m_pShape = m_pPhysics->createShape(
-			PxBoxGeometry(m_vHalfExtents),
-			*m_pMaterial
-		);
-		m_pShape->setLocalPose(PxTransform(m_vLocalOffset));
-
-		// 트리거 플래그 재적용
-		SetTrigger(m_bIsTrigger);
-		m_pShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, m_bIsTrigger);
-
-		// 액터가 있으면 붙여주기
-		if (m_pActor)
-			m_pActor->attachShape(*m_pShape);
 	}
 }
 
-CBoxCollider* CBoxCollider::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, PxPhysics* pPhysx, PxMaterial* pDefaultMat, const PxVec3& halfExtents)
+CBoxCollider* CBoxCollider::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,const _float3& vHalfExtents)
 {
 	CBoxCollider* pInstance = new CBoxCollider(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(pPhysx, pDefaultMat, halfExtents)))
+	if (FAILED(pInstance->Initialize_Prototype(vHalfExtents)))
 	{
 		MSG_BOX("Failed to Created : CBoxCollider");
 		Safe_Release(pInstance);
@@ -113,7 +134,6 @@ CBoxCollider* CBoxCollider::Create(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 	return pInstance;
 }
-
 
 CComponent* CBoxCollider::Clone(void* pArg)
 {

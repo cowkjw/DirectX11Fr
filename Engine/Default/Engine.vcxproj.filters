@@ -110,25 +110,16 @@
       <Filter>01.Utility\03.Components\Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Inspector.h">
-      <Filter>01.Utility\03.Components\PhysX\Inspector</Filter>
+      <Filter>01.Utility\03.Components\Collider\Inspector</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BoxCollider.h">
-      <Filter>01.Utility\03.Components\PhysX\Collider\Box</Filter>
+      <Filter>01.Utility\03.Components\Collider\Box</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SphereCollider.h">
-      <Filter>01.Utility\03.Components\PhysX\Collider\Sphere</Filter>
+      <Filter>01.Utility\03.Components\Collider\Sphere</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CapsuleCollider.h">
-      <Filter>01.Utility\03.Components\PhysX\Collider\Capsule</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\RigidBody.h">
-      <Filter>01.Utility\03.Components\PhysX\Rigidbody</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\PhysXMag.h">
-      <Filter>01.Utility\03.Components\PhysX\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\PhysXCollider.h">
-      <Filter>01.Utility\03.Components\PhysX\Collider</Filter>
+      <Filter>01.Utility\03.Components\Collider\Capsule</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Model.h">
       <Filter>01.Utility\03.Components\Model</Filter>
@@ -159,6 +150,12 @@
     </ClInclude>
     <ClInclude Include="..\public\AnimController.h">
       <Filter>01.Utility\03.Components\Animation\AnimationController</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Collider.h">
+      <Filter>01.Utility\03.Components\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CollisionMag.h">
+      <Filter>01.Utility\03.Components\Collider\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -253,22 +250,13 @@
       <Filter>01.Utility\10. Resource</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BoxCollider.cpp">
-      <Filter>01.Utility\03.Components\PhysX\Collider\Box</Filter>
+      <Filter>01.Utility\03.Components\Collider\Box</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SphereCollider.cpp">
-      <Filter>01.Utility\03.Components\PhysX\Collider\Sphere</Filter>
+      <Filter>01.Utility\03.Components\Collider\Sphere</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CapsuleCollider.cpp">
-      <Filter>01.Utility\03.Components\PhysX\Collider\Capsule</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\RigidBody.cpp">
-      <Filter>01.Utility\03.Components\PhysX\Rigidbody</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\PhysXMag.cpp">
-      <Filter>01.Utility\03.Components\PhysX\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\PhysXCollider.cpp">
-      <Filter>01.Utility\03.Components\PhysX\Collider</Filter>
+      <Filter>01.Utility\03.Components\Collider\Capsule</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Engine_Struct.cpp">
       <Filter>99.Defines</Filter>
@@ -302,6 +290,12 @@
     </ClCompile>
     <ClCompile Include="..\private\AnimController.cpp">
       <Filter>01.Utility\03.Components\Animation\AnimationController</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Collider.cpp">
+      <Filter>01.Utility\03.Components\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CollisionMag.cpp">
+      <Filter>01.Utility\03.Components\Collider\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,30 +389,6 @@
     <Filter Include="01.Utility\10. Resource">
       <UniqueIdentifier>{f4df4f5f-5527-4ebf-a8fd-c6ea868ba20a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\03.Components\PhysX">
-      <UniqueIdentifier>{96e944e9-0929-4ff5-aa26-5496715b11c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03.Components\PhysX\Inspector">
-      <UniqueIdentifier>{ff5029a0-54c1-4a97-a61d-9474bbfab0a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03.Components\PhysX\Rigidbody">
-      <UniqueIdentifier>{5342c891-0c4f-4e0f-ac76-f4ce45cb9b39}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03.Components\PhysX\Manager">
-      <UniqueIdentifier>{0be706e4-ce03-42ad-a4c5-2c1af3a44fe0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03.Components\PhysX\Collider">
-      <UniqueIdentifier>{5c2ad48f-3e05-4247-a2c7-8c08b5a03521}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03.Components\PhysX\Collider\Sphere">
-      <UniqueIdentifier>{d93b9940-e320-4f3a-8057-a1bce62185b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03.Components\PhysX\Collider\Capsule">
-      <UniqueIdentifier>{a38ca878-ac61-42c7-8147-1dbdf088b6f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03.Components\PhysX\Collider\Box">
-      <UniqueIdentifier>{c3a411de-d2f6-40cd-8b47-b6bec9f6ccca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03.Components\Model">
       <UniqueIdentifier>{7294800f-9dfd-4507-9539-42d60acca55e}</UniqueIdentifier>
     </Filter>
@@ -448,6 +418,24 @@
     </Filter>
     <Filter Include="01.Utility\03.Components\Animation\AnimationController">
       <UniqueIdentifier>{8e420046-bebd-4e7c-a1f2-f0baee9a13d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Collider">
+      <UniqueIdentifier>{5c2ad48f-3e05-4247-a2c7-8c08b5a03521}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Collider\Sphere">
+      <UniqueIdentifier>{d93b9940-e320-4f3a-8057-a1bce62185b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Collider\Capsule">
+      <UniqueIdentifier>{a38ca878-ac61-42c7-8147-1dbdf088b6f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Collider\Box">
+      <UniqueIdentifier>{c3a411de-d2f6-40cd-8b47-b6bec9f6ccca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Collider\Manager">
+      <UniqueIdentifier>{0be706e4-ce03-42ad-a4c5-2c1af3a44fe0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Collider\Inspector">
+      <UniqueIdentifier>{ff5029a0-54c1-4a97-a61d-9474bbfab0a1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

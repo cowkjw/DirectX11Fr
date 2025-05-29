@@ -5,15 +5,16 @@ BEGIN_NAMESPACE(Engine)
 class CShader;
 class CModel;
 class CAnimator;
-class CRigidBody;
-class CPhysXCollider;
 class CBoxCollider;
 class CCapsuleCollider;
 class CSphereCollider;
 END_NAMESPACE
 
 BEGIN_NAMESPACE(Client)	
-class CBaseCharacter : public CGameObject
+static constexpr _float3 GRAVITY = { 0.0f, -9.8f, 0.0f };
+static constexpr float     FRICTION = 5.0f;   // 지면 마찰 계수
+static constexpr float     RESTITUTION = 0.5f; // 바닥 반사 계수
+class CBaseCharacter : public CGameObject,  public ICollisionListener
 {
 public:
 	enum class CSTATE { IDLE, MOVE, ATTACK, SKILL, HURT, DIE };
@@ -36,6 +37,19 @@ public:
 	void ChangeState(class IState* pState);
 	class CInputBuffer* GetInputBuffer() { return m_pInputBuffer; }
 	void HandleInput();
+
+
+	void SetIsJumping(_bool bIsJumping) { m_bIsJumping = bIsJumping; }
+	_bool IsJumping() const { return m_bIsJumping; }
+	void Set_Target(const _wstring& name, LEVEL eLevel);
+	CBaseCharacter* Get_Target() const { return m_pTarget; }
+	void SetLastStepDirection(EDirection eDirection) { m_eLastStepDirection = eDirection; }
+	EDirection GetLastStepDirection() const { return m_eLastStepDirection; }
+	const _float3& GetVelocity() const { return m_Velocity; }
+	void SetVelocity(const _float3& velocity) { m_Velocity = velocity; }
+
+	void SetKnockback(_bool isKnockback) { m_IsKnockback = isKnockback; }
+	_bool IsKnockback() const { return m_IsKnockback; }
 protected:
 	virtual void Ready_Animation();
 
@@ -50,18 +64,33 @@ protected:
 	virtual HRESULT Ready_Components();
 
 protected:
+	_bool m_bIsJumping{ false }; // 점프 중인지 여부
 	_float m_fMaxHP{ 0.f };           // 최대 체력
 	_float m_fCurrentHP{ 0.f };       // 현재 체력
 	_float m_fStamina{ 0.f };         // 스태미나(호흡력)
+	_float m_fTimeDelta{ 0.f };
 	class CWeapon* m_pWeapon{ nullptr }; // 무기
+	CBaseCharacter* m_pTarget{ nullptr };
 
 	class CInputBuffer* m_pInputBuffer{ nullptr }; // 입력 버퍼 (커맨드 패턴)
 	_float m_fTotalTime{ 0.f }; // 총 시간 
+	EDirection m_eLastStepDirection{ EDirection::NONE }; // 마지막 이동 방향
+
+	_float3 m_Velocity = { 0, 0, 0 };
+	_bool m_IsKnockback = false; // 넉백 상태 여부
 
 public:
 	static CBaseCharacter* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
+
+
+	// ICollisionListener을(를) 통해 상속됨
+	void OnCollisionEnter(CCollider* other) override;
+
+	void OnCollisionStay(CCollider* other, _float fTimeDelta) override;
+
+	void OnCollisionExit(CCollider* other) override;
 
 };
 END_NAMESPACE

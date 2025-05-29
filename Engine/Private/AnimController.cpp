@@ -78,6 +78,14 @@ void CAnimController::Update(_float fTimeDelta)
 	m_pAnimator->Update(fTimeDelta);
 }
 
+_float CAnimController::GetStateLength(const string& name)
+{
+	auto state = FindState(name);
+	if (state)
+		return state->clip->GetClipLength();
+	return 0.f;
+}
+
 void CAnimController::AddTransition(size_t fromIdx, size_t toIdx, const Condition& cond, _float duration)
 {	// Transition 저장 시 condition.Evaluate(animator)를 래핑합니다.
 	if (fromIdx >= m_States.size() || toIdx >= m_States.size())

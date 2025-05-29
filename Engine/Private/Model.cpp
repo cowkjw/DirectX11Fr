@@ -92,9 +92,9 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 
 	if (FAILED(Ready_Meshes()))
 		return E_FAIL;
-
-	if (FAILED(Ready_Materials(pModelFilePath)))
-		return E_FAIL;
+	Ready_Materials(pModelFilePath);
+//	if (FAILED(Ready_Materials(pModelFilePath)))
+//		return E_FAIL;
 
 	if (FAILED(Ready_Animations()))
 		return E_FAIL;
@@ -352,7 +352,12 @@ HRESULT CModel::Ready_Materials(const _char* pModelFilePath)
 	{
 		CMaterial* pMaterial = CMaterial::Create(m_pDevice, m_pContext, pModelFilePath, m_pAIScene->mMaterials[i]);
 		if (nullptr == pMaterial)
+		{
+			for (auto& pMaterial : m_Materials)
+				Safe_Release(pMaterial);
+			m_Materials.clear();
 			return E_FAIL;
+		}
 
 		m_Materials.push_back(pMaterial);
 	}

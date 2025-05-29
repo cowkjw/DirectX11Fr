@@ -2,7 +2,6 @@
 
 #include "Picking.h"
 #include "Renderer.h"
-#include "PhysXMag.h"
 #include "Level_Manager.h"
 #include "Timer_Manager.h"
 #include "Graphic_Device.h"
@@ -14,6 +13,7 @@
 #include "TransformPipeline.h"
 #include "ResourceMag.h"
 #include "Prototype_Manager.h"
+#include "CollisionMag.h"
 
 IMPLEMENT_SINGLETON(CGameInstance);
 
@@ -72,18 +72,23 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	if (nullptr == m_pResourceMag)
 		return E_FAIL;
 
-
-	m_pPhysXManager = CPhysXMag::Create(thread::hardware_concurrency());
-	if (nullptr == m_pPhysXManager)
+	m_pCollisionMag = CCollisionMag::Create();
+	if (nullptr == m_pCollisionMag)
 		return E_FAIL;
 
 
+
+	
 	return S_OK;
+}
+
+void CGameInstance::Fixed_Update(_float fTimeDelta)
+{
+	m_pCollisionMag->Update(fTimeDelta);
 }
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
-	m_pPhysXManager->Update(fTimeDelta);
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 	m_pTransformPipeline->Update();
 
@@ -495,49 +500,31 @@ const vector<_wstring>& CGameInstance::GetModelKeys(_bool bIsStatic) const
 	return m_pResourceMag->GetModelKeys(bIsStatic);
 }
 
+
 #pragma endregion
 
-#pragma region PHYSX
-PxPhysics* CGameInstance::GetPhysics() const
+#pragma region COLLIDER
+void CGameInstance::Register_Collider(CCollider* pCollider)
 {
-	return m_pPhysXManager->GetPhysics();
-}
-PxScene* CGameInstance::GetScene() const
-{
-	return m_pPhysXManager->GetScene();
-}
-PxMaterial* CGameInstance::GetDefaultMaterial()
-{
-	return m_pPhysXManager->GetDefaultMaterial();
-}
-PxRigidStatic* CGameInstance::CreateRigidStatic(const PxTransform& transform)
-{
-	return m_pPhysXManager->CreateRigidStatic(transform);
-}
-PxRigidDynamic* CGameInstance::CreateRigidDynamic(const PxTransform& transform)
-{
-	return m_pPhysXManager->CreateRigidDynamic(transform);
-}
-void CGameInstance::RegisterCollider(CPhysXCollider* pCol)
-{
-	if (nullptr == m_pPhysXManager)
+	if (nullptr == m_pCollisionMag)
 		return;
-	m_pPhysXManager->RegisterCollider(pCol);
+	m_pCollisionMag->Register(pCollider);
 }
-void CGameInstance::UnregisterCollider(CPhysXCollider* pCol)
+
+void CGameInstance::Unregister_Collider(CCollider* pCollider)
 {
-	if (nullptr == m_pPhysXManager)
+	if (nullptr == m_pCollisionMag)
 		return;
-	m_pPhysXManager->UnregisterCollider(pCol);
+	m_pCollisionMag->Unregister(pCollider);
 }
 #pragma endregion
 
 void CGameInstance::Release_Engine()
 {
+	Safe_Release(m_pCollisionMag);
+
 	Safe_Release(m_pPicking);
 	
-	Safe_Release(m_pPhysXManager);
-
 	Safe_Release(m_pTransformPipeline);
 
 	Safe_Release(m_pUIManager);

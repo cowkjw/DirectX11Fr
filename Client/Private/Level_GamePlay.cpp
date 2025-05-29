@@ -1,6 +1,8 @@
 #include "Level_GamePlay.h"
 #include "GameInstance.h"
 #include "JsonLoader.h"
+#include "ThirdPersonCamera.h"
+#include "BaseCharacter.h"
 #include <Weapon.h>
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -27,12 +29,36 @@ HRESULT CLevel_GamePlay::Initialize()
 
 
 
-	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
-		ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_Camera")))
+	//if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
+	//	ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_Camera")))
+	//	return E_FAIL;
+
+
+	if (FAILED(Ready_Layer_TestCharacter(TEXT("Kyojuro"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_TestCharacter(TEXT("Layer_Character"))))
-		return E_FAIL;
+	CGameObject* pCharacter = m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("Kyojuro"));
+
+	if (pCharacter)
+	{
+		CThirdPersonCamera::THRIDCAMERA_DESC CameraDesc{};
+		CameraDesc.fSmoth = 0.1f;
+		CameraDesc.pTarget = pCharacter;
+		CameraDesc.fSpeedPerSec = 50.f;
+		CameraDesc.fRotationPerSec = XMConvertToRadians(180.f);
+		CameraDesc.vEye = _float3(0.f, 20.f, -50.f);
+		CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+		CameraDesc.fFov = XMConvertToRadians(60.0f);
+		CameraDesc.fNear = 0.1f;
+		CameraDesc.fFar = 1000.f;
+
+		if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_ThirdPersonCamera"),
+			ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_Camera"),&CameraDesc))
+			return E_FAIL;
+
+	}
+
+	
 	return S_OK;
 }
 
@@ -54,11 +80,22 @@ HRESULT CLevel_GamePlay::Ready_Layer_TestCharacter(const _wstring strLayerTag)
  	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_KoujuroWeapon"),
 		ToIndex(LEVEL::GAMEPLAY), TEXT("Weapon")))
 		return E_FAIL;
+	// Prototype_GameObject_Akaza
+	CBaseCharacter* pAkaza = static_cast<CBaseCharacter*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Akaza"),
+		ToIndex(LEVEL::GAMEPLAY), TEXT("Akaza")));
 
-	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Character"),
-		ToIndex(LEVEL::GAMEPLAY), strLayerTag))
+	if (!pAkaza)
 		return E_FAIL;
 
+	// Prototype_GameObject_Kyojuro
+	CBaseCharacter* pKyojuro = static_cast<CBaseCharacter*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Kyojuro"),
+		ToIndex(LEVEL::GAMEPLAY), strLayerTag));
+
+	if (!pKyojuro)
+		return E_FAIL;
+
+	pAkaza->Set_Target(TEXT("Kyojuro"), LEVEL::GAMEPLAY);
+	pKyojuro->Set_Target(TEXT("Akaza"), LEVEL::GAMEPLAY);
 
 	return S_OK;
 }

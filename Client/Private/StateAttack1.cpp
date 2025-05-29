@@ -21,6 +21,11 @@ void StateAttack1::Update(CBaseCharacter* pChar, _float fTimeDelta)
 	auto pAnim = pChar->Get_Animator();
 	auto buf = pChar->GetInputBuffer();
 
+	if (pChar->Get_Target())
+	{
+		pChar->GetTransform()->LookAt(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
+	}
+
 	if ((gi->IsKeyDown(VK_UP) || gi->IsKeyDown(VK_DOWN) ||
 		gi->IsKeyDown(VK_LEFT) || gi->IsKeyDown(VK_RIGHT))&&gi->IsKeyDown('I'))
 	{

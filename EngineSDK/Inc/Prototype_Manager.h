@@ -7,7 +7,6 @@
 #include "SphereCollider.h"
 #include "VIBuffer_Rect.h"
 #include "BoxCollider.h"
-#include "RigidBody.h"
 #include "Transform.h"
 #include "Animator.h"
 #include "Texture.h"

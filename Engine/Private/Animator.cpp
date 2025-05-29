@@ -152,6 +152,11 @@ const char* CAnimator::GetCurrentAnimName() const
 	return m_pCurrentAnim->Get_Name();
 }
 
+_float CAnimator::GetStateLengthByName(const string& name) const
+{
+	return m_pAnimController->GetStateLength(name);
+}
+
 
 CAnimator* CAnimator::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

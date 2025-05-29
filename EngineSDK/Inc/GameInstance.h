@@ -19,6 +19,7 @@ private:
 
 public:
 	HRESULT Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppContextOut);
+	void Fixed_Update(_float fTimeDelta);
 	void Update_Engine(_float fTimeDelta);
 	void Clear(_uint iLevelIndex);
 	void ClearObejcts(_uint iLevelIndex);
@@ -115,14 +116,10 @@ public:
 	const vector<_wstring>& GetModelKeys(_bool bIsStatic = true) const;
 #pragma endregion
 
-#pragma region PHYSX
-	PxPhysics* GetPhysics() const;
-	PxScene* GetScene() const;
-	PxMaterial* GetDefaultMaterial();
-	PxRigidStatic* CreateRigidStatic(const PxTransform& transform);
-	PxRigidDynamic* CreateRigidDynamic(const PxTransform& transform);
-	void RegisterCollider(CPhysXCollider* pCol);
-	void UnregisterCollider(CPhysXCollider* pCol);
+#pragma region COLLIDER
+	void Register_Collider(class CCollider* pCollider);
+	void Unregister_Collider(class CCollider* pCollider);
+
 #pragma endregion
 
 
@@ -139,7 +136,7 @@ private:
 	class CTransformPipeline* m_pTransformPipeline = { nullptr };
 	class CUIManager* m_pUIManager = { nullptr };
 	class CResourceMag* m_pResourceMag = { nullptr };
-	class CPhysXMag* m_pPhysXManager = { nullptr };
+	class CCollisionMag* m_pCollisionMag = { nullptr };
 
 public:
 	void Release_Engine();

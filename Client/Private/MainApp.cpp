@@ -32,6 +32,7 @@ HRESULT CMainApp::Initialize()
 
 void CMainApp::Update(_float fTimeDelta)
 {
+	m_pGameInstance->Fixed_Update(fTimeDelta);
 	m_pGameInstance->Update_Engine(fTimeDelta);
 }
 
@@ -81,21 +82,17 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	//	return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_BoxCollider"),
-		CBoxCollider::Create(m_pDevice, m_pContext,m_pGameInstance->GetPhysics(),m_pGameInstance->GetDefaultMaterial(), PxVec3(0.5f)))))
+		CBoxCollider::Create(m_pDevice, m_pContext, _float3(1.f,1.f,1.f)))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_CapsuleCollider"),
-		CCapsuleCollider::Create(m_pDevice, m_pContext, m_pGameInstance->GetPhysics(), m_pGameInstance->GetDefaultMaterial(), 0.5f,0.5f))))
+		CCapsuleCollider::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_SphereCollider"),
-		CSphereCollider::Create(m_pDevice, m_pContext, m_pGameInstance->GetPhysics(), m_pGameInstance->GetDefaultMaterial(),0.5f))))
+		CSphereCollider::Create(m_pDevice, m_pContext,0.5f))))
 		return E_FAIL;
 
-	PxTransform transform = PxTransform(PxVec3(0.f, 0.f, 0.f));
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_RigidBody"),
-		CRigidBody::Create(m_pDevice, m_pContext, m_pGameInstance->GetPhysics(), m_pGameInstance->GetDefaultMaterial(), transform))))
-		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Animator"),
 		CAnimator::Create(m_pDevice, m_pContext))))

@@ -1,0 +1,87 @@
+#include "Collider.h"
+#include "GameInstance.h"
+
+
+CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CComponent(pDevice, pContext)
+	, m_offset(0.f, 0.f, 0.f)
+	, m_bIsTrigger(false)
+{
+
+}
+
+CCollider::CCollider(const CCollider& Prototype)
+	: CComponent(Prototype)
+	, m_offset(Prototype.m_offset)
+	, m_bIsTrigger(Prototype.m_bIsTrigger)
+{
+}
+HRESULT CCollider::Initialize_Prototype()
+{
+    return S_OK;
+}
+
+HRESULT CCollider::Initialize(void* pArg)
+{
+	m_pGameInstance->Register_Collider(this);
+
+    return S_OK;
+}
+
+void CCollider::Update()
+{
+}
+
+void CCollider::DebugDraw()
+{
+}
+
+void CCollider::RenderInspector(IInspector& inspector)
+{
+	if (inspector.TreeNode("Collider Properties"))
+	{
+		_bool changed = false;
+		_float off[3] = { m_offset.x, m_offset.y, m_offset.z };
+		if (inspector.DragFloat3("Offset", off, 0.1f))
+		{
+			m_offset = { off[0], off[1], off[2] };
+			changed = true;
+		}
+		if (inspector.Checkbox("Is Trigger", &m_bIsTrigger))
+		{
+			changed = true;
+		}
+		if (changed)
+		{
+			// 트리거 플래그 적용
+			SetTrigger(m_bIsTrigger);
+		}
+		inspector.TreePop();
+	}
+}
+
+json CCollider::Serialize()
+{
+	json j;
+	j["Offset"] = { m_offset.x, m_offset.y, m_offset.z };
+	j["IsTrigger"] = m_bIsTrigger;
+	return j;
+}
+
+void CCollider::Deserialize(const json& j)
+{
+	if (j.contains("Offset"))
+	{
+		auto offset = j["Offset"];
+		m_offset = { offset[0], offset[1], offset[2] };
+	}
+	if (j.contains("IsTrigger"))
+	{
+		m_bIsTrigger = j["IsTrigger"];
+	}
+}
+
+void CCollider::Free()
+{
+    __super::Free();
+}

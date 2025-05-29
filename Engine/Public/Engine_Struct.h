@@ -24,7 +24,12 @@ namespace Engine
         float			fTrackPosition;
     }KEYFRAME;
 
-
+    struct ICollisionListener
+    {
+        virtual void OnCollisionEnter(class CCollider* other) = 0;
+        virtual void OnCollisionStay(class CCollider* other, float fTimeDelta) = 0;
+        virtual void OnCollisionExit(class CCollider* other) = 0;
+    };
 
 	typedef struct tagVector : public XMFLOAT3
 	{

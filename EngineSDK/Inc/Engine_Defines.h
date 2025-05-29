@@ -13,10 +13,8 @@
 
 #include "Fx11/d3dx11effect.h"
 #include <d3dcompiler.h>
-#include "PhysX/PxPhysicsAPI.h"
 
 using namespace DirectX;
-using namespace physx;
 
 #include "assimp/scene.h"
 #include "assimp/Importer.hpp"

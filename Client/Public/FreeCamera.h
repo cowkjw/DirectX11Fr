@@ -1,6 +1,8 @@
 #pragma once
 #include "Camera.h"
+#include "Client_Defines.h"
 
+BEGIN_NAMESPACE(Client)
 class CFreeCamera final : public CCamera
 {
 public:
@@ -29,4 +31,5 @@ public:
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };
+END_NAMESPACE
 

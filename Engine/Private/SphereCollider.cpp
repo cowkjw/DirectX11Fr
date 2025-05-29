@@ -1,60 +1,82 @@
 #include "SphereCollider.h"
+#include "GameObject.h"
+#include "BoxCollider.h"
+#include "CapsuleCollider.h"
 
 CSphereCollider::CSphereCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    : CPhysXCollider(pDevice,pContext)
+	: CCollider(pDevice, pContext)
 {
 }
 
 CSphereCollider::CSphereCollider(const CSphereCollider& Prototype)
-    : CPhysXCollider(Prototype),
-    m_fRadius(Prototype.m_fRadius)
+	: CCollider(Prototype),
+	m_fRadius(Prototype.m_fRadius)
 
 {
 }
 
-HRESULT CSphereCollider::Initialize_Prototype(PxPhysics* pPhysx, PxMaterial* pDefaultMat, _float radius)
+
+
+HRESULT CSphereCollider::Initialize_Prototype(_float radius)
 {
-    if (FAILED(__super::Initialize_Prototype(pPhysx, pDefaultMat)))
-        return E_FAIL;
-    m_fRadius = radius;
-    m_pShape = pPhysx->createShape(PxSphereGeometry(m_fRadius), *m_pMaterial);
-    return S_OK;
+	m_fRadius = radius > 0.1f ? radius : 0.1f; // 최소값 제한
+	return S_OK;
 }
 
 HRESULT CSphereCollider::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
-    return S_OK;
+	if (m_pOwner)
+	{
+		auto pTransform = m_pOwner->GetTransform();
+		if (pTransform)
+		{
+			Sphere.Radius = m_fRadius;
+			auto pos = pTransform->Get_State(STATE::POSITION);
+			XMVECTOR center = XMVectorSetW(pos, 0.f) + XMVectorSet(m_offset.x, m_offset.y, m_offset.z, 0.f); // W를 0으로 설정하여 위치 벡터로 사용
+			XMStoreFloat3(&Sphere.Center, center);
+
+		}
+		else
+		{
+			return E_FAIL; // Transform이 없으면 초기화 실패
+		}
+	}
+	__super::Initialize(pArg);
+	return S_OK;
+}
+
+void CSphereCollider::Update()
+{
+	auto pTransform = m_pOwner->GetTransform();
+	if (pTransform)
+	{
+		Sphere.Radius = m_fRadius;
+		auto pos = pTransform->Get_State(STATE::POSITION);
+		XMVECTOR center = XMVectorSetW(pos, 0.f) + XMVectorSet(m_offset.x, m_offset.y, m_offset.z, 0.f); // W를 0으로 설정하여 위치 벡터로 사용
+		XMStoreFloat3(&Sphere.Center, center);
+
+	}
 }
 
 void CSphereCollider::RenderInspector(IInspector& inspector)
 {
-    if (inspector.TreeNode("Sphere Collider")) {
-        _bool changed = false;
-        _float r = m_fRadius;
-        if (inspector.DragFloat("Radius", &r, 0.1f)) changed = true;
-        _float off[3] = { m_vLocalOffset.x, m_vLocalOffset.y, m_vLocalOffset.z };
-        if (inspector.DragFloat3("Offset", off, 0.1f))
-        {
-            m_vLocalOffset = PxVec3(off[0], off[1], off[2]);
-            changed = true;
-        }
-        if (changed)
-        {
-            r = (r > 0.1f ? r : 0.1f);
-            m_fRadius = r;
-
-            PxShape* oldShape = m_pShape;
-            m_pActor->detachShape(*oldShape);
-            oldShape->release();
-            m_pShape = m_pPhysics->createShape(PxSphereGeometry(m_fRadius), *m_pMaterial);
-            m_pShape->setLocalPose(PxTransform(m_vLocalOffset));  // 바로 반영
-            m_pActor->attachShape(*m_pShape);
-        }
-        CPhysXCollider::RenderInspector(inspector);
-        inspector.TreePop();
-    }
+	if (inspector.TreeNode("Sphere Collider"))
+	{
+		_bool changed = false;
+		_float radius = m_fRadius;
+		if (inspector.DragFloat("Radius", &radius, 0.1f))
+		{
+			m_fRadius = radius > 0.1f ? radius : 0.1f; // 최소값 제한
+			changed = true;
+		}
+		if (changed)
+		{
+			Sphere.Radius = m_fRadius;
+			Sphere.Center = m_offset; // Offset 적용
+		}
+		CCollider::RenderInspector(inspector);
+		inspector.TreePop();
+	}
 }
 
 void CSphereCollider::DebugDraw()
@@ -63,7 +85,7 @@ void CSphereCollider::DebugDraw()
 
 json CSphereCollider::Serialize()
 {
-	json j = CPhysXCollider::Serialize();
+	json j = CCollider::Serialize();
 	j["Type"] = "SphereCollider";
 	j["Radius"] = m_fRadius;
 	return j;
@@ -71,59 +93,62 @@ json CSphereCollider::Serialize()
 
 void CSphereCollider::Deserialize(const json& j)
 {
-	CPhysXCollider::Deserialize(j);
+	CCollider::Deserialize(j);
 	if (j.contains("Radius"))
 	{
 		auto radius = j["Radius"];
 		m_fRadius = radius;
 	}
-	if (j.contains("Offset"))
-	{
-		auto offset = j["Offset"];
-		m_vLocalOffset = PxVec3(offset[0], offset[1], offset[2]);
-	}
-	if (m_pShape && m_pActor)
-	{
-		m_pActor->detachShape(*m_pShape);
-		m_pShape->release();
-		m_pShape = m_pPhysics->createShape(PxSphereGeometry(m_fRadius), *m_pMaterial);
-		m_pShape->setLocalPose(PxTransform(m_vLocalOffset));
-		m_pActor->attachShape(*m_pShape);
-		// 트리거 플래그 재적용
-		SetTrigger(m_bIsTrigger);
-		m_pShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, m_bIsTrigger);
-	}
 }
 
-CSphereCollider* CSphereCollider::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, PxPhysics* pPhysx, PxMaterial* pDefaultMat, _float radius)
+_bool CSphereCollider::Intersects(CCollider* other)
 {
-    CSphereCollider* pInstance = new CSphereCollider(pDevice, pContext);
+	other->Update();
+	auto otherSphere = dynamic_cast<CSphereCollider*>(other);
+	if (otherSphere)
+		return Sphere.Intersects(otherSphere->Sphere);
 
-    if (FAILED(pInstance->Initialize_Prototype(pPhysx, pDefaultMat, radius)))
-    {
-        MSG_BOX("Failed to Created : CSphereCollider");
-        Safe_Release(pInstance);
-    }
-
-    return pInstance;
+	// 다른 타입(Box, Capsule)와도 비교할 수 있도록 확장
+	if (auto box = dynamic_cast<CBoxCollider*>(other)) {
+		return Sphere.Intersects(box->GetBoundingBox());
+	}
+	if (auto capsule = dynamic_cast<CCapsuleCollider*>(other))
+	{
+		if (capsule->GetBoundingCapsuleA().Intersects(Sphere) ||
+			capsule->GetBoundingCapsuleB().Intersects(Sphere))
+			return true;
+	}
+	return false;
 }
 
+CSphereCollider* CSphereCollider::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _float radius)
+{
+	CSphereCollider* pInstance = new CSphereCollider(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype(radius)))
+	{
+		MSG_BOX("Failed to Created : CSphereCollider");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
 
 CComponent* CSphereCollider::Clone(void* pArg)
 {
-    CSphereCollider* pInstance = new CSphereCollider(*this);
+	CSphereCollider* pInstance = new CSphereCollider(*this);
 
-    if (FAILED(pInstance->Initialize(pArg)))
-    {
-        MSG_BOX("Failed to Cloned : CSphereCollider");
-        Safe_Release(pInstance);
-    }
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CSphereCollider");
+		Safe_Release(pInstance);
+	}
 
-    return pInstance;
+	return pInstance;
 
 }
 
 void CSphereCollider::Free()
 {
-    __super::Free();
+	__super::Free();
 }

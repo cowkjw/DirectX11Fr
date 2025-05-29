@@ -318,6 +318,35 @@ void CTransform::Set_Parent(CGameObject* pParent)
 	}
 }
 
+_vector CTransform::Get_RotationQuaternion() const
+{
+	_vector scale, quat, trans;
+	XMMatrixDecompose(&scale, &quat, &trans, XMLoadFloat4x4(&m_WorldMatrix));
+	return quat;  // 쿼터니언 회전 반환
+}
+
+void CTransform::Set_RotationQuaternion(_fvector vQuat)
+{
+	XMVECTOR quat = XMQuaternionNormalize(vQuat);
+
+	// 2) 쿼터니언→회전 행렬
+	XMMATRIX rotM = XMMatrixRotationQuaternion(quat);
+
+	// 3) (옵션) 스케일, 위치 행렬 구성
+	_float3 vScale = Get_Scaled();
+	XMVECTOR scale = XMLoadFloat3(&vScale);
+	XMVECTOR trans = Get_State(STATE::POSITION);
+
+	XMMATRIX scaleM = XMMatrixScalingFromVector(scale);
+	XMMATRIX transM = XMMatrixTranslationFromVector(trans);
+
+	// 스케일 → 회전 → 위치 순서로 곱함
+	XMMATRIX worldM = scaleM * rotM * transM;
+
+	// 4) 최종 월드 매트릭스 저장
+	XMStoreFloat4x4(&m_WorldMatrix, worldM);
+}
+
 void CTransform::LookAt(_fvector vAt)
 {
 	_float3		vScaled = Get_Scaled();

@@ -45,3 +45,17 @@ static string WideToUtf8(const wstring& wstr)
 
     return strUtf8;
 }
+
+inline XMVECTOR RotateVectorByQuaternion(const XMVECTOR& v, const XMVECTOR& q) {
+    return XMVector3Rotate(v, q);
+}
+
+/// 축(axis)과 라디안 각(angle) 으로부터 쿼터니언 생성
+inline XMVECTOR QuaternionFromAxisAngle(const XMVECTOR& axis, float angle) {
+    return XMQuaternionRotationAxis(axis, angle);
+}
+
+/// Yaw(pivot around Y), Pitch, Roll 순서로부터 쿼터니언 생성
+inline XMVECTOR QuaternionFromYawPitchRoll(float yaw, float pitch, float roll) {
+    return XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
+}

@@ -47,7 +47,7 @@ public:
 public:
 
 	void SetAnimator(class CAnimator* animator) { m_pAnimator = animator; }
-
+	_float GetStateLength(const string& name);
 
 	size_t  AddState(const string& name, class CAnimation* clip, _uint iAnimIndex)
 	{

@@ -124,7 +124,11 @@ void CChannel::Update_TransformationMatrix(_uint& currentKeyFrameIndex, _float f
 	// TransformationMatrix = XMMatrixScaling() * XMMatrixRotationQuaternion() * XMMatrixTranslation();
 	TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 
-
+	if (m_iBoneIndex >= Bones.size())
+	{
+		//MSG_BOX("CChannel::Update_TransformationMatrix - m_iBoneIndex is out of range");
+		return;
+	}
 	Bones[m_iBoneIndex]->Set_TransformationMatrix(TransformationMatrix);
 	XMStoreFloat4x4(&m_LocalTransformationMatrix, TransformationMatrix);
 }

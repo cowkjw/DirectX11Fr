@@ -342,36 +342,7 @@ void CJsonLoader::FactoryComponent(CGameObject* pObj, const json& j)
 		CComponent* pComp = nullptr;
 		if ((pComp = pObj->Get_Component(wCompKey)) == nullptr)
 		{
-			PxRigidActor* pActor = nullptr;
-			if (compKey.find("Collider") != string::npos)
-			{
-
-				// (A) 이미 Rigidbody가 붙어 있다면
-				if (auto pRbodyComp = pObj->Get_Component(TEXT("Com_Rigidbody")))
-				{
-					pActor = static_cast<CRigidBody*>(pRbodyComp)->GetRigidActor();
-				}
-				else
-				{
-					// (B) 없으면 Transform 정보로 Static Actor 생성
-					CTransform* pTrans = pObj->GetTransform();
-					_vector pos = pTrans->Get_State(STATE::POSITION);
-
-					// Convert _vector to XMFLOAT3
-					XMFLOAT3 posFloat3;
-					XMStoreFloat3(&posFloat3, pos);
-					// Quaternion rot = pTrans->GetRotation(); // 회전도 필요하면
-					PxTransform physxT
-					{
-						{ posFloat3.x, posFloat3.y, posFloat3.z },
-						//{ rot.x, rot.y, rot.z, rot.w } 
-					};
-
-					// PhysX 매니저에 만든 헬퍼를 사용해서 Static Actor 생성
-					pActor = m_pGameInstance->CreateRigidStatic(physxT);
-				}
-			}
-			pObj->Add_Component(compCreateLevel, protoCompTag, wCompKey, &pComp, pActor);
+			pObj->Add_Component(compCreateLevel, protoCompTag, wCompKey, &pComp);
 			Safe_Release(pComp);
 		}
 		if (pComp)

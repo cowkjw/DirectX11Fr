@@ -16,7 +16,10 @@ void StateGuard::Update(CBaseCharacter* pChar, _float fTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	auto buf = pChar->GetInputBuffer();
-
+	if (pChar->Get_Target())
+	{
+		pChar->GetTransform()->LookAt(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
+	}
 	if (pGameInstance->IsKeyDown('I')&& pGameInstance->IsKeyDown('O'))
 	{
 		pChar->ChangeState(new StateSkill2());

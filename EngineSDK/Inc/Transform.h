@@ -43,11 +43,21 @@ public:
 	void Go_Backward(_float fTimeDelta);
 	void Go_Right(_float fTimeDelta);
 	void Go_Left(_float fTimeDelta);
+	void MoveDirection(_fvector vDirection, _float fTimeDelta)
+	{
+		_vector vPosition = Get_State(STATE::POSITION);
+		// 방향 벡터 정규화해서 그 방향으로 더해주기
+		vPosition += XMVector3Normalize(vDirection) * m_fSpeedPerSec * fTimeDelta;
+		// 새로운 위치로 상태 업데이트
+		Set_State(STATE::POSITION, vPosition);
+		m_bDirty = true;
+	}
 	void Follow_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance);
 
 	void Rotate_EulerAngles(const _float3& vEulerAngles);
 	void Turn(_fvector vAxis, _float fTimeDelta);
 	void RotateToDirection(_fvector dir);
+
 
 	void FlllowParent(const CTransform* pParentTransform);
 
@@ -66,6 +76,8 @@ public:
 	const auto& Get_WorldMatrix()  { return m_WorldMatrix; } // float4x4
 
 	const _float3& Get_EulerAngles() const { return m_vEulerAngles; }
+	_vector Get_RotationQuaternion() const;
+	void Set_RotationQuaternion(_fvector vQuat);
 
 	void Set_WorldMatrix(_float4x4 worldMatrix) {
 		m_bDirty = true;

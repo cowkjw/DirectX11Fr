@@ -21,6 +21,8 @@ public:
 	void SetActive(_bool bActive) {	m_bIsActive = bActive;}
 	void SetOwner(class CGameObject* pOwner);
 
+	class CGameObject* GetOwner() const { return m_pOwner; }
+
 	void SetPrototypeLevel(_uint iPrototypeLevel) { m_iPrototypeLevel = iPrototypeLevel; }
 	void SetCreateLevel(_uint iCreateLevel) { m_iCreateLevel = iCreateLevel; }
 

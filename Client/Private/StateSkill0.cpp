@@ -17,6 +17,11 @@ void StateSkill0::Update(CBaseCharacter* pChar, _float fTimeDelta)
 	auto anim = pChar->Get_Animator();
 	auto animCtrl = anim->GetAnimController();
 	const string& stateName = animCtrl->GetCurrentState()->stateName;
+
+	if (pChar->Get_Target())
+	{
+		pChar->GetTransform()->LookAt(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
+	}
 	if (stateName == "skill0" && anim->GetCurrentAnimProgress() >= 1.f)
 	{
 		_bool moving = gi->IsKeyDown(VK_UP) || gi->IsKeyDown(VK_DOWN) ||

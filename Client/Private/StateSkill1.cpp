@@ -13,6 +13,10 @@ void StateSkill1::Enter(CBaseCharacter* pChar)
 
 void StateSkill1::Update(CBaseCharacter* pChar, _float fTimeDelta)
 {
+	if (pChar->Get_Target())
+	{
+		pChar->GetTransform()->LookAt(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
+	}
 	CGameInstance* gi = CGameInstance::Get_Instance();
 	auto anim = pChar->Get_Animator();
 	auto animCtrl = anim->GetAnimController();

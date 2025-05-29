@@ -68,7 +68,7 @@ public:
             ? (elapsed / duration)
             : 0.f;
     }
-
+    _float GetStateLengthByName(const string& name) const;
 public:
     void AddBool(const std::string& name) { m_Params[name] = { ParamType::Bool }; }
     void AddFloat(const std::string& name) { m_Params[name] = { ParamType::Float }; }
