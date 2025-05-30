@@ -10,6 +10,10 @@
 #include "DirectXTK/Keyboard.h"
 #include "DirectXTK/Mouse.h"
 #include "DirectXTK/VertexTypes.h"
+#include "DirectXTK/PrimitiveBatch.h"
+#include "DirectXTK/Effects.h"
+#include <DirectXColors.h>
+
 
 #include "Fx11/d3dx11effect.h"
 #include <d3dcompiler.h>

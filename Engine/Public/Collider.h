@@ -36,8 +36,14 @@ public:
 
 protected:
 	_float3   m_offset{};
-	_bool       m_bIsTrigger;
+	_bool       m_bIsTrigger{ false };
+	_bool       m_bIsCollision{ false };
+	_bool 	    m_bIsDebugDraw{ false };
 	ICollisionListener* m_listener = nullptr;
+	PrimitiveBatch<VertexPositionColor>* m_pBatch = nullptr;
+	BasicEffect* m_pEffect = nullptr;
+	ID3D11InputLayout* m_pInputLayout = nullptr;
+
 
 public:
 	virtual void Free() override;

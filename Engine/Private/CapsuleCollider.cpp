@@ -93,6 +93,18 @@ void CCapsuleCollider::RenderInspector(IInspector& inspector)
 
 void CCapsuleCollider::DebugDraw()
 {
+	if (!m_bIsDebugDraw)
+		return;
+	if (!m_pBatch || !m_pEffect || !m_pInputLayout)
+		return;
+	m_pBatch->Begin();
+	m_pEffect->Apply(m_pContext);
+	m_pContext->IASetInputLayout(m_pInputLayout);
+	// A Ä¸½¶
+	m_pBatch->DrawCapsule(CapsuleCapsuleA.Center, CapsuleCapsuleA.Extents, CapsuleCapsuleA.Orientation, Colors::Red);
+	// B Ä¸½¶
+	m_pBatch->DrawCapsule(CapsuleCapsuleB.Center, CapsuleCapsuleB.Extents, CapsuleCapsuleB.Orientation, Colors::Blue);
+	m_pBatch->End();
 }
 
 json CCapsuleCollider::Serialize()

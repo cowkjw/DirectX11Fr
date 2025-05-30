@@ -25,6 +25,22 @@ HRESULT CCollider::Initialize(void* pArg)
 {
 	m_pGameInstance->Register_Collider(this);
 
+	m_pEffect = new BasicEffect(m_pDevice);
+	m_pEffect->SetVertexColorEnabled(true);
+	m_pBatch = new PrimitiveBatch<VertexPositionColor>(m_pContext);
+	const void* vsBlob = nullptr;
+	size_t      vsBlobSize = 0;
+	m_pEffect->GetVertexShaderBytecode(&vsBlob, &vsBlobSize);
+
+	// 2) InputLayout 생성
+	HRESULT hr = m_pDevice->CreateInputLayout(
+		VertexPositionColor::InputElements,    // D3D11_INPUT_ELEMENT_DESC 배열
+		VertexPositionColor::InputElementCount,// 배열 크기
+		vsBlob,                                // VS bytecode 포인터
+		vsBlobSize,                            // bytecode 크기
+		&m_pInputLayout                       // 결과 InputLayout
+	);
+
     return S_OK;
 }
 
@@ -34,6 +50,7 @@ void CCollider::Update()
 
 void CCollider::DebugDraw()
 {
+
 }
 
 void CCollider::RenderInspector(IInspector& inspector)
@@ -84,4 +101,8 @@ void CCollider::Deserialize(const json& j)
 void CCollider::Free()
 {
     __super::Free();
+
+	Safe_Delete(m_pBatch);
+	Safe_Delete(m_pEffect);
+	Safe_Release(m_pInputLayout);
 }
