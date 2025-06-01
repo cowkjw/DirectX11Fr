@@ -182,6 +182,9 @@ void CTransform::RotateToDirection(_fvector dir)
 	_float angle = acosf(dot);
 
 	// 7) 쿼터니언 회전 매트릭스
+
+	if (angle < 0.001f) return; // 회전 각도가 거의 0이면 회전하지 않음
+
 	_vector q = XMQuaternionRotationAxis(axis, angle);
 	_matrix R = XMMatrixRotationQuaternion(q);
 
@@ -197,16 +200,16 @@ void CTransform::RotateToDirection(_fvector dir)
 	m_bDirty = true;
 }
 
-void CTransform::FlllowParent(const CTransform* pParentTransform)
+void CTransform::FollowParent(const CTransform* pParentTransform)
 {
 	if (!pParentTransform) return;
 
  // 1) 부모 월드
-	XMMATRIX parentW = XMLoadFloat4x4(&pParentTransform->m_WorldMatrix);
-	// 2) 저장된 로컬
-	XMMATRIX localM = XMLoadFloat4x4(&m_LocalMatrix);
+	XMMATRIX parentWInv = pParentTransform->Get_WorldMatrix_Inverse();
+	// 2) 내 월드
+	XMMATRIX myWorld = XMLoadFloat4x4(&m_WorldMatrix);
 	// 3) 월드 = local × 부모월드
-	XMMATRIX worldM = XMMatrixMultiply(localM, parentW);
+	XMMATRIX worldM = XMMatrixMultiply(myWorld, parentWInv);
 	// 4) 결과 저장
 	XMStoreFloat4x4(&m_WorldMatrix, worldM);
 }

@@ -22,6 +22,10 @@ public:
 	}
 
 	void Update(_float fTimeDelta);
+	void DebugDraw();
+
+private:
+	void ResolvePenetrationXZ(class CCollider* A, class CCollider* B);
 
 private:
 	vector<class CCollider*> m_vColliders; // 충돌체 목록

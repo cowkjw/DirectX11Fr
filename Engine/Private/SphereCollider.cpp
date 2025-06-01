@@ -6,6 +6,7 @@
 CSphereCollider::CSphereCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCollider(pDevice, pContext)
 {
+	m_eColliderType = ColliderType::SPHERE;
 }
 
 CSphereCollider::CSphereCollider(const CSphereCollider& Prototype)
@@ -50,9 +51,22 @@ void CSphereCollider::Update()
 	auto pTransform = m_pOwner->GetTransform();
 	if (pTransform)
 	{
+		// 1) 반지름 동기화
 		Sphere.Radius = m_fRadius;
-		auto pos = pTransform->Get_State(STATE::POSITION);
-		XMVECTOR center = XMVectorSetW(pos, 0.f) + XMVectorSet(m_offset.x, m_offset.y, m_offset.z, 0.f); // W를 0으로 설정하여 위치 벡터로 사용
+
+		// 2) 월드 매트릭스 불러오기
+		XMMATRIX worldMtx = XMLoadFloat4x4(&pTransform->Get_WorldMatrix());
+
+		// 3) 로컬 오프셋 벡터 (w=0 → 방향 벡터로 취급)
+		XMVECTOR offsetV = XMVectorSet(m_offset.x, m_offset.y, m_offset.z, 0.f);
+
+		// 4) 회전·스케일만 적용된 오프셋
+		XMVECTOR rotatedOffset = XMVector3TransformNormal(offsetV, worldMtx);
+
+		// 5) 월드 위치 + 회전된 오프셋
+		XMVECTOR center = XMVectorSetW(pTransform->Get_State(STATE::POSITION), 0.f) + rotatedOffset;
+
+		// 6) 저장
 		XMStoreFloat3(&Sphere.Center, center);
 
 	}
@@ -81,6 +95,13 @@ void CSphereCollider::RenderInspector(IInspector& inspector)
 
 void CSphereCollider::DebugDraw()
 {
+	if (!m_bIsDebugDraw)
+		return;
+	CCollider::DebugDraw();
+	m_pEffect->Apply(m_pContext);
+	m_pBatch->Begin();
+	Draw(m_pBatch, Sphere, m_bIsCollision ? Colors::Red : Colors::Green);
+	m_pBatch->End();
 }
 
 json CSphereCollider::Serialize()
@@ -114,9 +135,7 @@ _bool CSphereCollider::Intersects(CCollider* other)
 	}
 	if (auto capsule = dynamic_cast<CCapsuleCollider*>(other))
 	{
-		if (capsule->GetBoundingCapsuleA().Intersects(Sphere) ||
-			capsule->GetBoundingCapsuleB().Intersects(Sphere))
-			return true;
+		return capsule->Intersects(this); // 캡슐과의 충돌 검사
 	}
 	return false;
 }

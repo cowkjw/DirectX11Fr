@@ -32,6 +32,7 @@ public:
 	virtual void Deserialize(const json& j) override;
 private:
 	HRESULT Ready_Components();
+	virtual HRESULT Bind_Shaders();
 private:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };

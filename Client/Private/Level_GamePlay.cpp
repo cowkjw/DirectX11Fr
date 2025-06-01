@@ -21,7 +21,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Terrain"),
 		ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_BackGround")))
 		return E_FAIL;
-
+	if(FAILED(Ready_Lights()))
+		return E_FAIL;
 	/*if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sky"),
 		ToIndex(LEVEL::GAMEPLAY), TEXT("Sky")))
 		return E_FAIL;*/
@@ -96,6 +97,22 @@ HRESULT CLevel_GamePlay::Ready_Layer_TestCharacter(const _wstring strLayerTag)
 
 	pAkaza->Set_Target(TEXT("Kyojuro"), LEVEL::GAMEPLAY);
 	pKyojuro->Set_Target(TEXT("Akaza"), LEVEL::GAMEPLAY);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Lights()
+{
+	LIGHT_DESC			LightDesc{};
+
+	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }

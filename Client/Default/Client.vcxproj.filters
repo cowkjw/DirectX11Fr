@@ -324,6 +324,9 @@
     <ClInclude Include="..\public\StateStep.h">
       <Filter>94. Pattern\State\DefaultState\Move</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Client_Struct.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

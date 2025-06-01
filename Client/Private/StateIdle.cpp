@@ -20,6 +20,7 @@ void StateIdle::Enter(CBaseCharacter* pChar)
     anim->SetBool("Guard", false);
     auto buf = pChar->GetInputBuffer();
 	buf->PopCommand(ECommand::LightAttack); // 1타 공격 입력 초기화
+    pChar->SetState(CBaseCharacter::CSTATE::IDLE);
 }
 
 void StateIdle::Update(CBaseCharacter* pChar, _float fTimeDelta)
@@ -32,19 +33,19 @@ void StateIdle::Update(CBaseCharacter* pChar, _float fTimeDelta)
     // 점프
     if (buf->CheckCommand(ECommand::Jump)) {
         buf->PopFront(1);
-        pChar->ChangeState(new StateJump());
+        pChar->ChangeState(new StateJump(TEXT("Jump")));
         return;
     }
     // 가드
     if (gi->IsKeyPressed('O'))
     {
-        pChar->ChangeState(new StateGuard());
+        pChar->ChangeState(new StateGuard(TEXT("Guard")));
         return;
     }
     // 스킬
     if (buf->CheckCommand(ECommand::Skill0)) {
         buf->PopFront(1);
-        pChar->ChangeState(new StateSkill0());
+        pChar->ChangeState(new StateSkill0(TEXT("Skill0")));
         return;
     }
     // 이동
@@ -52,14 +53,14 @@ void StateIdle::Update(CBaseCharacter* pChar, _float fTimeDelta)
         gi->IsKeyDown(VK_LEFT) || gi->IsKeyDown(VK_RIGHT);
     if (moving&&!anim->CheckBool("Attacking")&&!anim->CheckBool("Jump"))
     {
-        pChar->ChangeState(new StateMove());
+        pChar->ChangeState(new StateMove(TEXT("Move")));
         return;
     }
 
     if (buf->CheckCommand(ECommand::LightAttack))
     {
         buf->PopFront(1);
-        pChar->ChangeState(new StateAttack1());
+        pChar->ChangeState(new StateAttack1(TEXT("Skill1")));
         return;
     }
 }

@@ -5,6 +5,9 @@ class StateJumpAttack : public IState
 {
 public:
 	StateJumpAttack() = default;
+	StateJumpAttack(const _wstring& stateName)
+		: IState(stateName) {
+	}
 	~StateJumpAttack() override = default;
 	void Enter(CBaseCharacter* pChar) override;
 	void Update(CBaseCharacter* pChar, _float fTimeDelta) override;

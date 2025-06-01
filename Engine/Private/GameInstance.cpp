@@ -3,6 +3,7 @@
 #include "Picking.h"
 #include "Renderer.h"
 #include "Level_Manager.h"
+#include "Light_Manager.h"
 #include "Timer_Manager.h"
 #include "Graphic_Device.h"
 #include "FrustumCull.h"
@@ -76,6 +77,9 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	if (nullptr == m_pCollisionMag)
 		return E_FAIL;
 
+	m_pLight_Manager = CLight_Manager::Create();
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
 
 
 	
@@ -121,6 +125,7 @@ HRESULT CGameInstance::Draw()
 
 	m_pRenderer->Draw();
 	m_pLevel_Manager->Render();
+	m_pCollisionMag->DebugDraw();
 
 	return S_OK;
 }
@@ -519,8 +524,23 @@ void CGameInstance::Unregister_Collider(CCollider* pCollider)
 }
 #pragma endregion
 
+#pragma region LIGHT_MANAGER
+const LIGHT_DESC* CGameInstance::Get_Light(_uint iIndex)
+{
+	return m_pLight_Manager->Get_Light(iIndex);
+}
+
+HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
+{
+	return m_pLight_Manager->Add_Light(LightDesc);
+}
+#pragma endregion
+
+
 void CGameInstance::Release_Engine()
 {
+	Safe_Release(m_pLight_Manager);
+
 	Safe_Release(m_pCollisionMag);
 
 	Safe_Release(m_pPicking);

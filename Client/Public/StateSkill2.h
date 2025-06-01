@@ -5,6 +5,9 @@ class StateSkill2 : public IState
 {
 public:
 	StateSkill2() = default;
+	StateSkill2(const _wstring& stateName)
+		: IState(stateName) {
+	}
 	~StateSkill2() override = default;
 	void Enter(CBaseCharacter* pChar) override;
 	void Update(CBaseCharacter* pChar, _float fTimeDelta) override;

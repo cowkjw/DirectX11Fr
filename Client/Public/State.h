@@ -27,6 +27,10 @@ BEGIN_NAMESPACE(Client)
 class IState 
 {
 public:
+	IState() = default;
+	IState(const _wstring& stateName)
+		: m_stateName(stateName) {
+	}
     virtual ~IState() = default;
     // 상태 진입 시: 애니메이션 세팅, 초기화
     virtual void Enter(CBaseCharacter* pChar) = 0;
@@ -34,5 +38,9 @@ public:
     virtual void Update(CBaseCharacter* pChar, _float fTimeDelta) = 0;
     // 상태 종료 시: 후처리
     virtual void Exit(CBaseCharacter* pChar) = 0;
+	void SetStateName(const _wstring& stateName) { m_stateName = stateName; }
+	_wstring GetStateName() const { return m_stateName; }
+protected:
+	_wstring m_stateName; // 상태 이름
 };
 END_NAMESPACE

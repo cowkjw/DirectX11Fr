@@ -163,6 +163,7 @@
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Function.h" />
+    <ClInclude Include="..\Public\Client_Struct.h" />
     <ClInclude Include="..\public\Command.h" />
     <ClInclude Include="..\Public\CompositeNode.h" />
     <ClInclude Include="..\public\Environment.h" />

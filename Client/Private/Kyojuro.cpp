@@ -51,13 +51,18 @@ HRESULT CKyojuro::Initialize(void* pArg)
 
 	Ready_Animation();
 
-	if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_CapsuleCollider"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom))))
-		return E_FAIL;
+	Add_Component(TEXT("Com_CapsuleCollider"), CCapsuleCollider::Create(m_pDevice, m_pContext, 3.9f, 77.f), reinterpret_cast<CComponent**>(&m_pColliderCom));
+
+	m_pColliderCom->Initialize(nullptr);
+	m_pColliderCom->SetOffset(_float3(0.f, 8.1f, 0.f));
+
+	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_CapsuleCollider"),
+	//	TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom))))
+	//	return E_FAIL;
 	m_pColliderCom->SetListener(this);
 	ChangeState(new StateIdle());
 
-
+	m_iShaderPass = 1;
 	return S_OK;
 }
 
@@ -143,10 +148,9 @@ void CKyojuro::Ready_Animation()
 	}
 	size_t jump0Idx = ctrl->AddState("Jump0", jumpClips[0], 2);
 	size_t jump1Idx = ctrl->AddState("Jump1", jumpClips[1], 2);
-//	size_t jump2Idx = ctrl->AddState("Jump2", jumpClips[2], 2);
 	size_t jump3Idx = ctrl->AddState("Jump3", jumpClips[3], 2);
 	jumpClips[1]->SetTickPerSecond(18.f); // 1번 점프 속도
-	jumpClips[3]->SetTickPerSecond(35.f); // 1번 점프 속도
+	jumpClips[3]->SetTickPerSecond(35.f); 
 
 	vector<CAnimation*> comboAttackClips;
 	for (int i = 1; i <= 4; ++i)
@@ -510,21 +514,25 @@ void CKyojuro::Ready_Animation()
 
 	// 스탭 처리
 	CAnimController::Condition StepBack{ "StepBack", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(idleIdx, stepBackIdx, StepBack, 0.1f);
 	ctrl->AddTransition(runIdx, stepBackIdx, StepBack, 0.1f);
 	ctrl->AddTransition(stepBackIdx, runIdx, cFin);
 	ctrl->AddTransition(stepBackIdx, idleIdx, cSpeedDown);
 
 	CAnimController::Condition StepFront{ "StepFront", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(idleIdx, stepFrontIdx, StepFront, 0.1f);
 	ctrl->AddTransition(runIdx, stepFrontIdx, StepFront, 0.1f);
 	ctrl->AddTransition(stepFrontIdx, runIdx, cFin);
 	ctrl->AddTransition(stepFrontIdx, idleIdx, cSpeedDown);
 
 	CAnimController::Condition StepLeft{ "StepLeft", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(idleIdx, stepLeftIdx, StepLeft, 0.1f);
 	ctrl->AddTransition(runIdx, stepLeftIdx, StepLeft, 0.1f);
 	ctrl->AddTransition(stepLeftIdx, runIdx, cFin);
 	ctrl->AddTransition(stepLeftIdx, idleIdx, cSpeedDown);
 
 	CAnimController::Condition StepRight{ "StepRight", CAnimController::EOp::Trigger, 0.f };
+
 	ctrl->AddTransition(idleIdx, stepRightIdx, StepRight, 0.1f);
 	ctrl->AddTransition(runIdx, stepRightIdx, StepRight, 0.1f);
 	ctrl->AddTransition(stepRightIdx, runIdx, cFin);

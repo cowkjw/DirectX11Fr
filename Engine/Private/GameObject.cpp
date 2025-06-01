@@ -122,7 +122,7 @@ void CGameObject::Late_Update(_float fTimeDelta)
 		for (auto& child : m_vecChildren)
 		{
 			if(child&&child->IsActive())
-				child->GetTransform()->FlllowParent(m_pTransformCom);
+				child->GetTransform()->FollowParent(m_pTransformCom);
 
 		}
 		m_pTransformCom->SetDirty(false);

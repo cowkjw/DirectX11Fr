@@ -157,6 +157,15 @@
     <ClInclude Include="..\public\CollisionMag.h">
       <Filter>01.Utility\03.Components\Collider\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Private\DebugDraw.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light.h">
+      <Filter>01.Utility\08. Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light_Manager.h">
+      <Filter>01.Utility\08. Light\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -296,6 +305,15 @@
     </ClCompile>
     <ClCompile Include="..\private\CollisionMag.cpp">
       <Filter>01.Utility\03.Components\Collider\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DebugDraw.cpp">
+      <Filter>99.Defines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light.cpp">
+      <Filter>01.Utility\08. Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light_Manager.cpp">
+      <Filter>01.Utility\08. Light\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -437,5 +455,16 @@
     <Filter Include="01.Utility\03.Components\Collider\Inspector">
       <UniqueIdentifier>{ff5029a0-54c1-4a97-a61d-9474bbfab0a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\08. Light">
+      <UniqueIdentifier>{20d18410-a831-4147-a5f5-8e41754f6a92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\08. Light\Manager">
+      <UniqueIdentifier>{9516cf6d-5c31-4d84-b75b-b6a627dfd6fb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Asset\ShaderFiles\Engine_Shader_Defines.hlsli">
+      <Filter>99.Defines</Filter>
+    </None>
   </ItemGroup>
 </Project>

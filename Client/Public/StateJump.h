@@ -5,6 +5,9 @@ class StateJump : public IState
 {
 public:
 	StateJump() = default;
+    StateJump(const _wstring& stateName)
+        : IState(stateName) {
+    }
 	~StateJump() override = default;
 	void Enter(CBaseCharacter* pChar) override;
 	void Update(CBaseCharacter* pChar, _float fTimeDelta) override;

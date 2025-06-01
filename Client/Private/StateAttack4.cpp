@@ -3,12 +3,14 @@
 #include "StateIdle.h"
 #include "StateSkill0.h"
 #include "StateSkill1.h"
+#include "Akaza.h"
 
 void StateAttack4::Enter(CBaseCharacter* pChar)
 {
 	pChar->Get_Animator()->SetTrigger("Attack");
 	pChar->Get_Animator()->SetBool("Attacking", true);
 	pChar->Get_Animator()->SetBool("Move", false);
+	pChar->SetState(CBaseCharacter::CSTATE::ATTACK);
 }
 
 void StateAttack4::Update(CBaseCharacter* pChar, _float fTimeDelta)
@@ -24,17 +26,17 @@ void StateAttack4::Update(CBaseCharacter* pChar, _float fTimeDelta)
 		gi->IsKeyDown(VK_LEFT) || gi->IsKeyDown(VK_RIGHT)) && gi->IsKeyDown('I'))
 	{
 
-		pChar->ChangeState(new StateSkill1());
+		pChar->ChangeState(new StateSkill1(TEXT("Skill1")));
 		return;
 	}
 
 	if (buf->CheckCommand(ECommand::Skill0)) {
 		buf->PopFront(1);
-		pChar->ChangeState(new StateSkill0());
+		pChar->ChangeState(new StateSkill0(TEXT("Skill0")));
 		return;
 	}
 
-	if (stateName == "attack3" && pAnim->GetCurrentAnimProgress() >= 1.f)
+	if (pAnim->GetCurrentAnimProgress() >= 1.f)
 	{
 		bIsCombo = false;
 		_bool moving = gi->IsKeyDown(VK_UP) || gi->IsKeyDown(VK_DOWN) ||
@@ -42,11 +44,11 @@ void StateAttack4::Update(CBaseCharacter* pChar, _float fTimeDelta)
 		pChar->GetInputBuffer()->ClearBuffer();
 		if (moving)
 		{
-			pChar->ChangeState(new StateMove());
+			pChar->ChangeState(new StateMove(TEXT("Move")));
 		}
 		else
 		{
-			pChar->ChangeState(new StateIdle());
+			pChar->ChangeState(new StateIdle(TEXT("Idle")));
 		}
 		return;
 	}
@@ -55,4 +57,9 @@ void StateAttack4::Update(CBaseCharacter* pChar, _float fTimeDelta)
 void StateAttack4::Exit(CBaseCharacter* pChar)
 {
 	pChar->Get_Animator()->SetBool("Attacking", false);
+
+	if (auto akaza = dynamic_cast<CAkaza*>(pChar))
+	{
+		akaza->SetComState(CAkaza::COM_STATE::IDLE);
+	}
 }

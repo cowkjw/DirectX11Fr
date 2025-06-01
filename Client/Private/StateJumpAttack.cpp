@@ -10,6 +10,7 @@ void StateJumpAttack::Enter(CBaseCharacter* pChar)
 	pAnim->SetBool("Attacking", true);
 	pAnim->SetBool("Move", false);
 	pAnim->SetBool("Jump", true);
+	pChar->SetState(CBaseCharacter::CSTATE::ATTACK);
 }
 
 void StateJumpAttack::Update(CBaseCharacter* pChar, _float fTimeDelta)
@@ -20,7 +21,7 @@ void StateJumpAttack::Update(CBaseCharacter* pChar, _float fTimeDelta)
 	const string& stateName = ctrl->GetCurrentState()->stateName;
 	if (stateName.find("jumpAttack")!=string::npos&&pAnim->GetCurrentAnimProgress() >= 1.f)
 	{
-		pChar->ChangeState(new StateJump());
+		pChar->ChangeState(new StateJump(TEXT("Jump")));
 		return;
 
 		///*_bool moving = gi->IsKeyDown(VK_UP) || gi->IsKeyDown(VK_DOWN) ||

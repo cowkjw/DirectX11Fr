@@ -6,6 +6,9 @@ class StateAttack1 : public IState
 {
 public:
 	StateAttack1() = default;
+	StateAttack1(const _wstring& stateName)
+		: IState(stateName) {
+	}
 	~StateAttack1() override = default;
 	void Enter(CBaseCharacter* pChar) override;
 	void Update(CBaseCharacter* pChar, _float fTimeDelta) override;

@@ -7,6 +7,7 @@ CBoxCollider::CBoxCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCollider(pDevice, pContext)
 	, m_vHalfExtents(1.f, 1.f, 1.f) // 기본값 설정
 {
+	m_eColliderType = ColliderType::BOX; // ColliderType 설정
 }
 
 CBoxCollider::CBoxCollider(const CBoxCollider& Prototype)
@@ -87,15 +88,25 @@ _bool CBoxCollider::Intersects(CCollider* other)
 	}
 	else if (auto capsule = dynamic_cast<CCapsuleCollider*>(other))
 	{
-		if (capsule->GetBoundingCapsuleA().Intersects(Box) ||
-			capsule->GetBoundingCapsuleB().Intersects(Box))
-			return true;
+		return capsule->Intersects(this);
 	}
 	return false;
 }
 
 void CBoxCollider::DebugDraw()
 {
+
+	if (!m_bIsDebugDraw)
+		return;
+	if (!m_pBatch || !m_pEffect || !m_pInputLayout)
+		return;
+	CCollider::DebugDraw();
+	m_pEffect->Apply(m_pContext);
+	m_pBatch->Begin();
+
+	Draw(m_pBatch, Box, m_bIsCollision ? Colors::Red : Colors::Green);
+	m_pBatch->End();
+
 }
 
 json CBoxCollider::Serialize()

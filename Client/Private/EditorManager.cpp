@@ -76,59 +76,59 @@ void CEditorManager::Update(_float fTimeDelta)
 
 	//}
 
-	if (m_pGameInstance->IsMousePressed(0))
+	ImGuiIO& io = ImGui::GetIO();
+	if (!io.WantCaptureMouse)
 	{
-		std::vector<std::pair<float, CGameObject*>> hitList;
-		XMMATRIX viewMatrix = XMLoadFloat4x4(m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW));
-
-		for (auto* obj : m_vecSceneObjects)
+		// 2) 마우스 왼쪽 버튼 눌렀을 때만 피킹
+		if (m_pGameInstance->IsMousePressed(0))
 		{
-			if (!obj || !obj->IsActive())
-				continue;
+			std::vector<std::pair<float, CGameObject*>> hitList;
+			XMMATRIX viewMatrix = XMLoadFloat4x4(m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW));
 
-			auto pModel = dynamic_cast<CModel*>(obj->Get_Component(TEXT("Com_Model")));
-			if (!pModel)
-				continue;
-
-			bool hit = false;
-			_float hitDepth = 0.f;
-
-			// 각 메시마다 픽킹 검사
-			for (auto* rawMesh : pModel->Get_Meshes())
+			for (auto* obj : m_vecSceneObjects)
 			{
-				auto* pBuffer = static_cast<CVIBuffer*>(rawMesh);
-				if (!pBuffer)
+				if (!obj || !obj->IsActive())
 					continue;
 
-				_float3 localHit;
-				_matrix invWorld = obj->GetTransform()->Get_WorldMatrix_Inverse();
-				if (pBuffer->Compute_PickedPosition(invWorld, localHit))
+				auto pModel = dynamic_cast<CModel*>(obj->Get_Component(TEXT("Com_Model")));
+				if (!pModel)
+					continue;
+
+				bool hit = false;
+				_float hitDepth = 0.f;
+
+				// 메시별 픽킹 검사
+				for (auto* rawMesh : pModel->Get_Meshes())
 				{
-					// 로컬→월드 좌표 변환
-					XMVECTOR vLocal4 = XMVectorSet(localHit.x, localHit.y, localHit.z, 1.f);
-					XMVECTOR vWorldPos = XMVector4Transform(vLocal4, XMLoadFloat4x4(&obj->GetTransform()->Get_WorldMatrix()));
-					// 월드→뷰 공간 변환
-					XMVECTOR vViewPos = XMVector3TransformCoord(vWorldPos, viewMatrix);
-					// Z값(깊이) 저장
-					hitDepth = XMVectorGetZ(vViewPos);
+					auto* pBuffer = static_cast<CVIBuffer*>(rawMesh);
+					if (!pBuffer)
+						continue;
 
-					hit = true;
-					break;  // 이 오브젝트는 히트했으니 메시 루프 탈출
+					_float3 localHit;
+					_matrix invWorld = obj->GetTransform()->Get_WorldMatrix_Inverse();
+					if (pBuffer->Compute_PickedPosition(invWorld, localHit))
+					{
+						XMVECTOR vLocal4 = XMVectorSet(localHit.x, localHit.y, localHit.z, 1.f);
+						XMVECTOR vWorldPos = XMVector4Transform(vLocal4, XMLoadFloat4x4(&obj->GetTransform()->Get_WorldMatrix()));
+						XMVECTOR vViewPos = XMVector3TransformCoord(vWorldPos, viewMatrix);
+						hitDepth = XMVectorGetZ(vViewPos);
+
+						hit = true;
+						break;  
+					}
 				}
+
+				if (hit)
+					hitList.emplace_back(hitDepth, obj);
 			}
 
-			if (hit)
+			if (!hitList.empty())
 			{
-				hitList.emplace_back(hitDepth, obj);
-				// 다음 오브젝트로 바로 넘어가기
+				// 깊이순으로 정렬 후 가장 앞에 있는 객체 선택
+				sort(hitList.begin(), hitList.end(),
+					[](auto& A, auto& B) { return A.first < B.first; });
+				m_pSelectedObject = hitList.front().second;
 			}
-		}
-
-		if (!hitList.empty())
-		{
-			std::sort(hitList.begin(), hitList.end(),
-				[](auto& A, auto& B) { return A.first < B.first; });
-			m_pSelectedObject = hitList.front().second;
 		}
 	}
 
@@ -142,11 +142,10 @@ void CEditorManager::Update(_float fTimeDelta)
 			GizmoOp = CGizmo::Operation::SCALE;
 	}
 
+	// 4) 패널 업데이트
 	for (auto& pannel : m_vecPannels)
-	{
 		if (pannel)
 			pannel->Update(fTimeDelta);
-	}
 }
 
 HRESULT CEditorManager::Render()

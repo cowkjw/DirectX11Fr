@@ -59,7 +59,7 @@ public:
 	void RotateToDirection(_fvector dir);
 
 
-	void FlllowParent(const CTransform* pParentTransform);
+	void FollowParent(const CTransform* pParentTransform);
 
 
 	json Serialize() override;

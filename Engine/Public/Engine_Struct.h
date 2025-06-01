@@ -11,6 +11,27 @@ namespace Engine
 		unsigned int	iNumLevels;		
 	}ENGINE_DESC;
 
+    struct Capsule
+    {
+        XMVECTOR A;    // 위 끝점
+        XMVECTOR B;    // 아래 끝점
+        float            Radius;
+    };
+
+    typedef struct tagLightDesc
+    {
+        enum TYPE { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_END };
+
+        TYPE				eType;
+        XMFLOAT4			vDirection;
+        XMFLOAT4			vPosition;
+        float				fRange;
+
+        XMFLOAT4			vDiffuse;
+        XMFLOAT4			vAmbient;
+        XMFLOAT4			vSpecular;
+    }LIGHT_DESC;
+
 
 
     typedef struct tagKeyFrame

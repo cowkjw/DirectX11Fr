@@ -29,11 +29,11 @@ void StateSkill0::Update(CBaseCharacter* pChar, _float fTimeDelta)
 		pChar->GetInputBuffer()->ClearBuffer();
 		if (moving)
 		{
-			pChar->ChangeState(new StateMove());
+			pChar->ChangeState(new StateMove(TEXT("Move")));
 		}
 		else
 		{
-			pChar->ChangeState(new StateIdle());
+			pChar->ChangeState(new StateIdle(TEXT("Idle")));
 		}
 		return;
 	}

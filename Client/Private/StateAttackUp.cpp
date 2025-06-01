@@ -11,6 +11,7 @@ void StateAttackUp::Enter(CBaseCharacter* pChar)
 	pAnim->SetTrigger("AttackUp");
 	pAnim->SetBool("Move", false);
 	pAnim->SetBool("Jump", false);
+	pChar->SetState(CBaseCharacter::CSTATE::ATTACK);
 }
 
 void StateAttackUp::Update(CBaseCharacter* pChar, _float fTimeDelta)
@@ -25,13 +26,13 @@ void StateAttackUp::Update(CBaseCharacter* pChar, _float fTimeDelta)
 		gi->IsKeyDown(VK_LEFT) || gi->IsKeyDown(VK_RIGHT)) && gi->IsKeyDown('I'))
 	{
 
-		pChar->ChangeState(new StateSkill1());
+		pChar->ChangeState(new StateSkill1(TEXT("Skill1")));
 		return;
 	}
 
 	if (buf->CheckCommand(ECommand::Skill0)) {
 		buf->PopFront(1);
-		pChar->ChangeState(new StateSkill0());
+		pChar->ChangeState(new StateSkill0(TEXT("Skill0")));
 		return;
 	}
 	if (stateName == "attackUp" && anim->GetCurrentAnimProgress() >= 1.f)
@@ -42,11 +43,11 @@ void StateAttackUp::Update(CBaseCharacter* pChar, _float fTimeDelta)
 		pChar->GetInputBuffer()->ClearBuffer();
 		if (moving)
 		{
-			pChar->ChangeState(new StateMove());
+			pChar->ChangeState(new StateMove(TEXT("Move")));
 		}
 		else
 		{
-			pChar->ChangeState(new StateIdle());
+			pChar->ChangeState(new StateIdle(TEXT("Idle")));
 		}
 		return;
 

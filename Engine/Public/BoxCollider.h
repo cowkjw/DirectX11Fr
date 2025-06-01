@@ -4,6 +4,7 @@
 BEGIN_NAMESPACE(Engine)
 class ENGINE_DLL CBoxCollider final : public CCollider
 {
+	friend class CCollisionMag;
 private:
 	CBoxCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBoxCollider(const CBoxCollider& Prototype);

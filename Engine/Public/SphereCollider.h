@@ -4,6 +4,7 @@
 BEGIN_NAMESPACE(Engine)
 class ENGINE_DLL CSphereCollider final : public CCollider
 {
+	friend class CCollisionMag;
 private:
 	CSphereCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CSphereCollider(const CSphereCollider& Prototype);

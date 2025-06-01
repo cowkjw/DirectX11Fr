@@ -6,6 +6,9 @@ class StateGuard : public IState
 {
 public:
 	StateGuard() = default;
+	StateGuard(const _wstring& stateName)
+		: IState(stateName) {
+	}
 	~StateGuard() override = default;
 	void Enter(CBaseCharacter* pChar) override;
 	void Update(CBaseCharacter* pChar, _float fTimeDelta) override;

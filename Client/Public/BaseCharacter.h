@@ -17,7 +17,7 @@ static constexpr float     RESTITUTION = 0.5f; // 바닥 반사 계수
 class CBaseCharacter : public CGameObject,  public ICollisionListener
 {
 public:
-	enum class CSTATE { IDLE, MOVE, ATTACK, SKILL, HURT, DIE };
+	enum class CSTATE { IDLE, MOVE, ATTACK, GUARD,JUMP, STEP, KNOCKDOWN,SKILL, HURT, DIE };
 protected:
 	CBaseCharacter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBaseCharacter(const CBaseCharacter& Prototype);
@@ -37,13 +37,17 @@ public:
 	void ChangeState(class IState* pState);
 	class CInputBuffer* GetInputBuffer() { return m_pInputBuffer; }
 	void HandleInput();
+	virtual void UpdateState(_float fTimeDelta);
 
+	virtual void FillInpit(InputData& outInput);
 
 	void SetIsJumping(_bool bIsJumping) { m_bIsJumping = bIsJumping; }
 	_bool IsJumping() const { return m_bIsJumping; }
 	void Set_Target(const _wstring& name, LEVEL eLevel);
 	CBaseCharacter* Get_Target() const { return m_pTarget; }
 	void SetLastStepDirection(EDirection eDirection) { m_eLastStepDirection = eDirection; }
+	void SetState(CSTATE eState) { m_eState = eState; }
+	CSTATE GetState() const { return m_eState; }
 	EDirection GetLastStepDirection() const { return m_eLastStepDirection; }
 	const _float3& GetVelocity() const { return m_Velocity; }
 	void SetVelocity(const _float3& velocity) { m_Velocity = velocity; }
@@ -62,6 +66,7 @@ protected:
 
 protected:
 	virtual HRESULT Ready_Components();
+	virtual HRESULT Bind_Shaders();
 
 protected:
 	_bool m_bIsJumping{ false }; // 점프 중인지 여부
@@ -69,6 +74,7 @@ protected:
 	_float m_fCurrentHP{ 0.f };       // 현재 체력
 	_float m_fStamina{ 0.f };         // 스태미나(호흡력)
 	_float m_fTimeDelta{ 0.f };
+	CSTATE m_eState{ CSTATE::IDLE }; // 현재 상태
 	class CWeapon* m_pWeapon{ nullptr }; // 무기
 	CBaseCharacter* m_pTarget{ nullptr };
 
@@ -78,6 +84,7 @@ protected:
 
 	_float3 m_Velocity = { 0, 0, 0 };
 	_bool m_IsKnockback = false; // 넉백 상태 여부
+	_uint m_iShaderPass{ 0 }; // 셰이더 패스 인덱스
 
 public:
 	static CBaseCharacter* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

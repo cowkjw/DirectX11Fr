@@ -8,9 +8,19 @@ class StateStep : public IState
 {
 public:
 	StateStep() = default;
+	StateStep(const _wstring& stateName)
+		: IState(stateName) {
+	}
+
 	StateStep(EDirection eDirection)
 		: m_eDirection(eDirection) {
 	}
+	StateStep(const _wstring& stateName, EDirection eDirection)
+		: IState(stateName), m_eDirection(eDirection)
+	{
+	}
+
+
 	~StateStep() override = default;
 	void Enter(CBaseCharacter* pChar) override;
 	void Update(CBaseCharacter* pChar, _float fTimeDelta) override;

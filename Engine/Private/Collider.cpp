@@ -1,5 +1,6 @@
 #include "Collider.h"
 #include "GameInstance.h"
+#include "GameObject.h"
 
 
 CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -14,6 +15,10 @@ CCollider::CCollider(const CCollider& Prototype)
 	: CComponent(Prototype)
 	, m_offset(Prototype.m_offset)
 	, m_bIsTrigger(Prototype.m_bIsTrigger)
+	, m_bIsCollision(Prototype.m_bIsCollision)
+	, m_bIsDebugDraw(Prototype.m_bIsDebugDraw)
+	, m_eColliderType(Prototype.m_eColliderType)
+
 {
 }
 HRESULT CCollider::Initialize_Prototype()
@@ -50,6 +55,17 @@ void CCollider::Update()
 
 void CCollider::DebugDraw()
 {
+	XMMATRIX view = m_pGameInstance->Get_Transform_Matrix(TRANSFORM::VIEW);
+	XMMATRIX proj = m_pGameInstance->Get_Transform_Matrix(TRANSFORM::PROJECTION);
+	XMMATRIX world = XMMatrixIdentity();
+
+	// 2) Effect¿¡ ¼ÂÆÃ
+	m_pEffect->SetWorld(world);
+	m_pEffect->SetView(view);
+	m_pEffect->SetProjection(proj);
+
+
+	m_pContext->IASetInputLayout(m_pInputLayout);
 
 }
 

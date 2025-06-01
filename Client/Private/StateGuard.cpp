@@ -22,13 +22,13 @@ void StateGuard::Update(CBaseCharacter* pChar, _float fTimeDelta)
 	}
 	if (pGameInstance->IsKeyDown('I')&& pGameInstance->IsKeyDown('O'))
 	{
-		pChar->ChangeState(new StateSkill2());
+		pChar->ChangeState(new StateSkill2(TEXT("Skill2")));
 		return;
 	}
 
 	if (!pGameInstance->IsKeyDown('O'))
 	{
-		pChar->ChangeState(new StateIdle());
+		pChar->ChangeState(new StateIdle(TEXT("Idle")));
 		return;
 	}
 

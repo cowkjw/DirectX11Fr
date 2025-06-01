@@ -120,19 +120,15 @@ void StateStep::Update(CBaseCharacter* pChar, _float fTimeDelta)
 		auto anim = pChar->Get_Animator();
 		anim->SetBool("Stepping", false);
 
-		// 1) 2단 스텝(Left2/Right2)이면 그냥 Idle
-		if (m_eDirection == EDirection::Left2
-			|| m_eDirection == EDirection::Right2)
-		{
-			pChar->ChangeState(new StateIdle());
-			return;
-		}
+		//// 1) 2단 스텝(Left2/Right2)이면 그냥 Idle
+		//if (m_eDirection == EDirection::Left2
+		//	|| m_eDirection == EDirection::Right2)
+		//{
+		//	pChar->ChangeState(new StateIdle());
+		//	return;
+		//}
 
 			_vector dir = XMVectorZero();
-		// 2) 1단 스텝(Left, Right)일 때만 연속 스텝
-		if (m_eDirection == EDirection::Left
-			|| m_eDirection == EDirection::Right)
-		{
 			// 입력 벡터 수집 (월드 기준)
 			if (CGameInstance::Get_Instance()->IsKeyDown(VK_LEFT))  dir = XMVectorSet(-1, 0, 0, 0);
 			if (CGameInstance::Get_Instance()->IsKeyDown(VK_RIGHT)) dir = XMVectorSet(1, 0, 0, 0);
@@ -141,9 +137,14 @@ void StateStep::Update(CBaseCharacter* pChar, _float fTimeDelta)
 			if (XMVector3Equal(dir, XMVectorZero()))
 			{
 				// 키 입력 없으면 Idle
-				pChar->ChangeState(new StateIdle());
+				pChar->ChangeState(new StateIdle(TEXT("Idle")));
 				return;
 			}
+		// 2) 1단 스텝(Left, Right)일 때만 연속 스텝
+		if (m_eDirection == EDirection::Left
+			|| m_eDirection == EDirection::Right)
+		{
+			
 
 			dir = XMVector3Normalize(dir);
 
@@ -155,7 +156,7 @@ void StateStep::Update(CBaseCharacter* pChar, _float fTimeDelta)
 				: EDirection::NONE);
 			if (basicDir == EDirection::NONE)
 			{
-				pChar->ChangeState(new StateIdle());
+				pChar->ChangeState(new StateIdle(TEXT("Idle")));
 				return;
 			}
 
@@ -168,7 +169,7 @@ void StateStep::Update(CBaseCharacter* pChar, _float fTimeDelta)
 				next = (last == EDirection::Right ? EDirection::Right2 : EDirection::Right);
 
 			// 5) 연속 스텝 호출
-			pChar->ChangeState(new StateStep(next));
+			pChar->ChangeState(new StateStep(TEXT("Step"),next));
 			return;
 		}
 
@@ -178,9 +179,9 @@ void StateStep::Update(CBaseCharacter* pChar, _float fTimeDelta)
 		if (CGameInstance::Get_Instance()->IsKeyDown(VK_DOWN))  anyDir += XMVectorSet(0, 0, -1, 0);*/
 		bool moving = !XMVector3Equal(dir, XMVectorZero());
 		if (moving && !anim->CheckBool("Attacking") && !anim->CheckBool("Jump"))
-			pChar->ChangeState(new StateMove());
+			pChar->ChangeState(new StateMove(TEXT("Move")));
 		else
-			pChar->ChangeState(new StateIdle());
+			pChar->ChangeState(new StateIdle(TEXT("Idle")));
 
 		return;
 	}

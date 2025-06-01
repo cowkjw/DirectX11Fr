@@ -5,6 +5,9 @@ class StateIdle : public IState
 {
 public:
 	StateIdle() = default;
+	StateIdle(const _wstring& stateName)
+		: IState(stateName) {
+	}
 	~StateIdle() override = default;
 	void Enter(CBaseCharacter* pChar) override;
 	void Update(CBaseCharacter* pChar, _float fTimeDelta) override;

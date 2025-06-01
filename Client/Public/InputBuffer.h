@@ -23,6 +23,13 @@ public:
 		while (n-- && !m_Commands.empty())
 			m_Commands.pop_front();
 	}
+	Command* PopFront() {
+		if (m_Commands.empty())
+			return nullptr;
+		Command* cmd = &m_Commands.front();
+		m_Commands.pop_front();
+		return cmd;
+	}
 	void ClearBuffer() {
 		m_Commands.clear();}
 	void PopCommand(ECommand type);

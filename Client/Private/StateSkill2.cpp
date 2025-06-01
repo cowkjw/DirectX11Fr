@@ -1,6 +1,7 @@
 #include "StateSkill2.h"
 #include "StateIdle.h"
 #include "StateMove.h"
+
 void StateSkill2::Enter(CBaseCharacter* pChar)
 {
 	auto pAnim = pChar->Get_Animator();
@@ -29,11 +30,11 @@ void StateSkill2::Update(CBaseCharacter* pChar, _float fTimeDelta)
         pChar->GetInputBuffer()->ClearBuffer();
 		if (bMoving)
 		{
-			pChar->ChangeState(new StateMove());
+			pChar->ChangeState(new StateMove(TEXT("Move")));
 		}
 		else
 		{
-			pChar->ChangeState(new StateIdle());
+			pChar->ChangeState(new StateIdle(TEXT("Idle")));
 		}
     }
 }

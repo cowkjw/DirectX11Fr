@@ -22,8 +22,9 @@ CBaseCharacter::CBaseCharacter(const CBaseCharacter& Prototype)
 	, m_fCurrentHP{ Prototype.m_fCurrentHP }
 	, m_fStamina{ Prototype.m_fStamina }
 	, m_pWeapon{ Prototype.m_pWeapon }
-	, m_pInputBuffer{ Prototype.m_pInputBuffer }
+	, m_pInputBuffer{ CInputBuffer::Create() }
 	, m_pTarget{Prototype.m_pTarget }
+	, m_iShaderPass{ Prototype.m_iShaderPass }
 {
 }
 
@@ -48,18 +49,7 @@ HRESULT CBaseCharacter::Initialize(void* pArg)
 void CBaseCharacter::Priority_Update(_float fTimeDelta)
 {
 
-	static _uint iAnim = 0;
-	if (m_pGameInstance->IsKeyPressed('N'))
-	{
-		m_pAnimatroCom->Set_Animation(iAnim, 0.15f);
-		iAnim++;
-	}
 
-	if (m_pGameInstance->IsKeyPressed('M'))
-	{
-		m_pAnimatroCom->Set_Animation(iAnim, 0.15f);
-		iAnim = max(0, iAnim - 1);
-	}
 }
 
 void CBaseCharacter::Update(_float fTimeDelta)
@@ -74,51 +64,7 @@ void CBaseCharacter::Update(_float fTimeDelta)
 	m_pAnimatroCom->GetAnimController()->Update(fTimeDelta);
 	m_pModelCom->Play_Animation(fTimeDelta);
 
-	if (m_pState)
-	{
-		m_pState->Update(this, fTimeDelta);
-	}
-	if (m_IsKnockback)
-	{
-		// (1) 속도에 중력 적용
-		XMVECTOR velVec = XMLoadFloat3(&m_Velocity);
-		XMVECTOR gravityVec = XMLoadFloat3(&GRAVITY) * fTimeDelta;
-		//velVec += gravityVec;
 
-		// (2) 위치 갱신
-		XMVECTOR posVec = m_pTransformCom->Get_State(STATE::POSITION);
-		XMVECTOR deltaPos = velVec * fTimeDelta;
-		posVec += deltaPos;
-
-		// (3) 땅 충돌 및 반사
-		float newY = XMVectorGetY(posVec);
-		//if (newY <= groundY)
-		//{
-		//	posVec = XMVectorSetY(posVec, groundY);
-		//	velVec = XMVectorSetY(velVec, -XMVectorGetY(velVec) * RESTITUTION);
-
-		//	// y 속도가 충분히 작아지면 넉백 종료
-		XMVECTOR horizVel = XMVectorSetY(velVec, 0.0f);
-		// 길이(크기) 계산
-		float   speedXZ = XMVectorGetX(XMVector3Length(horizVel));
-
-		// 속도가 임계값 이하가 되면 넉백 종료
-		const float stopThreshold = 0.1f;
-		if (speedXZ < stopThreshold)
-		{
-			m_IsKnockback = false;
-			velVec = XMVectorZero();  // 완전히 멈춤
-		}
-
-		// (4) 상태 저장 및 Transform 적용
-		XMStoreFloat3(&m_Velocity, velVec);
-		m_pTransformCom->Set_State(STATE::POSITION, posVec);
-	}
-	else
-	{
-		// 넉백이 아닐 땐 Velocity를 0으로 유지
-		m_Velocity = { 0,0,0 };
-	}
 }
 
 void CBaseCharacter::Late_Update(_float fTimeDelta)
@@ -136,12 +82,14 @@ void CBaseCharacter::Late_Update(_float fTimeDelta)
 
 HRESULT CBaseCharacter::Render()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::PROJECTION))))
-		return E_FAIL;
+	//if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::PROJECTION))))
+	//	return E_FAIL;
+
+	Bind_Shaders();
 
 
 	_uint		iNumMesh = m_pModelCom->Get_NumMeshes();
@@ -166,7 +114,7 @@ HRESULT CBaseCharacter::Render()
 
 		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
 
-		if (FAILED(m_pShaderCom->Begin(0)))
+		if (FAILED(m_pShaderCom->Begin(m_iShaderPass)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))
@@ -211,6 +159,58 @@ void CBaseCharacter::HandleInput()
 	if (m_pGameInstance->IsKeyPressed('I')) m_pInputBuffer->AddCommand({ ECommand::Skill0, m_fTotalTime });
 }
 
+void CBaseCharacter::UpdateState(_float fTimeDelta)
+{
+	InputData input;
+	FillInpit(input);
+	if (m_pState)
+	{
+		m_pState->Update(this, fTimeDelta);
+	}
+}
+
+void CBaseCharacter::FillInpit(InputData& outInput)
+{
+	outInput = InputData();  // 기본값
+
+	while (auto cmd = m_pInputBuffer->PopFront())
+	{
+		switch (cmd->type)
+		{
+		case ECommand::LightAttack:
+			outInput.doAttack = true;
+			break;
+		case ECommand::Jump:
+			outInput.doJump = true;
+			break;
+		case ECommand::Dash:
+			outInput.doStep = true; // 또는 doDash 로 따로 관리
+			break;
+		case ECommand::Guard:
+			outInput.doGuard = true;
+			break;
+		case ECommand::Skill0:
+			outInput.doSkill0 = true;
+			break;
+		case ECommand::Skill1:
+			outInput.doSkill1 = true;
+			break;
+		case ECommand::Skill2:
+			outInput.doSkill2 = true;
+			break;
+		}
+	}
+
+	auto gi = CGameInstance::Get_Instance();
+	XMVECTOR dir = XMVectorZero();
+	if (gi->IsKeyDown(VK_UP))    dir += XMVectorSet(0, 0, 1, 0);
+	if (gi->IsKeyDown(VK_DOWN))  dir += XMVectorSet(0, 0, -1, 0);
+	if (gi->IsKeyDown(VK_LEFT))  dir += XMVectorSet(-1, 0, 0, 0);
+	if (gi->IsKeyDown(VK_RIGHT)) dir += XMVectorSet(1, 0, 0, 0);
+	if (!XMVector3Equal(dir, XMVectorZero()))
+		outInput.moveDir = XMVector3Normalize(dir);
+}
+
 void CBaseCharacter::Set_Target(const _wstring& name, LEVEL eLevel)
 {
 	m_pTarget = dynamic_cast<CBaseCharacter*>(m_pGameInstance->Find_GameObjectByName(ToIndex(eLevel), name));
@@ -226,50 +226,10 @@ void CBaseCharacter::Set_Target(const _wstring& name, LEVEL eLevel)
 
 void CBaseCharacter::OnCollisionEnter(CCollider* other)
 {
-	//if (auto pOtherChar = dynamic_cast<CBaseCharacter*>(other->GetOwner()))
-	//{
-	//	if (pOtherChar->IsKnockback()) return;
-	//	XMVECTOR myVel = XMLoadFloat3(&m_Velocity);
-	//	// 두 캐릭터 중심 차이로 근사한 법선
-	//	_vector myPos = this->GetTransform()->Get_State(STATE::POSITION);
-	//	_vector otherPos = pOtherChar->GetTransform()->Get_State(STATE::POSITION);
-	//	XMVECTOR normal = XMVector3Normalize(
-	//		otherPos - myPos);
+	if (other->GetType() == CCollider::ColliderType::HITBOX)
+	{
 
-	//	// 법선과 내 속도의 내적(dot)
-	//	float dp = XMVectorGetX(XMVector3Dot(normal, myVel));
-
-	//	// dp > 0 이면 내 속도가 법선 방향과 유사 → 내가 공격자
-	//	// dp < 0 이면 내 속도가 법선과 반대 → 내가 피격자
-	//	if (dp < 0.0f)
-	//	{
-
-	//		//_vector myPos = this->GetTransform()->Get_State(STATE::POSITION);
-	//		//_vector otherPos = pOtherChar->GetTransform()->Get_State(STATE::POSITION);
-
-
-	//	}
-	//	// 2) 방향 계산 (상대 → 나 방향을 반대로 해서 밀어냄)
-	//	XMVECTOR dirVec = otherPos - myPos;
-	//	dirVec = XMVector3Normalize(dirVec);
-
-	//	// 3) 세기 결정 (원하는 넉백 세기)
-	//	const float pushStrength = 5.f;  // 예시, 값 조정
-
-	//	// 4) 상대 캐릭터에 넉백 속도 추가
-	//	//    CBaseCharacter에 mVelocity 같은 멤버가 있다고 가정
-	//	XMFLOAT3 pushVel;
-	//	XMStoreFloat3(&pushVel, dirVec * pushStrength);
-
-	//	auto vVel = pOtherChar->GetVelocity(); // 현재 속도 가져오기
-
-	//	vVel.x += pushVel.x;
-	//	vVel.y += pushVel.y;
-	//	vVel.z += pushVel.z;
-
-	//	pOtherChar->SetKnockback(true); // 넉백 상태로 설정
-	//	pOtherChar->SetVelocity(vVel); // 넉백 속도 적용
-	//}
+	}
 }
 
 
@@ -312,6 +272,33 @@ HRESULT CBaseCharacter::Ready_Components()
 	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Animator"),
 	//	TEXT("Com_Animator"), reinterpret_cast<CComponent**>(&m_pAnimatroCom), m_pModelCom)))
 	//	return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CBaseCharacter::Bind_Shaders()
+{
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+		return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
+	//	return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::PROJECTION))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
+		return E_FAIL;
+
+	const LIGHT_DESC* pLightDesc = m_pGameInstance->Get_Light(0);
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
+		return E_FAIL;
 
 	return S_OK;
 }

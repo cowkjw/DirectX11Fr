@@ -77,12 +77,12 @@ void StateJump::Update(CBaseCharacter* pChar, _float fTimeDelta)
 			gi->IsKeyDown(VK_LEFT) || gi->IsKeyDown(VK_RIGHT);
 		if (moving)
 		{
-			pChar->ChangeState(new StateMove());
+			pChar->ChangeState(new StateMove(TEXT("Move")));
 			return;
 		}
 		else
 		{
-			pChar->ChangeState(new StateIdle());
+			pChar->ChangeState(new StateIdle(TEXT("Idle")));
 			return;
 		}
 	}
@@ -159,7 +159,7 @@ void StateJump::Update(CBaseCharacter* pChar, _float fTimeDelta)
 				return;
 		}
 
-		pChar->ChangeState(new StateStep(stepDir));
+		pChar->ChangeState(new StateStep(TEXT("Step"), stepDir));
 		return;
 	}
 

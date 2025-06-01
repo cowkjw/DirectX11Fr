@@ -3,6 +3,7 @@
 #include "StateAttack1.h"
 #include "StateJump.h"
 #include "StateGuard.h"
+#include "Collider.h"
 #include "StateStep.h"
 #include "StateSkill1.h"
 
@@ -10,6 +11,12 @@
 void StateMove::Enter(CBaseCharacter* pChar)
 {
 	pChar->Get_Animator()->SetBool("Move", true);
+	auto col = static_cast<CCollider*>(pChar->Get_Component(TEXT("Com_CapsuleCollider")));
+	if (col)
+	{
+		col->SetPriority(1); // 이동 상태에서는 충돌 우선순위를 높임
+	}
+	pChar->SetState(CBaseCharacter::CSTATE::MOVE);
 }
 
 void StateMove::Update(CBaseCharacter* pChar, _float fTimeDelta)
@@ -23,13 +30,13 @@ void StateMove::Update(CBaseCharacter* pChar, _float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	if (pGameInstance->IsKeyPressed('O'))
 	{
-		pChar->ChangeState(new StateGuard());
+		pChar->ChangeState(new StateGuard(TEXT("Guard")));
 		return;
 	}
 
 	if (pGameInstance->IsKeyPressed('I'))
 	{
-		pChar->ChangeState(new StateSkill1());
+		pChar->ChangeState(new StateSkill1(TEXT("Skill1")));
 		return;
 	}
 
@@ -37,13 +44,13 @@ void StateMove::Update(CBaseCharacter* pChar, _float fTimeDelta)
 	if (buf->CheckCommand(ECommand::LightAttack))
 	{
 		buf->PopFront(1);
-		pChar->ChangeState(new StateAttack1());
+		pChar->ChangeState(new StateAttack1(TEXT("Attack1")));
 		return;
 	}
 
 	if (pGameInstance->IsKeyPressed('K'))
 	{
-		pChar->ChangeState(new StateJump());
+		pChar->ChangeState(new StateJump(TEXT("Jump")));
 		return;
 	}
 
@@ -205,7 +212,7 @@ void StateMove::Update(CBaseCharacter* pChar, _float fTimeDelta)
 		//}
 		// 4) 상태 전이
 		pChar->SetLastStepDirection(finalDir);  // 마지막 스텝 방향 갱신
-		pChar->ChangeState(new StateStep(finalDir));
+		pChar->ChangeState(new StateStep(TEXT("Step"),finalDir));
 		return;
 	}
 
@@ -218,7 +225,7 @@ void StateMove::Update(CBaseCharacter* pChar, _float fTimeDelta)
 	}
 	else
 	{
-		pChar->ChangeState(new StateIdle());
+		pChar->ChangeState(new StateIdle(TEXT("Idle")));
 		return;
 	}
 }
@@ -226,4 +233,9 @@ void StateMove::Update(CBaseCharacter* pChar, _float fTimeDelta)
 void StateMove::Exit(CBaseCharacter* pChar)
 {
 	pChar->Get_Animator()->SetBool("Move", false);
+	auto col = static_cast<CCollider*>(pChar->Get_Component(TEXT("Com_CapsuleCollider")));
+	if (col)
+	{
+		col->SetPriority(0); 
+	}
 }

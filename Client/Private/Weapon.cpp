@@ -1,5 +1,6 @@
 #include "Weapon.h"
 #include "GameInstance.h"
+#include <BaseCharacter.h>
 
 CWeapon::CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -37,6 +38,26 @@ HRESULT CWeapon::Initialize(void* pArg)
 
 	m_pTransformCom->Scaling(_float3(0.1f, 0.1f, 0.1f));
 
+	Add_Component(TEXT("Com_Collider"), CSphereCollider::Create(m_pDevice, m_pContext,1.f), reinterpret_cast<CComponent**>(&m_pColliderCom));
+	m_pColliderCom->SetOffset(_float3(-3.3f, 12.5f, 24.3f)); // z는 앞으로 하면서 y값 올려야함
+	m_pColliderCom->Initialize(nullptr);
+	m_pColliderCom->SetListener(this);
+
+	Add_Component(TEXT("Com_Collider1"), CSphereCollider::Create(m_pDevice, m_pContext, 1.f), reinterpret_cast<CComponent**>(&m_pColliderCom1));
+	m_pColliderCom1->SetOffset(_float3(-5.6f, 21.2f, 49.6f)); // z는 앞으로 하면서 y값 올려야함
+	m_pColliderCom1->Initialize(nullptr);
+	m_pColliderCom1->SetListener(this);
+
+	Add_Component(TEXT("Com_Collider2"), CSphereCollider::Create(m_pDevice, m_pContext, 1.f), reinterpret_cast<CComponent**>(&m_pColliderCom2));
+	m_pColliderCom2->SetOffset(_float3(-8.3f, 28.9f,72.9f)); // z는 앞으로 하면서 y값 올려야함
+	m_pColliderCom2->Initialize(nullptr);
+	m_pColliderCom2->SetListener(this);
+
+
+	m_pColliderCom->SetColliderType(CCollider::ColliderType::HITBOX);
+	m_pColliderCom1->SetColliderType(CCollider::ColliderType::HITBOX);
+	m_pColliderCom2->SetColliderType(CCollider::ColliderType::HITBOX);
+
 	return S_OK;
 }
 
@@ -46,7 +67,14 @@ void CWeapon::Priority_Update(_float fTimeDelta)
 
 void CWeapon::Update(_float fTimeDelta)
 {
+	if (auto pCharacter = static_cast<CBaseCharacter*>(m_pParent))
+	{
+		_bool bCanAttack = pCharacter->GetState() == CBaseCharacter::CSTATE::ATTACK;
 
+		m_pColliderCom->SetActive(bCanAttack);
+		m_pColliderCom1->SetActive(bCanAttack);
+		m_pColliderCom2->SetActive(bCanAttack);
+	}
 }
 
 void CWeapon::Late_Update(_float fTimeDelta)
@@ -57,16 +85,16 @@ void CWeapon::Late_Update(_float fTimeDelta)
 		_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
 		_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
 		_matrix wepaonLocal = m_pTransformCom->Get_WorldMatrix_Inverse();
-		 _matrix world = XMMatrixMultiply(XMLoadFloat4x4(&boneLocal), XMLoadFloat4x4(&parentWorld));
-		 _matrix weaponWorld = XMMatrixMultiply(wepaonLocal, world);
-	//_matrix World = XMMatrixMultiply(XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix()),XMLoadFloat4x4(m_pBoneSocket->Get_CombinedTransformationMatrix()) );
+		_matrix world = XMMatrixMultiply(XMLoadFloat4x4(&boneLocal), XMLoadFloat4x4(&parentWorld));
+		_matrix weaponWorld = XMMatrixMultiply(wepaonLocal, world);
+		//_matrix World = XMMatrixMultiply(XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix()),XMLoadFloat4x4(m_pBoneSocket->Get_CombinedTransformationMatrix()) );
 		_float4x4 WorldMatrix{};
 		XMStoreFloat4x4(&WorldMatrix, world);
 		m_pTransformCom->Set_WorldMatrix(WorldMatrix);
-	//	m_pTransformCom->Set_WorldMatrix();
+		//	m_pTransformCom->Set_WorldMatrix();
 
 	}
-	
+
 	//if (m_pBoneSocket)
 	//{
 	//	// 캐릭터 루트(부모)의 월드 행렬
@@ -95,12 +123,7 @@ void CWeapon::Late_Update(_float fTimeDelta)
 
 HRESULT CWeapon::Render()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::PROJECTION))))
-		return E_FAIL;
+	Bind_Shaders();
 
 
 	_uint		iNumMesh = m_pModelCom->Get_NumMeshes();
@@ -140,6 +163,31 @@ HRESULT CWeapon::Ready_Components()
 	return S_OK;
 }
 
+HRESULT CWeapon::Bind_Shaders()
+{
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::PROJECTION))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
+		return E_FAIL;
+
+	const LIGHT_DESC* pLightDesc = m_pGameInstance->Get_Light(0);
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 CWeapon* CWeapon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CWeapon* pInstance = new CWeapon(pDevice, pContext);
@@ -165,10 +213,25 @@ CGameObject* CWeapon::Clone(void* pArg)
 void CWeapon::Free()
 {
 	__super::Free();
+
 	if (!m_bIsCloned)
 	{
-		Safe_Release(m_pShaderCom);
-		Safe_Release(m_pModelCom);
-		Safe_Release(m_pColliderCom);
+	Safe_Release(m_pModelCom);
+	Safe_Release(m_pShaderCom);
 	}
+	Safe_Release(m_pColliderCom);
+	Safe_Release(m_pColliderCom1);
+	Safe_Release(m_pColliderCom2);
+}
+
+void CWeapon::OnCollisionEnter(CCollider* other)
+{
+}
+
+void CWeapon::OnCollisionStay(CCollider* other, float fTimeDelta)
+{
+}
+
+void CWeapon::OnCollisionExit(CCollider* other)
+{
 }

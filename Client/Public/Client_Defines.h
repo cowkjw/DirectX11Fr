@@ -9,6 +9,7 @@
 
 #include "../Default/framework.h"
 #include "Client_Enum.h"
+#include "Client_Struct.h"
 #include "Client_Function.h"
 #include <process.h>
 #include <fstream>
