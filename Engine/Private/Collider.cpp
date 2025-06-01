@@ -75,6 +75,7 @@ void CCollider::RenderInspector(IInspector& inspector)
 	{
 		_bool changed = false;
 		_float off[3] = { m_offset.x, m_offset.y, m_offset.z };
+		_int priority = m_iPriority;
 		if (inspector.DragFloat3("Offset", off, 0.1f))
 		{
 			m_offset = { off[0], off[1], off[2] };
@@ -82,6 +83,11 @@ void CCollider::RenderInspector(IInspector& inspector)
 		}
 		if (inspector.Checkbox("Is Trigger", &m_bIsTrigger))
 		{
+			changed = true;
+		}
+		if (inspector.InputInt("Priority", &priority))
+		{
+			m_iPriority = priority;
 			changed = true;
 		}
 		if (changed)
@@ -95,14 +101,16 @@ void CCollider::RenderInspector(IInspector& inspector)
 
 json CCollider::Serialize()
 {
-	json j;
+	json j = CComponent::Serialize();
 	j["Offset"] = { m_offset.x, m_offset.y, m_offset.z };
 	j["IsTrigger"] = m_bIsTrigger;
+	j["Priority"] = m_iPriority;
 	return j;
 }
 
 void CCollider::Deserialize(const json& j)
 {
+	CComponent::Deserialize(j);
 	if (j.contains("Offset"))
 	{
 		auto offset = j["Offset"];
@@ -111,6 +119,10 @@ void CCollider::Deserialize(const json& j)
 	if (j.contains("IsTrigger"))
 	{
 		m_bIsTrigger = j["IsTrigger"];
+	}
+	if (j.contains("Priority"))
+	{
+		m_iPriority = j["Priority"];
 	}
 }
 

@@ -35,11 +35,11 @@ public:
     // 상태 진입 시: 애니메이션 세팅, 초기화
     virtual void Enter(CBaseCharacter* pChar) = 0;
     // 매 프레임: 입력 체크 · 이동/애니 처리 · 전이 판단
-    virtual void Update(CBaseCharacter* pChar, _float fTimeDelta) = 0;
+    virtual void Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta) = 0;
     // 상태 종료 시: 후처리
     virtual void Exit(CBaseCharacter* pChar) = 0;
-	void SetStateName(const _wstring& stateName) { m_stateName = stateName; }
-	_wstring GetStateName() const { return m_stateName; }
+//	void SetStateName(const _wstring& stateName) { m_stateName = stateName; }
+	const _wstring& GetStateName() const { return m_stateName; }
 protected:
 	_wstring m_stateName; // 상태 이름
 };

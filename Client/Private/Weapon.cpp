@@ -38,18 +38,18 @@ HRESULT CWeapon::Initialize(void* pArg)
 
 	m_pTransformCom->Scaling(_float3(0.1f, 0.1f, 0.1f));
 
-	Add_Component(TEXT("Com_Collider"), CSphereCollider::Create(m_pDevice, m_pContext,1.f), reinterpret_cast<CComponent**>(&m_pColliderCom));
+	Add_Component(TEXT("Com_Collider"), CSphereCollider::Create(m_pDevice, m_pContext,1.5f), reinterpret_cast<CComponent**>(&m_pColliderCom));
 	m_pColliderCom->SetOffset(_float3(-3.3f, 12.5f, 24.3f)); // z는 앞으로 하면서 y값 올려야함
 	m_pColliderCom->Initialize(nullptr);
 	m_pColliderCom->SetListener(this);
 
-	Add_Component(TEXT("Com_Collider1"), CSphereCollider::Create(m_pDevice, m_pContext, 1.f), reinterpret_cast<CComponent**>(&m_pColliderCom1));
+	Add_Component(TEXT("Com_Collider1"), CSphereCollider::Create(m_pDevice, m_pContext, 1.5f), reinterpret_cast<CComponent**>(&m_pColliderCom1));
 	m_pColliderCom1->SetOffset(_float3(-5.6f, 21.2f, 49.6f)); // z는 앞으로 하면서 y값 올려야함
 	m_pColliderCom1->Initialize(nullptr);
 	m_pColliderCom1->SetListener(this);
 
-	Add_Component(TEXT("Com_Collider2"), CSphereCollider::Create(m_pDevice, m_pContext, 1.f), reinterpret_cast<CComponent**>(&m_pColliderCom2));
-	m_pColliderCom2->SetOffset(_float3(-8.3f, 28.9f,72.9f)); // z는 앞으로 하면서 y값 올려야함
+	Add_Component(TEXT("Com_Collider2"), CSphereCollider::Create(m_pDevice, m_pContext, 1.5f), reinterpret_cast<CComponent**>(&m_pColliderCom2));
+	m_pColliderCom2->SetOffset(_float3(-9.3f, 29.9f,72.9f)); // z는 앞으로 하면서 y값 올려야함
 	m_pColliderCom2->Initialize(nullptr);
 	m_pColliderCom2->SetListener(this);
 
@@ -57,6 +57,10 @@ HRESULT CWeapon::Initialize(void* pArg)
 	m_pColliderCom->SetColliderType(CCollider::ColliderType::HITBOX);
 	m_pColliderCom1->SetColliderType(CCollider::ColliderType::HITBOX);
 	m_pColliderCom2->SetColliderType(CCollider::ColliderType::HITBOX);
+
+	m_pColliderCom->SetActive(false);
+	m_pColliderCom1->SetActive(false);
+	m_pColliderCom2->SetActive(false);
 
 	return S_OK;
 }
@@ -69,11 +73,16 @@ void CWeapon::Update(_float fTimeDelta)
 {
 	if (auto pCharacter = static_cast<CBaseCharacter*>(m_pParent))
 	{
-		_bool bCanAttack = pCharacter->GetState() == CBaseCharacter::CSTATE::ATTACK;
+		_bool bCanAttack = pCharacter->GetState() == CBaseCharacter::CSTATE::ATTACK || pCharacter->GetState() == CBaseCharacter::CSTATE::SKILL;
 
 		m_pColliderCom->SetActive(bCanAttack);
 		m_pColliderCom1->SetActive(bCanAttack);
 		m_pColliderCom2->SetActive(bCanAttack);
+
+
+		m_pColliderCom->SetDrawDebug(bCanAttack);
+		m_pColliderCom1->SetDrawDebug(bCanAttack);
+		m_pColliderCom2->SetDrawDebug(bCanAttack);
 	}
 }
 

@@ -151,6 +151,9 @@
     <Filter Include="01.GameObject\Character\Kyojuro">
       <UniqueIdentifier>{4b255449-01ed-4bb1-9559-775bacb7ccbd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="94. Pattern\State\DefaultState\Hurt">
+      <UniqueIdentifier>{54a08314-14bd-4f48-9a13-b2fe24dab60e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -326,6 +329,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Client_Struct.h">
       <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateHurt.h">
+      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BodyColliderParts.h">
+      <Filter>01.GameObject\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -515,6 +524,12 @@
     </ClCompile>
     <ClCompile Include="..\private\StateStep.cpp">
       <Filter>94. Pattern\State\DefaultState\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateHurt.cpp">
+      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BodyColliderParts.cpp">
+      <Filter>01.GameObject\Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

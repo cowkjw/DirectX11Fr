@@ -13,7 +13,7 @@ void StateJumpAttack::Enter(CBaseCharacter* pChar)
 	pChar->SetState(CBaseCharacter::CSTATE::ATTACK);
 }
 
-void StateJumpAttack::Update(CBaseCharacter* pChar, _float fTimeDelta)
+void StateJumpAttack::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)
 {
 	CGameInstance* gi = CGameInstance::Get_Instance();
 	auto pAnim = pChar->Get_Animator();

@@ -167,6 +167,7 @@
     <ClInclude Include="..\public\Command.h" />
     <ClInclude Include="..\Public\CompositeNode.h" />
     <ClInclude Include="..\public\Environment.h" />
+    <ClInclude Include="..\public\BodyColliderParts.h" />
     <ClInclude Include="..\public\FreeCamera.h" />
     <ClInclude Include="..\public\Gizmo.h" />
     <ClInclude Include="..\public\Hierarchy.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="..\public\StateAttackDown.h" />
     <ClInclude Include="..\public\StateAttackUp.h" />
     <ClInclude Include="..\public\StateGuard.h" />
+    <ClInclude Include="..\public\StateHurt.h" />
     <ClInclude Include="..\public\StateIdle.h" />
     <ClInclude Include="..\public\StateJump.h" />
     <ClInclude Include="..\public\StateJumpAttack.h" />
@@ -233,6 +235,7 @@
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseCharacter.cpp" />
     <ClCompile Include="..\private\Environment.cpp" />
+    <ClCompile Include="..\private\BodyColliderParts.cpp" />
     <ClCompile Include="..\private\FreeCamera.cpp" />
     <ClCompile Include="..\private\Gizmo.cpp" />
     <ClCompile Include="..\private\Hierarchy.cpp" />
@@ -258,6 +261,7 @@
     <ClCompile Include="..\private\StateAttackDown.cpp" />
     <ClCompile Include="..\private\StateAttackUp.cpp" />
     <ClCompile Include="..\private\StateGuard.cpp" />
+    <ClCompile Include="..\private\StateHurt.cpp" />
     <ClCompile Include="..\private\StateIdle.cpp" />
     <ClCompile Include="..\private\StateJump.cpp" />
     <ClCompile Include="..\private\StateJumpAttack.cpp" />

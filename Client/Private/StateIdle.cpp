@@ -23,7 +23,7 @@ void StateIdle::Enter(CBaseCharacter* pChar)
     pChar->SetState(CBaseCharacter::CSTATE::IDLE);
 }
 
-void StateIdle::Update(CBaseCharacter* pChar, _float fTimeDelta)
+void StateIdle::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)
 {
     auto gi = CGameInstance::Get_Instance();
     auto anim = pChar->Get_Animator();
@@ -31,36 +31,43 @@ void StateIdle::Update(CBaseCharacter* pChar, _float fTimeDelta)
     // 1타 공격 입력
 
     // 점프
-    if (buf->CheckCommand(ECommand::Jump)) {
-        buf->PopFront(1);
+    if (input.doJump) 
+    {
+        buf->PopCommand(ECommand::Jump,.1);
         pChar->ChangeState(new StateJump(TEXT("Jump")));
         return;
     }
     // 가드
-    if (gi->IsKeyPressed('O'))
+    if (input.doGuard)
     {
+        buf->PopCommand(ECommand::Guard,1);
         pChar->ChangeState(new StateGuard(TEXT("Guard")));
         return;
     }
     // 스킬
-    if (buf->CheckCommand(ECommand::Skill0)) {
-        buf->PopFront(1);
+
+    if (input.doSkill0)
+    {
+        buf->PopCommand(ECommand::Skill0, 1);
         pChar->ChangeState(new StateSkill0(TEXT("Skill0")));
         return;
     }
+    //if (buf->CheckCommand(ECommand::Skill0)) {
+    //    buf->PopFront(1);
+    //    pChar->ChangeState(new StateSkill0(TEXT("Skill0")));
+    //    return;
+    //}
     // 이동
-    _bool moving = gi->IsKeyDown(VK_UP) || gi->IsKeyDown(VK_DOWN) ||
-        gi->IsKeyDown(VK_LEFT) || gi->IsKeyDown(VK_RIGHT);
-    if (moving&&!anim->CheckBool("Attacking")&&!anim->CheckBool("Jump"))
+    _bool bMoving = !XMVector3Equal(input.moveDir, XMVectorZero());
+    if (bMoving &&!anim->CheckBool("Attacking")&&!anim->CheckBool("Jump"))
     {
         pChar->ChangeState(new StateMove(TEXT("Move")));
         return;
     }
 
-    if (buf->CheckCommand(ECommand::LightAttack))
+    if (input.doAttack)
     {
-        buf->PopFront(1);
-        pChar->ChangeState(new StateAttack1(TEXT("Skill1")));
+        pChar->ChangeState(new StateAttack1(TEXT("Attack1")));
         return;
     }
 }

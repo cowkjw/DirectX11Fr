@@ -29,9 +29,11 @@ void StateJump::Enter(CBaseCharacter* pChar)
 		JUMP_SPEED,
 		XMVector3Equal(dir, XMVectorZero()) ? 0.f : m_direction.z * HORIZ_SPEED
 	};
+
+	pChar->SetState(CBaseCharacter::CSTATE::JUMP);
 }
 
-void StateJump::Update(CBaseCharacter* pChar, _float fTimeDelta)
+void StateJump::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)
 {
 	CGameInstance* gi = CGameInstance::Get_Instance();
 	auto pAnim = pChar->Get_Animator();

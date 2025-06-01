@@ -364,6 +364,22 @@ void CTransform::LookAt(_fvector vAt)
 	m_bDirty = true;
 }
 
+void CTransform::LookAtXZ(_fvector vAt)
+{
+	_float3 vScaled = Get_Scaled();
+	_vector vLook = vAt - Get_State(STATE::POSITION);
+	// XZ 평면에서의 Look 벡터
+	vLook = XMVectorSet(XMVectorGetX(vLook), 0.f, XMVectorGetZ(vLook), 0.f);
+	_vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
+	_vector vUp = XMVector3Cross(vLook, vRight);
+	Set_State(STATE::RIGHT, XMVector3Normalize(vRight) * vScaled.x);
+	Set_State(STATE::UP, XMVector3Normalize(vUp) * vScaled.y);
+	Set_State(STATE::LOOK, XMVector3Normalize(vLook) * vScaled.z);
+
+
+	m_bDirty = true;
+}
+
 void CTransform::UpdateEulerAngles()
 {
 	_vector scale, quat, translation;

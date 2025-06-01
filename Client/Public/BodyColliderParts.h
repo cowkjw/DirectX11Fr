@@ -11,12 +11,17 @@ class CSphereCollider;
 END_NAMESPACE
 
 BEGIN_NAMESPACE(Client)
-class CWeapon : public CGameObject,public ICollisionListener
+class CBodyColliderParts : public CGameObject, public ICollisionListener
 {
+public:
+	typedef struct tagBodyColliderPartsDesc : public CGameObject::GAMEOBJECT_DESC
+	{
+		vector<_float3> vColliderOffsets; // 각 콜라이더의 오프셋
+	} BODYCOLLIDERPARTS_DESC;
 protected:
-	CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CWeapon(const CWeapon& Prototype);
-	virtual ~CWeapon() = default;
+	CBodyColliderParts(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CBodyColliderParts(const CBodyColliderParts& Prototype);
+	virtual ~CBodyColliderParts() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -25,27 +30,22 @@ public:
 	virtual void Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
-	
+
 public:
 	void Set_BoneSocket(CBone* pBoneSocket) {
 		m_pBoneSocket = pBoneSocket;
 	}
 
 private:
-	CShader* m_pShaderCom = { nullptr };
-	CModel* m_pModelCom = { nullptr };
-	CSphereCollider* m_pColliderCom = { nullptr };
-	CSphereCollider* m_pColliderCom1 = { nullptr };
-	CSphereCollider* m_pColliderCom2 = { nullptr };
+	vector<CSphereCollider*> m_pColliderComs;
 	CBone* m_pBoneSocket = { nullptr };
 	_float4x4 m_OffsetMatrix{};
 
 private:
 	virtual HRESULT Ready_Components();
-	virtual HRESULT Bind_Shaders();
 
 public:
-	static CWeapon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CBodyColliderParts* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 
@@ -59,4 +59,3 @@ public:
 
 };
 END_NAMESPACE
-

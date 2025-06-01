@@ -4,6 +4,7 @@
 #include "StateIdle.h"
 #include "InputBuffer.h"
 #include "Weapon.h"	
+#include "BodyColliderParts.h"
 
 using AniCon = CAnimController::Condition;
 CKyojuro::CKyojuro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -43,7 +44,7 @@ HRESULT CKyojuro::Initialize(void* pArg)
 	//	Set_Weapon("R_Hand_1", dynamic_cast<CWeapon*>(pWeapon));
 	Set_Weapon("R_Hand_1_Lct", dynamic_cast<CWeapon*>(pWeapon));
 
-	if (m_pWeapon)
+	if (m_pWeapon) // 자식벡터로 넣지는 않음
 	{
 		m_pWeapon->SetParent(this);
 	}
@@ -51,16 +52,35 @@ HRESULT CKyojuro::Initialize(void* pArg)
 
 	Ready_Animation();
 
-	Add_Component(TEXT("Com_CapsuleCollider"), CCapsuleCollider::Create(m_pDevice, m_pContext, 3.9f, 77.f), reinterpret_cast<CComponent**>(&m_pColliderCom));
+	Add_Component(TEXT("Com_CapsuleCollider"), CCapsuleCollider::Create(m_pDevice, m_pContext, 3.5f, 77.f), reinterpret_cast<CComponent**>(&m_pColliderCom));
 
 	m_pColliderCom->Initialize(nullptr);
 	m_pColliderCom->SetOffset(_float3(0.f, 8.1f, 0.f));
+
+
+	CBodyColliderParts::BODYCOLLIDERPARTS_DESC desc{};
+	desc.vColliderOffsets.push_back(_float3(0.f, 0.f, 0.f));
+	AddChild(CBodyColliderParts::Create(m_pDevice, m_pContext));
+
+	m_vecChildren.back()->Initialize(&desc);
+	if (auto parts = dynamic_cast<CBodyColliderParts*>(m_vecChildren.back()))
+	{
+		CBone* pBoneRHand = m_pModelCom->Get_Bone("R_Foot_1");
+		if (!pBoneRHand)
+		{
+			MSG_BOX("CKyojuro::Initialize - Bone not found");
+			return E_FAIL;
+		}
+		parts->Set_BoneSocket(pBoneRHand);
+	}
 
 	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_CapsuleCollider"),
 	//	TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom))))
 	//	return E_FAIL;
 	m_pColliderCom->SetListener(this);
-	ChangeState(new StateIdle());
+	ChangeState(new StateIdle(TEXT("Idle")));
+
+
 
 	m_iShaderPass = 1;
 	return S_OK;
@@ -74,6 +94,10 @@ void CKyojuro::Priority_Update(_float fTimeDelta)
 void CKyojuro::Update(_float fTimeDelta)
 {
 	__super::Update(fTimeDelta);
+	for (auto& child : m_vecChildren)
+	{
+		child->Update(fTimeDelta);
+	}
 }
 
 void CKyojuro::Late_Update(_float fTimeDelta)
@@ -81,14 +105,22 @@ void CKyojuro::Late_Update(_float fTimeDelta)
 
 
 	__super::Late_Update(fTimeDelta);
-
-	if (m_pAnimatroCom)
+	for (auto& child : m_vecChildren)
 	{
-		const char* cur = m_pAnimatroCom->GetCurrentAnimName();
-		char buf[MAX_PATH];
-		sprintf_s(buf, "현재 애니메이션: %s", cur);
-		SetWindowTextA(g_hWnd, buf);
+		child->Late_Update(fTimeDelta);
 	}
+//
+//	if (m_pState)
+//	{
+//		auto currentState = m_pState->GetStateName();
+//
+//		// 현재 애니메이션 상태를 윈도우 타이틀에 표시
+//		SetWindowTextA(g_hWnd, WStringToString(currentState).c_str());
+//
+////		char buf[MAX_PATH];
+////		sprintf_s(buf, "현재 애니메이션: %s", currentState);
+////		SetWindowTextA(g_hWnd, buf);
+//	}
 }
 
 HRESULT CKyojuro::Render()
@@ -200,16 +232,12 @@ void CKyojuro::Ready_Animation()
 	ctrl->AddTransition(attack2Idx, attack3Idx, c3, 0.1f);
 
 
+	//A_P0000_V00_C00_Dmg01_F
 
 
-	//// 3타까지 위,아래 중 처리
-	//// Attack2 ->AttackDown
-	//ctrl->AddTransition(attack2Idx, attack4Idx, cAttackDown, 0.5f); // 3타가 끝나면 아래 공격으로
-
-	////Attack2 -> AttackUp
-	//ctrl->AddTransition(attack2Idx, attack5Idx, cAttackUp, 0.5f); // 3타가 끝나면 위 공격으로
-
-
+	auto animHurtFront = m_pModelCom->GetAnimationClipByName("A_P0000_V00_C00_Dmg01_F");
+	animHurtFront->SetLoop(false);
+	size_t hurtFIdx = ctrl->AddState("Hurt_F", animHurtFront, 12);
 
 	// A_P0012_V00_C00_BaseGuard01_0
 
@@ -331,7 +359,9 @@ void CKyojuro::Ready_Animation()
 	m_pAnimatroCom->AddTrigger("StepLeftJump");
 	m_pAnimatroCom->AddTrigger("StepBackJump");
 	m_pAnimatroCom->AddTrigger("StepFrontJump");
+	m_pAnimatroCom->AddTrigger("Hurt");
 	m_pAnimatroCom->AddBool("Stepping"); // 스텝 중인지 여부
+	m_pAnimatroCom->AddBool("Hurted");
 
 
 	// 추적 대시 A_P0012_V00_C00_AtkSkl01
@@ -496,11 +526,11 @@ void CKyojuro::Ready_Animation()
 	//ctrl->AddTransition(attack3Idx, skillDefaultIdx, cRisingSun);
 	//ctrl->AddTransition(attack4Idx, skillDefaultIdx, cRisingSun);
 	//ctrl->AddTransition(attack5Idx, skillDefaultIdx, cRisingSun);
-	ctrl->AddTransition(guardSkill0Idx, guardSkill1Idx, cFin, 0.1f);
-	ctrl->AddTransition(guardSkill1Idx, guardSkill2Idx, cFin, 0.1f);
 	ctrl->AddTransition(guard0Idx, guardSkill0Idx, cRisingSun, 0.1f);
 	ctrl->AddTransition(guard1Idx, guardSkill0Idx, cRisingSun, 0.1f);
 	ctrl->AddTransition(guard2Idx, guardSkill0Idx, cRisingSun, 0.1f);
+	ctrl->AddTransition(guardSkill0Idx, guardSkill1Idx, cFin, 0.1f);
+	ctrl->AddTransition(guardSkill1Idx, guardSkill2Idx, cFin, 0.1f);
 	ctrl->AddTransition(guardSkill2Idx, runIdx, cSpeedUp);
 	ctrl->AddTransition(guardSkill2Idx, idleIdx, cFin);
 
@@ -581,6 +611,22 @@ void CKyojuro::Ready_Animation()
 //   ctrl->AddTransition(stepFrontJumpIdx, jump2Idx, cFinished, 0.05f);
 	ctrl->AddTransition(stepFrontJumpIdx, jump3Idx, cFinished, 0.05f);
 
+
+	// 피격 처리
+	CAnimController::Condition cHurt{ "Hurt", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(runIdx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(runEndIdx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(idleIdx, hurtFIdx, cHurt, 0.1f);
+
+	ctrl->AddTransition(attack0Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(attack1Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(attack2Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(attack3Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(attack4Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(attack5Idx, hurtFIdx, cHurt, 0.1f);
+
+	ctrl->AddTransition(hurtFIdx, idleIdx, cFin);
+	ctrl->AddTransition(hurtFIdx, runIdx, cSpeedUp, 0.1f);
 
 }
 

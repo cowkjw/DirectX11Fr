@@ -20,6 +20,7 @@ public:
 	_bool DragFloat3(const char* label, _float* v, _float speed) override;
 	_bool InputFloat(const char* label, _float* v) override;
 	_bool InputFloat3(const char* label, _float* v) override;
+	_bool InputInt(const char* label, int* v) override;
 private:
 	void DrawInspector();
 	void DrawComponentList();

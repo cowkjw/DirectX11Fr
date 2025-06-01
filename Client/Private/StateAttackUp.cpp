@@ -14,7 +14,7 @@ void StateAttackUp::Enter(CBaseCharacter* pChar)
 	pChar->SetState(CBaseCharacter::CSTATE::ATTACK);
 }
 
-void StateAttackUp::Update(CBaseCharacter* pChar, _float fTimeDelta)
+void StateAttackUp::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)
 {
 	CGameInstance* gi = CGameInstance::Get_Instance();
 	auto anim = pChar->Get_Animator();
@@ -22,25 +22,29 @@ void StateAttackUp::Update(CBaseCharacter* pChar, _float fTimeDelta)
 	auto buf = pChar->GetInputBuffer();
 	const string& stateName = animCtrl->GetCurrentState()->stateName;
 
-	if ((gi->IsKeyDown(VK_UP) || gi->IsKeyDown(VK_DOWN) ||
-		gi->IsKeyDown(VK_LEFT) || gi->IsKeyDown(VK_RIGHT)) && gi->IsKeyDown('I'))
-	{
+	_float fProgress = anim->GetCurrentAnimProgress();
 
+	if (fProgress <= 0.4f)
+	{
+		pChar->GetTransform()->Go_Straight(fTimeDelta);
+	}
+
+	if (input.doSkill1)
+	{
 		pChar->ChangeState(new StateSkill1(TEXT("Skill1")));
 		return;
 	}
 
-	if (buf->CheckCommand(ECommand::Skill0)) {
-		buf->PopFront(1);
+	if (input.doSkill0)
+	{
 		pChar->ChangeState(new StateSkill0(TEXT("Skill0")));
 		return;
 	}
-	if (stateName == "attackUp" && anim->GetCurrentAnimProgress() >= 1.f)
+
+	if (anim->GetCurrentAnimProgress() >= 1.f)
 	{
 		bIsCombo = false;
-		_bool moving = gi->IsKeyDown(VK_UP) || gi->IsKeyDown(VK_DOWN) ||
-			gi->IsKeyDown(VK_LEFT) || gi->IsKeyDown(VK_RIGHT);
-		pChar->GetInputBuffer()->ClearBuffer();
+		_bool moving = !XMVector3Equal(input.moveDir, XMVectorZero());
 		if (moving)
 		{
 			pChar->ChangeState(new StateMove(TEXT("Move")));

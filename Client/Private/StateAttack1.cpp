@@ -17,7 +17,7 @@ void StateAttack1::Enter(CBaseCharacter* pChar)
 
 }
 
-void StateAttack1::Update(CBaseCharacter* pChar, _float fTimeDelta)
+void StateAttack1::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)
 {
 	CGameInstance* gi = CGameInstance::Get_Instance();
 	auto pAnim = pChar->Get_Animator();
@@ -25,7 +25,7 @@ void StateAttack1::Update(CBaseCharacter* pChar, _float fTimeDelta)
 
 	if (pChar->Get_Target())
 	{
-		pChar->GetTransform()->LookAt(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
+		pChar->GetTransform()->LookAtXZ(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
 	}
 
 	if (pAnim->GetCurrentAnimProgress() <= 0.1f)
@@ -33,32 +33,44 @@ void StateAttack1::Update(CBaseCharacter* pChar, _float fTimeDelta)
 		pChar->GetTransform()->Go_Straight(fTimeDelta);
 	}
 
-	if ((gi->IsKeyDown(VK_UP) || gi->IsKeyDown(VK_DOWN) ||
-		gi->IsKeyDown(VK_LEFT) || gi->IsKeyDown(VK_RIGHT))&&gi->IsKeyDown('I'))
+	if (input.doSkill1)
 	{
-
 		pChar->ChangeState(new StateSkill1(TEXT("Skill1")));
 		return;
 	}
 
-	if (buf->CheckCommand(ECommand::Skill0)) {
-		buf->PopFront(1);
+	if (input.doSkill0)
+	{
 		pChar->ChangeState(new StateSkill0(TEXT("Skill0")));
 		return;
 	}
+	//if ((gi->IsKeyDown(VK_UP) || gi->IsKeyDown(VK_DOWN) ||
+	//	gi->IsKeyDown(VK_LEFT) || gi->IsKeyDown(VK_RIGHT))&&gi->IsKeyDown('I'))
+	//{
 
-	if (buf->CheckCombo({ ECommand::LightAttack, ECommand::LightAttack }))
+	//	pChar->ChangeState(new StateSkill1(TEXT("Skill1")));
+	//	return;
+	//}
+
+	if (input.doAttack2)
+	{
+		buf->PopCommand(ECommand::LightAttack, 2);
+		pChar->ChangeState(new StateAttack2(TEXT("Attack2")));
+		return;
+	}
+
+
+	/*if (buf->CheckCombo({ ECommand::LightAttack, ECommand::LightAttack }))
 	{
 		buf->PopFront(2);
 		pChar->ChangeState(new StateAttack2(TEXT("Attack2")));
 		return;
-	}
+	}*/
 	auto animCtrl = pAnim->GetAnimController();
 	const string& stateName = animCtrl->GetCurrentState()->stateName;
 	if (stateName == "attack0" && pAnim->GetCurrentAnimProgress() >= 1.f)
 	{
-		_bool moving = gi->IsKeyDown(VK_UP) || gi->IsKeyDown(VK_DOWN) ||
-			gi->IsKeyDown(VK_LEFT) || gi->IsKeyDown(VK_RIGHT);
+		_bool moving = !XMVector3Equal(input.moveDir, XMVectorZero());
 		bIsCombo = false;
 		if (moving)
 		{
@@ -68,7 +80,7 @@ void StateAttack1::Update(CBaseCharacter* pChar, _float fTimeDelta)
 		{
 			pChar->ChangeState(new StateIdle(TEXT("Idle")));
 		}
-	
+
 		return;
 	}
 	bIsCombo = true;
@@ -76,5 +88,5 @@ void StateAttack1::Update(CBaseCharacter* pChar, _float fTimeDelta)
 
 void StateAttack1::Exit(CBaseCharacter* pChar)
 {
-pChar->Get_Animator()->SetBool("Attacking", bIsCombo);
+	pChar->Get_Animator()->SetBool("Attacking", bIsCombo);
 }

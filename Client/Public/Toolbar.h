@@ -39,7 +39,7 @@ private:
 	_char         m_NameBuf[128] = "";
 
 	_char    m_FilePathBuf[260];   // 저장/로딩할 파일 경로
-	CJsonLoader  m_JsonLoader;    // JsonLoader 인스턴스
+	CJsonLoader*  m_JsonLoader = nullptr;    // JsonLoader 인스턴스
 
 	mutex m_FbxLoadMutex;
 	string m_ModelKey;

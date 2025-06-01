@@ -35,25 +35,26 @@ public:
 	void Set_Weapon(const char* boneName, class CWeapon* pWeapon);
 	class CAnimator* Get_Animator() { return m_pAnimatroCom; }
 	void ChangeState(class IState* pState);
+	const _wstring& GetCurrentStateName();
 	class CInputBuffer* GetInputBuffer() { return m_pInputBuffer; }
-	void HandleInput();
+	virtual void HandleInput();
 	virtual void UpdateState(_float fTimeDelta);
 
-	virtual void FillInpit(InputData& outInput);
+	virtual void FillInput(InputData& outInput);
 
 	void SetIsJumping(_bool bIsJumping) { m_bIsJumping = bIsJumping; }
 	_bool IsJumping() const { return m_bIsJumping; }
 	void Set_Target(const _wstring& name, LEVEL eLevel);
 	CBaseCharacter* Get_Target() const { return m_pTarget; }
 	void SetLastStepDirection(EDirection eDirection) { m_eLastStepDirection = eDirection; }
-	void SetState(CSTATE eState) { m_eState = eState; }
+
+	void SetState(CSTATE eState) { m_eState = eState; } // 캐릭터 상태
 	CSTATE GetState() const { return m_eState; }
-	EDirection GetLastStepDirection() const { return m_eLastStepDirection; }
+
+	EDirection GetLastStepDirection() const { return m_eLastStepDirection; } // 마지막 방향
 	const _float3& GetVelocity() const { return m_Velocity; }
 	void SetVelocity(const _float3& velocity) { m_Velocity = velocity; }
 
-	void SetKnockback(_bool isKnockback) { m_IsKnockback = isKnockback; }
-	_bool IsKnockback() const { return m_IsKnockback; }
 protected:
 	virtual void Ready_Animation();
 
@@ -83,7 +84,6 @@ protected:
 	EDirection m_eLastStepDirection{ EDirection::NONE }; // 마지막 이동 방향
 
 	_float3 m_Velocity = { 0, 0, 0 };
-	_bool m_IsKnockback = false; // 넉백 상태 여부
 	_uint m_iShaderPass{ 0 }; // 셰이더 패스 인덱스
 
 public:

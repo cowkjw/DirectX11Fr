@@ -13,7 +13,7 @@ void StateStep::Enter(CBaseCharacter* pChar)
 
 	if (pChar->Get_Target())
 	{
-		pChar->GetTransform()->LookAt(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
+		pChar->GetTransform()->LookAtXZ(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
 	}
 	_vector forward = pChar->GetTransform()->Get_State(STATE::LOOK);
 	_vector right = pChar->GetTransform()->Get_State(STATE::RIGHT);
@@ -49,7 +49,7 @@ void StateStep::Enter(CBaseCharacter* pChar)
 
 }
 
-void StateStep::Update(CBaseCharacter* pChar, _float fTimeDelta)
+void StateStep::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)
 {
 	auto buf = pChar->GetInputBuffer();
 	auto anim = pChar->Get_Animator();
@@ -128,23 +128,23 @@ void StateStep::Update(CBaseCharacter* pChar, _float fTimeDelta)
 		//	return;
 		//}
 
-			_vector dir = XMVectorZero();
-			// 입력 벡터 수집 (월드 기준)
-			if (CGameInstance::Get_Instance()->IsKeyDown(VK_LEFT))  dir = XMVectorSet(-1, 0, 0, 0);
-			if (CGameInstance::Get_Instance()->IsKeyDown(VK_RIGHT)) dir = XMVectorSet(1, 0, 0, 0);
-			if (CGameInstance::Get_Instance()->IsKeyDown(VK_UP))   dir += XMVectorSet(0, 0, 1, 0);
-			if (CGameInstance::Get_Instance()->IsKeyDown(VK_DOWN))  dir += XMVectorSet(0, 0, -1, 0);
-			if (XMVector3Equal(dir, XMVectorZero()))
-			{
-				// 키 입력 없으면 Idle
-				pChar->ChangeState(new StateIdle(TEXT("Idle")));
-				return;
-			}
+		_vector dir = XMVectorZero();
+		// 입력 벡터 수집 (월드 기준)
+		if (CGameInstance::Get_Instance()->IsKeyDown(VK_LEFT))  dir = XMVectorSet(-1, 0, 0, 0);
+		if (CGameInstance::Get_Instance()->IsKeyDown(VK_RIGHT)) dir = XMVectorSet(1, 0, 0, 0);
+		if (CGameInstance::Get_Instance()->IsKeyDown(VK_UP))   dir += XMVectorSet(0, 0, 1, 0);
+		if (CGameInstance::Get_Instance()->IsKeyDown(VK_DOWN))  dir += XMVectorSet(0, 0, -1, 0);
+		if (XMVector3Equal(dir, XMVectorZero()))
+		{
+			// 키 입력 없으면 Idle
+			pChar->ChangeState(new StateIdle(TEXT("Idle")));
+			return;
+		}
 		// 2) 1단 스텝(Left, Right)일 때만 연속 스텝
 		if (m_eDirection == EDirection::Left
 			|| m_eDirection == EDirection::Right)
 		{
-			
+
 
 			dir = XMVector3Normalize(dir);
 
@@ -169,7 +169,7 @@ void StateStep::Update(CBaseCharacter* pChar, _float fTimeDelta)
 				next = (last == EDirection::Right ? EDirection::Right2 : EDirection::Right);
 
 			// 5) 연속 스텝 호출
-			pChar->ChangeState(new StateStep(TEXT("Step"),next));
+			pChar->ChangeState(new StateStep(TEXT("Step"), next));
 			return;
 		}
 
@@ -189,10 +189,11 @@ void StateStep::Update(CBaseCharacter* pChar, _float fTimeDelta)
 	// t < 1: 기존대로 이동 및 바라보기
 	pChar->GetTransform()->MoveDirection(m_vStepDir, fTimeDelta);
 	if (pChar->Get_Target())
-		pChar->GetTransform()->LookAt(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
+		pChar->GetTransform()->LookAtXZ(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
 }
 
 void StateStep::Exit(CBaseCharacter* pChar)
 {
-
+	auto anim = pChar->Get_Animator();
+	anim->SetBool("Stepping", false);
 }

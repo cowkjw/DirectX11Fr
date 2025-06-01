@@ -9,22 +9,29 @@ void StateSkill1::Enter(CBaseCharacter* pChar)
 	pAnim->SetTrigger("Skill1");
 	pAnim->SetBool("Move", false);
 	pAnim->SetBool("Jump", false);
+	pChar->SetState(CBaseCharacter::CSTATE::SKILL);
 }
 
-void StateSkill1::Update(CBaseCharacter* pChar, _float fTimeDelta)
+
+void StateSkill1::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)
 {
 	if (pChar->Get_Target())
 	{
-		pChar->GetTransform()->LookAt(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
+		pChar->GetTransform()->LookAtXZ(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
 	}
 	CGameInstance* gi = CGameInstance::Get_Instance();
 	auto anim = pChar->Get_Animator();
+
 	auto animCtrl = anim->GetAnimController();
 	const string& stateName = animCtrl->GetCurrentState()->stateName;
-	if (stateName == "skill1End" && anim->GetCurrentAnimProgress() >= 1.f)
+	if (anim->GetCurrentAnimProgress() <= 0.7f)
 	{
-		_bool moving = gi->IsKeyDown(VK_UP) || gi->IsKeyDown(VK_DOWN) ||
-			gi->IsKeyDown(VK_LEFT) || gi->IsKeyDown(VK_RIGHT);
+		pChar->GetTransform()->Go_Straight(fTimeDelta);
+	}
+
+	if (anim->GetCurrentAnimProgress() >= 1.f)
+	{
+		_bool moving = !XMVector3Equal(input.moveDir, XMVectorZero());
 		pChar->GetInputBuffer()->ClearBuffer();
 		if (moving)
 		{

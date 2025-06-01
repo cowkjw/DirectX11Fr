@@ -89,6 +89,15 @@ _bool CInspectorPannel::InputFloat3(const char* label, _float* v)
 	return false;
 }
 
+_bool CInspectorPannel::InputInt(const char* label, int* v)
+{
+	if (ImGui::InputInt(label, v))
+	{
+		return true;
+	}
+	return false;
+}
+
 void CInspectorPannel::DrawInspector()
 {
     ImGui::Begin("Inspector");
@@ -173,38 +182,37 @@ void CInspectorPannel::DrawAddComponentPopup()
 	// 3) Collider 서브메뉴
 	if (ImGui::BeginMenu("Collider"))
 	{
-		
+		static _uint iColliderCount = 0;
 		CComponent* pCollider = nullptr;
 		if (ImGui::MenuItem("Box Collider"))
 		{
-			if (FAILED(CEditorManager::m_pSelectedObject->Add_Component(
-				ToIndex(LEVEL::STATIC),
-				TEXT("Prototype_Component_BoxCollider"),
-				TEXT("Com_Collider"),
-				&pCollider
-			)))
+			if (FAILED(CEditorManager::m_pSelectedObject->Add_Component(TEXT("Com_Collider") + to_wstring(iColliderCount++), CBoxCollider::Create(m_pDevice, m_pContext), reinterpret_cast<CComponent**>(&pCollider))))
+			{
+				--iColliderCount;
 				return;
+			}
+			pCollider->Initialize(nullptr);
 		}
 		if (ImGui::MenuItem("Sphere Collider"))
 		{
-			if (FAILED(CEditorManager::m_pSelectedObject->Add_Component(
-				ToIndex(LEVEL::STATIC),
-				TEXT("Prototype_Component_SphereCollider"),
-				TEXT("Com_Collider"),
-				&pCollider
-			)))
+
+			if (FAILED(CEditorManager::m_pSelectedObject->Add_Component(TEXT("Com_Collider") + to_wstring(iColliderCount++), CSphereCollider::Create(m_pDevice, m_pContext,1.f), reinterpret_cast<CComponent**>(&pCollider))))
+			{
+				--iColliderCount;
 				return;
+			}
+			pCollider->Initialize(nullptr);
 		}
 		if (ImGui::MenuItem("Capsule Collider"))
 		{
-			if (FAILED(CEditorManager::m_pSelectedObject->Add_Component(
-				ToIndex(LEVEL::STATIC),
-				TEXT("Prototype_Component_CapsuleCollider"),
-				TEXT("Com_Collider"),
-				&pCollider
-			)))
+			if (FAILED(CEditorManager::m_pSelectedObject->Add_Component(TEXT("Com_Collider") + to_wstring(iColliderCount++), CCapsuleCollider::Create(m_pDevice, m_pContext), reinterpret_cast<CComponent**>(&pCollider))))
+			{
+				--iColliderCount;
 				return;
+			}
+			pCollider->Initialize(nullptr);
 		}
+
 		Safe_Release(pCollider);
 		ImGui::EndMenu();
 	}

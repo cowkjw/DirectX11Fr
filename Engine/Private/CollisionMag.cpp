@@ -6,88 +6,220 @@
 
 void CCollisionMag::Update(_float fTimeDelta)
 {
-	if (m_vColliders.empty()) return; // 충돌체가 없으면 업데이트하지 않음
-	for (auto& collider : m_vColliders)
-    {
-		collider->Update();
-	}
+	//if (m_vColliders.empty()) return; // 충돌체가 없으면 업데이트하지 않음
+	//for (auto& collider : m_vColliders)
+ //   {
+	//	collider->Update();
+	//}
 
-    set<pair<CCollider*, CCollider*>> curr;
+ //   set<pair<CCollider*, CCollider*>> curr;
+ //   for (size_t i = 0; i < m_vColliders.size(); ++i)
+ //   {
+ //       for (size_t j = i + 1; j < m_vColliders.size(); ++j) 
+ //       {
+	//		auto A = m_vColliders[i], B = m_vColliders[j]; // A, B 순서대로 비교
+
+ //           if (!A->IsActive() || !B->IsActive()) continue;
+
+	//		if (m_vColliders[i]->GetOwner() == m_vColliders[j]->GetOwner()
+ //               || m_vColliders[i]->GetOwner()->GetParent()==m_vColliders[j]->GetOwner()
+ //               || m_vColliders[j]->GetOwner()->GetParent() == m_vColliders[i]->GetOwner()) // 같은 오브젝트는 비교하지 않음
+	//			continue;
+ //           if (A->Intersects(B))
+ //           {
+	//			curr.insert({ A,B }); // 현재 충돌 상태를 저장
+ //               CCollider* pusher = A;
+ //               CCollider* pushed = B;
+ //               if (!m_vCollisions.count({ A,B })) // 처음이면 
+ //               {
+ //                   A->NotifyEnter(B);
+ //                   B->NotifyEnter(A);
+ //                   A->SetCollision(true); // 충돌 상태 설정
+ //                   B->SetCollision(true);
+
+ //                   if (A->GetPriority() > B->GetPriority())
+ //                   {
+ //                       pusher = A;
+ //                       pushed = B;
+ //                   }
+ //                   else if (B->GetPriority() > A->GetPriority())
+ //                   {
+ //                       pusher = B;
+ //                       pushed = A;
+ //                   }
+
+ //                   if (pusher->GetType() == CCollider::ColliderType::HITBOX
+ //                       || pushed->GetType() == CCollider::ColliderType::HITBOX)
+ //                       continue;
+	//				ResolvePenetrationXZ(pusher, pushed); // 충돌 해소
+ //               }
+	//			else // 이미 충돌 중이면
+ //               {
+ //                   A->NotifyStay(B, fTimeDelta);
+ //                   B->NotifyStay(A, fTimeDelta);
+ //                   A->SetCollision(true); // 충돌 상태 설정
+ //                   B->SetCollision(true);
+ //                   if (A->GetPriority() > B->GetPriority())
+ //                   {
+ //                       pusher = A;
+ //                       pushed = B;
+ //                   }
+ //                   else if (B->GetPriority() > A->GetPriority())
+ //                   {
+ //                       pusher = B;
+ //                       pushed = A;
+	//				}
+ //                   if (pusher->GetType() == CCollider::ColliderType::HITBOX
+ //                       || pushed->GetType() == CCollider::ColliderType::HITBOX)
+ //                       continue;
+ //                   ResolvePenetrationXZ(pusher, pushed); // 충돌 해소
+ //               }
+ //           }
+ //       }
+ //   }
+ //   for (auto& p : m_vCollisions) 
+ //   {
+	//	if (!curr.count(p)) // 현재 충돌 상태에 없으면
+ //       {
+ //           p.first->NotifyExit(p.second);
+ //           p.second->NotifyExit(p.first);
+ //           p.first->SetCollision(false); // 충돌 상태 설정
+ //           p.second->SetCollision(false);
+ //       }
+ //   }
+	//m_vCollisions = move(curr); // 현재 충돌 상태로 업데이트
+
+    if (m_vColliders.empty())
+        return;
+
+    // 1) 모든 콜라이더 업데이트
+    for (auto& collider : m_vColliders)
+        collider->Update();
+
+    // 2) 이번 프레임에 충돌이 발생한 (소유자)쌍을 기록할 set
+    //    pair<CBaseCharacter*, CBaseCharacter*> 형태로 저장
+    set<pair<CGameObject*, CGameObject*>> ownerCollided;
+
+    // 3) 현재 프레임의 콜라이더 간 충돌을 기록할 set
+    set<pair<CCollider*, CCollider*>> currColliders;
+
+    // 4) 모든 콜라이더 쌍에 대해 충돌 검사
     for (size_t i = 0; i < m_vColliders.size(); ++i)
     {
-        for (size_t j = i + 1; j < m_vColliders.size(); ++j) 
+        auto A = m_vColliders[i];
+        for (size_t j = i + 1; j < m_vColliders.size(); ++j)
         {
-			auto A = m_vColliders[i], B = m_vColliders[j]; // A, B 순서대로 비교
+            auto B = m_vColliders[j];
 
-            if (!A->IsActive() || !B->IsActive()) continue;
+            // (a) 둘 중 하나라도 비활성화 상태면 무시
+            if (!A->IsActive() || !B->IsActive())
+                continue;
 
-			if (m_vColliders[i]->GetOwner() == m_vColliders[j]->GetOwner()
-                || m_vColliders[i]->GetOwner()->GetParent()==m_vColliders[j]->GetOwner()
-                || m_vColliders[j]->GetOwner()->GetParent() == m_vColliders[i]->GetOwner()) // 같은 오브젝트는 비교하지 않음
-				continue;
-            if (A->Intersects(B))
+            // (b) 같은 게임 오브젝트 (또는 부모-자식 관계)면 무시
+            CGameObject* ownerA = A->GetOwner();
+            CGameObject* ownerB = B->GetOwner();
+            if (ownerA == ownerB
+                || ownerA->GetParent() == ownerB
+                || ownerB->GetParent() == ownerA)
+                continue;
+
+            // 5) 실제 충돌 여부 체크
+            if (!A->Intersects(B))
+                continue;
+
+            // 6) **소유자 단위로 중복 처리 방지**
+            //    (ownerA, ownerB) 쌍 정렬 => (min, max) 형태로 key 생성
+            pair<CGameObject*, CGameObject*> ownerPair =
+                ownerA < ownerB
+                ? make_pair(ownerA, ownerB)
+                : make_pair(ownerB, ownerA);
+
+            // (a) 만약 이미 같은 ownerPair를 처리했다면, 이번 콜라이더 쌍은 넘긴다
+            if (ownerCollided.count(ownerPair))
             {
-				curr.insert({ A,B }); // 현재 충돌 상태를 저장
+                // 이미 소유자 단위로 충돌 처리된 적이 있어서 여기서는 Skip
+                continue;
+            }
+
+            // (b) 아직 처리되지 않은 소유자 쌍이라면,
+            //     이번 프레임 ownerPair를 처리 목록에 추가하고,
+            //     실제 콜라이더 단위 로직도 수행
+            ownerCollided.insert(ownerPair);
+            currColliders.insert({ A, B });
+
+            // 충돌 “Enter” 혹은 “Stay” 분기
+            if (!m_vCollisions.count({ A, B }))
+            {
+                // 여기는 A,B가 이번 프레임 처음 충돌한 경우(Enter)
+                A->NotifyEnter(B);
+                B->NotifyEnter(A);
+                A->SetCollision(true);
+                B->SetCollision(true);
+
+                // 우선순위 비교하여 겹침 해소 (단, HITBOX이면 해소하지 않음)
                 CCollider* pusher = A;
                 CCollider* pushed = B;
-                if (!m_vCollisions.count({ A,B })) // 처음이면 
+                if (A->GetPriority() > B->GetPriority())
                 {
-                    A->NotifyEnter(B);
-                    B->NotifyEnter(A);
-                    A->SetCollision(true); // 충돌 상태 설정
-                    B->SetCollision(true);
-
-                    if (A->GetPriority() > B->GetPriority())
-                    {
-                        pusher = A;
-                        pushed = B;
-                    }
-                    else if (B->GetPriority() > A->GetPriority())
-                    {
-                        pusher = B;
-                        pushed = A;
-                    }
-
-                    if (pusher->GetType() == CCollider::ColliderType::HITBOX
-                        || pushed->GetType() == CCollider::ColliderType::HITBOX)
-                        continue;
-					ResolvePenetrationXZ(pusher, pushed); // 충돌 해소
+                    pusher = A;
+                    pushed = B;
                 }
-				else // 이미 충돌 중이면
+                else if (B->GetPriority() > A->GetPriority())
                 {
-                    A->NotifyStay(B, fTimeDelta);
-                    B->NotifyStay(A, fTimeDelta);
-                    A->SetCollision(true); // 충돌 상태 설정
-                    B->SetCollision(true);
-                    if (A->GetPriority() > B->GetPriority())
-                    {
-                        pusher = A;
-                        pushed = B;
-                    }
-                    else if (B->GetPriority() > A->GetPriority())
-                    {
-                        pusher = B;
-                        pushed = A;
-					}
-                    if (pusher->GetType() == CCollider::ColliderType::HITBOX
-                        || pushed->GetType() == CCollider::ColliderType::HITBOX)
-                        continue;
-                    ResolvePenetrationXZ(pusher, pushed); // 충돌 해소
+                    pusher = B;
+                    pushed = A;
+                }
+
+                if (pusher->GetType() != CCollider::ColliderType::HITBOX
+                    && pushed->GetType() != CCollider::ColliderType::HITBOX)
+                {
+                    ResolvePenetrationXZ(pusher, pushed);
                 }
             }
-        }
-    }
-    for (auto& p : m_vCollisions) 
+            else
+            {
+                // 이미 충돌 중(STAY)
+                A->NotifyStay(B, fTimeDelta);
+                B->NotifyStay(A, fTimeDelta);
+                A->SetCollision(true);
+                B->SetCollision(true);
+
+                CCollider* pusher = A;
+                CCollider* pushed = B;
+                if (A->GetPriority() > B->GetPriority())
+                {
+                    pusher = A;
+                    pushed = B;
+                }
+                else if (B->GetPriority() > A->GetPriority())
+                {
+                    pusher = B;
+                    pushed = A;
+                }
+
+                if (pusher->GetType() != CCollider::ColliderType::HITBOX
+                    && pushed->GetType() != CCollider::ColliderType::HITBOX)
+                {
+                    ResolvePenetrationXZ(pusher, pushed);
+                }
+            }
+        } // for j
+    } // for i
+
+    // 7) 기존 충돌 목록(m_vCollisions)에 있는데, 이번 프레임 currColliders에 없으면 Exit
+    for (auto& pairPrev : m_vCollisions)
     {
-		if (!curr.count(p)) // 현재 충돌 상태에 없으면
+        if (!currColliders.count(pairPrev))
         {
-            p.first->NotifyExit(p.second);
-            p.second->NotifyExit(p.first);
-            p.first->SetCollision(false); // 충돌 상태 설정
-            p.second->SetCollision(false);
+            pairPrev.first->NotifyExit(pairPrev.second);
+            pairPrev.second->NotifyExit(pairPrev.first);
+            pairPrev.first->SetCollision(false);
+            pairPrev.second->SetCollision(false);
         }
     }
-	m_vCollisions = move(curr); // 현재 충돌 상태로 업데이트
+
+    // 8) m_vCollisions 갱신
+    m_vCollisions = move(currColliders);
 }
 
 void CCollisionMag::DebugDraw()
@@ -404,6 +536,94 @@ void CCollisionMag::ResolvePenetrationXZ(CCollider* A, CCollider* B)
             return;
         }
     }
+
+    //if (auto boxA = dynamic_cast<CBoxCollider*>(A))
+    //{
+    //    if (auto capB = dynamic_cast<CCapsuleCollider*>(B))
+    //    {
+    //        // 캡슐 축의 중점을 구함
+    //        XMVECTOR midB = 0.5f * (capB->m_Capsule.A + capB->m_Capsule.B);
+    //        // 박스 중심을 가져옴
+    //        XMVECTOR centerA = XMLoadFloat3(&boxA->Box.Center);
+
+    //        // XZ 평면에서 두 점 사이 벡터 계산
+    //        XMVECTOR raw = centerA - midB;
+    //        XMVECTOR hor = XMVectorSet(
+    //            XMVectorGetX(raw),
+    //            0.0f,
+    //            XMVectorGetZ(raw),
+    //            0.0f
+    //        );
+    //        float dist = XMVectorGetX(XMVector3Length(hor));
+    //        // 박스 반지름(대략 extents 중 최대값) + 캡슐 반지름
+    //        float rBox = max(boxA->Box.Extents.x, boxA->Box.Extents.z);
+    //        float rCap = capB->m_Capsule.Radius;
+    //        float penetration = (rBox + rCap) - dist;
+    //        if (penetration > 0.0f)
+    //        {
+    //            if (dist < 1e-6f)
+    //            {
+    //                hor = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+    //            }
+    //            else
+    //            {
+    //                hor = XMVector3Normalize(hor);
+    //            }
+    //            const float epsilon = 0.001f;
+    //            XMVECTOR push = hor * (penetration + epsilon);
+
+    //            // B(캡슐 소유자)만 밀어내기
+    //            CGameObject* goB = capB->GetOwner();
+    //            XMVECTOR posB = goB->GetTransform()->Get_State(STATE::POSITION);
+    //            goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+    //        }
+    //        return;
+    //    }
+    //}
+
+    ////  A가 Box, B가 Sphere
+    //if (auto boxA = dynamic_cast<CBoxCollider*>(A))
+    //{
+    //    if (auto sphB = dynamic_cast<CSphereCollider*>(B))
+    //    {
+    //        // 구 중심과 박스 중심 계산
+    //        XMVECTOR centerS = XMLoadFloat3(&sphB->Sphere.Center);
+    //        XMVECTOR centerA = XMLoadFloat3(&boxA->Box.Center);
+
+    //        // XZ 평면에서 두 점 사이 벡터
+    //        XMVECTOR raw = centerS - centerA;
+    //        XMVECTOR hor = XMVectorSet(
+    //            XMVectorGetX(raw),
+    //            0.0f,
+    //            XMVectorGetZ(raw),
+    //            0.0f
+    //        );
+    //        float dist = XMVectorGetX(XMVector3Length(hor));
+    //        // 구 반지름 + 박스 반지름(대략 extents 중 최대값)
+    //        float rSphere = sphB->Sphere.Radius;
+    //        float rBox = max(boxA->Box.Extents.x, boxA->Box.Extents.z);
+    //        float penetration = (rSphere + rBox) - dist;
+    //        if (penetration > 0.0f)
+    //        {
+    //            if (dist < 1e-6f)
+    //            {
+    //                hor = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+    //            }
+    //            else
+    //            {
+    //                hor = XMVector3Normalize(hor);
+    //            }
+    //            const float epsilon = 0.001f;
+    //            XMVECTOR push = hor * (penetration + epsilon);
+
+    //            // B(구 소유자)만 밀어내기
+    //            CGameObject* goB = sphB->GetOwner();
+    //            XMVECTOR posB = goB->GetTransform()->Get_State(STATE::POSITION);
+    //            goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+    //        }
+    //        return;
+    //    }
+    //}
 }
 
 CCollisionMag* CCollisionMag::Create()

@@ -9,25 +9,24 @@ void StateSkill2::Enter(CBaseCharacter* pChar)
 	pAnim->SetTrigger("Skill2");
 	pAnim->SetBool("Move", false);
 	pAnim->SetBool("Jump", false);
+	pChar->SetState(CBaseCharacter::CSTATE::SKILL);
 }
 
-void StateSkill2::Update(CBaseCharacter* pChar, _float fTimeDelta)
+
+void StateSkill2::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)
 {
 	CGameInstance* gi = CGameInstance::Get_Instance();
 	auto anim = pChar->Get_Animator();
 	auto animCtrl = anim->GetAnimController();
 	const string& stateName = animCtrl->GetCurrentState()->stateName;
-    _bool bMoving = gi->IsKeyDown(VK_UP) ||
-        gi->IsKeyDown(VK_DOWN) ||
-        gi->IsKeyDown(VK_LEFT) ||
-        gi->IsKeyDown(VK_RIGHT);
+	
     //anim->SetBool("Move", moving);
 
     _float progress = anim->GetCurrentAnimProgress();
 
-    if (stateName == "guardSkill2" && progress >= 1.f)
+    if (progress >= 1.f)
     {
-        pChar->GetInputBuffer()->ClearBuffer();
+		_bool bMoving = !XMVector3Equal(input.moveDir, XMVectorZero());
 		if (bMoving)
 		{
 			pChar->ChangeState(new StateMove(TEXT("Move")));

@@ -14,6 +14,7 @@ public:
 
     virtual bool InputFloat(const char* label, float* v) = 0;
     virtual bool InputFloat3(const char* label, float v[3]) = 0;
+	virtual bool InputInt(const char* label, int* v) = 0;
 };
 
 END_NAMESPACE

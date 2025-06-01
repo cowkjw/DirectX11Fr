@@ -11,13 +11,15 @@
 #include "StateSkill0.h"
 #include "StateSkill1.h"
 #include "StateSkill2.h"
+#include "BodyColliderParts.h"
 
 
 using AniCon = CAnimController::Condition;
 CAkaza::CAkaza(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBaseCharacter(pDevice, pContext)
 {
-
+	random_device rd;
+	m_RandGen.seed(rd());
 }
 
 CAkaza::CAkaza(const CAkaza& Prototype)
@@ -49,7 +51,7 @@ HRESULT CAkaza::Initialize(void* pArg)
 	Ready_Animation();
 
 
-	Add_Component(TEXT("Com_CapsuleCollider"), CCapsuleCollider::Create(m_pDevice, m_pContext, 3.9f, 77.f), reinterpret_cast<CComponent**>(&m_pColliderCom));
+	Add_Component(TEXT("Com_CapsuleCollider"), CCapsuleCollider::Create(m_pDevice, m_pContext, 3.5f, 77.f), reinterpret_cast<CComponent**>(&m_pColliderCom));
 
 	m_pColliderCom->Initialize(nullptr);
 	m_pColliderCom->SetOffset(_float3(0.f, 8.1f, 0.f));
@@ -57,12 +59,56 @@ HRESULT CAkaza::Initialize(void* pArg)
 	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_CapsuleCollider"),
 	//	TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom))))
 	//	return E_FAIL;
+	ChangeState(new StateIdle(TEXT("Idle")));
+	m_eComState = COM_STATE::IDLE;
 	m_pColliderCom->SetListener(this);
+
+	CBodyColliderParts::BODYCOLLIDERPARTS_DESC desc{};
+	desc.vColliderOffsets.push_back(_float3(0.f, 0.f, 0.f));
+	for (int i = 0; i < 4; i++)
+	{
+		AddChild(CBodyColliderParts::Create(m_pDevice, m_pContext));
+	    m_vecChildren.back()->Initialize(&desc);
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		if (auto parts = dynamic_cast<CBodyColliderParts*>(m_vecChildren[i]))
+		{
+			CBone* pBoneRHand = nullptr;
+
+			if (i == 0)
+			{
+				pBoneRHand =m_pModelCom->Get_Bone("L_Hand_1");
+			}
+			else if (i == 1)
+			{
+				pBoneRHand = m_pModelCom->Get_Bone("R_Hand_1");
+			}
+			else if (i == 2)
+			{
+				pBoneRHand = m_pModelCom->Get_Bone("R_Foot_1");
+			}
+			else if (i == 3)
+			{
+				pBoneRHand = m_pModelCom->Get_Bone("L_Foot_1");
+			}
+			if (!pBoneRHand)
+			{
+				MSG_BOX("CAkaza::Initialize - Bone not found");
+				return E_FAIL;
+			}
+			parts->Set_BoneSocket(pBoneRHand);
+		}
+	}
+
+
 	return S_OK;
 }
 
 void CAkaza::Priority_Update(_float fTimeDelta)
 {
+
 	static _uint iAnim = 0;
 	if (m_pGameInstance->IsKeyPressed('N'))
 	{
@@ -75,54 +121,57 @@ void CAkaza::Priority_Update(_float fTimeDelta)
 		m_pAnimatroCom->Set_Animation(iAnim, 0.15f);
 		iAnim = max(0, iAnim - 1);
 	}
-	switch (m_eComState)
-	{
-	case COM_STATE::IDLE:
-		break;
-	case COM_STATE::MOVE:
-		break;
-	case COM_STATE::ATTACK:
-		ChangeState(new StateAttack1());
-		break;
-	case COM_STATE::GUARD:
-		ChangeState(new StateGuard());
-		break;
-	case COM_STATE::STEP:
-		break;
-	case COM_STATE::SKILL:
-		break;
-	case COM_STATE::JUMP:
-		break;
-	case COM_STATE::APPRACH:
-		m_fFollowTime -= fTimeDelta;
-		if (m_fFollowTime <= 0.f)
-		{
-			m_fFollowTime = 5.f;
-			ChangeState(new StateIdle());
-			m_eComState = COM_STATE::IDLE;
-		}
-		else
-		{
-			m_pTransformCom->Follow_Target(m_pTarget->GetTransform()->Get_State(STATE::POSITION), fTimeDelta, 10.f);
-			m_pAnimatroCom->SetBool("Move", true);
-			m_pTransformCom->LookAt(m_pTarget->GetTransform()->Get_State(STATE::POSITION));
-		}
-		break;
-	case COM_STATE::HURT:
-		break;
 
-	}
+
 }
 
 void CAkaza::Update(_float fTimeDelta)
 {
-	__super::Update(fTimeDelta);
+	//__super::Update(fTimeDelta);
+
+	//UpdateState(fTimeDelta);
+	//m_pAnimatroCom->GetAnimController()->Update(fTimeDelta);
+	//m_pModelCom->Play_Animation(fTimeDelta);
+
+	for (auto& child : m_vecChildren)
+	{
+		child->Update(fTimeDelta);
+	}
+
 }
 
 void CAkaza::Late_Update(_float fTimeDelta)
 {
+	__super::Update(fTimeDelta);
 	__super::Late_Update(fTimeDelta);
-	PredictPlayerState();
+
+
+	for (auto& child : m_vecChildren)
+	{
+		child->Late_Update(fTimeDelta);
+	}
+
+	if (m_pState)
+	{
+		auto currentState = m_pState->GetStateName();
+
+		auto animCtrl = m_pAnimatroCom->GetAnimController();
+		//if (animCtrl)
+		//{
+		//	auto currentAnim = m_pAnimatroCom->GetCurrentAnimName();
+		//	char buf[MAX_PATH];
+		//sprintf_s(buf, "현재 애니메이션: %s", currentAnim);
+		//SetWindowTextA(g_hWnd, buf);
+		//}
+
+		// 현재 애니메이션 상태를 윈도우 타이틀에 표시
+		SetWindowTextA(g_hWnd, WStringToString(currentState).c_str());
+
+		//		char buf[MAX_PATH];
+		//		sprintf_s(buf, "현재 애니메이션: %s", currentState);
+		//		SetWindowTextA(g_hWnd, buf);
+	}
+	//PredictPlayerState();
 }
 
 HRESULT CAkaza::Render()
@@ -152,8 +201,8 @@ HRESULT CAkaza::Ready_Components()
 
 void CAkaza::Ready_Animation()
 {
-	m_pAnimatroCom->PlayClip(m_pModelCom->GetAnimationClipByName("A_P1012_V00_C90_BaseNut01_1"));
 
+	m_pAnimatroCom->PlayClip(m_pModelCom->GetAnimationClipByName("A_P1012_V00_C90_BaseNut01_1"));
 	auto ctrl = m_pAnimatroCom->GetAnimController();
 	// 2) 상태(State) 등록
 	   // Idle
@@ -220,28 +269,27 @@ void CAkaza::Ready_Animation()
 
 	// Attack0 → Attack1 : 20~60% 구간에만
 	AniCon c1{ "Attack", CAnimController::EOp::Trigger, 0.f };
-	c1.minTime = 0.2f; c1.maxTime = 0.6f;
+	c1.minTime = 0.1f; c1.maxTime = 1.f;
 	ctrl->AddTransition(attack0Idx, attack1Idx, c1, 0.1f);
 
 	// Attack1 → Attack2 : 20~60% 구간
 	AniCon c2{ "Attack", CAnimController::EOp::Trigger, 0.f };
-	c2.minTime = 0.2f; c2.maxTime = 0.6f;
+	c2.minTime = 0.1f; c2.maxTime = 1.f;
 	ctrl->AddTransition(attack1Idx, attack2Idx, c2, 0.1f);
 
 	// Attack2 → Attack3 : 20~60% 구간
 	AniCon c3{ "Attack", CAnimController::EOp::Trigger, 0.f };
-	c3.minTime = 0.4f; c3.maxTime = 1.f;
+	c3.minTime = 0.1f; c3.maxTime = 1.f;
 	ctrl->AddTransition(attack2Idx, attack3Idx, c3, 0.1f);
 
 
 
+	//A_P0000_V00_C00_Dmg01_F
 
-	//// 3타까지 위,아래 중 처리
-	//// Attack2 ->AttackDown
-	//ctrl->AddTransition(attack2Idx, attack4Idx, cAttackDown, 0.5f); // 3타가 끝나면 아래 공격으로
 
-	////Attack2 -> AttackUp
-	//ctrl->AddTransition(attack2Idx, attack5Idx, cAttackUp, 0.5f); // 3타가 끝나면 위 공격으로
+	auto animHurtFront = m_pModelCom->GetAnimationClipByName("A_P0000_V00_C00_Dmg01_F");
+	animHurtFront->SetLoop(false);
+	size_t hurtFIdx = ctrl->AddState("Hurt_F", animHurtFront, 12);
 
 
 
@@ -322,24 +370,28 @@ void CAkaza::Ready_Animation()
 
 
 
-	// A_P1012_V00_C90_AtkSkl02 염호
-	auto skillDefault = m_pModelCom->GetAnimationClipByName("A_P1012_V00_C90_AtkSkl02A_0");
+	// A_P1012_V00_C90_AtkSkl02 파괴살 공식
+	auto skillDefault = m_pModelCom->GetAnimationClipByName("A_P1012_V00_C90_AtkSkl02_0");
 	skillDefault->SetLoop(false);
 	skillDefault->SetTickPerSecond(35.f); // 스킬 속도 조정
 	size_t skillDefaultIdx = ctrl->AddState("skill0", skillDefault, 8);
 
-	// A_P1012_V00_C90_AtkSkl03_0 기염만상
+	// A_P1012_V00_C90_AtkSkl03_0 파괴살 공식
 	vector<CAnimation*> skill1Clips;
 
-	for (auto i = 0; i < 2; i++)
+	for (auto i = 0; i < 4; i++)
 	{
 		auto name = "A_P1012_V00_C90_AtkSkl03_" + to_string(i);
 		auto a = m_pModelCom->GetAnimationClipByName(name);
 		a->SetLoop(false);
 		skill1Clips.push_back(a);
 	}
-	size_t skill1Idx = ctrl->AddState("skill1", skill1Clips[0], 10);
-	size_t skill1EndIdx = ctrl->AddState("skill1End", skill1Clips[1], 10);
+	size_t skill1Idx0 = ctrl->AddState("skill1_0", skill1Clips[0], 10);
+	size_t skill1Idx1 = ctrl->AddState("skill1_1", skill1Clips[1], 10);
+	size_t skill1Idx2 = ctrl->AddState("skill1_2", skill1Clips[2], 10);
+	size_t skill1EndIdx = ctrl->AddState("skill1End", skill1Clips[3], 10);
+
+
 
 
 	// 3) 파라미터(Parameter) 등록
@@ -365,7 +417,9 @@ void CAkaza::Ready_Animation()
 	m_pAnimatroCom->AddTrigger("StepLeftJump");
 	m_pAnimatroCom->AddTrigger("StepBackJump");
 	m_pAnimatroCom->AddTrigger("StepFrontJump");
+	m_pAnimatroCom->AddTrigger("Hurt");
 	m_pAnimatroCom->AddBool("Stepping"); // 스텝 중인지 여부
+	m_pAnimatroCom->AddBool("Hurted");
 
 
 	// 추적 대시 A_P1012_V00_C90_AtkSkl01
@@ -496,7 +550,7 @@ void CAkaza::Ready_Animation()
 		ctrl->AddTransition(guard2Idx, idleIdx, cGU, 0.05f);
 	}
 
-	// 염호 스킬 상태 설정
+	// 공식
 	CAnimController::Condition cFlameTiger{ "Skill0", CAnimController::EOp::Trigger, 0.f };
 
 	ctrl->AddTransition(attack0Idx, skillDefaultIdx, cFlameTiger);
@@ -509,20 +563,22 @@ void CAkaza::Ready_Animation()
 	ctrl->AddTransition(idleIdx, skillDefaultIdx, cFlameTiger, 0.2f);
 	ctrl->AddTransition(skillDefaultIdx, idleIdx, cFin);
 
-	// 기염만상
+	// 난식
 	CAnimController::Condition cBreath{ "Skill1", CAnimController::EOp::Trigger, 0.f };
-	ctrl->AddTransition(attack0Idx, skill1Idx, cBreath);
-	ctrl->AddTransition(attack1Idx, skill1Idx, cBreath);
-	ctrl->AddTransition(attack2Idx, skill1Idx, cBreath);
-	ctrl->AddTransition(attack3Idx, skill1Idx, cBreath);
-	ctrl->AddTransition(attack4Idx, skill1Idx, cBreath);
-	ctrl->AddTransition(attack5Idx, skill1Idx, cBreath);
-	ctrl->AddTransition(runEndIdx, skill1Idx, cBreath);
-	ctrl->AddTransition(skill1Idx, skill1EndIdx, cFin, 0.1f);
+	ctrl->AddTransition(attack0Idx, skill1Idx0, cBreath);
+	ctrl->AddTransition(attack1Idx, skill1Idx0, cBreath);
+	ctrl->AddTransition(attack2Idx, skill1Idx0, cBreath);
+	ctrl->AddTransition(attack3Idx, skill1Idx0, cBreath);
+	ctrl->AddTransition(attack4Idx, skill1Idx0, cBreath);
+	ctrl->AddTransition(attack5Idx, skill1Idx0, cBreath);
+	ctrl->AddTransition(runEndIdx, skill1Idx0, cBreath);
+	ctrl->AddTransition(skill1Idx0, skill1Idx1, cFin, 0.1f);
+	ctrl->AddTransition(skill1Idx1, skill1Idx2, cFin, 0.1f);
+	ctrl->AddTransition(skill1Idx2, skill1EndIdx, cFin, 0.1f);
 	ctrl->AddTransition(skill1EndIdx, runIdx, cSpeedUp);
 	ctrl->AddTransition(skill1EndIdx, idleIdx, cFin);
 
-	// 상승염천
+	// 나침
 	CAnimController::Condition cRisingSun{ "Skill2", CAnimController::EOp::Trigger, 0.f };
 	//ctrl->AddTransition(attack0Idx, skillDefaultIdx, cRisingSun);
 	//ctrl->AddTransition(attack1Idx, skillDefaultIdx, cRisingSun);
@@ -615,42 +671,383 @@ void CAkaza::Ready_Animation()
 	//   ctrl->AddTransition(stepFrontJumpIdx, jump2Idx, cFinished, 0.05f);
 	ctrl->AddTransition(stepFrontJumpIdx, jump3Idx, cFinished, 0.05f);
 
+
+	// 피격 처리
+	CAnimController::Condition cHurt{ "Hurt", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(runIdx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(runEndIdx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(idleIdx, hurtFIdx, cHurt, 0.1f);
+
+	ctrl->AddTransition(attack0Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(attack1Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(attack2Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(attack3Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(attack4Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(attack5Idx, hurtFIdx, cHurt, 0.1f);
+
+	ctrl->AddTransition(hurtFIdx, idleIdx, cFin);
+	ctrl->AddTransition(hurtFIdx, runIdx, cSpeedUp, 0.1f);
+
 }
 
-void CAkaza::PredictPlayerState()
-{
-	if (m_pTarget)
-	{
-		switch (m_pTarget->GetState())
-		{
-		case CBaseCharacter::CSTATE::IDLE:
-			m_eComState = COM_STATE::ATTACK;
-			break;
-		case CBaseCharacter::CSTATE::MOVE:
-			m_eComState = COM_STATE::APPRACH;
-			break;
-		case CBaseCharacter::CSTATE::JUMP:
-				
-		
-			m_pAnimatroCom->SetBool("Attacking", false);
-			m_pAnimatroCom->SetBool("Jump", true);
-			break;
-		case CBaseCharacter::CSTATE::ATTACK:
-			m_eComState = COM_STATE::GUARD;
-			break;
-		case CBaseCharacter::CSTATE::GUARD:
-			m_pInputBuffer->AddCommand({ ECommand::LightAttack, m_fTotalTime });
-		//	m_pInputBuffer->AddCommand({ ECommand::Jump, m_fTotalTime });
-		//	m_pInputBuffer->AddCommand({ ECommand::Dash, m_fTotalTime });
-		//	m_pInputBuffer->AddCommand({ ECommand::Guard, m_fTotalTime });
-		//	m_pInputBuffer->AddCommand({ ECommand::Skill0, m_fTotalTime });
 
+_bool CAkaza::IsCooldownReady(_float& fCooldownVar, _float fTimeDelta, _float fBaseDelay)
+{
+	if (fCooldownVar > 0.f)
+	{
+		fCooldownVar -= fTimeDelta;
+		return false;
+	}
+	fCooldownVar = fBaseDelay;
+	return true;
+}
+
+void CAkaza::FillInput(InputData& outInput)
+{
+	CBaseCharacter* pTarget = Get_Target();
+	if (!pTarget)
+		return;
+
+	float dt = CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+	auto anim = m_pAnimatroCom; // 예: 애니메이터 컴포넌트 포인터
+
+	// 3) 거리/방향 계산 (XZ 평면)
+	XMVECTOR myPos = GetTransform()->Get_State(STATE::POSITION);
+	XMVECTOR tgtPos = pTarget->GetTransform()->Get_State(STATE::POSITION);
+	myPos = XMVectorSetY(myPos, 0.f);
+	tgtPos = XMVectorSetY(tgtPos, 0.f);
+	XMVECTOR diff = tgtPos - myPos;
+	float dist = XMVectorGetX(XMVector3Length(diff));
+	XMVECTOR dirToPlayer = (dist > 0.001f) ? XMVector3Normalize(diff) : XMVectorZero();
+
+	// 4) 플레이어 상태 한 번에 확인 → 즉시 액션 결정
+	CBaseCharacter::CSTATE playerState = pTarget->GetState();
+
+	outInput = InputData();  // 기본값
+
+	//if (!XMVector3Equal(dirToPlayer, XMVectorZero()))
+	//	outInput.moveDir = XMVector3Normalize(dirToPlayer);
+	auto commands = m_pInputBuffer->GetCommands();
+
+	if (m_pInputBuffer->CheckCombo(commands,
+		{ ECommand::LightAttack, ECommand::LightAttack,
+		  ECommand::LightAttack, ECommand::LightAttack },
+		2.5f))
+	{
+		if (CGameInstance::Get_Instance()->IsKeyDown(VK_UP))
+		{
+			outInput.doAttack3Up = true;
+		}
+		else if (CGameInstance::Get_Instance()->IsKeyDown(VK_DOWN))
+		{
+			outInput.doAttack3Down = true;
+		}
+
+		outInput.doAttack4 = true;
+		outInput.doAttack3 = true;
+		outInput.doAttack2 = true;
+		outInput.doAttack = true;
+
+	}
+	// 3타: LightAttack×3 + 위/아래 판정 (시간 제한 1초)
+	else if (m_pInputBuffer->CheckCombo(commands,
+		{ ECommand::LightAttack, ECommand::LightAttack,
+		  ECommand::LightAttack },
+		1.f))
+	{
+		outInput.doAttack3 = true;
+		outInput.doAttack2 = true;
+		outInput.doAttack = true;
+	}
+	else if (m_pInputBuffer->CheckCombo(commands,
+		{ ECommand::LightAttack, ECommand::LightAttack },
+		0.5f))
+	{
+		outInput.doAttack2 = true;
+		outInput.doAttack = true;
+	}
+	else if (m_pInputBuffer->CheckCombo(commands,
+		{ ECommand::LightAttack },
+		0.2f))
+	{
+		outInput.doAttack = true;
+	}
+
+
+	for (const auto& cmd : commands)
+	{
+		switch (cmd.type)
+		{
+		case ECommand::Jump:
+			outInput.doJump = true;
 			break;
-		case CBaseCharacter::CSTATE::SKILL:
+		case ECommand::Dash:
+			outInput.doStep = true; // 또는 doDash 로 따로 관리
+			{
+				// 상대가 가드 중인지 체크
+				_bool targetIsGuarding = (pTarget->GetState() == CBaseCharacter::CSTATE::GUARD);
+
+				if (targetIsGuarding)
+				{
+					// 상대가 가드 중이면 앞으로 대시
+					outInput.moveDir = XMVector3Normalize(dirToPlayer);
+				}
+				else if (outInput.doAttack)
+				{
+					// 공격 중이면 앞으로 대시
+					outInput.moveDir = XMVector3Normalize(dirToPlayer);
+				}
+				else
+				{
+					// 그 외에는 뒤로 대시
+					outInput.moveDir = XMVectorNegate(XMVector3Normalize(dirToPlayer));
+				}
+			}
+			break;
+		case ECommand::Guard:
+			outInput.doGuard = true;
+			break;
+		case ECommand::Move:
+			outInput.moveDir = dirToPlayer; // 이동 방향 설정
+			break;
+		case ECommand::Skill0:
+			_bool bMoving = !XMVector3Equal(outInput.moveDir, XMVectorZero());
+			if (bMoving)
+			{
+				outInput.doSkill1 = true;
+			}
+			else
+			{
+				outInput.doSkill0 = true;
+			}
 			break;
 		}
 	}
 }
+
+void CAkaza::HandleInput()
+{
+	CBaseCharacter* pTarget = Get_Target();
+	if (!pTarget)
+		return;
+
+	float dt = CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+
+	// 0) 모든 쿨다운 타이머 감소
+	if (m_fFollowCooldown > 0.f) m_fFollowCooldown -= dt;
+	if (m_fAttackCooldown > 0.f) m_fAttackCooldown -= dt;
+	if (m_fGuardCooldown > 0.f) m_fGuardCooldown -= dt;
+	if (m_fStepCooldown > 0.f) m_fStepCooldown -= dt;
+	if (m_fJumpCooldown > 0.f) m_fJumpCooldown -= dt;
+
+	// 1) 거리/방향 계산 (XZ 평면)
+	XMVECTOR myPos = GetTransform()->Get_State(STATE::POSITION);
+	XMVECTOR tgtPos = pTarget->GetTransform()->Get_State(STATE::POSITION);
+	myPos = XMVectorSetY(myPos, 0.f);
+	tgtPos = XMVectorSetY(tgtPos, 0.f);
+	XMVECTOR diff = tgtPos - myPos;
+	float    dist = XMVectorGetX(XMVector3Length(diff));
+	XMVECTOR dirToPlayer = (dist > 0.001f) ? XMVector3Normalize(diff) : XMVectorZero();
+
+	CBaseCharacter::CSTATE playerState = pTarget->GetState();
+
+
+	if (m_pGameInstance->IsKeyPressed(VK_TAB))
+	{
+		int a = 0;
+	}
+	// 4-1) 플레이어 IDLE 상태
+	if (playerState == CBaseCharacter::CSTATE::IDLE)
+	{
+		// (1) 공격 범위 이내 공격 시도
+		if (dist <= 25.f)
+		{
+			if (m_fAttackCooldown <= 0.f)
+			{
+				m_pInputBuffer->AddCommand({ ECommand::LightAttack, m_fTotalTime });
+				m_fAttackCooldown = 0.2f; // 공격 쿨다운 예시
+			}
+			return;
+		}
+
+		// (2) 너무 멀리 떨어져 있다면 쿨다운 끝나면 추격
+		//     dist >= 15 추격 범위
+
+
+		// (3) 거리 10~15 구간: 한 박자 쉬어가는 구간 → 아무것도 하지 않음
+		return;
+	}
+	// 4-2) 플레이어 MOVE 상태
+	else if (playerState == CBaseCharacter::CSTATE::MOVE)
+	{
+		//// (1) 공격 범위 이내 → 공격
+		if (dist <= 25.f)
+		{
+			if (m_fAttackCooldown <= 0.f)
+			{
+				m_pInputBuffer->AddCommand({ ECommand::LightAttack, m_fTotalTime });
+				m_fAttackCooldown = 0.2f;
+			}
+			return;
+		}
+
+		// (2) 매우 멀리 있으면 자동 추격 (거리 예: dist 20)
+		if (dist >= 40.f)
+		{
+			m_pInputBuffer->AddCommand({ ECommand::Move, m_fTotalTime });
+			return;
+		}
+
+		// (3) 10~20 구간: 한 박자 쉬어가기
+		return;
+	}
+	// 4-3) 플레이어 JUMP 상태
+	else if (playerState == CBaseCharacter::CSTATE::JUMP)
+	{
+		m_pInputBuffer->AddCommand({ ECommand::Skill0, m_fTotalTime });
+		//if (m_fJumpCooldown <= 0.f)
+		//{
+		//	m_pInputBuffer->AddCommand({ ECommand::Jump, m_fTotalTime });
+		//	m_fJumpCooldown = 1.5f;
+		//}
+		return;
+	}
+	// 4-4) 플레이어 ATTACK 상태
+	else if (playerState == CBaseCharacter::CSTATE::ATTACK)
+	{
+		// (1) 랜덤 확률로 가드하기
+		if (m_Distribution(m_RandGen) < 0.55f)
+		{
+			if (m_fGuardCooldown <= 0.f)
+			{
+				m_pInputBuffer->AddCommand({ ECommand::Guard, m_fTotalTime });
+				m_fGuardCooldown = 3.f; // 가드 쿨다운 예시
+			}
+			if (dist >= 30.f)
+			{
+				m_pInputBuffer->AddCommand({ ECommand::Move, m_fTotalTime });
+			}
+			return;
+		}
+		// (2) 아니면 뒤로 대시(Back-Dash)
+		else
+		{
+			if (m_fStepCooldown <= 0.f)
+			{
+				m_pInputBuffer->AddCommand({ ECommand::Dash, m_fTotalTime });
+				m_fStepCooldown = 5.0f;
+			}
+			return;
+		}
+	}
+	// 4-5) 플레이어 GUARD 상태
+	else if (playerState == CBaseCharacter::CSTATE::GUARD)
+	{
+		auto r = m_Distribution(m_RandGen);
+		if (r < 0.55f)
+		{
+			if (dist <= 25.f)
+			{
+				if (m_fAttackCooldown <= 0.f)
+				{
+					m_pInputBuffer->AddCommand({ ECommand::LightAttack, m_fTotalTime });
+					m_fAttackCooldown = 0.2f;
+				}
+				return;
+			}
+			else if (dist >= 40.f)
+			{
+				m_pInputBuffer->AddCommand({ ECommand::Move, m_fTotalTime });
+				return;
+			}
+			else
+			{
+				m_pInputBuffer->AddCommand({ ECommand::Skill0, m_fTotalTime });
+				return;
+			}
+		}
+		else
+		{
+			// r >= 0.55f 이므로, 남은 확률은 0.45 (45%)
+		// 이 45%를 다시 대시 vs 가드로 나눌 때:
+			//   - 대시 30% (0.30), 가드 15% (0.15) 이런 식
+				//   비교값을 0.55 + 0.30 = 0.85
+
+			if (r < 0.85f)
+			{
+				if (m_fGuardCooldown <= 0.f)
+				{
+					m_pInputBuffer->AddCommand({ ECommand::Guard, m_fTotalTime });
+					m_fGuardCooldown = 1.0f;
+				}
+
+			}
+			else
+			{
+				// 85~100(=1.0) 사이면: 15%
+				if (m_fStepCooldown <= 0.f)
+				{
+					m_pInputBuffer->AddCommand({ ECommand::Dash, m_fTotalTime });
+					m_fStepCooldown = 1.0f;
+					m_fFollowCooldown = 0.7f;
+				}
+			}
+		}
+
+		return;
+	}
+	// 4-6) 플레이어 SKILL 상태
+	else if (playerState == CBaseCharacter::CSTATE::SKILL)
+	{
+		auto r = m_Distribution(m_RandGen);
+		if (r < 0.55f)
+		{
+			if (dist <= 25.f)
+			{
+				if (m_fAttackCooldown <= 0.f)
+				{
+					m_pInputBuffer->AddCommand({ ECommand::LightAttack, m_fTotalTime });
+					m_fAttackCooldown = 0.2f;
+				}
+				return;
+			}
+			else if (dist >= 40.f)
+			{
+				m_pInputBuffer->AddCommand({ ECommand::Move, m_fTotalTime });
+				return;
+			}
+		}
+		else
+		{
+			// r >= 0.55f 이므로, 남은 확률은 0.45 (45%)
+		// 이 45%를 다시 대시 vs 가드로 나눌 때:
+			//   - 대시 30% (0.30), 가드 15% (0.15) 이런 식
+				//   비교값을 0.55 + 0.30 = 0.85
+
+			if (r < 0.85f)
+			{
+				if (m_fGuardCooldown <= 0.f)
+				{
+					m_pInputBuffer->AddCommand({ ECommand::Guard, m_fTotalTime });
+					m_fGuardCooldown = 1.0f;
+				}
+
+			}
+			else
+			{
+				// 85~100(=1.0) 사이면: 15%
+				if (m_fStepCooldown <= 0.f)
+				{
+					m_pInputBuffer->AddCommand({ ECommand::Dash, m_fTotalTime });
+					m_fStepCooldown = 1.0f;
+					m_fFollowCooldown = 0.7f;
+				}
+			}
+		}
+		return;
+	}
+}
+
 
 CAkaza* CAkaza::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

@@ -1,7 +1,7 @@
 #pragma once
 #include "Client_Enum.h"
 
-enum class ECommand { LightAttack, HeavyAttack, Jump, Dash, Guard, Skill0, Skill1, Skill2, Ultemate };
+enum class ECommand { LightAttack, HeavyAttack, Move,Up,Down, Jump, Dash, Guard, Skill0, Skill1, Skill2, Ultemate };
 struct Command
 {
     ECommand   type;

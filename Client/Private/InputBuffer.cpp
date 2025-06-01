@@ -3,7 +3,6 @@
 
 CInputBuffer::CInputBuffer()
 	: m_Commands{}
-	, m_fTime{ 0.25f }
 	, m_pGameInstance{ CGameInstance::Get_Instance() }
 {
 	Safe_AddRef(m_pGameInstance);
@@ -11,6 +10,10 @@ CInputBuffer::CInputBuffer()
 
 void CInputBuffer::Update(_float fTime)
 {
+	if (m_Commands.size() >= 3)
+	{
+		int a = 0;
+	}
 	// m_fTime(0.2f) 보다 오래된 명령은 전부 제거
 	while (!m_Commands.empty() &&
 		fTime - m_Commands.front().timestamp > m_fTime)
@@ -43,14 +46,24 @@ _bool CInputBuffer::CheckCombo(const vector<ECommand>& seq)
 	return dt <= m_fTime;
 }
 
-void CInputBuffer::PopCommand(ECommand type)
+void CInputBuffer::PopCommand(ECommand type, _int iCount)
 {
 	for (auto it = m_Commands.begin(); it != m_Commands.end(); )
 	{
 		if (it->type == type)
+		{
+			if (iCount != -1)
+			{
+				iCount--;
+			}
 			it = m_Commands.erase(it);
+
+		}
 		else
+		{
+			if (iCount == 0) break; // iCount가 0이면 더 이상 제거하지 않음
 			++it;
+		}
 	}
 }
 

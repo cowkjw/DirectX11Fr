@@ -8,6 +8,8 @@ struct InputData
 	bool	 doAttack2; // 추가 공격(2타) - 예: 연속 공격, 콤보 등
 	bool    doAttack3; // 추가 공격(3타) - 예: 연속 공격, 콤보 등
 	bool     doAttack4; // 추가 공격(4타) - 예: 연속 공격, 콤보 등
+	bool     doAttack3Down; // 추가 공격(3타) - 예: 연속 공격, 콤보 등
+    bool     doAttack3Up;
     bool     doJump;    // 점프
     bool     doGuard;   // 가드(방어)
     bool     doSkill0;  // 스킬0
@@ -28,6 +30,8 @@ struct InputData
 		, doAttack2(false)
 		, doAttack3(false)
 		, doAttack4(false)
+		, doAttack3Down(false)
+		, doAttack3Up(false)
 
     {
     }

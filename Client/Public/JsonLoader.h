@@ -12,6 +12,7 @@ class CJsonLoader final : public CBase
 {
 public:
 	CJsonLoader();
+	CJsonLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CJsonLoader() = default;
 public:
     _int CountPrototypes(const string& filePath) const;
@@ -28,6 +29,8 @@ private:
 	void FactoryUI(CUIObject** pObjOut, const json& j);
 private:
 	CGameInstance* m_pGameInstance = { nullptr };   
+	ID3D11Device* m_pDevice = { nullptr };
+	ID3D11DeviceContext* m_pContext = { nullptr };
 
 public:
     virtual void Free() override;

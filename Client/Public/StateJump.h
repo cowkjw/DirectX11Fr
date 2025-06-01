@@ -10,7 +10,7 @@ public:
     }
 	~StateJump() override = default;
 	void Enter(CBaseCharacter* pChar) override;
-	void Update(CBaseCharacter* pChar, _float fTimeDelta) override;
+	void Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta) override;
 	void Exit(CBaseCharacter* pChar) override;
 
 private:

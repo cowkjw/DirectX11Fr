@@ -13,7 +13,9 @@ CBoxCollider::CBoxCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CBoxCollider::CBoxCollider(const CBoxCollider& Prototype)
 	: CCollider(Prototype)
 	, m_vHalfExtents(Prototype.m_vHalfExtents) 
+	, Box(Prototype.Box) // BoundingBox 복사
 {
+
 }
 
 HRESULT CBoxCollider::Initialize_Prototype(const _float3 vHalfExtents)
@@ -52,8 +54,9 @@ void CBoxCollider::Update()
 		auto pTransform = m_pOwner->GetTransform();
 		if (pTransform)
 		{
+		
 			_vector pos = pTransform->Get_State(STATE::POSITION);
-			XMVECTOR center = XMVectorSetW(pos, 0.f); // W를 0으로 설정하여 위치 벡터로 사용
+			XMVECTOR center = pos + XMLoadFloat3(&m_offset);
 			XMVECTOR quat = pTransform->Get_RotationQuaternion();
 			XMStoreFloat3(&Box.Center, center);
 			Box.Extents = m_vHalfExtents;
@@ -81,7 +84,10 @@ void CBoxCollider::RenderInspector(IInspector& inspector)
 _bool CBoxCollider::Intersects(CCollider* other)
 {
 	other->Update();
-	if (Box.Intersects(dynamic_cast<CBoxCollider*>(other)->Box)) return true;
+	if (auto box = dynamic_cast<CBoxCollider*>(other))
+	{
+		return Box.Intersects(box->GetBoundingBox());
+	}
 	else if (auto sphere = dynamic_cast<CSphereCollider*>(other))
 	{
 		return Box.Intersects(sphere->GetBoundingSphere());

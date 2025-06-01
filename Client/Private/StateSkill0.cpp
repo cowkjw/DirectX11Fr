@@ -9,9 +9,11 @@ void StateSkill0::Enter(CBaseCharacter* pChar)
 	pAnim->SetTrigger("Skill0");
 	pAnim->SetBool("Move", false);
 	pAnim->SetBool("Jump", false);
+
+	pChar->SetState(CBaseCharacter::CSTATE::SKILL);
 }
 
-void StateSkill0::Update(CBaseCharacter* pChar, _float fTimeDelta)
+void StateSkill0::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)
 {
 	CGameInstance* gi = CGameInstance::Get_Instance();
 	auto anim = pChar->Get_Animator();
@@ -20,7 +22,7 @@ void StateSkill0::Update(CBaseCharacter* pChar, _float fTimeDelta)
 
 	if (pChar->Get_Target())
 	{
-		pChar->GetTransform()->LookAt(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
+		pChar->GetTransform()->LookAtXZ(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
 	}
 	if (stateName == "skill0" && anim->GetCurrentAnimProgress() >= 1.f)
 	{

@@ -85,6 +85,7 @@ public:
 	}
 
 	void LookAt(_fvector vAt);
+	void LookAtXZ(_fvector vAt);
 
 
 	_bool IsDirty() const { return m_bDirty; }

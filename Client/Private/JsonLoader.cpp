@@ -12,7 +12,15 @@ CJsonLoader::CJsonLoader()
 	Safe_AddRef(m_pGameInstance);
 }
 
-
+CJsonLoader::CJsonLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	:m_pContext{ pContext }
+	, m_pDevice{ pDevice }
+	, m_pGameInstance{ CGameInstance::Get_Instance() }
+{
+	Safe_AddRef(m_pGameInstance);
+	Safe_AddRef(m_pContext);
+	Safe_AddRef(m_pDevice);
+}
 _int CJsonLoader::CountPrototypes(const string& filePath) const
 {
 	//ifstream ifs(filePath);
@@ -264,7 +272,7 @@ HRESULT CJsonLoader::Load_Objects(const string& filePath, function<void()> onEnt
 				continue;
 			}
 		}
-	// parentId == 0 이면 최상위로 씬 루트 벡터에 추가
+		// parentId == 0 이면 최상위로 씬 루트 벡터에 추가
 		CEditorManager::m_vecSceneObjects.push_back(pChild);
 	}
 
@@ -335,15 +343,50 @@ void CJsonLoader::FactoryComponent(CGameObject* pObj, const json& j)
 	{
 		const string& compKey = kv.key();       // e.g. "Com_Collider"
 		const json& compData = kv.value();
+
 		// Prototype 정보
 		_uint compCreateLevel = compData.contains("ComponentLevel") ? compData["ComponentLevel"].get<_uint>() : -1;
 		wstring protoCompTag = compData.contains("ComponentTag") ? StringToWString(compData["ComponentTag"].get<string>()) : L"";
 		wstring wCompKey = StringToWString(compKey);
 		CComponent* pComp = nullptr;
-		if ((pComp = pObj->Get_Component(wCompKey)) == nullptr)
+
+
+		if (compKey.find("Collider") != string::npos)
 		{
-			pObj->Add_Component(compCreateLevel, protoCompTag, wCompKey, &pComp);
-			Safe_Release(pComp);
+			if (compData.contains("Type"))
+			{
+				string typeStr = compData["Type"].get<string>();
+
+				if (typeStr == "CapsuleCollider")
+				{
+					pComp = CCapsuleCollider::Create(m_pDevice, m_pContext,
+						compData["Radius"].get<_float>(),
+						compData["Height"].get<_float>());
+				}
+				else if (typeStr == "BoxCollider")
+				{
+					pComp = CBoxCollider::Create(m_pDevice, m_pContext);
+				}
+				else if (typeStr == "SphereCollider")
+				{
+					pComp = CSphereCollider::Create(m_pDevice, m_pContext,
+						compData["Radius"].get<_float>());
+				}
+
+				CComponent* tmp = nullptr;
+				pObj->Add_Component(wCompKey,pComp,&tmp);
+				pComp->Initialize(nullptr);
+				Safe_Release(tmp);
+			}
+		}
+
+		else
+		{
+			if ((pComp = pObj->Get_Component(wCompKey)) == nullptr)
+			{
+				pObj->Add_Component(compCreateLevel, protoCompTag, wCompKey, &pComp);
+				Safe_Release(pComp);
+			}
 		}
 		if (pComp)
 			pComp->Deserialize(compData);
@@ -383,5 +426,7 @@ void CJsonLoader::Free()
 {
 	__super::Free();
 	Safe_Release(m_pGameInstance);
+	Safe_Release(m_pContext);
+	Safe_Release(m_pDevice);
 }
 

@@ -16,6 +16,7 @@ public:
 		CAPSULE,
 		HITBOX,
 		HURTBOX,
+		ENVIRONMENT,
 		NONE
 	};
 protected:

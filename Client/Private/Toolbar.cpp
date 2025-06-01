@@ -24,6 +24,8 @@ HRESULT CToolbar::Initialize()
 	m_ModelKeys = m_pGameInstance->GetModelKeys();
     m_FilePathBuf[0] = '\0';
 
+	m_JsonLoader =new CJsonLoader(m_pDevice, m_pContext);
+
     return S_OK;
 }
 
@@ -241,7 +243,7 @@ void CToolbar::DrawToolbar()
     if (ImGui::Button("Save Scene"))
     {
         std::string path(m_FilePathBuf);
-        if (path.empty() || FAILED(m_JsonLoader.Save_Objects(path, []() {})))
+        if (path.empty() || FAILED(m_JsonLoader->Save_Objects(path, []() {})))
             ImGui::OpenPopup("Save Error");
 
         if (ImGui::BeginPopup("Save Error"))
@@ -263,7 +265,7 @@ void CToolbar::DrawToolbar()
         }
         else
         {
-			m_JsonLoader.Load_Objects(path, []() {});
+			m_JsonLoader->Load_Objects(path, []() {});
         }
 
         if (ImGui::BeginPopup("Load Error"))
@@ -441,4 +443,5 @@ void CToolbar::Free()
 	m_TextureKeys.clear();
 	m_LevelStringMap.clear();
 	m_CurrentPrototype = "";
+	Safe_Release(m_JsonLoader);
 }

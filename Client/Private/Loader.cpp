@@ -291,7 +291,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 HRESULT CLoader::Loading_For_Editor()
 {
 	lstrcpy(m_szLoadingText, TEXT("로딩중입니다."));
-	CJsonLoader jsonLoader;
+	CJsonLoader jsonLoader(m_pDevice,m_pContext);
 	jsonLoader.Load_Textures("../Asset/Json/Textures.json", [&]() {
 		// 이곳에 로드 후 처리할 작업을 추가합니다.
 		});
