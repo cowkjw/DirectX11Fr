@@ -186,10 +186,8 @@ void CBaseCharacter::UpdateState(_float fTimeDelta)
 
 void CBaseCharacter::FillInput(InputData& outInput)
 {
-	if (m_pGameInstance->IsKeyPressed(VK_TAB))
-	{
-		int a = 0;
-	}
+	if (m_pAnimatroCom->CheckBool("Hurted"))
+		return; // 피격 중이면 입력 무시
 
 	outInput = InputData();  // 기본값
 	auto gi = CGameInstance::Get_Instance();

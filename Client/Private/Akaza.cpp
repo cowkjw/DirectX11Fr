@@ -708,6 +708,9 @@ void CAkaza::FillInput(InputData& outInput)
 	if (!pTarget)
 		return;
 
+	if (m_pAnimatroCom->CheckBool("Hurted"))
+		return; // 피격 중이면 입력 무시
+
 	float dt = CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
 	auto anim = m_pAnimatroCom; // 예: 애니메이터 컴포넌트 포인터
 
@@ -732,13 +735,13 @@ void CAkaza::FillInput(InputData& outInput)
 	if (m_pInputBuffer->CheckCombo(commands,
 		{ ECommand::LightAttack, ECommand::LightAttack,
 		  ECommand::LightAttack, ECommand::LightAttack },
-		2.5f))
+		1.f))
 	{
-		if (CGameInstance::Get_Instance()->IsKeyDown(VK_UP))
+		if (m_Distribution(m_RandGen) < 0.3f)
 		{
 			outInput.doAttack3Up = true;
 		}
-		else if (CGameInstance::Get_Instance()->IsKeyDown(VK_DOWN))
+		else if (m_Distribution(m_RandGen) < 0.5f)
 		{
 			outInput.doAttack3Down = true;
 		}
@@ -785,11 +788,11 @@ void CAkaza::FillInput(InputData& outInput)
 			outInput.doStep = true; // 또는 doDash 로 따로 관리
 			{
 				// 상대가 가드 중인지 체크
-				_bool targetIsGuarding = (pTarget->GetState() == CBaseCharacter::CSTATE::GUARD);
+				_bool targetIsGuarding = (pTarget->GetState() == CBaseCharacter::CSTATE::GUARD || pTarget->GetState() == CBaseCharacter::CSTATE::MOVE||
+					pTarget->GetState() == CBaseCharacter::CSTATE::IDLE) ;
 
 				if (targetIsGuarding)
 				{
-					// 상대가 가드 중이면 앞으로 대시
 					outInput.moveDir = XMVector3Normalize(dirToPlayer);
 				}
 				else if (outInput.doAttack)
@@ -865,16 +868,17 @@ void CAkaza::HandleInput()
 			if (m_fAttackCooldown <= 0.f)
 			{
 				m_pInputBuffer->AddCommand({ ECommand::LightAttack, m_fTotalTime });
-				m_fAttackCooldown = 0.2f; // 공격 쿨다운 예시
+				m_fAttackCooldown = 0.1f; // 공격 쿨다운 예시
 			}
 			return;
+		}	
+		
+		if (dist >= 70.f)
+		{
+			m_pInputBuffer->AddCommand({ ECommand::Dash, m_fTotalTime });
 		}
+		
 
-		// (2) 너무 멀리 떨어져 있다면 쿨다운 끝나면 추격
-		//     dist >= 15 추격 범위
-
-
-		// (3) 거리 10~15 구간: 한 박자 쉬어가는 구간 → 아무것도 하지 않음
 		return;
 	}
 	// 4-2) 플레이어 MOVE 상태
@@ -886,19 +890,26 @@ void CAkaza::HandleInput()
 			if (m_fAttackCooldown <= 0.f)
 			{
 				m_pInputBuffer->AddCommand({ ECommand::LightAttack, m_fTotalTime });
-				m_fAttackCooldown = 0.2f;
+				m_fAttackCooldown = 0.1f;
 			}
 			return;
 		}
 
 		// (2) 매우 멀리 있으면 자동 추격 (거리 예: dist 20)
-		if (dist >= 40.f)
+		if (dist >= 40.f&&dist<60.f)
 		{
 			m_pInputBuffer->AddCommand({ ECommand::Move, m_fTotalTime });
 			return;
 		}
+		else if (dist >= 60.f)
+		{
+			if (m_fStepCooldown <= 0.f)
+			{
+				m_pInputBuffer->AddCommand({ ECommand::Dash, m_fTotalTime });
+				m_fStepCooldown = 3.0f; // 대시 쿨다운 예시
+			}
+		}
 
-		// (3) 10~20 구간: 한 박자 쉬어가기
 		return;
 	}
 	// 4-3) 플레이어 JUMP 상태
@@ -988,8 +999,7 @@ void CAkaza::HandleInput()
 				if (m_fStepCooldown <= 0.f)
 				{
 					m_pInputBuffer->AddCommand({ ECommand::Dash, m_fTotalTime });
-					m_fStepCooldown = 1.0f;
-					m_fFollowCooldown = 0.7f;
+					m_fStepCooldown = 4.0f;
 				}
 			}
 		}

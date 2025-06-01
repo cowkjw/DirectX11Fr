@@ -73,9 +73,11 @@ void CBodyColliderParts::Update(_float fTimeDelta)
 			if (bCanAttack)
 			{
 				pCollider->SetActive(true);
+				pCollider->SetDrawDebug(true);
 			}
 			else
 			{
+				pCollider->SetDrawDebug(false);
 				pCollider->SetActive(false);
 			}
 		}
