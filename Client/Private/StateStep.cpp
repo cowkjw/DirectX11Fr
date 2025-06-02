@@ -163,21 +163,18 @@ void StateStep::Update(CBaseCharacter* pChar, const InputData& input, float fTim
 			// 4) 토글 로직
 			EDirection last = pChar->GetLastStepDirection();
 			EDirection next = basicDir;
-			if (basicDir == EDirection::Left)
+		/*	if (basicDir == EDirection::Left)
 				next = (last == EDirection::Left ? EDirection::Left2 : EDirection::Left);
 			else if (basicDir == EDirection::Right)
-				next = (last == EDirection::Right ? EDirection::Right2 : EDirection::Right);
+				next = (last == EDirection::Right ? EDirection::Right2 : EDirection::Right);*/
 
 			// 5) 연속 스텝 호출
+			buf->PopCommand(ECommand::Dash, 1);
 			pChar->ChangeState(new StateStep(TEXT("Step"), next));
 			return;
 		}
 
-		// 6) 그 외(Forward/Backward)나 움직임 있으면 Move, 없으면 Idle
-	/*	_vector anyDir = XMVectorZero();
-		if (CGameInstance::Get_Instance()->IsKeyDown(VK_UP))    anyDir += XMVectorSet(0, 0, 1, 0);
-		if (CGameInstance::Get_Instance()->IsKeyDown(VK_DOWN))  anyDir += XMVectorSet(0, 0, -1, 0);*/
-		bool moving = !XMVector3Equal(dir, XMVectorZero());
+		_bool moving = !XMVector3Equal(dir, XMVectorZero());
 		if (moving && !anim->CheckBool("Attacking") && !anim->CheckBool("Jump"))
 			pChar->ChangeState(new StateMove(TEXT("Move")));
 		else
