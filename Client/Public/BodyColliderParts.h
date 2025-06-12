@@ -17,6 +17,10 @@ public:
 	typedef struct tagBodyColliderPartsDesc : public CGameObject::GAMEOBJECT_DESC
 	{
 		vector<_float3> vColliderOffsets; // 각 콜라이더의 오프셋
+		_float fRadius = 1.5f; // 콜라이더의 반지름
+		ColliderType eDefaultShape = ColliderType::SPHERE;
+		ColliderType eDefaultType = ColliderType::HITBOX;
+		
 	} BODYCOLLIDERPARTS_DESC;
 protected:
 	CBodyColliderParts(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -30,11 +34,20 @@ public:
 	virtual void Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual void OnEnable() override;
+	virtual void OnDisable() override;
 
 public:
 	void Set_BoneSocket(CBone* pBoneSocket) {
 		m_pBoneSocket = pBoneSocket;
 	}
+	CSphereCollider* GetCollider(_uint iIndex) const {
+		if (iIndex < m_pColliderComs.size())
+			return m_pColliderComs[iIndex];
+		return nullptr;
+	}
+
+	void Set_Radius(_uint iIndex, _float fRadius);
 
 private:
 	vector<CSphereCollider*> m_pColliderComs;

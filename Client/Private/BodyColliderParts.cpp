@@ -39,11 +39,11 @@ HRESULT CBodyColliderParts::Initialize(void* pArg)
 		for (size_t i = 0;i<vecOffsets.size();i++)
 		{
 			auto offset = vecOffsets[i];
-			auto pCollider = CSphereCollider::Create(m_pDevice, m_pContext, 1.5f);
+			auto pCollider = CSphereCollider::Create(m_pDevice, m_pContext, pDesc->fRadius);
 			pCollider->SetOffset(offset);
 			pCollider->Initialize(nullptr);
 			pCollider->SetListener(this);
-			pCollider->SetColliderType(CCollider::ColliderType::HITBOX);
+			pCollider->SetColliderType(pDesc->eDefaultType);
 			pCollider->SetActive(false); // 초기에는 비활성화
 			m_pColliderComs.push_back(pCollider);
 			Add_Component(TEXT("Com_Collider" + to_wstring(i)), pCollider, reinterpret_cast<CComponent**>(&m_pColliderComs.back()));
@@ -64,24 +64,41 @@ void CBodyColliderParts::Priority_Update(_float fTimeDelta)
 
 void CBodyColliderParts::Update(_float fTimeDelta)
 {
-	if (auto pCharacter = static_cast<CBaseCharacter*>(m_pParent))
-	{
-		_bool bCanAttack = pCharacter->GetState() == CBaseCharacter::CSTATE::ATTACK || pCharacter->GetState() == CBaseCharacter::CSTATE::SKILL;
+	//if (auto pCharacter = dynamic_cast<CBaseCharacter*>(m_pParent))
+	//{
+	//	_bool bCanAttack = pCharacter->GetState() == CBaseCharacter::CSTATE::ATTACK || pCharacter->GetState() == CBaseCharacter::CSTATE::SKILL;
 
-		for (auto& pCollider : m_pColliderComs)
-		{
-			if (bCanAttack)
-			{
-				pCollider->SetActive(true);
-				pCollider->SetDrawDebug(true);
-			}
-			else
-			{
-				pCollider->SetDrawDebug(false);
-				pCollider->SetActive(false);
-			}
-		}
-	}
+	//	for (auto& pCollider : m_pColliderComs)
+	//	{
+	//		if (bCanAttack)
+	//		{
+	//			pCollider->SetActive(true);
+	//			pCollider->SetDrawDebug(true);
+	//		}
+	//		else
+	//		{
+	//			pCollider->SetDrawDebug(false);
+	//			pCollider->SetActive(false);
+	//		}
+	//	}
+	//}
+	//else
+	//{
+	//	/*for (auto& pCollider : m_pColliderComs)
+	//	{
+	//		_bool bCanAttack = true;
+	//		if (bCanAttack)
+	//		{
+	//			pCollider->SetActive(true);
+	//			pCollider->SetDrawDebug(true);
+	//		}
+	//		else
+	//		{
+	//			pCollider->SetDrawDebug(false);
+	//			pCollider->SetActive(false);
+	//		}
+	//	}*/
+	//}
 }
 
 void CBodyColliderParts::Late_Update(_float fTimeDelta)
@@ -132,6 +149,33 @@ HRESULT CBodyColliderParts::Render()
 {
 
 	return S_OK;
+}
+
+void CBodyColliderParts::OnEnable()
+{
+	if (m_pColliderComs.empty())
+		return;
+	for (auto& pCollider : m_pColliderComs)
+	{
+		pCollider->SetActive(true); 
+		pCollider->SetDrawDebug(true);
+	}
+}
+
+void CBodyColliderParts::OnDisable()
+{
+	if (m_pColliderComs.empty())
+		return;
+	for (auto& pCollider : m_pColliderComs)
+	{
+		pCollider->SetActive(false); // 초기에는 비활성화
+		pCollider->SetDrawDebug(false);
+	}
+}
+
+void CBodyColliderParts::Set_Radius(_uint iIndex, _float fRadius)
+{
+	m_pColliderComs[iIndex]->SetRadius(fRadius);
 }
 
 

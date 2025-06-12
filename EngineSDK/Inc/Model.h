@@ -43,7 +43,7 @@ public:
 
 
 	_uint Get_NumAnimations() const { return m_iNumAnimations; }
-	vector<class CAnimation*> GetAnimations() { return m_Animations; }
+	vector<class CAnimation*> GetAnimations()& { return m_Animations; }
 	class CAnimation* GetAnimationClip(_uint iIndex) 
 	{
 		if (iIndex >= m_iNumAnimations)

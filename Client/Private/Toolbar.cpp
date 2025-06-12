@@ -6,27 +6,31 @@
 #include <GameInstance.h>
 #include <EditorManager.h>
 #include <BaseCharacter.h>
+#include "Model.h"
+#include "Animation.h"
+#include "Animator.h"  
+#include "AnimController.h"
 #include <Environment.h>
 
 
 CToolbar::CToolbar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    : CPannel(pDevice, pContext)
+	: CPannel(pDevice, pContext)
 {
 
 }
 HRESULT CToolbar::Initialize()
 {
-    Get_PrototypeList();
-    RegisterDefaultPrototypes();
+	Get_PrototypeList();
+	RegisterDefaultPrototypes();
 	SetLevelEnumToString();
-    m_ShaderKeys = m_pGameInstance->GetShaderKeys();
-    m_TextureKeys = m_pGameInstance->GetTextureKeys();
+	m_ShaderKeys = m_pGameInstance->GetShaderKeys();
+	m_TextureKeys = m_pGameInstance->GetTextureKeys();
 	m_ModelKeys = m_pGameInstance->GetModelKeys();
-    m_FilePathBuf[0] = '\0';
+	m_FilePathBuf[0] = '\0';
 
-	m_JsonLoader =new CJsonLoader(m_pDevice, m_pContext);
+	m_JsonLoader = new CJsonLoader(m_pDevice, m_pContext);
 
-    return S_OK;
+	return S_OK;
 }
 
 void CToolbar::Update(_float fTimeDelta)
@@ -36,247 +40,332 @@ void CToolbar::Update(_float fTimeDelta)
 HRESULT CToolbar::Render()
 {
 	DrawToolbar();
-    FBXLodaer();
+	FBXLodaer();
+	DrawAnimEventEditor();
 	return S_OK;
 }
 
 void CToolbar::DrawToolbar()
 {
-    ImGui::Begin("Toolbar");
+	ImGui::Begin("Toolbar");
 
-    ImGui::Checkbox("Orthographic Gizmo", &CEditorManager::m_bOrthoGizmo);
-    // UI 여부 판단
-    _bool isUI = (m_CurrentPrototype == "Canvas" || m_CurrentPrototype == "Button" ||
-        m_CurrentPrototype == "Image" || m_CurrentPrototype == "Bar");
-    string curLevel = "Unknown";
-    // UI 파라미터 입력
-    static CUIObject::UIOBJECT_DESC uiDesc{};
-    uiDesc.fSizeX = 1.f;
-    uiDesc.fSizeY = 1.f;
+	ImGui::Checkbox("Orthographic Gizmo", &CEditorManager::m_bOrthoGizmo);
+	// UI 여부 판단
+	_bool isUI = (m_CurrentPrototype == "Canvas" || m_CurrentPrototype == "Button" ||
+		m_CurrentPrototype == "Image" || m_CurrentPrototype == "Bar");
+	string curLevel = "Unknown";
+	// UI 파라미터 입력
+	static CUIObject::UIOBJECT_DESC uiDesc{};
+	static CUIButton::UIButtonDesc buttonDesc{};
+	static CUIProgressBar::BAR_DESC barDesc{};
+	uiDesc.fSizeX = 1.f;
+	uiDesc.fSizeY = 1.f;
 
-    if (isUI)
-    {
-        ImGui::Text("Configure %s", m_CurrentPrototype.c_str());
-        ImGui::DragFloat2("Position", &uiDesc.fX, 1.0f, -10000.f, 10000.f);
-        ImGui::DragFloat2("Size", &uiDesc.fSizeX, 0.1f, 0.1f, 1000.f);
+	if (isUI)
+	{
+		ImGui::Text("Configure %s", m_CurrentPrototype.c_str());
+		ImGui::DragFloat2("Position", &uiDesc.fX, 1.0f, -10000.f, 10000.f);
+		ImGui::DragFloat2("Size", &uiDesc.fSizeX, 0.1f, 0.1f, 1000.f);
 
 
 
-        // 현재 선택된 문자열을 표시하기 위해 변환
-        string curShader = WStringToString(uiDesc.strShaderKey);
-        if (ImGui::BeginCombo("Shader Key", curShader.c_str()))
-        {
-            for (size_t i = 0; i < m_ShaderKeys.size(); ++i)
-            {
-                // 벡터에서 꺼낸 wstring을 string으로 변환
-                string key = WStringToString(m_ShaderKeys[i]);
-                _bool selected = (uiDesc.strShaderKey == m_ShaderKeys[i]);
-                if (ImGui::Selectable(key.c_str(), selected))
-                {
-                    uiDesc.strShaderKey = m_ShaderKeys[i];  // 선택 시 wstring으로 저장
-                }
-                if (selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
+		// 현재 선택된 문자열을 표시하기 위해 변환
+		string curShader = WStringToString(uiDesc.strShaderKey);
+		if (ImGui::BeginCombo("Shader Key", curShader.c_str()))
+		{
+			for (size_t i = 0; i < m_ShaderKeys.size(); ++i)
+			{
+				// 벡터에서 꺼낸 wstring을 string으로 변환
+				string key = WStringToString(m_ShaderKeys[i]);
+				_bool selected = (uiDesc.strShaderKey == m_ShaderKeys[i]);
+				if (ImGui::Selectable(key.c_str(), selected))
+				{
+					uiDesc.strShaderKey = m_ShaderKeys[i];  // 선택 시 wstring으로 저장
+				}
+				if (selected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
 
-        string curTex = WStringToString(uiDesc.strTextureKey);
-        if (ImGui::BeginCombo("Texture Key", curTex.c_str()))
-        {
-            for (size_t i = 0; i < m_TextureKeys.size(); ++i)
-            {
-                string key = WStringToString(m_TextureKeys[i]);
-                _bool selected = (uiDesc.strTextureKey == m_TextureKeys[i]);
-                if (ImGui::Selectable(key.c_str(), selected))
-                {
-                    uiDesc.strTextureKey = m_TextureKeys[i];
-                }
-                if (selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
+		string curTex = WStringToString(uiDesc.strTextureKey);
+		if (ImGui::BeginCombo("Texture Key", curTex.c_str()))
+		{
+			for (size_t i = 0; i < m_TextureKeys.size(); ++i)
+			{
+				string key = WStringToString(m_TextureKeys[i]);
+				_bool selected = (uiDesc.strTextureKey == m_TextureKeys[i]);
+				if (ImGui::Selectable(key.c_str(), selected))
+				{
+					uiDesc.strTextureKey = m_TextureKeys[i];
+				}
+				if (selected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
 
-        _int order = uiDesc.iSortingOrder;
-        ImGui::InputInt("Sorting Order", &order);
-        uiDesc.iSortingOrder = order;
+		_int order = uiDesc.iSortingOrder;
+		ImGui::InputInt("Sorting Order", &order);
+		uiDesc.iSortingOrder = order;
 
-        //if (ImGui::BeginCombo("LEVEL", curLevel.c_str()))
-        //{
-        //    for (auto& kv : m_LevelStringMap)
-        //    {
-        //        const string& key = kv.first;
-        //        _uint value = kv.second;
-        //        _bool selected = (uiDesc.iLevel == value);
+		//if (ImGui::BeginCombo("LEVEL", curLevel.c_str()))
+		//{
+		//    for (auto& kv : m_LevelStringMap)
+		//    {
+		//        const string& key = kv.first;
+		//        _uint value = kv.second;
+		//        _bool selected = (uiDesc.iLevel == value);
 
-        //        if (ImGui::Selectable(key.c_str(), selected))
-        //        {
-        //            uiDesc.iLevel = value;
-        //            m_iCurrentSelectedLevel = value;
-        //            UpdatePrototypeList();
-        //        }
-        //        if (selected)
-        //            ImGui::SetItemDefaultFocus();
-        //    }
-        //    ImGui::EndCombo();
-        //}
+		//        if (ImGui::Selectable(key.c_str(), selected))
+		//        {
+		//            uiDesc.iLevel = value;
+		//            m_iCurrentSelectedLevel = value;
+		//            UpdatePrototypeList();
+		//        }
+		//        if (selected)
+		//            ImGui::SetItemDefaultFocus();
+		//    }
+		//    ImGui::EndCombo();
+		//}
 
-        ImGui::Separator();
-    }
-    else
-    {
-        ImGui::InputText("Instance Name", m_NameBuf, IM_ARRAYSIZE(m_NameBuf));
+		if (m_CurrentPrototype == "Button")
+		{
+			string curTex = WStringToString(buttonDesc.strButtonImageHoverKey);
+			if (ImGui::BeginCombo("HoverTexture Key", curTex.c_str()))
+			{
+				for (size_t i = 0; i < m_TextureKeys.size(); ++i)
+				{
+					string key = WStringToString(m_TextureKeys[i]);
+					_bool selected = (buttonDesc.strButtonImageHoverKey == m_TextureKeys[i]);
+					if (ImGui::Selectable(key.c_str(), selected))
+					{
+						buttonDesc.strButtonImageHoverKey = m_TextureKeys[i];
+					}
+					if (selected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+		}
+		else if (m_CurrentPrototype == "Bar")
+		{
+			string curTex = WStringToString(barDesc.strFillTextureKey);
+			if (ImGui::BeginCombo("FillTexture Key", curTex.c_str()))
+			{
+				for (size_t i = 0; i < m_TextureKeys.size(); ++i)
+				{
+					string key = WStringToString(m_TextureKeys[i]);
+					_bool selected = (barDesc.strFillTextureKey == m_TextureKeys[i]);
+					if (ImGui::Selectable(key.c_str(), selected))
+					{
+						barDesc.strFillTextureKey = m_TextureKeys[i];
+					}
+					if (selected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
 
-        if (ImGui::BeginCombo("Model Key", m_ModelKey.c_str()))
-        {
-            for (size_t i = 0; i < m_ModelKeys.size(); ++i)
-            {
-                // 벡터에서 꺼낸 wstring을 string으로 변환
-                string key = WStringToString(m_ModelKeys[i]);
-                _bool selected = (StringToWString(m_ModelKey) == m_ModelKeys[i]);
-                if (ImGui::Selectable(key.c_str(), selected))
-                {
-                    m_ModelKey = WStringToString(m_ModelKeys[i]);
-                }
-                if (selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
-    }
+			string curDamageTex = WStringToString(barDesc.strDamageTextureKey);
+			if (ImGui::BeginCombo("DamageTexture Key", curDamageTex.c_str()))
+			{
+				for (size_t i = 0; i < m_TextureKeys.size(); ++i)
+				{
+					string key = WStringToString(m_TextureKeys[i]);
+					_bool selected = (barDesc.strDamageTextureKey == m_TextureKeys[i]);
+					if (ImGui::Selectable(key.c_str(), selected))
+					{
+						barDesc.strDamageTextureKey = m_TextureKeys[i];
+					}
+					if (selected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
 
-    for (auto& kv : m_LevelStringMap)
-    {
-        if (kv.second == uiDesc.iLevel)
-        {
-            curLevel = kv.first;
-            break;
-        }
-    }
-    if (ImGui::BeginCombo("LEVEL", curLevel.c_str()))
-    {
-        for (auto& kv : m_LevelStringMap)
-        {
-            const string& key = kv.first;
-            _uint value = kv.second;
-            _bool selected{ false };
+			string curUVShader = WStringToString(barDesc.strBarShaderKey);
+			if (ImGui::BeginCombo("BarShader Key", curUVShader.c_str()))
+			{
+				for (size_t i = 0; i < m_ShaderKeys.size(); ++i)
+				{
+					// 벡터에서 꺼낸 wstring을 string으로 변환
+					string key = WStringToString(m_ShaderKeys[i]);
+					_bool selected = (barDesc.strBarShaderKey == m_ShaderKeys[i]);
+					if (ImGui::Selectable(key.c_str(), selected))
+					{
+						barDesc.strBarShaderKey = m_ShaderKeys[i];  // 선택 시 wstring으로 저장
+					}
+					if (selected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+		}
 
-            if (ImGui::Selectable(key.c_str(), selected))
-            {
-                uiDesc.iLevel = value;
-                m_iCurrentSelectedLevel = value;
+		ImGui::Separator();
+	}
+	else
+	{
+		ImGui::InputText("Instance Name", m_NameBuf, IM_ARRAYSIZE(m_NameBuf));
+
+		if (ImGui::BeginCombo("Model Key", m_ModelKey.c_str()))
+		{
+			for (size_t i = 0; i < m_ModelKeys.size(); ++i)
+			{
+				// 벡터에서 꺼낸 wstring을 string으로 변환
+				string key = WStringToString(m_ModelKeys[i]);
+				_bool selected = (StringToWString(m_ModelKey) == m_ModelKeys[i]);
+				if (ImGui::Selectable(key.c_str(), selected))
+				{
+					m_ModelKey = WStringToString(m_ModelKeys[i]);
+				}
+				if (selected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
+	}
+
+	for (auto& kv : m_LevelStringMap)
+	{
+		if (kv.second == uiDesc.iLevel)
+		{
+			curLevel = kv.first;
+			break;
+		}
+	}
+	if (ImGui::BeginCombo("LEVEL", curLevel.c_str()))
+	{
+		for (auto& kv : m_LevelStringMap)
+		{
+			const string& key = kv.first;
+			_uint value = kv.second;
+			_bool selected{ false };
+
+			if (ImGui::Selectable(key.c_str(), selected))
+			{
+				uiDesc.iLevel = value;
+				m_iCurrentSelectedLevel = value;
 				selected = true;
-                UpdatePrototypeList();
-            }
-            if (selected)
-                ImGui::SetItemDefaultFocus();
-        }
-        ImGui::EndCombo();
-    }
+				UpdatePrototypeList();
+			}
+			if (selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
+	}
 
-    // 프로토타입 콤보
-    if (ImGui::BeginCombo("ProtoType", m_CurrentPrototype.c_str()))
-    {
-        for (auto& kv : m_PrototypeSet)
-        {
-            _bool sel = (kv == m_CurrentPrototype);
-            if (ImGui::Selectable(kv.c_str(), sel))
-                m_CurrentPrototype = kv;
-            if (sel) ImGui::SetItemDefaultFocus();
-        }
-        ImGui::EndCombo();
-    }
+	// 프로토타입 콤보
+	if (ImGui::BeginCombo("ProtoType", m_CurrentPrototype.c_str()))
+	{
+		for (auto& kv : m_PrototypeSet)
+		{
+			_bool sel = (kv == m_CurrentPrototype);
+			if (ImGui::Selectable(kv.c_str(), sel))
+				m_CurrentPrototype = kv;
+			if (sel) ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
+	}
 
-    // 생성 버튼
-    if (ImGui::Button("Create Object"))
-    {
-        CGameObject* obj = nullptr;
-        if (isUI)
-        {
-			
-            if (m_CurrentPrototype == "Canvas") obj = m_pGameInstance->CreateUI(&uiDesc, UI_TYPE::CANVAS);
-            else if (m_CurrentPrototype == "Button") obj = m_pGameInstance->CreateUI(&uiDesc, UI_TYPE::BUTTON);
-            else if (m_CurrentPrototype == "Image")  obj = m_pGameInstance->CreateUI(&uiDesc, UI_TYPE::IMAGE);
-            else if (m_CurrentPrototype == "Bar")    obj = m_pGameInstance->CreateUI(&uiDesc, UI_TYPE::BAR);
-        }
-        else
-        {
-            wstring wname = m_NameBuf[0]
-                ? StringToWString(m_NameBuf)
-                : StringToWString(m_CurrentPrototype);
-            obj = ClonePrototype(m_CurrentPrototype, wname);
-            // 생성 후 입력란 초기화
-            m_NameBuf[0] = '\0';
-        }
+	// 생성 버튼
+	if (ImGui::Button("Create Object"))
+	{
+		CGameObject* obj = nullptr;
+		if (isUI)
+		{
+
+			if (m_CurrentPrototype == "Canvas") obj = m_pGameInstance->CreateUI(&uiDesc, UI_TYPE::CANVAS);
+			else if (m_CurrentPrototype == "Button")
+			{
+				memcpy(&buttonDesc, &uiDesc, sizeof(uiDesc));
+				obj = m_pGameInstance->CreateUI(&buttonDesc, UI_TYPE::BUTTON);
+			}
+			else if (m_CurrentPrototype == "Image")  obj = m_pGameInstance->CreateUI(&uiDesc, UI_TYPE::IMAGE);
+			else if (m_CurrentPrototype == "Bar")
+			{
+				memcpy(&barDesc, &uiDesc, sizeof(uiDesc));
+				obj = m_pGameInstance->CreateUI(&barDesc, UI_TYPE::BAR);
+			}
+		}
+		else
+		{
+			wstring wname = m_NameBuf[0]
+				? StringToWString(m_NameBuf)
+				: StringToWString(m_CurrentPrototype);
+			obj = ClonePrototype(m_CurrentPrototype, wname);
+			// 생성 후 입력란 초기화
+			m_NameBuf[0] = '\0';
+		}
 
 		// 레벨에 따라 객체를 추가
-        if (obj) 
-        {
-            CEditorManager::m_vecSceneObjects.push_back(obj);
-        }
-    }
+		if (obj)
+		{
+			CEditorManager::m_vecSceneObjects.push_back(obj);
+		}
+	}
 
 
-    ImGui::Separator();
-    ImGui::InputText("Scene Path", m_FilePathBuf, IM_ARRAYSIZE(m_FilePathBuf), ImGuiInputTextFlags_ReadOnly);
-    ImGui::SameLine();
-    if (ImGui::Button("..."))  // 파일 다이얼로그 버튼
-    {
-        // OPENFILENAME 구조체 초기화
-        OPENFILENAMEA ofn{};
-        ofn.lStructSize = sizeof(ofn);
-        ofn.hwndOwner = GetActiveWindow();           // ImGui 창의 HWND를 넘겨주세요
-        ofn.lpstrFilter = "JSON Files\0*.json\0All Files\0*.*\0";
-        ofn.lpstrFile = m_FilePathBuf;               // 선택된 파일 경로 버퍼
-        ofn.nMaxFile = sizeof(m_FilePathBuf);
-        ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
+	ImGui::Separator();
+	ImGui::InputText("Scene Path", m_FilePathBuf, IM_ARRAYSIZE(m_FilePathBuf), ImGuiInputTextFlags_ReadOnly);
+	ImGui::SameLine();
+	if (ImGui::Button("..."))  // 파일 다이얼로그 버튼
+	{
+		// OPENFILENAME 구조체 초기화
+		OPENFILENAMEA ofn{};
+		ofn.lStructSize = sizeof(ofn);
+		ofn.hwndOwner = GetActiveWindow();           // ImGui 창의 HWND를 넘겨주세요
+		ofn.lpstrFilter = "JSON Files\0*.json\0All Files\0*.*\0";
+		ofn.lpstrFile = m_FilePathBuf;               // 선택된 파일 경로 버퍼
+		ofn.nMaxFile = sizeof(m_FilePathBuf);
+		ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
 
-        // 열기 대화상자 표시
-        if (GetOpenFileNameA(&ofn))
-        {
-            // m_FilePathBuf가 선택된 파일 경로로 업데이트됩니다.
-        }
-    }
+		// 열기 대화상자 표시
+		if (GetOpenFileNameA(&ofn))
+		{
+			// m_FilePathBuf가 선택된 파일 경로로 업데이트됩니다.
+		}
+	}
 
-    // Save 버튼 클릭 시
-    if (ImGui::Button("Save Scene"))
-    {
-        std::string path(m_FilePathBuf);
-        if (path.empty() || FAILED(m_JsonLoader->Save_Objects(path, []() {})))
-            ImGui::OpenPopup("Save Error");
+	// Save 버튼 클릭 시
+	if (ImGui::Button("Save Scene"))
+	{
+		std::string path(m_FilePathBuf);
+		if (path.empty() || FAILED(m_JsonLoader->Save_Objects(path, []() {})))
+			ImGui::OpenPopup("Save Error");
 
-        if (ImGui::BeginPopup("Save Error"))
-        {
-            ImGui::Text("파일을 저장할 수 없습니다.\n경로를 확인하세요.");
-            ImGui::EndPopup();
-        }
-    }
+		if (ImGui::BeginPopup("Save Error"))
+		{
+			ImGui::Text("파일을 저장할 수 없습니다.\n경로를 확인하세요.");
+			ImGui::EndPopup();
+		}
+	}
 
-    ImGui::SameLine();
+	ImGui::SameLine();
 
-    // Load 버튼 클릭 시
-    if (ImGui::Button("Load Scene"))
-    {
-        string path(m_FilePathBuf);
-        if (path.empty())
-        {
-            ImGui::OpenPopup("Load Error");
-        }
-        else
-        {
+	// Load 버튼 클릭 시
+	if (ImGui::Button("Load Scene"))
+	{
+		string path(m_FilePathBuf);
+		if (path.empty())
+		{
+			ImGui::OpenPopup("Load Error");
+		}
+		else
+		{
 			m_JsonLoader->Load_Objects(path, []() {});
-        }
+		}
 
-        if (ImGui::BeginPopup("Load Error"))
-        {
-            ImGui::Text("파일을 불러올 수 없습니다.\n경로 또는 포맷을 확인하세요.");
-            ImGui::EndPopup();
-        }
-    }
+		if (ImGui::BeginPopup("Load Error"))
+		{
+			ImGui::Text("파일을 불러올 수 없습니다.\n경로 또는 포맷을 확인하세요.");
+			ImGui::EndPopup();
+		}
+	}
 
 
-    ImGui::End();
+	ImGui::End();
 }
 
 void CToolbar::RegisterDefaultPrototypes()
@@ -289,27 +378,29 @@ void CToolbar::RegisterDefaultPrototypes()
 
 void CToolbar::SetLevelEnumToString()
 {
-    m_LevelStringMap["Static"] = 0;
-    m_LevelStringMap["Logo"] = 2;
-    m_LevelStringMap["GamePlay"] = 3;
+	m_LevelStringMap["Static"] = 0;
+	m_LevelStringMap["Logo"] = 2;
+	m_LevelStringMap["GamePlay"] = 3;
+	m_LevelStringMap["EnmuBoss"] = 4;
+	m_LevelStringMap["ModeSelect"] = 6;
 }
 
 void CToolbar::UpdatePrototypeList()
 {
-    m_PrototypeSet.clear();
-    RegisterDefaultPrototypes();
+	m_PrototypeSet.clear();
+	RegisterDefaultPrototypes();
 
 	auto pProtoList = m_pPrototypes[m_iCurrentSelectedLevel];
-    if (pProtoList.empty())
-        return;
+	if (pProtoList.empty())
+		return;
 
-    for (auto& pProto : pProtoList)
-    {
+	for (auto& pProto : pProtoList)
+	{
 		if (dynamic_cast<CGameObject*>(pProto.second) == nullptr)
 			continue;
 		string name = WStringToString(pProto.first);
-        m_PrototypeSet.insert(name);
-    }
+		m_PrototypeSet.insert(name);
+	}
 }
 
 void CToolbar::Get_PrototypeList()
@@ -322,84 +413,266 @@ void CToolbar::Get_PrototypeList()
 		{
 			m_pPrototypes.push_back(*prototypes);
 		}
-        else
-        {
+		else
+		{
 			m_pPrototypes.push_back({});
-        }
+		}
 	}
 }
 
 void CToolbar::FBXLodaer()
 {
-    ImGui::Begin("Loader");
+	ImGui::Begin("Loader");
 
 	static _bool isAnimation = false;
 
-    vector<wchar_t> buffer(8192);
+	vector<wchar_t> buffer(8192);
 
-    if (ImGui::Button("Add FBX Files")) {
-        OPENFILENAMEW ofn{};
-        ofn.lStructSize = sizeof(ofn);
-        ofn.hwndOwner = GetActiveWindow();
-        ofn.lpstrFilter = L"FBX Files\0*.fbx\0All Files\0*.*\0";
-        ofn.lpstrFile = buffer.data();
-        ofn.nMaxFile = static_cast<DWORD>(buffer.size());
-        ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
-        if (GetOpenFileNameW(&ofn)) {
-            m_FbxFilePaths.clear();
-            wchar_t* ptr = buffer.data();
-            std::wstring dir = ptr;
-            ptr += dir.size() + 1;
-            if (*ptr == L'\0') {
-                // 단일 파일 선택
-                m_FbxFilePaths.push_back(dir);
-            }
-            else {
-                // 다중 파일 선택
-                while (*ptr) {
-                    std::wstring file = ptr;
-                    ptr += file.size() + 1;
-                    m_FbxFilePaths.push_back(dir + L"\\" + file);
-                }
-            }
-        }
-    }
+	if (ImGui::Button("Add FBX Files")) {
+		OPENFILENAMEW ofn{};
+		ofn.lStructSize = sizeof(ofn);
+		ofn.hwndOwner = GetActiveWindow();
+		ofn.lpstrFilter = L"FBX Files\0*.fbx\0All Files\0*.*\0";
+		ofn.lpstrFile = buffer.data();
+		ofn.nMaxFile = static_cast<DWORD>(buffer.size());
+		ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
+		if (GetOpenFileNameW(&ofn)) {
+			m_FbxFilePaths.clear();
+			wchar_t* ptr = buffer.data();
+			std::wstring dir = ptr;
+			ptr += dir.size() + 1;
+			if (*ptr == L'\0') {
+				// 단일 파일 선택
+				m_FbxFilePaths.push_back(dir);
+			}
+			else {
+				// 다중 파일 선택
+				while (*ptr) {
+					std::wstring file = ptr;
+					ptr += file.size() + 1;
+					m_FbxFilePaths.push_back(dir + L"\\" + file);
+				}
+			}
+		}
+	}
 
-    // 선택된 FBX 목록 표시
-    if (ImGui::CollapsingHeader("Selected FBX Files")) {
-        for (const auto& path : m_FbxFilePaths) {
-            // 간단히 UTF-16을 ANSI로 변환하여 출력
+	// 선택된 FBX 목록 표시
+	if (ImGui::CollapsingHeader("Selected FBX Files")) {
+		for (const auto& path : m_FbxFilePaths) {
+			// 간단히 UTF-16을 ANSI로 변환하여 출력
 			string utf8 = wstring_convert<codecvt_utf8<wchar_t>>().to_bytes(path);
-            ImGui::TextUnformatted(utf8.c_str());
-        }
-    }
+			ImGui::TextUnformatted(utf8.c_str());
+		}
+	}
 
 	// 애니메이션 체크박스
-    
+
 	ImGui::Checkbox("Animation", &isAnimation);
 
-    // FBX 로드 버튼
-    if (ImGui::Button("Load FBX Files"))
-    {
-        for (const auto& path : m_FbxFilePaths) 
-        {
+	// FBX 로드 버튼
+	if (ImGui::Button("Load FBX Files"))
+	{
+		for (const auto& path : m_FbxFilePaths)
+		{
 			string pathStr = WStringToString(path);
 			CModel::Create(m_pDevice, m_pContext, isAnimation ? MODEL::ANIM : MODEL::NONANIM, pathStr.c_str());
-        }
-    }
+		}
+	}
 
-    ImGui::End();
+	ImGui::End();
+}
+
+void CToolbar::DrawAnimEventEditor()
+{
+
+	static _bool  isPlaying = false;
+	static _int   selectedAnim = 0;
+	static _float playTime = 0.f;
+	static _int   selectedListenerIdx = 0;
+
+	// 선택 오브젝트/모델/애니메이터 체크
+	if (!CEditorManager::m_pSelectedObject) return;
+	auto pModel = static_cast<CModel*>(
+		CEditorManager::m_pSelectedObject
+		->Get_Component(TEXT("Com_Model"))
+		);
+	auto pAnimator = dynamic_cast<CAnimator*>(
+		CEditorManager::m_pSelectedObject
+		->Get_Component(TEXT("Com_Animator"))
+		);
+	if (!pModel || !pAnimator) return;
+
+	auto animations = pModel->GetAnimations();
+	int animCount = (int)animations.size();
+	if (animCount == 0) return;
+
+	ImGui::Begin("Animation Event Editor");
+
+	// 1) 애니메이션 선택 재생 
+	// 콤보박스
+	vector<const char*> animNames(animCount);
+	for (_int i = 0; i < animCount; ++i)
+		animNames[i] = animations[i]->Get_Name();
+	_bool selected = ImGui::Combo("Animation", &selectedAnim, animNames.data(), animCount);
+
+	if (selected)
+	{
+		// 애니메이션 선택 시 재생 시간 초기화
+		playTime = 0.f;
+		if (isPlaying)
+		{
+			pAnimator->PlayClip(animations[selectedAnim]);
+		}
+	}
+	// Play / Stop
+	ImGui::SameLine();
+	if (ImGui::Button(isPlaying ? "Stop" : "Play"))
+	{
+		isPlaying = !isPlaying;
+		if (isPlaying)      pAnimator->PlayClip(animations[selectedAnim]);
+		else                pAnimator->StopAnimation();
+	}
+
+
+
+	// 동기화된 재생 시간
+	CAnimation* anim = animations[selectedAnim];
+	float duration = anim->GetDuration();
+	playTime = anim->GetCurrentTrackPosition();
+
+	ImGui::Text("Play Time: %.2f / %.2f", playTime, duration);
+	if (ImGui::SliderFloat("Time", &playTime, 0.f, duration))
+	{
+		// 슬라이더로 타임 직접 세팅
+		anim->SetCurrentTrackPosition(playTime);
+	}
+	ImGui::Separator();
+
+	//  2) 애니 이벤트 편집
+	if (ImGui::Button("Add Manual Event"))
+		anim->AddEvent({ playTime, "NewEvent" });
+
+	auto& events = anim->GetEvents();
+	for (_int i = 0; i < (_int)events.size(); ++i)
+	{
+		auto& ev = events[i];
+		ImGui::PushID(i);
+		char buf[64];
+		strncpy_s(buf, ev.name.c_str(), sizeof(buf));
+		if (ImGui::InputText("Name", buf, sizeof(buf)))
+			ev.name = buf;
+		ImGui::Separator();
+		if (ImGui::DragFloat("Time", &ev.fTime, 0.01f, 0.f, duration, "%.2f"))
+			ImGui::SameLine();
+		if (ImGui::Button("Remove")) {
+			events.erase(events.begin() + i);
+			ImGui::PopID();
+			break;
+		}
+		ImGui::PopID();
+		ImGui::Separator();
+	}
+
+	const auto& listeners = pAnimator->GetEventListeners();
+	vector<const char*> listenerNames;
+	listenerNames.reserve(listeners.size());
+	for (auto& kv : listeners)
+		listenerNames.push_back(kv.first.c_str());
+
+	if (!listenerNames.empty())
+	{
+		ImGui::Text("Available Animator Events:");
+		ImGui::Combo("##listener_combo", &selectedListenerIdx,
+			listenerNames.data(), (int)listenerNames.size());
+		ImGui::SameLine();
+		if (ImGui::Button("Assign To Anim"))
+		{
+			anim->AddEvent({ playTime, listenerNames[selectedListenerIdx] });
+		}
+		ImGui::Separator();
+	}
+
+	if (ImGui::Button("Save All Clips Events to JSON"))
+	{
+		json root;
+		// 선택된 오브젝트 이름
+		string objName = WStringToString(CEditorManager::m_pSelectedObject->Get_Name());
+		root["object"] = objName;
+
+		// 모든 애니메이션 순회
+		json animArray = json::array();
+		for (auto* clip : animations)
+		{
+			json jclip;
+			string clipName = clip->Get_Name();
+			jclip["clipName"] = clipName;
+			jclip["duration"] = clip->GetDuration();
+
+			// 이벤트 배열
+			json evArray = json::array();
+			for (auto& ev : clip->GetEvents())
+			{
+				evArray.push_back({
+					{"time", ev.fTime},
+					{"name", ev.name}
+					});
+			}
+			jclip["events"] = move(evArray);
+			animArray.push_back(move(jclip));
+		}
+		root["animations"] = move(animArray);
+
+		// 파일 경로: ../Asset/Json/ObjectName_events.json
+		string path = std::string("../Asset/Json/") + objName + "_events.json";
+		ofstream ofs(path);
+		ofs << root.dump(4);
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Load All Clips Events from JSON"))
+	{
+		string objName = WStringToString(CEditorManager::m_pSelectedObject->Get_Name());
+		string path = string("../Asset/Json/") + objName + "_events.json";
+
+		json root;
+		ifstream ifs(path);
+		if (ifs.is_open()) {
+			ifs >> root;
+			// "animations" 배열 순회
+			for (auto& jclip : root["animations"])
+			{
+				string clipName = jclip["clipName"];
+				// 해당 이름의 CAnimation* 찾기
+				for (auto* clip : animations)
+				{
+					if (clip->Get_Name() == clipName)
+					{
+						// 기존 이벤트 지우고 새로 채우기
+						clip->GetEvents().clear();
+						for (auto& jev : jclip["events"])
+						{
+							float t = jev["time"];
+							string n = jev["name"];
+							clip->AddEvent({ t, n });
+						}
+						break;
+					}
+				}
+			}
+		}
+	}
+	ImGui::End();
 }
 
 CGameObject* CToolbar::ClonePrototype(const string& prototypeName, const wstring& instanceName, void* pArg)
 {
-    auto& protoMap = m_pPrototypes[m_iCurrentSelectedLevel];
-    auto it = protoMap.find(StringToWString(prototypeName));
-    if (it == protoMap.end())
-        return nullptr;
+	auto& protoMap = m_pPrototypes[m_iCurrentSelectedLevel];
+	auto it = protoMap.find(StringToWString(prototypeName));
+	if (it == protoMap.end())
+		return nullptr;
 
-    if (dynamic_cast<CEnvironment*>(it->second))
-    {
+	if (dynamic_cast<CEnvironment*>(it->second))
+	{
 		CEnvironment::ENVIRONMENT_DESC envDesc;
 		envDesc.strModelTag = StringToWString(m_ModelKey);
 		envDesc.strName = instanceName;
@@ -411,16 +684,16 @@ CGameObject* CToolbar::ClonePrototype(const string& prototypeName, const wstring
 			&envDesc
 		);
 		return pClone;
-    }
+	}
 
-    CGameObject* pClone = m_pGameInstance->Add_GameObject(
-        m_iCurrentSelectedLevel,
-        StringToWString(prototypeName),
-        m_iCurrentSelectedLevel,
-        instanceName,
+	CGameObject* pClone = m_pGameInstance->Add_GameObject(
+		m_iCurrentSelectedLevel,
+		StringToWString(prototypeName),
+		m_iCurrentSelectedLevel,
+		instanceName,
 		pArg ? pArg : nullptr
-    );
-    return pClone;
+	);
+	return pClone;
 
 }
 
@@ -438,7 +711,7 @@ CToolbar* CToolbar::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 void CToolbar::Free()
 {
 	__super::Free();
-    m_PrototypeSet.clear();
+	m_PrototypeSet.clear();
 	m_ShaderKeys.clear();
 	m_TextureKeys.clear();
 	m_LevelStringMap.clear();

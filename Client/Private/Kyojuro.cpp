@@ -5,6 +5,8 @@
 #include "InputBuffer.h"
 #include "Weapon.h"	
 #include "BodyColliderParts.h"
+#include <JsonLoader.h>
+#include "UIProgressBar.h"
 
 using AniCon = CAnimController::Condition;
 CKyojuro::CKyojuro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -31,15 +33,20 @@ HRESULT CKyojuro::Initialize(void* pArg)
 	Desc.fSpeedPerSec = 40.f;
 	Desc.strName = TEXT("Kyojuro");
 
+
+	if (FAILED(Ready_Components()))
+		return E_FAIL;
+
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
 
 	m_pTransformCom->Scaling(_float3(0.1f, 0.1f, 0.1f));
 
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
 
 	CGameObject* pWeapon = m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("Weapon"));
+
+	if (pWeapon == nullptr)
+		pWeapon = m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("Weapon"));
 
 	//	Set_Weapon("R_Hand_1", dynamic_cast<CWeapon*>(pWeapon));
 	Set_Weapon("R_Hand_1_Lct", dynamic_cast<CWeapon*>(pWeapon));
@@ -48,6 +55,15 @@ HRESULT CKyojuro::Initialize(void* pArg)
 	{
 		m_pWeapon->SetParent(this);
 	}
+
+	// 애니메이션 이벤트 등록
+	m_pAnimatorCom->RegisterEventListener("ActiveHitbox", [&](const string&) {
+		ActiveCollider();
+		});
+
+	m_pAnimatorCom->RegisterEventListener("DeactiveHitbox", [&](const string&) {
+		DeactiveCollider();
+		});
 
 
 	Ready_Animation();
@@ -72,6 +88,7 @@ HRESULT CKyojuro::Initialize(void* pArg)
 			return E_FAIL;
 		}
 		parts->Set_BoneSocket(pBoneRHand);
+		parts->SetActive(false);
 	}
 
 	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_CapsuleCollider"),
@@ -79,10 +96,10 @@ HRESULT CKyojuro::Initialize(void* pArg)
 	//	return E_FAIL;
 	m_pColliderCom->SetListener(this);
 	ChangeState(new StateIdle(TEXT("Idle")));
-
-
-
 	m_iShaderPass = 1;
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 100.f, 1.f));
+
 	return S_OK;
 }
 
@@ -129,6 +146,17 @@ HRESULT CKyojuro::Render()
 	return S_OK;
 }
 
+void CKyojuro::TakeDamage(_float fDamage)
+{
+	__super::TakeDamage(fDamage);
+	auto pLeftBar = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("LeftLifeBar"));
+	if (pLeftBar)
+	{
+		CUIProgressBar* pLifeBar = static_cast<CUIProgressBar*>(pLeftBar);
+		pLifeBar->ApplyDamage(fDamage);
+	}
+}
+
 HRESULT CKyojuro::Ready_Components()
 {
 	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxAnimMesh"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
@@ -138,26 +166,32 @@ HRESULT CKyojuro::Ready_Components()
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Kyoujuro"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
+	{
+		if (FAILED(__super::Add_Component(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_Kyoujuro"),
+			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+			return E_FAIL;
+	}
 
-	/* For.Com_AnimController*/
-	if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Animator"),
-		TEXT("Com_Animator"), reinterpret_cast<CComponent**>(&m_pAnimatroCom), m_pModelCom)))
-		return E_FAIL;
 
 	return S_OK;
 }
 
 void CKyojuro::Ready_Animation()
 {
-	m_pAnimatroCom->PlayClip(m_pModelCom->GetAnimationClipByName("A_P0012_V00_C00_BaseNut01_1"));
+	m_pAnimatorCom->PlayClip(m_pModelCom->GetAnimationClipByName("A_P0012_V00_C00_BaseNut01_1"));
 
-	auto ctrl = m_pAnimatroCom->GetAnimController();
+	auto animations = m_pModelCom->GetAnimations();
+	CJsonLoader jsonLoader;
+	jsonLoader.LoadAnimEvent("../Asset/Json/Kyojuro_events.json", animations);
+	jsonLoader.Free();
+
+	auto ctrl = m_pAnimatorCom->GetAnimController();
 	// 2) 상태(State) 등록
 	   // Idle
 	auto idleAnim = m_pModelCom->GetAnimationClipByName("A_P0012_V00_C00_BaseNut01_1");
 	idleAnim->SetLoop(true);
 	size_t idleIdx = ctrl->AddState("Idle", idleAnim, m_pModelCom->GetAnimationMap()[idleAnim->Get_Name()]);
+	idleAnim->AddEvent({ 0.f, "DeactiveHitbox" }); // 0 프레임에 Hitbox 활성화
 
 	// Run
 	auto runAnim = m_pModelCom->GetAnimationClipByName("A_P0012_V00_C00_BaseRun01_1");
@@ -210,6 +244,8 @@ void CKyojuro::Ready_Animation()
 	size_t attack3Idx = ctrl->AddState("attack3", comboAttackClips[3], 3);
 	size_t attack4Idx = ctrl->AddState("attackDown", comboAttackClips[4], 3);
 	size_t attack5Idx = ctrl->AddState("attackUp", comboAttackClips[5], 3);
+
+	comboAttackClips[5]->AddEvent({36.f , "DeactiveHitbox"}); // 36 프레임
 
 	// Idle → Attack0 : 버튼 누르면 즉시 진입
 	AniCon c0{ "Attack", CAnimController::EOp::Trigger, 0.f };
@@ -337,31 +373,31 @@ void CKyojuro::Ready_Animation()
 
 
 	// 3) 파라미터(Parameter) 등록
-	m_pAnimatroCom->AddBool("Move");
-	m_pAnimatroCom->AddBool("Jump");
-	m_pAnimatroCom->AddBool("Guard");
-	m_pAnimatroCom->AddBool("Attacking");
-	m_pAnimatroCom->AddTrigger("JumpAttack");
-	m_pAnimatroCom->AddTrigger("Attack");
-	m_pAnimatroCom->AddTrigger("AttackDown");
-	m_pAnimatroCom->AddTrigger("AttackUp");
-	m_pAnimatroCom->AddTrigger("Skill0");
-	m_pAnimatroCom->AddTrigger("Skill1");
-	m_pAnimatroCom->AddTrigger("Skill2");
-	m_pAnimatroCom->AddTrigger("DashAttack");
-	m_pAnimatroCom->AddTrigger("StepBack");
-	m_pAnimatroCom->AddTrigger("StepFront");
-	m_pAnimatroCom->AddTrigger("StepLeft");
-	m_pAnimatroCom->AddTrigger("StepLeft2");
-	m_pAnimatroCom->AddTrigger("StepRight");
-	m_pAnimatroCom->AddTrigger("StepRight2");
-	m_pAnimatroCom->AddTrigger("StepRightJump");
-	m_pAnimatroCom->AddTrigger("StepLeftJump");
-	m_pAnimatroCom->AddTrigger("StepBackJump");
-	m_pAnimatroCom->AddTrigger("StepFrontJump");
-	m_pAnimatroCom->AddTrigger("Hurt");
-	m_pAnimatroCom->AddBool("Stepping"); // 스텝 중인지 여부
-	m_pAnimatroCom->AddBool("Hurted");
+	m_pAnimatorCom->AddBool("Move");
+	m_pAnimatorCom->AddBool("Jump");
+	m_pAnimatorCom->AddBool("Guard");
+	m_pAnimatorCom->AddBool("Attacking");
+	m_pAnimatorCom->AddTrigger("JumpAttack");
+	m_pAnimatorCom->AddTrigger("Attack");
+	m_pAnimatorCom->AddTrigger("AttackDown");
+	m_pAnimatorCom->AddTrigger("AttackUp");
+	m_pAnimatorCom->AddTrigger("Skill0");
+	m_pAnimatorCom->AddTrigger("Skill1");
+	m_pAnimatorCom->AddTrigger("Skill2");
+	m_pAnimatorCom->AddTrigger("DashAttack");
+	m_pAnimatorCom->AddTrigger("StepBack");
+	m_pAnimatorCom->AddTrigger("StepFront");
+	m_pAnimatorCom->AddTrigger("StepLeft");
+	m_pAnimatorCom->AddTrigger("StepLeft2");
+	m_pAnimatorCom->AddTrigger("StepRight");
+	m_pAnimatorCom->AddTrigger("StepRight2");
+	m_pAnimatorCom->AddTrigger("StepRightJump");
+	m_pAnimatorCom->AddTrigger("StepLeftJump");
+	m_pAnimatorCom->AddTrigger("StepBackJump");
+	m_pAnimatorCom->AddTrigger("StepFrontJump");
+	m_pAnimatorCom->AddTrigger("Hurt");
+	m_pAnimatorCom->AddBool("Stepping"); // 스텝 중인지 여부
+	m_pAnimatorCom->AddBool("Hurted");
 
 
 	// 추적 대시 A_P0012_V00_C00_AtkSkl01
@@ -624,11 +660,84 @@ void CKyojuro::Ready_Animation()
 	ctrl->AddTransition(attack3Idx, hurtFIdx, cHurt, 0.1f);
 	ctrl->AddTransition(attack4Idx, hurtFIdx, cHurt, 0.1f);
 	ctrl->AddTransition(attack5Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(skill1Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(skill1EndIdx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(skillDefaultIdx, hurtFIdx, cHurt, 0.1f);
 
 	ctrl->AddTransition(hurtFIdx, idleIdx, cFin);
 	ctrl->AddTransition(hurtFIdx, runIdx, cSpeedUp, 0.1f);
 
 }
+
+void CKyojuro::ActiveCollider()
+{
+	if (m_pWeapon)
+	{
+		auto collider =static_cast<CSphereCollider*>(m_pWeapon->Get_Component(TEXT("Com_Collider")));
+		auto collider1 =static_cast<CSphereCollider*>(m_pWeapon->Get_Component(TEXT("Com_Collider1")));
+		auto collider2 =static_cast<CSphereCollider*>(m_pWeapon->Get_Component(TEXT("Com_Collider2")));
+
+		if (collider)
+		{
+			collider->SetActive(true);
+			collider->SetDrawDebug(true);
+		}
+		if (collider1)
+		{
+			collider1->SetActive(true);
+			collider1->SetDrawDebug(true);
+		}
+		if (collider2)
+		{
+			collider2->SetActive(true);
+			collider2->SetDrawDebug(true);
+		}
+	}
+	for (auto& pBodyColl : m_vecChildren)
+	{
+		if (dynamic_cast<CBodyColliderParts*>(pBodyColl))
+		{
+			pBodyColl->SetActive(true);
+		}
+	}
+}
+
+void CKyojuro::DeactiveCollider()
+{
+	if (m_pWeapon)
+	{
+		auto collider = static_cast<CSphereCollider*>(m_pWeapon->Get_Component(TEXT("Com_Collider")));
+		auto collider1 = static_cast<CSphereCollider*>(m_pWeapon->Get_Component(TEXT("Com_Collider1")));
+		auto collider2 = static_cast<CSphereCollider*>(m_pWeapon->Get_Component(TEXT("Com_Collider2")));
+
+
+		if (collider)
+		{
+			collider->SetActive(false);
+			collider->SetDrawDebug(false);
+		}
+		if (collider1)
+		{
+			collider1->SetActive(false);
+			collider1->SetDrawDebug(false);
+		}
+		if (collider2)
+		{
+			collider2->SetActive(false);
+			collider2->SetDrawDebug(false);
+		}
+	}
+	for (auto& pBodyColl : m_vecChildren)
+	{
+		if (dynamic_cast<CBodyColliderParts*>(pBodyColl))
+		{
+			pBodyColl->SetActive(false);
+		}
+	}
+}
+
+
+
 
 CKyojuro* CKyojuro::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

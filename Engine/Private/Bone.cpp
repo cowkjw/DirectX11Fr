@@ -27,10 +27,15 @@ void CBone::Update_CombinedTransformationMatrix(const vector<CBone*>& Bones, _fm
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * PreTransformMatrix);
 
 	else // 부모가 있으면
-		XMStoreFloat4x4(&m_CombinedTransformationMatrix, 
-			XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(&Bones[m_iParentBoneIndex]->m_CombinedTransformationMatrix));
-	// 부모의 변환 행렬과 내 변환 행렬을 곱해준다.
 
+	// 부모의 변환 행렬과 내 변환 행렬을 곱해준다.
+	{
+		_matrix trasformationMatrix = XMMatrixMultiply(XMLoadFloat4x4(&m_TransformationMatrix), m_vExtraMatix);
+		XMStoreFloat4x4(&m_CombinedTransformationMatrix,
+			trasformationMatrix * XMLoadFloat4x4(&Bones[m_iParentBoneIndex]->m_CombinedTransformationMatrix));
+
+		Reset_ExtraMatrix();
+	}
 }
 
 
@@ -46,6 +51,11 @@ CBone* CBone::Create(const aiNode* pAINode, _int iParentBoneIndex)
 	}
 
 	return pInstance;
+}
+
+void CBone::ResetBones()
+{
+	XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix));
 }
 
 HRESULT CBone::ExportBinary(ofstream& ofs)

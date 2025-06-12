@@ -53,7 +53,28 @@ void CAnimator::Update(_float fDeltaTime)
 		// 블렌드 중이 아니면 그냥 현재 애니메이션만 업데이트
 		if (m_pCurrentAnim == nullptr)
 			return;
-		m_bIsFinished =  m_pCurrentAnim->Update_Bones(fDeltaTime, m_Bones, m_Blend.isLoop);
+		/*m_bIsFinished =  m_pCurrentAnim->Update_Bones(fDeltaTime, m_Bones, m_Blend.isLoop);*/
+
+		vector<string> triggeredEvents;
+		// 수정한 Update_Bones 호출 (outEvents 전달)
+		m_bIsFinished = m_pCurrentAnim->Update_Bones(
+			fDeltaTime,
+			m_Bones,
+			m_Blend.isLoop,
+			&triggeredEvents
+		);
+
+		// 콜백 실행
+		for (auto& name : triggeredEvents)
+		{
+			// 이벤트 리스너에 등록 해둔거에 애니메이션 이벤트가 있는지 찾기
+			auto it = m_eventListeners.find(name);
+			if (it != m_eventListeners.end()) 
+			{
+				for (auto& cb : it->second)
+					cb(name);
+			}
+		}
 	}
 	else
 	{
@@ -110,12 +131,36 @@ void CAnimator::Set_Animation(_uint iIndex, _float fadeDuration, _bool isLoop)
 
 void CAnimator::UpdateBlend(_float fTimeDelta)
 {
+
+	vector<string> triggeredEvents;
+
+	// 2) src / dst 애니메이션을 이벤트 콜백 모드로 업데이트
+	m_Blend.srcAnim->Update_Bones(
+		fTimeDelta,
+		m_Bones,
+		m_Blend.srcAnim->Get_isLoop(),
+		&triggeredEvents       // <-- 이벤트 수집
+	);
+	m_Blend.dstAnim->Update_Bones(
+		fTimeDelta,
+		m_Bones,
+		m_Blend.dstAnim->Get_isLoop(),
+		&triggeredEvents
+	);
+
+	// 3) 수집된 이벤트에 대해 기존과 동일하게 콜백 실행
+	for (auto& name : triggeredEvents)
+	{
+		auto it = m_eventListeners.find(name);
+		if (it != m_eventListeners.end())
+		{
+			for (auto& cb : it->second)
+				cb(name);
+		}
+	}
 	m_Blend.elapsed += fTimeDelta;
 	_float t = min(m_Blend.elapsed / m_Blend.duration, 1.f);
 
-	//  두 애니메이션을 각자 업데이트 (루프 모드 유지)
-	m_Blend.srcAnim->Update_Bones(fTimeDelta, m_Bones, m_Blend.srcAnim->Get_isLoop());
-	m_Blend.dstAnim->Update_Bones(fTimeDelta, m_Bones, m_Blend.dstAnim->Get_isLoop());
 	for (size_t i = 0; i < m_Bones.size(); ++i)
 	{
 		_matrix srcM = m_Blend.srcAnim->GetBoneMatrix(static_cast<_uint>(i));
@@ -150,6 +195,11 @@ const char* CAnimator::GetCurrentAnimName() const
 	if (m_pCurrentAnim == nullptr)
 		return nullptr;
 	return m_pCurrentAnim->Get_Name();
+}
+
+void CAnimator::RegisterEventListener(const string& eventName, AnimEventCallback cb)
+{
+	m_eventListeners[eventName].push_back(move(cb));
 }
 
 _float CAnimator::GetStateLengthByName(const string& name) const

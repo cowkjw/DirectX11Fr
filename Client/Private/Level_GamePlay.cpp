@@ -4,6 +4,7 @@
 #include "ThirdPersonCamera.h"
 #include "BaseCharacter.h"
 #include <Weapon.h>
+#include "UIProgressBar.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -14,9 +15,13 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 HRESULT CLevel_GamePlay::Initialize()
 {
 	CJsonLoader jsonLoader(m_pDevice,m_pContext);
+	jsonLoader.Load_Objects("../Asset/Json/StaticCanvas.json", [&]() {
+		// 이곳에 로드 후 처리할 작업을 추가합니다.
+		});
 	jsonLoader.Load_Objects("../Asset/Json/GamePlayBackgroundObj2.json", [&]() {
 		// 이곳에 로드 후 처리할 작업을 추가합니다.
 		});
+
 	jsonLoader.Free();
 	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Terrain"),
 		ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_BackGround")))
@@ -59,7 +64,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	}
 
-	
+
 	return S_OK;
 }
 

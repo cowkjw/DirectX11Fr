@@ -24,6 +24,62 @@
       "tag": "Sky",
       "path": "../Asset/Resources/Models/Map/Sky.bin",
       "Anim": false
+    },
+    {
+      "tag": "SM_e_202_DemonMeat_01a",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/Meats/SM_e_202_DemonMeat_01a.bin",
+      "Anim": false
+    },
+    {
+      "tag": "SM_e_202_DemonMeatParts_01a",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/Meats/SM_e_202_DemonMeatParts_01a.bin",
+      "Anim": false
+    },
+    {
+      "tag": "SM_e_202_DemonMeatParts_01b",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/Meats/SM_e_202_DemonMeatParts_01b.bin",
+      "Anim": false
+    },
+    {
+      "tag": "SM_e_202_DemonMeatParts_02a",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/Meats/SM_e_202_DemonMeatParts_02a.bin",
+      "Anim": false
+    },
+    {
+      "tag": "SM_e_202_DemonMeatParts_02b",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/Meats/SM_e_202_DemonMeatParts_02b.bin",
+      "Anim": false
+    },
+    {
+      "tag": "SM_e_202_DemonMeatParts_03a",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/Meats/SM_e_202_DemonMeatParts_03a.bin",
+      "Anim": false
+    },
+    {
+      "tag": "SM_e_202_DemonMeatParts_03b",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/Meats/SM_e_202_DemonMeatParts_03b.bin",
+      "Anim": false
+    },
+    {
+      "tag": "SM_e_202_DemonMeatParts_03c",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/Meats/SM_e_202_DemonMeatParts_03c.bin",
+      "Anim": false
+    },
+    {
+      "tag": "SM_e_202_DemonMeatParts_04a",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/Meats/SM_e_202_DemonMeatParts_04a.bin",
+      "Anim": false
+    },
+    {
+      "tag": "SM_e_202_DemonMeatParts_05a",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/Meats/SM_e_202_DemonMeatParts_05a.bin",
+      "Anim": false
+    },
+    {
+      "tag": "EnmuGround",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/Ground/EnmuGround.bin",
+      "Anim": false
     }
+
   ]
 }

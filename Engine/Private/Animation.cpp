@@ -85,10 +85,35 @@ HRESULT CAnimation::InitializeByBinary(ifstream& ifs, const vector<class CBone*>
 	return S_OK;
 }
 
-_bool CAnimation::Update_Bones(_float fTimeDelta, const vector<CBone*>& Bones, _bool isLoop)
+//_bool CAnimation::Update_Bones(_float fTimeDelta, const vector<CBone*>& Bones, _bool isLoop)
+//{
+//	m_isLoop = isLoop;
+//	m_fCurrentTrackPosition += m_fTickPerSecond * fTimeDelta;
+//
+//	if (m_fCurrentTrackPosition >= m_fDuration)
+//	{
+//		m_fCurrentTrackPosition = 0.f;
+//		if (false == isLoop)
+//		{
+//			m_fCurrentTrackPosition = m_fDuration;
+//			return true;
+//		}
+//	}
+//
+//	// 채널이 각 뼈들의 정보 (예: 오른쪽 팔, 손목, 손가락등)
+//	for (_uint i = 0; i < m_iNumChannels; ++i)
+//	{
+//		m_Channels[i]->Update_TransformationMatrix(m_CurrentKeyFrameIndices[i], m_fCurrentTrackPosition, Bones);
+//	}
+//	return false;
+//}
+
+_bool CAnimation::Update_Bones(_float fTimeDelta, const vector<CBone*>& Bones, _bool isLoop, vector<string>* outEvents)
 {
 	m_isLoop = isLoop;
+	_float prevPos = m_fCurrentTrackPosition;
 	m_fCurrentTrackPosition += m_fTickPerSecond * fTimeDelta;
+
 
 	if (m_fCurrentTrackPosition >= m_fDuration)
 	{
@@ -100,11 +125,32 @@ _bool CAnimation::Update_Bones(_float fTimeDelta, const vector<CBone*>& Bones, _
 		}
 	}
 
-	// 채널이 각 뼈들의 정보 (예: 오른쪽 팔, 손목, 손가락등)
-	for (_uint i = 0; i < m_iNumChannels; ++i)
+
+	// **이벤트 검출** (prevPos < ev.time <= currentPos)
+	if (outEvents)
 	{
-		m_Channels[i]->Update_TransformationMatrix(m_CurrentKeyFrameIndices[i], m_fCurrentTrackPosition, Bones);
+		for (auto& ev : m_events) 
+		{
+			if (ev.fTime > prevPos && ev.fTime <= m_fCurrentTrackPosition) 
+			{
+				outEvents->push_back(ev.name);
+			}
+		}
 	}
+
+	// 기존 본 업데이트 로직
+	for (_uint i = 0; i < m_iNumChannels; ++i) 
+	{
+		m_Channels[i]->Update_TransformationMatrix(
+			m_CurrentKeyFrameIndices[i],
+			m_fCurrentTrackPosition,
+			Bones
+		);
+	}
+
+	// 논루프 애니 종료 반환
+	if (!isLoop && m_fCurrentTrackPosition >= m_fDuration)
+		return true;
 	return false;
 }
 

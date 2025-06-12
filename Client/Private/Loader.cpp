@@ -13,6 +13,8 @@
 #include "Akaza.h"
 #include "ThirdPersonCamera.h"	
 #include "Environment.h"
+#include "EnmuMeat.h"
+#include "EnmuTentacle.h"
 
 //#include "player.h"
 //#include "Effect.h"
@@ -73,6 +75,11 @@ HRESULT CLoader::Loading()
 		break;
 	case LEVEL::EDITOR:
 		hr = Loading_For_Editor();
+		break;
+	case LEVEL::ENMU_BOSS:
+		hr = Loading_For_EnmuBoss();
+	case LEVEL::MODE:
+		hr = Loading_For_Mode();
 		break;
 	}
 	LeaveCriticalSection(&m_CriticalSection);
@@ -165,8 +172,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 
 	//PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationX(XMConvertToRadians(-90.f));
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Tanjiro"),
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Tanjiro/Tanjiro.fbx", PreTransformMatrix))))
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Meat"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Map/EnmuMap/Meats/SM_e_202_DemonMeatParts_01b.fbx", PreTransformMatrix))))
 	//	return E_FAIL;
 
 
@@ -292,9 +299,9 @@ HRESULT CLoader::Loading_For_Editor()
 {
 	lstrcpy(m_szLoadingText, TEXT("로딩중입니다."));
 	CJsonLoader jsonLoader(m_pDevice,m_pContext);
-	jsonLoader.Load_Textures("../Asset/Json/Textures.json", [&]() {
-		// 이곳에 로드 후 처리할 작업을 추가합니다.
-		});
+	//jsonLoader.Load_Textures("../Asset/Json/Textures.json", [&]() {
+	//	// 이곳에 로드 후 처리할 작업을 추가합니다.
+	//	});
 
 	jsonLoader.Load_Models("../Asset/Json/Models.json", [&]() {
 		// 이곳에 로드 후 처리할 작업을 추가합니다.
@@ -310,11 +317,6 @@ HRESULT CLoader::Loading_For_Editor()
 		return E_FAIL;
 	_matrix		PreTransformMatrix = XMMatrixIdentity();
 
-	PreTransformMatrix = XMMatrixRotationX(XMConvertToRadians(70.f)) * XMMatrixRotationZ(XMConvertToRadians(30.f)) * XMMatrixTranslation(0.5f, 2.7f, 0.f);
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_KoujuroWeapon"),
-		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Weapon/KoujuroWeapon.bin", PreTransformMatrix))))
-		return E_FAIL;
-
 	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Kyoujuro"),
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.bin", PreTransformMatrix))))
@@ -329,22 +331,208 @@ HRESULT CLoader::Loading_For_Editor()
 		CAkaza::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Kyojuro"),
-		CKyojuro::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
 
 	/* For.Prototype_GameObject_KoujuroWeapon */
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_KoujuroWeapon"),
 		CWeapon::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Kyojuro"),
+		CKyojuro::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Envirnoment"),
 		CEnvironment::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_Envirnoment"),
+		CEnvironment::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_Sky"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Map/Sky.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_EnmuLeftArm"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/EnmuBoss/LeftArm/EnmuLeftArm.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_EnmuRightArm"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/EnmuBoss/RightArm/EnmuRightArm.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_Body"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/EnmuBoss/Body/EnmuBossBody.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_EnmuHead"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/EnmuBoss/Head/EnmuBossHead.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_EnmuMeat */
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_EnmuMeat"),
+		CEnmuMeat::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
 	m_isFinished = true;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_EnmuBoss()
+{
+
+	lstrcpy(m_szLoadingText, TEXT("텍스쳐을(를) 로딩중입니다."));
+
+	CJsonLoader jsonLoader;
+
+	jsonLoader.Load_Models("../Asset/Json/Models.json", [&]() {
+		// 이곳에 로드 후 처리할 작업을 추가합니다.
+		});
+	jsonLoader.Free();
+
+
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.fbx"))))
+	//	return E_FAIL;
+
+	_matrix		PreTransformMatrix = XMMatrixIdentity();
+	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_EnmuTentacle"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/EnmuBoss/Tentacle/EnmuTentacle.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_Kyoujuro"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_Sky"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Map/Sky.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_EnmuLeftArm"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/EnmuBoss/LeftArm/EnmuLeftArm.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_EnmuRightArm"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/EnmuBoss/RightArm/EnmuRightArm.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_Body"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/EnmuBoss/Body/EnmuBossBody.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_EnmuHead"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/EnmuBoss/Head/EnmuBossHead.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+	PreTransformMatrix = XMMatrixRotationX(XMConvertToRadians(70.f)) * XMMatrixRotationZ(XMConvertToRadians(30.f)) * XMMatrixTranslation(0.5f, 2.7f, 0.f);
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_KoujuroWeapon"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Weapon/KoujuroWeapon.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+
+
+	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
+	///* For.Prototype_Component_VIBuffer_Terrain */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Terrain"),
+	//	CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Asset/Resources/Textures/Terrain/Height.bmp")))))
+	//	return E_FAIL;
+
+
+
+	lstrcpy(m_szLoadingText, TEXT("사운드을(를) 로딩중입니다."));
+
+	lstrcpy(m_szLoadingText, TEXT("원형객체을(를) 로딩중입니다."));
+	///* For.Prototype_GameObject_Terrain */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Terrain"),
+	//	CTerrain::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+
+	///* For.Prototype_GameObject_Camera_Free */
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_Camera_Free"),
+		CFreeCamera::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_Envirnoment"),
+		CEnvironment::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Kyojuro */
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_Kyojuro"),
+		CKyojuro::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_KoujuroWeapon */
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_KoujuroWeapon"),
+		CWeapon::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	///* For.Prototype_GameObject_ThirdPersonCamera */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_ThirdPersonCamera"),
+	//	CThirdPersonCamera::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+
+
+	/* For.Prototype_GameObject_EnmuMeat */
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_EnmuMeat"),
+		CEnmuMeat::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	/* For.Prototype_GameObject_EnmuTentacle */
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_EnmuTentacle"),
+		CEnmuTentacle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
+
+	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Mode()
+{
+	lstrcpy(m_szLoadingText, TEXT("텍스쳐을(를) 로딩중입니다."));
+
+	CJsonLoader jsonLoader;
+	jsonLoader.Load_Textures("../Asset/Json/Textures.json", [&]() {
+		// 이곳에 로드 후 처리할 작업을 추가합니다.
+		});
+
+	jsonLoader.Free();
+
+	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
+
+
+	lstrcpy(m_szLoadingText, TEXT("셰이더을(를) 로딩중입니다."));
+
+
+	lstrcpy(m_szLoadingText, TEXT("사운드을(를) 로딩중입니다."));
+
+
+	lstrcpy(m_szLoadingText, TEXT("원형객체을(를) 로딩중입니다."));
+
+
+	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
+
+	m_isFinished = true;
+
 	return S_OK;
 }
 

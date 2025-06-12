@@ -31,6 +31,8 @@ public:
 		m_pBoneSocket = pBoneSocket;
 	}
 
+	void LaucnhTargetAirborne(class CBaseCharacter* pTarget, _float fForce = 10.f);
+
 private:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
@@ -39,6 +41,7 @@ private:
 	CSphereCollider* m_pColliderCom2 = { nullptr };
 	CBone* m_pBoneSocket = { nullptr };
 	_float4x4 m_OffsetMatrix{};
+	_bool m_bFirstCollision = true; // 첫 충돌 여부
 
 private:
 	virtual HRESULT Ready_Components();

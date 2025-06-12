@@ -47,6 +47,169 @@
       "path": "../Asset/Resources/Textures/Title/BgBase_Title.png",
       "numTextures": 1,
       "static": true
+    },
+    {
+      "key": "TitleBgEffect",
+      "path": "../Asset/Resources/Textures/Title/Back_Eff_%d.png",
+      "numTextures": 2,
+      "static": true
+    },
+    {
+      "key": "Wind",
+      "path": "../Asset/Resources/Textures/Title/Wind00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "CloudDark1",
+      "path": "../Asset/Resources/Textures/GameModeSelect/Cloud_Dark01.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "CloudDark2",
+      "path": "../Asset/Resources/Textures/GameModeSelect/Cloud_Dark02.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "CloudDark1",
+      "path": "../Asset/Resources/Textures/GameModeSelect/Cloud_Dark01.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Cloud1",
+      "path": "../Asset/Resources/Textures/GameModeSelect/Cloud01.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Cloud2",
+      "path": "../Asset/Resources/Textures/GameModeSelect/Cloud02.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "ModeCursor",
+      "path": "../Asset/Resources/Textures/GameModeSelect/Cursor.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "ModeTanjiro",
+      "path": "../Asset/Resources/Textures/GameModeSelect/Lang_Character_Adv.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "ModeTitle",
+      "path": "../Asset/Resources/Textures/GameModeSelect/Lang_Title.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "ModeName",
+      "path": "../Asset/Resources/Textures/GameModeSelect/Lang_ModeTitle_Adv_00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "ModeNameHover",
+      "path": "../Asset/Resources/Textures/GameModeSelect/Lang_ModeTitle_Adv_01.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Mode_Back",
+      "path": "../Asset/Resources/Textures/GameModeSelect/Mode_Back.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Mode_BackDeco",
+      "path": "../Asset/Resources/Textures/GameModeSelect/Mode_Back_Deco00_00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Ink",
+      "path": "../Asset/Resources/Textures/Title/Xcmn_Ink100.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "BarAkaza",
+      "path": "../Asset/Resources/Textures/GamePlayUI/C_Akz00_00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "BarKyojuro",
+      "path": "../Asset/Resources/Textures/GamePlayUI/C_Kjr00_00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "BarTanjiro",
+      "path": "../Asset/Resources/Textures/GamePlayUI/C_Tjr00_00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "BarEnmu",
+      "path": "../Asset/Resources/Textures/GamePlayUI/C_Enm00_00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "BarLifeGreen",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Bar_Life1.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "BarLifeRed",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Bar_Life4.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Boss_Gauge_Deco",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Boss_Gauge_Deco.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Gauge_Base",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Gauge_Base.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Gauge_Life_Bg",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Gauge_Life_Bg.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Gauge_Life",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Enemis_Gauge_Frame.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Gauge_Brth_Bg",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Gauge_Brth_Bg.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Gauge_Brth",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Gauge_Brth.png",
+      "numTextures": 1,
+      "static": true
     }
+
   ]
 }

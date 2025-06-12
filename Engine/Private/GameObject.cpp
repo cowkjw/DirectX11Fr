@@ -62,7 +62,7 @@ HRESULT CGameObject::Add_Component(_uint iPrototypeLevelIndex, const _wstring& s
 	return S_OK;
 }
 
-HRESULT CGameObject::Add_Component(const _wstring& strComponentTag,CComponent* pComponent, CComponent** ppOut)
+HRESULT CGameObject::Add_Component(const _wstring& strComponentTag, CComponent* pComponent, CComponent** ppOut)
 {
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -97,6 +97,7 @@ HRESULT CGameObject::Initialize(void* pArg)
 	if (FAILED(m_pTransformCom->Initialize(pArg)))
 		return E_FAIL;
 
+	m_pTransformCom->SetOwner(this);
 	m_Components.emplace(g_strTransformTag, m_pTransformCom);
 
 	Safe_AddRef(m_pTransformCom);
@@ -117,16 +118,16 @@ void CGameObject::Update(_float fTimeDelta)
 
 void CGameObject::Late_Update(_float fTimeDelta)
 {
-	if (m_pTransformCom&&m_pTransformCom->IsDirty())
+	/*if (m_pTransformCom && m_pTransformCom->IsDirty())
 	{
 		for (auto& child : m_vecChildren)
 		{
-			if(child&&child->IsActive())
+			if (child && child->IsActive())
 				child->GetTransform()->FollowParent(m_pTransformCom);
 
 		}
 		m_pTransformCom->SetDirty(false);
-	}
+	}*/
 }
 
 void CGameObject::AddChild(CGameObject* pGameObject)
@@ -198,10 +199,14 @@ void CGameObject::Free()
 	for (auto& Pair : m_Components)
 		Safe_Release(Pair.second);
 	m_Components.clear();
+
+
 	for (auto& pChild : m_vecChildren)
 	{
 		Safe_Release(pChild);
 	}
+	m_vecChildren.clear();
+
 
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);

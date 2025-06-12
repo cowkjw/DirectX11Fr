@@ -1,0 +1,906 @@
+[
+    {
+        "CreateLevel": 6,
+        "ID": 17,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 1,
+        "UI": true,
+        "UIType": 3,
+        "components": {
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -640.0,
+                    360.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "ModeCanvas",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 6,
+        "ID": 18,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTexNonAlpha",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "Mode_Back",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.20
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1280.0,
+                    720.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "Background",
+        "parentId": 17,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 6,
+        "ID": 23,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "CloudDark2",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    500.0,
+                    307.0,
+                    0.20
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    350.0,
+                    300.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "CloudDarkRight",
+        "parentId": 17,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 6,
+        "ID": 31,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_UICompose",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "Wind",
+        "UI": true,
+        "UIType": 0,
+        "UVOffset": [
+            0.83,
+            0.0
+        ],
+        "UVScale": [
+            1.0,
+            1.0
+        ],
+        "UVSpeed": [
+            0.1,
+            0.0
+        ],
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -122.98,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    90.0
+                ],
+                "Scale": [
+                    599.97,
+                    599.97,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "Wind",
+        "parentId": 17,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 6,
+        "ID": 27,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "Mode_BackDeco",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -356.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    609.46,
+                    720.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "Deco",
+        "parentId": 17,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 6,
+        "ID": 29,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "ModeCursor",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -573.0,
+                    79.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    80.0,
+                    70.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": false,
+        "name": "Cursor",
+        "parentId": 17,
+        "tag": ""
+    },
+    {
+        "ButtonImage": {
+            "CreateLevel": 6,
+            "ID": 26,
+            "NumTextures": 1,
+            "Position": [
+                0.0,
+                0.0
+            ],
+            "ProtoLevel": 0,
+            "ProtoTypeTag": "",
+            "ShaderKey": "Shader_VtxPosTex",
+            "Size": [
+                1.0,
+                1.0
+            ],
+            "SortingOrder": 0,
+            "TextureIndex": 0,
+            "TextureKey": "ModeName",
+            "UI": true,
+            "UIType": 0,
+            "components": {
+                "Com_Shader": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Texture": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Transform": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true,
+                    "Position": [
+                        -395.0,
+                        80.0,
+                        0.20
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        296.29,
+                        100.0,
+                        1.0
+                    ]
+                },
+                "Com_VIBuffer": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                }
+            },
+            "isActive": true,
+            "name": "ModeName",
+            "parentId": 25,
+            "tag": ""
+        },
+        "CreateLevel": 6,
+        "HoverImage": {
+            "CreateLevel": 0,
+            "ID": 27,
+            "NumTextures": 1,
+            "Position": [
+                0.0,
+                0.0
+            ],
+            "ProtoLevel": 0,
+            "ProtoTypeTag": "",
+            "ShaderKey": "Shader_VtxPosTex",
+            "Size": [
+                1.0,
+                1.0
+            ],
+            "SortingOrder": 0,
+            "TextureIndex": 0,
+            "TextureKey": "ModeNameHover",
+            "UI": true,
+            "UIType": 0,
+            "components": {
+                "Com_Shader": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Texture": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Transform": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true,
+                    "Position": [
+                        -395.0,
+                        83.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        315.0,
+                        113.0,
+                        1.0
+                    ]
+                },
+                "Com_VIBuffer": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                }
+            },
+            "isActive": true,
+            "name": "ModeNmaeHover",
+            "parentId": 25,
+            "tag": ""
+        },
+        "ID": 25,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "UI": true,
+        "UIType": 1,
+        "components": {
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -395.0,
+                    78.0,
+                    0.20
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    296.29,
+                    103.80,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "ModeButton",
+        "parentId": 17,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 6,
+        "ID": 28,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "Cloud2",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    511.0,
+                    311.98,
+                    0.20
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    350.0,
+                    300.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "CloudRight",
+        "parentId": 17,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 6,
+        "ID": 26,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "ModeTanjiro",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -4.94e-05,
+                    -49.99,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1280.0,
+                    1100.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "Tanjiro",
+        "parentId": 17,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 6,
+        "ID": 22,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "CloudDark1",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -532.96,
+                    258.0,
+                    0.20
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    350.0,
+                    260.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "CloudDarkLeft",
+        "parentId": 17,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 6,
+        "ID": 24,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "Cloud1",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -579.0,
+                    292.98,
+                    0.20
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    350.0,
+                    208.5,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "CloudLeft",
+        "parentId": 17,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 6,
+        "ID": 30,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "ModeTitle",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -451.0,
+                    271.0,
+                    0.20
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    250.0,
+                    100.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "ModeTitle",
+        "parentId": 17,
+        "tag": ""
+    }
+]

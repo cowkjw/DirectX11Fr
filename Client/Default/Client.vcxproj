@@ -160,12 +160,29 @@
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\public\BaseCharacter.h" />
     <ClInclude Include="..\Public\BehaviorTree.h" />
+    <ClInclude Include="..\public\BossAngryFreeze.h" />
+    <ClInclude Include="..\public\BossFollowPunch.h" />
+    <ClInclude Include="..\public\BossFreezeAttack.h" />
+    <ClInclude Include="..\public\BossHandAttack.h" />
+    <ClInclude Include="..\public\BossHurt.h" />
+    <ClInclude Include="..\public\BossIdle.h" />
+    <ClInclude Include="..\public\BossOpen.h" />
+    <ClInclude Include="..\public\BossPunch.h" />
+    <ClInclude Include="..\public\BossState.h" />
+    <ClInclude Include="..\public\BossSwingAttack.h" />
+    <ClInclude Include="..\public\BossTentacle.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Function.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
     <ClInclude Include="..\public\Command.h" />
     <ClInclude Include="..\Public\CompositeNode.h" />
+    <ClInclude Include="..\public\EnmuArm.h" />
+    <ClInclude Include="..\Public\EnmuBody.h" />
+    <ClInclude Include="..\Public\EnmuHead.h" />
+    <ClInclude Include="..\public\EnmuMeat.h" />
+    <ClInclude Include="..\public\EnmuParts.h" />
+    <ClInclude Include="..\public\EnmuTentacle.h" />
     <ClInclude Include="..\public\Environment.h" />
     <ClInclude Include="..\public\BodyColliderParts.h" />
     <ClInclude Include="..\public\FreeCamera.h" />
@@ -177,9 +194,11 @@
     <ClInclude Include="..\public\JsonLoader.h" />
     <ClInclude Include="..\Public\Kyojuro.h" />
     <ClInclude Include="..\Public\Level_Editor.h" />
+    <ClInclude Include="..\Public\Level_EnmuBoss.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
+    <ClInclude Include="..\Public\Level_Mode.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\Public\Node.h" />
@@ -195,6 +214,7 @@
     <ClInclude Include="..\public\StateAttackDown.h" />
     <ClInclude Include="..\public\StateAttackUp.h" />
     <ClInclude Include="..\public\StateGuard.h" />
+    <ClInclude Include="..\public\StateHurtAir.h" />
     <ClInclude Include="..\public\StateHurt.h" />
     <ClInclude Include="..\public\StateIdle.h" />
     <ClInclude Include="..\public\StateJump.h" />
@@ -208,9 +228,10 @@
     <ClInclude Include="..\Public\TaskNode.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\ThirdPersonCamera.h" />
-    <ClInclude Include="..\public\TitleCanvas.h" />
+    <ClInclude Include="..\public\GameplayCanvas.h" />
     <ClInclude Include="..\public\EditorManager.h" />
     <ClInclude Include="..\public\Toolbar.h" />
+    <ClInclude Include="..\public\UIAnimImage.h" />
     <ClInclude Include="..\public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -234,6 +255,23 @@
     <ClCompile Include="..\private\Akaza.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseCharacter.cpp" />
+    <ClCompile Include="..\private\BossAngryFreeze.cpp" />
+    <ClCompile Include="..\private\BossFollowPunch.cpp" />
+    <ClCompile Include="..\private\BossFreezeAttack.cpp" />
+    <ClCompile Include="..\private\BossHandAttack.cpp" />
+    <ClCompile Include="..\private\BossHurt.cpp" />
+    <ClCompile Include="..\private\BossIdle.cpp" />
+    <ClCompile Include="..\private\BossOpen.cpp" />
+    <ClCompile Include="..\private\BossPunch.cpp" />
+    <ClCompile Include="..\private\BossState.cpp" />
+    <ClCompile Include="..\private\BossSwingAttack.cpp" />
+    <ClCompile Include="..\private\BossTentacle.cpp" />
+    <ClCompile Include="..\private\EnmuArm.cpp" />
+    <ClCompile Include="..\Private\EnmuBody.cpp" />
+    <ClCompile Include="..\Private\EnmuHead.cpp" />
+    <ClCompile Include="..\private\EnmuMeat.cpp" />
+    <ClCompile Include="..\private\EnmuParts.cpp" />
+    <ClCompile Include="..\private\EnmuTentacle.cpp" />
     <ClCompile Include="..\private\Environment.cpp" />
     <ClCompile Include="..\private\BodyColliderParts.cpp" />
     <ClCompile Include="..\private\FreeCamera.cpp" />
@@ -245,9 +283,11 @@
     <ClCompile Include="..\private\JsonLoader.cpp" />
     <ClCompile Include="..\Private\Kyojuro.cpp" />
     <ClCompile Include="..\Private\Level_Editor.cpp" />
+    <ClCompile Include="..\Private\Level_EnmuBoss.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
+    <ClCompile Include="..\Private\Level_Mode.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\ObserverManager.cpp" />
@@ -261,6 +301,7 @@
     <ClCompile Include="..\private\StateAttackDown.cpp" />
     <ClCompile Include="..\private\StateAttackUp.cpp" />
     <ClCompile Include="..\private\StateGuard.cpp" />
+    <ClCompile Include="..\private\StateHurtAir.cpp" />
     <ClCompile Include="..\private\StateHurt.cpp" />
     <ClCompile Include="..\private\StateIdle.cpp" />
     <ClCompile Include="..\private\StateJump.cpp" />
@@ -273,9 +314,10 @@
     <ClCompile Include="..\private\Tanjiro.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\ThirdPersonCamera.cpp" />
-    <ClCompile Include="..\private\TitleCanvas.cpp" />
+    <ClCompile Include="..\private\GameplayCanvas.cpp" />
     <ClCompile Include="..\private\EditorManager.cpp" />
     <ClCompile Include="..\private\Toolbar.cpp" />
+    <ClCompile Include="..\private\UIAnimImage.cpp" />
     <ClCompile Include="..\private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
@@ -287,10 +329,12 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_UICompose.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxAnimMesh.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTex.hlsl" />
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTexNonAlpha.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Asset\Json\GamePlayBackgroundObj.json" />

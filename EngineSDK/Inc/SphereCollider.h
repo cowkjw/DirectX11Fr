@@ -23,6 +23,10 @@ public:
 	const BoundingSphere& GetBoundingSphere() const {
 		return Sphere;
 	}
+	void SetRadius(_float radius) {
+		m_fRadius = radius;
+		Sphere.Radius = radius;
+	}
 private:
 	BoundingSphere Sphere;
 	_float m_fRadius = 0.5f;

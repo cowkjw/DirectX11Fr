@@ -1,9 +1,11 @@
 #include "Level_Loading.h"
 
 
+#include "Level_EnmuBoss.h"
 #include "Level_GamePlay.h"
 #include "Level_Editor.h"
 #include "Level_Logo.h"
+#include "Level_Mode.h"
 #include "Loader.h"
 
 #include "GameInstance.h"
@@ -48,6 +50,12 @@ void CLevel_Loading::Update(_float fTimeDelta)
 			break;
 		case LEVEL::EDITOR:
 			pLevel = CLevel_Editor::Create(m_pDevice, m_pContext);
+			break;
+		case LEVEL::ENMU_BOSS:
+			pLevel = CLevel_EnmuBoss::Create(m_pDevice, m_pContext);
+			break;
+		case LEVEL::MODE:
+			pLevel = CLevel_Mode::Create(m_pDevice, m_pContext);
 			break;
 		}
 

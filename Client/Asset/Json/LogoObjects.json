@@ -26,6 +26,11 @@
                     0.0,
                     0.0
                 ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
                 "Scale": [
                     1.0,
                     1.0,
@@ -45,8 +50,8 @@
         "tag": ""
     },
     {
-        "CreateLevel": 2,
-        "ID": 9,
+        "CreateLevel": 0,
+        "ID": 15,
         "NumTextures": 1,
         "Position": [
             0.0,
@@ -54,7 +59,7 @@
         ],
         "ProtoLevel": 0,
         "ProtoTypeTag": "",
-        "ShaderKey": "Shader_VtxPosTex",
+        "ShaderKey": "Shader_VtxPosTexNonAlpha",
         "Size": [
             1.0,
             1.0
@@ -83,12 +88,17 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    -163.99,
+                    -190.77,
                     0.0,
                     0.20
                 ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
                 "Scale": [
-                    953.79,
+                    900.0,
                     720.0,
                     1.0
                 ]
@@ -106,69 +116,8 @@
         "tag": ""
     },
     {
-        "CreateLevel": 3,
-        "ID": 11,
-        "NumTextures": 1,
-        "Position": [
-            0.0,
-            0.0
-        ],
-        "ProtoLevel": 0,
-        "ProtoTypeTag": "",
-        "ShaderKey": "Shader_VtxPosTex",
-        "Size": [
-            1.0,
-            1.0
-        ],
-        "SortingOrder": 0,
-        "TextureIndex": 0,
-        "TextureKey": "TitleEffect",
-        "UI": true,
-        "UIType": 0,
-        "components": {
-            "Com_Shader": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Texture": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Transform": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true,
-                "Position": [
-                    0.0,
-                    -196.0,
-                    0.20
-                ],
-                "Scale": [
-                    1280.0,
-                    330.39,
-                    1.0
-                ]
-            },
-            "Com_VIBuffer": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            }
-        },
-        "isActive": true,
-        "name": "Effect",
-        "parentId": 8,
-        "tag": ""
-    },
-    {
-        "CreateLevel": 2,
-        "ID": 12,
+        "CreateLevel": 0,
+        "ID": 16,
         "NumTextures": 1,
         "Position": [
             0.0,
@@ -205,12 +154,17 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    449.98,
+                    414.97,
                     0.0,
                     0.20
                 ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
                 "Scale": [
-                    381.60,
+                    450.0,
                     720.0,
                     1.0
                 ]
@@ -227,9 +181,165 @@
         "parentId": 8,
         "tag": ""
     },
+  {
+    "CreateLevel": 2,
+    "ID": 24,
+    "NumTextures": 1,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "ShaderKey": "Shader_UICompose",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 0,
+    "TextureIndex": 0,
+    "TextureKey": "Wind",
+    "UI": true,
+    "UIType": 0,
+    "UVOffset": [
+      -0.44,
+      0.05
+    ],
+    "UVScale": [
+      1.0,
+      1.0
+    ],
+    "UVSpeed": [
+      -0.01,
+      0.0
+    ],
+    "components": {
+      "Com_Shader": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Texture": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
+        "Position": [
+          595.57,
+          -339.99,
+          0.20
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          -4.59
+        ],
+        "Scale": [
+          810.06,
+          479.89,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
+    },
+    "isActive": true,
+    "name": "WindDeco",
+    "parentId": 8,
+    "tag": ""
+  },
     {
-        "CreateLevel": 2,
-        "ID": 10,
+        "CreateLevel": 0,
+        "ID": 17,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_UICompose",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "TitleEffect",
+        "UI": true,
+        "UIType": 0,
+        "UVOffset": [
+            0.97,
+            0.0
+        ],
+        "UVScale": [
+            1.0,
+            1.0
+        ],
+        "UVSpeed": [
+            0.01,
+            0.0
+        ],
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    590.96,
+                    -304.0,
+                    0.20
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    799.09,
+                    1000.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "Effect",
+        "parentId": 8,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 0,
+        "ID": 18,
         "NumTextures": 1,
         "Position": [
             0.0,
@@ -266,13 +376,18 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    418.98,
-                    167.97,
+                    371.97,
+                    127.94,
                     0.20
                 ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
                 "Scale": [
-                    300.0,
-                    300.0,
+                    400.0,
+                    400.0,
                     1.0
                 ]
             },
@@ -285,6 +400,188 @@
         },
         "isActive": true,
         "name": "Logo",
+        "parentId": 8,
+        "tag": ""
+    },
+    {
+        "ButtonImage": {
+            "CreateLevel": 2,
+            "ID": 21,
+            "NumTextures": 1,
+            "Position": [
+                0.0,
+                0.0
+            ],
+            "ProtoLevel": 0,
+            "ProtoTypeTag": "",
+            "ShaderKey": "Shader_VtxPosTex",
+            "Size": [
+                1.0,
+                1.0
+            ],
+            "SortingOrder": 0,
+            "TextureIndex": 0,
+            "TextureKey": "TitleInfo_Base",
+            "UI": true,
+            "UIType": 0,
+            "components": {
+                "Com_Shader": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Texture": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Transform": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true,
+                    "Position": [
+                        400.0,
+                        -95.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                  "Scale": [
+                    425.0,
+                    70.0,
+                    1.0
+                  ]
+                },
+                "Com_VIBuffer": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                }
+            },
+            "isActive": true,
+            "name": "HoverImage",
+            "parentId": 20,
+            "tag": ""
+        },
+        "CreateLevel": 2,
+        "HoverImage": {
+            "CreateLevel": 0,
+            "ID": 22,
+            "NumTextures": 1,
+            "Position": [
+                0.0,
+                0.0
+            ],
+            "ProtoLevel": 0,
+            "ProtoTypeTag": "",
+            "ShaderKey": "Shader_VtxPosTex",
+            "Size": [
+                1.0,
+                1.0
+            ],
+            "SortingOrder": 0,
+            "TextureIndex": 0,
+            "TextureKey": "Title_Select",
+            "UI": true,
+            "UIType": 0,
+            "components": {
+                "Com_Shader": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Texture": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Transform": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true,
+                    "Position": [
+                        400.0,
+                        -95.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                  "Scale": [
+                    425.0,
+                    70.0,
+                    1.0
+                  ]
+                },
+                "Com_VIBuffer": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                }
+            },
+            "isActive": true,
+            "name": "DefaultImage",
+            "parentId": 20,
+            "tag": ""
+        },
+        "ID": 20,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "UI": true,
+        "UIType": 1,
+        "components": {
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    420.0,
+                    -95.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    425.0,
+                    70.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "StartButton",
         "parentId": 8,
         "tag": ""
     }

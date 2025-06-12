@@ -10,6 +10,9 @@ CUIObject::CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CUIObject::CUIObject(const CUIObject& Prototype)
 	: CGameObject(Prototype),
 	m_iSortingOrder(Prototype.m_iSortingOrder)
+	, m_eUIType(Prototype.m_eUIType)
+	, m_fWidth(Prototype.m_fWidth)
+	, m_fHeight(Prototype.m_fHeight)
 {
 }
 
@@ -47,6 +50,8 @@ HRESULT CUIObject::Initialize(void* pArg)
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fX - ViewportDesc.Width * 0.5f, -m_fY + ViewportDesc.Height * 0.5f, 0.f, 1.f));
 
+	m_fWidth = ViewportDesc.Width;
+	m_fHeight = ViewportDesc.Height;
 
 	m_pVIBufferCom = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBufferCom)

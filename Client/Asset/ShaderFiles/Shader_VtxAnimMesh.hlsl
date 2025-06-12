@@ -81,8 +81,8 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out;
 
     vector  vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    if (vMtrlDiffuse.a < 0.3f)
-        discard;
+   /* if (vMtrlDiffuse.a < 0.1f)
+        discard;*/
 
     float4 vShade = max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f) +
         (g_vLightAmbient * g_vMtrlAmibient);
@@ -104,8 +104,8 @@ PS_OUT PS_MAIN_CLAMP(PS_IN In)
     PS_OUT Out;
 
     vector  vMtrlDiffuse = g_DiffuseTexture.Sample(LinearClampSampler, In.vTexcoord);
-    if (vMtrlDiffuse.a < 0.3f)
-        discard;
+    /*if (vMtrlDiffuse.a < 0.1f)
+        discard;*/
 
     float4 vShade = max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f) +
         (g_vLightAmbient * g_vMtrlAmibient);

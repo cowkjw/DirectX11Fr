@@ -4,7 +4,7 @@
 #include "Level_Loading.h"
 #include "BackGround.h"
 #include "JsonLoader.h"
-#include "TitleCanvas.h"
+#include "GameplayCanvas.h"
 #include <UIButton.h>
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		: CLevel { pDevice, pContext }
@@ -14,24 +14,30 @@ CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_Logo::Initialize()
 {
-	/*if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+	//	return E_FAIL;
 
 
- auto pStartButton = dynamic_cast<CUIButton*>(m_pGameInstance->Get_UI(TEXT("TitleCanvas"), TEXT("StartButton")));
+ //auto pStartButton = dynamic_cast<CUIButton*>(m_pGameInstance->Get_UI(TEXT("TitleCanvas"), TEXT("StartButton")));
 
- if (pStartButton)
- {
-	 pStartButton->Set_OnClick([this]() {
-		 StartGamePlay();
-		 });
- }*/
+ //if (pStartButton)
+ //{
+	// pStartButton->Set_OnClick([this]() {
+	//	 StartGamePlay();
+	//	 });
+ //}
 
 	CJsonLoader jsonLoader;
 	jsonLoader.Load_Objects("../Asset/Json/LogoObjects.json", [&]() {
 		// 이곳에 로드 후 처리할 작업을 추가합니다.
 		});
 
+
+	//jsonLoader.Load_Objects("../Asset/Json/StaticCanvas.json", [&]() {
+	//	// 이곳에 로드 후 처리할 작업을 추가합니다.
+	//	});
+	//
+	Ready_UI_Setup();
 	return S_OK;
 }
 
@@ -52,6 +58,14 @@ void CLevel_Logo::Update(_float fTimeDelta)
 			return;
 	}
 
+	if (m_pGameInstance->IsKeyPressed('F'))
+	{
+		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
+			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::ENMU_BOSS))))
+			return;
+	}
+
+
 	POINT pt = m_pGameInstance->GetMousePos();
 
 	{
@@ -68,7 +82,20 @@ void CLevel_Logo::Update(_float fTimeDelta)
 HRESULT CLevel_Logo::Render()
 {
 //	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
-
+	auto pButton = m_pGameInstance->Get_UI(TEXT("TitleCanvas"), TEXT("StartButton"));
+	if (pButton)
+	{
+		auto pStartBt = dynamic_cast<CUIButton*>(pButton);
+		if (pStartBt && pStartBt->IsHovered())
+		{
+			m_pGameInstance->Draw_Font(TEXT("Demonslayer"), TEXT("게임 시작"), _float2(970.f, 440.f), XMVectorSet(0.f,0.f,0.f, 1.f));
+		}
+		else
+		{
+			m_pGameInstance->Draw_Font(TEXT("Demonslayer"), TEXT("게임 시작"), _float2(970.f, 440.f), XMVectorSet(1.f, 1.f, 1.f, 1.f));
+		}
+	}
+	
 	return S_OK;
 }
 
@@ -82,7 +109,7 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _wstring strLayerTag)
     CanvasDesc.fSizeY = g_iWinSizeY;
     CanvasDesc.strName = L"TitleCanvas";
 
-    auto pUICanvas = CTitleCanvas::Create(m_pDevice, m_pContext);
+    auto pUICanvas = CGameplayCanvas::Create(m_pDevice, m_pContext);
     if (!pUICanvas)
         return E_FAIL;
 
@@ -96,10 +123,43 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _wstring strLayerTag)
     return S_OK;
 }
 
+void CLevel_Logo::Ready_UI_Setup()
+{
+	auto pButton = m_pGameInstance->Get_UI(TEXT("TitleCanvas"), TEXT("StartButton"));
+	if (pButton)
+	{
+		auto pStartBt = dynamic_cast<CUIButton*>(pButton);
+		if (pStartBt)
+		{
+			pStartBt->Set_OnClick([this]() {
+				StartGamePlay();
+				});
+		}
+	}
+	auto uiWind = static_cast<CUIImage*>(m_pGameInstance->Get_UI(TEXT("TitleCanvas"), TEXT("WindDeco")));
+	if (uiWind)
+	{
+		uiWind->Set_Color(_float4(0.5f, 0.5f, 0.5f, 1.f)); 
+
+	}
+	auto uiEffect = static_cast<CUIImage*>(m_pGameInstance->Get_UI(TEXT("TitleCanvas"), TEXT("Effect")));
+	if (uiEffect)
+	{
+		uiEffect->Set_Color(_float4(1.f,1.f,1.f, 0.5f)); // 반투명하게 설정
+	}
+
+	/*auto pInkImage = dynamic_cast<CUIImage*>(m_pGameInstance->Get_UI(TEXT("StaticCanvas"), TEXT("Ink")));
+	if (pInkImage)
+	{
+		pInkImage->EnableUVAnim(5, 6, 1.f);
+	}*/
+
+}
+
 void CLevel_Logo::StartGamePlay()
 {
 	if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
-		CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY))))
+		CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::MODE))))
 		return;
 }
 

@@ -32,6 +32,11 @@ namespace Engine
         XMFLOAT4			vSpecular;
     }LIGHT_DESC;
 
+    struct AnimationEvent
+    {
+        float fTime{ 0.f };
+        string name;
+    };
 
 
     typedef struct tagKeyFrame

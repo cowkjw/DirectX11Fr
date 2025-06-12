@@ -40,6 +40,7 @@ public:
 protected:
 	/* 뷰포트 상의 유아이의 중심위치 fX, fY, 사이즈 fSiuzeX, fSizeY */
 	_float			m_fX{}, m_fY{}, m_fSizeX{}, m_fSizeY{};
+	_float 		m_fWidth{}, m_fHeight{}; // 실제 렌더링 크기
 
 	/* 직교 투영을 위한 행렬. */
 	_float4x4		m_ViewMatrix{}, m_ProjMatrix{};

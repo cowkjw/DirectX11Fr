@@ -6,23 +6,6 @@
 #include "InputBuffer.h"
 #include "AnimController.h"
 
-BEGIN_NAMESPACE(Engine)
-class CAnimator;
-class CGameObject;
-class CShader;
-class CModel;
-class CRigidBody;
-class CPhysXCollider;
-class CBoxCollider;
-class CCapsuleCollider;
-class CSphereCollider;
-class CGameInstance;
-class CTransform;
-class CCollider;
-class CAnimController;
-class CAnimation;
-END_NAMESPACE
-
 BEGIN_NAMESPACE(Client)
 class IState 
 {

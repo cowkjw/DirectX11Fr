@@ -5,6 +5,7 @@ BEGIN_NAMESPACE(Engine)
 class CGameInstance;
 class CGameObject;
 class CUIObject;
+class CAnimation;
 END_NAMESPACE
 
 BEGIN_NAMESPACE(Client)
@@ -22,6 +23,8 @@ public:
 	HRESULT Load_Models(const string& filePath,function<void()> onEntryLoaded);
 	HRESULT Load_Objects(const string& filePath, function<void()> onEntryLoaded);
 	HRESULT Save_Objects(const string& filePath, function<void()> onEntryLoaded);
+
+	HRESULT LoadAnimEvent(const string& filePath,vector<CAnimation*>& animations);
 
 private:
 	void CollectAllObjects(CGameObject* root,vector<CGameObject*>& out);

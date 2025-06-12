@@ -174,7 +174,7 @@ HRESULT CEditorManager::Render()
 		);
 	}
 
-	TestNodes();
+//	TestNodes();
 	return S_OK;
 }
 static int node_id_a = 1;

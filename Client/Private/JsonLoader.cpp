@@ -5,6 +5,8 @@
 #include "EditorManager.h"
 #include "Model.h"
 #include <regex>
+#include "Animation.h"
+#include "UIProgressBar.h"
 
 CJsonLoader::CJsonLoader()
 	: m_pGameInstance{ CGameInstance::Get_Instance() }
@@ -93,10 +95,6 @@ HRESULT CJsonLoader::Load_Shaders(const string& filePath, function<void()> onEnt
 				pElems = VTXANIMMESH::Elements;
 				iNum = VTXANIMMESH::iNumElements;
 			}
-			//else if (layout == "VTXBONE") {
-			//	pElems = VTXBONE::Elements;
-			//	iNum = VTXBONE::iNumElements;
-			//}
 			//else if (layout == "VTXCOLLIDER") {
 			//	pElems = VTXCOLLIDER::Elements;
 			//	iNum = VTXCOLLIDER::iNumElements;
@@ -207,12 +205,12 @@ HRESULT CJsonLoader::Load_Objects(const string& filePath, function<void()> onEnt
 	if (!j.is_array())
 		return E_FAIL;
 
-	CEditorManager::m_vecSceneObjects.clear();
-	for (_uint i = 1; i < ToIndex(LEVEL::END); ++i)
-	{
-		m_pGameInstance->ClearObejcts(i);
-	}
-	m_pGameInstance->ClearUI();
+	//CEditorManager::m_vecSceneObjects.clear();
+	//for (_uint i = 1; i < ToIndex(LEVEL::END); ++i)
+	//{
+	//	m_pGameInstance->ClearObejcts(i);
+	//}
+	//m_pGameInstance->ClearUI();
 
 
 	// 3) ID → 객체 매핑 준비
@@ -252,7 +250,6 @@ HRESULT CJsonLoader::Load_Objects(const string& filePath, function<void()> onEnt
 		allObjs.push_back(pObj);
 	}
 
-	// 5) 부모·자식 관계 재구성
 	for (const auto& entry : j)
 	{
 		_uint id = entry["ID"].get<_uint>();
@@ -305,6 +302,8 @@ HRESULT CJsonLoader::Save_Objects(const string& filePath, function<void()> onEnt
 	for (auto* pObj : allObjs)
 	{
 		if (!pObj) continue;
+		if (dynamic_cast<CUIButton*>(pObj->GetParent())|| dynamic_cast<CUIProgressBar*>(pObj->GetParent())) // 버튼에 있는 Image는 제외
+			continue;
 		jArr.push_back(pObj->Serialize());
 	}
 
@@ -325,6 +324,45 @@ HRESULT CJsonLoader::Save_Objects(const string& filePath, function<void()> onEnt
 		return E_FAIL;
 	ofs << jsonStr;
 
+	return S_OK;
+}
+
+HRESULT CJsonLoader::LoadAnimEvent(const string& filePath, vector<CAnimation*>& animations)
+{
+	json root;
+	ifstream ifs(filePath);
+	if (ifs.is_open()) {
+		ifs >> root;
+		// "animations" 배열 순회
+		for (auto& jclip : root["animations"])
+		{
+			string clipName = jclip["clipName"];
+			for (auto& clip : animations)
+			{
+		
+				if (clip->Get_Name() == clipName)
+				{
+					if (clipName == "A_P0012_V00_C00_AtkSkl03_0")
+					{
+						int a = 0;
+					}
+					// 기존 이벤트 지우고 새로 채우기
+					clip->GetEvents().clear();
+					for (auto& jev : jclip["events"])
+					{
+						float t = jev["time"];
+						string n = jev["name"];
+						clip->AddEvent({ t, n });
+					}
+					break;
+				}
+			}
+		}
+	}
+	else
+	{
+		return E_FAIL; // 파일 열기 실패
+	}
 	return S_OK;
 }
 
@@ -408,6 +446,7 @@ void CJsonLoader::FactoryUI(CUIObject** pObjOut, const json& j)
 	uiDesc.fY = j["Position"][1].get<_float>();
 	uiDesc.fSizeX = j["Size"][0].get<_float>();
 	uiDesc.fSizeY = j["Size"][1].get<_float>();
+
 	if (j.contains("ShaderKey"))
 		uiDesc.strShaderKey = StringToWString(j["ShaderKey"].get<string>());
 	if (j.contains("TextureKey"))
@@ -420,6 +459,60 @@ void CJsonLoader::FactoryUI(CUIObject** pObjOut, const json& j)
 	*pObjOut = static_cast<CUIObject*>(m_pGameInstance->CreateUI(&uiDesc, uiType));
 	if (!*pObjOut)
 		return;
+
+	if (uiType == UI_TYPE::BUTTON)
+	{
+		auto pbutton = static_cast<CUIButton*>(*pObjOut);
+		CUIObject* pBtnImgObj = nullptr;
+		CUIObject* pHoverImgObj = nullptr;
+
+		// JSON 안 키 이름이 정확한지 확인 ("ButtonImage", "HoverImage" 와 일치해야 함)
+		FactoryUI(&pBtnImgObj, j["ButtonImage"]);
+		FactoryUI(&pHoverImgObj, j["HoverImage"]);
+
+		// CUIImage* 타입으로 변환
+		CUIImage* pBtnImage = dynamic_cast<CUIImage*>(pBtnImgObj);
+		CUIImage* pHoverImage = dynamic_cast<CUIImage*>(pHoverImgObj);
+		pBtnImage->Deserialize(j["ButtonImage"]);
+		pHoverImage->Deserialize(j["HoverImage"]);
+
+		FactoryComponent(pBtnImage, j["ButtonImage"]);
+		FactoryComponent(pHoverImage, j["HoverImage"]);
+
+
+		// 버튼에 설정
+		pbutton->SetButtonImage(pBtnImage, pHoverImage);
+
+	}
+	else if (uiType == UI_TYPE::BAR)
+	{
+		auto pUiBar = static_cast<CUIProgressBar*>(*pObjOut);
+		CUIObject* pBGImageObj = nullptr;
+		CUIObject* pFillImageObj = nullptr;
+		CUIObject* pDamageObj = nullptr;
+		FactoryUI(&pBGImageObj, j["BGImage"]);
+		FactoryUI(&pFillImageObj, j["FillImage"]);
+		FactoryUI(&pDamageObj, j["DamageImage"]);
+
+		CUIImage* pBGImage = dynamic_cast<CUIImage*>(pBGImageObj);
+		CUIImage* pFillImage = dynamic_cast<CUIImage*>(pFillImageObj);
+		CUIImage* pDamageImage = dynamic_cast<CUIImage*>(pDamageObj);
+		pBGImage->Deserialize(j["BGImage"]);
+		pFillImage->Deserialize(j["FillImage"]);
+		pDamageImage->Deserialize(j["DamageImage"]);
+		FactoryComponent(pBGImage, j["BGImage"]);
+		FactoryComponent(pFillImage, j["FillImage"]);
+		FactoryComponent(pDamageImage, j["DamageImage"]);
+		pUiBar->SetBarImage(pBGImage, pFillImage, pDamageImage);
+	}
+
+	if (auto pUiImage = dynamic_cast<CUIImage*>(*pObjOut))
+	{
+		if (j.contains("UVOffset"))
+		{
+			pUiImage->Deserialize(j);
+		}
+	}
 }
 
 void CJsonLoader::Free()

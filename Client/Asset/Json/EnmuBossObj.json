@@ -1,0 +1,239 @@
+[
+    {
+        "CreateLevel": 4,
+        "ID": 13,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_EnmuMeat",
+        "components": {
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        "isActive": true,
+        "name": "EnmuMeat",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 0,
+        "ID": 14,
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "components": {
+            "Com_Animator": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "Prototype_Component_Animator",
+                "IsActive": true
+            },
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 4,
+                "ComponentTag": "Prototype_Component_Model_EnmuLeftArm",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    21.68,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ]
+            }
+        },
+        "isActive": true,
+        "name": "EnmuLeftArm",
+        "parentId": 13,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 0,
+        "ID": 15,
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "components": {
+            "Com_Animator": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "Prototype_Component_Animator",
+                "IsActive": true
+            },
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 4,
+                "ComponentTag": "Prototype_Component_Model_EnmuRightArm",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -21.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ]
+            }
+        },
+        "isActive": true,
+        "name": "EnmuRightArm",
+        "parentId": 13,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 0,
+        "ID": 16,
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "components": {
+            "Com_Animator": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "Prototype_Component_Animator",
+                "IsActive": true
+            },
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 4,
+                "ComponentTag": "Prototype_Component_Model_Body",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ]
+            }
+        },
+        "isActive": true,
+        "name": "EnmuBody",
+        "parentId": 13,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 0,
+        "ID": 17,
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "components": {
+            "Com_Animator": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "Prototype_Component_Animator",
+                "IsActive": true
+            },
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 4,
+                "ComponentTag": "Prototype_Component_Model_EnmuHead",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.05,
+                    0.05,
+                    0.05
+                ]
+            }
+        },
+        "isActive": true,
+        "name": "EnmuHead",
+        "parentId": 13,
+        "tag": ""
+    }
+]

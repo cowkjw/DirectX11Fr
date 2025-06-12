@@ -12,5 +12,15 @@ namespace Engine
 	enum class RESOURCE_TYPE { TEXTURE, SHADER };
 	enum class MODEL { NONANIM, ANIM };
 	enum class ParamType { Bool, Trigger, Float, Int };
+	enum class ColliderType
+	{
+		BOX,
+		SPHERE,
+		CAPSULE,
+		HITBOX,
+		HURTBOX,
+		ENVIRONMENT,
+		NONE
+	};
 	
 }

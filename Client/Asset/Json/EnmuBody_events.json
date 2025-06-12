@@ -1,0 +1,55 @@
+{
+    "animations": [
+        {
+            "clipName": "A_P1011_V17_C00_AtkAngry01_1",
+            "duration": 120.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V17_C00_AtkAngry01_Cut",
+            "duration": 120.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V17_C00_AtkSkl08",
+            "duration": 120.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V17_C00_BaseNut01_1",
+            "duration": 60.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V17_C00_DmgBreak01_0",
+            "duration": 40.0,
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                }
+            ]
+        },
+        {
+            "clipName": "A_P1011_V17_C00_DmgBreak01_1",
+            "duration": 45.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V17_C00_DmgBreak01_2",
+            "duration": 45.0,
+            "events": [
+                {
+                    "name": "ActiveHitbox",
+                    "time": 44.00890350341797
+                }
+            ]
+        },
+        {
+            "clipName": "A_P1011_V17_C00_DmgDownS01_Add",
+            "duration": 20.0,
+            "events": []
+        }
+    ],
+    "object": "EnmuBody"
+}

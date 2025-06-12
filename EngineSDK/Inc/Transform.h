@@ -59,7 +59,7 @@ public:
 	void RotateToDirection(_fvector dir);
 
 
-	void FollowParent(const CTransform* pParentTransform);
+	void FollowParent(CTransform* pParentTransform);
 
 
 	json Serialize() override;
@@ -73,7 +73,7 @@ public:
 		return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix));
 	}
 
-	const auto& Get_WorldMatrix()  { return m_WorldMatrix; } // float4x4
+	auto& Get_WorldMatrix()  { return m_WorldMatrix; } // float4x4
 
 	const _float3& Get_EulerAngles() const { return m_vEulerAngles; }
 	_vector Get_RotationQuaternion() const;
@@ -88,7 +88,8 @@ public:
 	void LookAtXZ(_fvector vAt);
 
 
-	_bool IsDirty() const { return m_bDirty; }
+	_bool IsDirty() const { 
+		return m_bDirty; }
 	void SetDirty(_bool bDirty) { m_bDirty = bDirty; }
 	void UpdateEulerAngles();
 

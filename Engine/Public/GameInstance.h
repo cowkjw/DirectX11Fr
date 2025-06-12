@@ -147,7 +147,7 @@ private:
 	class CResourceMag* m_pResourceMag = { nullptr };
 	class CCollisionMag* m_pCollisionMag = { nullptr };
 	class CLight_Manager* m_pLight_Manager = { nullptr };
-//	class CFont_Manager* m_pFont_Manager = { nullptr };
+	class CFontMag* m_pFont_Manager = { nullptr };
 
 public:
 	void Release_Engine();

@@ -4,6 +4,7 @@
 #include "StateIdle.h"
 #include "InputBuffer.h"
 #include "StateHurt.h"
+#include "StateHurtAir.h"
 #include "Weapon.h"	
 #include "Environment.h"
 
@@ -19,15 +20,15 @@ CBaseCharacter::CBaseCharacter(const CBaseCharacter& Prototype)
 	, m_pShaderCom{ Prototype.m_pShaderCom }
 	, m_pModelCom{ Prototype.m_pModelCom }
 	, m_pColliderCom{ Prototype.m_pColliderCom }
-	, m_pAnimatroCom{ Prototype.m_pAnimatroCom }
+	, m_pAnimatorCom{ Prototype.m_pAnimatorCom }
 	, m_fMaxHP{ Prototype.m_fMaxHP }
 	, m_fCurrentHP{ Prototype.m_fCurrentHP }
 	, m_fStamina{ Prototype.m_fStamina }
 	, m_pWeapon{ Prototype.m_pWeapon }
-	, m_pInputBuffer{CInputBuffer::Create()}
+	, m_pInputBuffer{ CInputBuffer::Create() }
 	, m_pTarget{ Prototype.m_pTarget }
 	, m_iShaderPass{ Prototype.m_iShaderPass }
-	,m_pState{nullptr}
+	, m_pState{ nullptr }
 {
 
 }
@@ -44,9 +45,21 @@ HRESULT CBaseCharacter::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	if (FAILED(CBaseCharacter::Ready_Components()))
+		return E_FAIL;
+
 	m_pTransformCom->Scaling(_float3(0.1f, 0.1f, 0.1f));
 
 	m_fTotalTime = 0.f;
+
+	m_pAnimatorCom->RegisterEventListener("HitedAir", [&](const string& eventName) {
+		LaunchAirborne(25.f);
+		});
+
+	m_pAnimatorCom->RegisterEventListener("EndHurt", [&](const string& eventName) {
+		//	ChangeState(new StateIdle(TEXT("Idle")));
+		m_pAnimatorCom->SetBool("Hurted", false);
+		});
 
 	return S_OK;
 }
@@ -65,9 +78,15 @@ void CBaseCharacter::Update(_float fTimeDelta)
 	m_pInputBuffer->Update(m_fTotalTime);
 	UpdateState(fTimeDelta);
 
+	if (m_bAirborne)
+	{
+		UpdateAirborne(fTimeDelta);
+	}
+
+
 
 	// 3) 애니메이션 업데이트
-	m_pAnimatroCom->GetAnimController()->Update(fTimeDelta);
+	m_pAnimatorCom->GetAnimController()->Update(fTimeDelta);
 	m_pModelCom->Play_Animation(fTimeDelta);
 
 }
@@ -75,7 +94,6 @@ void CBaseCharacter::Update(_float fTimeDelta)
 void CBaseCharacter::Late_Update(_float fTimeDelta)
 {
 	CGameObject::Late_Update(fTimeDelta);
-
 	//_float3 tmp{};  
 	//XMStoreFloat3(&tmp, m_pTransformCom->Get_State(STATE::POSITION));  
 	//if (m_pGameInstance->IsAABBInFrustum(tmp, m_pTransformCom->Get_Scaled()))  
@@ -186,7 +204,7 @@ void CBaseCharacter::UpdateState(_float fTimeDelta)
 
 void CBaseCharacter::FillInput(InputData& outInput)
 {
-	if (m_pAnimatroCom->CheckBool("Hurted"))
+	if (m_pAnimatorCom->CheckBool("Hurted"))
 		return; // 피격 중이면 입력 무시
 
 	outInput = InputData();  // 기본값
@@ -213,15 +231,15 @@ void CBaseCharacter::FillInput(InputData& outInput)
 		{
 			outInput.doAttack3Down = true;
 		}
-	
+
 		outInput.doAttack4 = true;
 		outInput.doAttack3 = true;
 		outInput.doAttack2 = true;
 		outInput.doAttack = true;
-		
+
 	}
 	// 3타: LightAttack×3 + 위/아래 판정 (시간 제한 1초)
-	else if (m_pInputBuffer-> CheckCombo(commands,
+	else if (m_pInputBuffer->CheckCombo(commands,
 		{ ECommand::LightAttack, ECommand::LightAttack,
 		  ECommand::LightAttack },
 		1.f))
@@ -257,9 +275,9 @@ void CBaseCharacter::FillInput(InputData& outInput)
 		case ECommand::Guard:
 			outInput.doGuard = true;
 			break;
-		case ECommand::Skill2 :
-				outInput.doSkill2 = true;
-				break;
+		case ECommand::Skill2:
+			outInput.doSkill2 = true;
+			break;
 			break;
 		case ECommand::Skill0:
 
@@ -292,13 +310,17 @@ void CBaseCharacter::Set_Target(const _wstring& name, LEVEL eLevel)
 
 void CBaseCharacter::OnCollisionEnter(CCollider* other)
 {
-	if (other->GetType() == CCollider::ColliderType::HITBOX)
+	if (other->GetType() == ColliderType::HITBOX)
 	{
 		CBaseCharacter* pAttacker = static_cast<CBaseCharacter*>(other->GetOwner()->GetParent()); // 무기인 경우 (사실상 다 히트박스의 부모 기준일거임)
 		if (pAttacker == nullptr)
 		{
 			pAttacker = static_cast<CBaseCharacter*>(other->GetOwner());
 			return;
+		}
+		if (this == pAttacker)
+		{
+			return; // 자기 자신과 충돌은 무시
 		}
 
 		// 나와 공격자 사이의 방향 계산 (XZ 평면)
@@ -317,7 +339,7 @@ void CBaseCharacter::OnCollisionEnter(CCollider* other)
 			: XMVectorNegate(pAttacker->GetTransform()->Get_State(STATE::LOOK));
 
 		// 뒤로 밀려나는 거리
-		const _float knockbackDistance = 2.f; 
+		const _float knockbackDistance = 2.f;
 		XMVECTOR offset = XMVectorScale(backDir, knockbackDistance);
 
 		// 4) 현재 위치에 offset을 더해 새로운 위치로 설정
@@ -327,28 +349,61 @@ void CBaseCharacter::OnCollisionEnter(CCollider* other)
 		newPos = XMVectorSetY(newPos, origY);
 		GetTransform()->Set_State(STATE::POSITION, newPos);
 
-		if (m_eState != CSTATE::HURT&&m_eState!=CSTATE::GUARD)
+		if (m_eState != CSTATE::HURT && m_eState != CSTATE::GUARD)
 		{
-		ChangeState(new StateHurt());
+			ChangeState(new StateHurt());
+			TakeDamage(2.f); // 피해량 조정 가능
 		}
-	}
 
+		_float distanceZ = XMVectorGetZ(newPos - attackerPos);
+
+
+	}
+	m_bFirstCollision = true; // 첫 충돌 처리 완료
 }
 
 
 void CBaseCharacter::OnCollisionStay(CCollider* other, _float fTimeDelta)
 {
-
+	m_bFirstCollision = false; // 첫 충돌 이후에는 계속 충돌 상태로 유지
 }
 
 
 void CBaseCharacter::OnCollisionExit(CCollider* other)
 {
+	m_bFirstCollision = false; // 충돌 종료 시 첫 충돌 상태 해제
+}
+
+void CBaseCharacter::LaunchAirborne(_float fJumpForce)
+{
+	m_bAirborne = true;
+	m_Velocity.y = fJumpForce; // 점프 힘 추가
+	m_bIsJumping = true; // 점프 상태로 설정
+	ChangeState(new StateHurtAir());
+}
+
+void CBaseCharacter::UpdateAirborne(_float fTimeDelta)
+{
+	_vector vVel = XMLoadFloat3(&m_Velocity);
+	_vector gravity = XMLoadFloat3(&GRAVITY) * fTimeDelta * 6.5f;
+	vVel += gravity;
+	XMStoreFloat3(&m_Velocity, vVel);
+	_vector pos = m_pTransformCom->Get_State(STATE::POSITION);
+	pos += vVel * fTimeDelta;
+	m_pTransformCom->Set_State(STATE::POSITION, pos);
+
+	if (m_pTransformCom->Get_State(STATE::POSITION).m128_f32[1] < 0.f) // 바닥에 닿으면
+	{
+		m_bAirborne = false; // 공중 상태 해제
+		m_Velocity.y = 0.f; // 속도 초기화
+		m_bIsJumping = false; // 점프 상태 해제
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetY(m_pTransformCom->Get_State(STATE::POSITION), 0.f)); // 바닥에 고정
+	}
 }
 
 void CBaseCharacter::Ready_Animation()
-{	
-	
+{
+
 }
 
 HRESULT CBaseCharacter::Ready_Components()
@@ -373,8 +428,14 @@ HRESULT CBaseCharacter::Ready_Components()
 
 	///* For.Com_AnimController*/
 	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Animator"),
-	//	TEXT("Com_Animator"), reinterpret_cast<CComponent**>(&m_pAnimatroCom), m_pModelCom)))
+	//	TEXT("Com_Animator"), reinterpret_cast<CComponent**>(&m_pAnimatorCom), m_pModelCom)))
 	//	return E_FAIL;
+
+
+	/* For.Com_AnimController*/
+	if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Animator"),
+		TEXT("Com_Animator"), reinterpret_cast<CComponent**>(&m_pAnimatorCom), m_pModelCom)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -435,7 +496,7 @@ void CBaseCharacter::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);
 
-	Safe_Release(m_pAnimatroCom);
+	Safe_Release(m_pAnimatorCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Delete(m_pState);
 	Safe_Release(m_pInputBuffer);

@@ -45,6 +45,8 @@ public:
 	HRESULT Loading_For_Logo();
 	HRESULT Loading_For_GamePlay();
 	HRESULT Loading_For_Editor();
+	HRESULT Loading_For_EnmuBoss();
+	HRESULT Loading_For_Mode();
 
 
 public:

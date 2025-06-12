@@ -3,6 +3,7 @@
 #include "Animation.h"
 
 BEGIN_NAMESPACE(Engine)
+using AnimEventCallback = function<void(const string&)>;
 class ENGINE_DLL CAnimator final  :  public CComponent
 {
 public:
@@ -39,6 +40,7 @@ public:
     // 즉시 전환: 현재 애니메이션을 멈추고 바로 새 애니메이션 재생
     void Play(_uint iAnimIndex, _bool isLoop = true);
 	void PlayClip(class CAnimation* pAnim, _bool isLoop = true);
+	void StopAnimation() { m_pCurrentAnim = nullptr; m_iCurrentAnimIndex = 0; m_bIsFinished = true; }
 
     void StartTransition(CAnimation* from, CAnimation* to, _float duration = 0.2f);
     void Set_Animation(_uint iIndex, _float fadeDuration = 0.2f, _bool isLoop = false);
@@ -50,6 +52,8 @@ public:
 	class CAnimation* GetCurrentAnim() const { return m_pCurrentAnim; }
     class CAnimController* GetAnimController() const { return m_pAnimController; }
 
+    void RegisterEventListener(const string& eventName, AnimEventCallback cb);
+	const unordered_map<string, vector<AnimEventCallback>>& GetEventListeners() const { return m_eventListeners; }
 
 
 	_bool IsBlending() const { return m_Blend.active; }
@@ -126,6 +130,7 @@ private:
 	class CAnimController* m_pAnimController = nullptr; // 애니메이션 컨트롤러
     unordered_map<string, Parameter> m_Params;
 	_bool m_bIsFinished = false; // 애니메이션 재생 완료 여부
+    unordered_map<string, vector<AnimEventCallback>> m_eventListeners;
 
 public:
 	static CAnimator* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

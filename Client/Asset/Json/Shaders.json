@@ -23,6 +23,18 @@
       "path": "../Asset/ShaderFiles/Shader_VtxAnimMesh.hlsl",
       "layout": "VTXANIMMESH",
       "static": true
+    },
+    {
+      "key": "Shader_UICompose",
+      "path": "../Asset/ShaderFiles/Shader_UICompose.hlsl",
+      "layout": "VTXPOSTEX",
+      "static": true
+    },
+    {
+      "key": "Shader_VtxPosTexNonAlpha",
+      "path": "../Asset/ShaderFiles/Shader_VtxPosTexNonAlpha.hlsl",
+      "layout": "VTXPOSTEX",
+      "static": true
     }
   ]
 }

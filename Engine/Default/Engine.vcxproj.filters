@@ -166,6 +166,10 @@
     <ClInclude Include="..\Public\Light_Manager.h">
       <Filter>01.Utility\08. Light\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\CustomFont.h">
+      <Filter>01.Utility\11. Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FontMag.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -315,6 +319,10 @@
     <ClCompile Include="..\Private\Light_Manager.cpp">
       <Filter>01.Utility\08. Light\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\CustomFont.cpp">
+      <Filter>01.Utility\11. Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FontMag.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00.System">
@@ -460,6 +468,12 @@
     </Filter>
     <Filter Include="01.Utility\08. Light\Manager">
       <UniqueIdentifier>{9516cf6d-5c31-4d84-b75b-b6a627dfd6fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\11. Font">
+      <UniqueIdentifier>{11917dab-9d7b-462e-9fb6-1563247e8241}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\11. Font\Manager">
+      <UniqueIdentifier>{d7cdf22f-e79e-41b6-b2d7-4fd3376a12de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -34,6 +34,8 @@ HRESULT CFreeCamera::Initialize(void* pArg)
 	//CAMERA_FREE_DESC* pDesc = static_cast<CAMERA_FREE_DESC*>(pArg);
 	//m_fMouseSensor = pDesc->fMouseSensor;
 
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 20.f, 150.f, 1.f));
+
 	return S_OK;
 }
 

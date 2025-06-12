@@ -6,6 +6,6 @@ class IObserver
 public:
     
     virtual ~IObserver() = default;
-    virtual void Notify(MsgT const& msg) = 0;
+    virtual void Notify(const MsgT& msg) = 0;
 };
 

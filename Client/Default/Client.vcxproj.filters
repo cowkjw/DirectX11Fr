@@ -154,6 +154,48 @@
     <Filter Include="94. Pattern\State\DefaultState\Hurt">
       <UniqueIdentifier>{54a08314-14bd-4f48-9a13-b2fe24dab60e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00.Levels\Enmu_Boss">
+      <UniqueIdentifier>{23c0d03d-76f5-464c-9eaf-3672ca91f84b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\State\Enmu">
+      <UniqueIdentifier>{4f49e5e8-9fa8-4b1f-9106-3970b34f2fdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Character\Enmu\EnmuMeat">
+      <UniqueIdentifier>{7d1d9b35-f7e9-4d0c-8d67-16bfd8584fc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Character\Enmu\EnmuMeat\Parts">
+      <UniqueIdentifier>{f78c85c9-9610-4099-a842-24631d1c387f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Character\Enmu\EnmuMeat\Parts\Head">
+      <UniqueIdentifier>{4fbd8442-feb8-4a4f-ae3d-969b375491b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Character\Enmu\EnmuMeat\Parts\Body">
+      <UniqueIdentifier>{b27cf463-06f4-4520-a93c-93ca9fafe99a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Character\Enmu\EnmuMeat\Parts\Arm">
+      <UniqueIdentifier>{43d64d51-25f0-4de7-9ca4-8bde2fce81e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\State\Enmu\Meat">
+      <UniqueIdentifier>{ff78051d-ff9c-4591-9431-235308b603f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\State\Enmu\Meat\Arm">
+      <UniqueIdentifier>{96050999-8ff2-42aa-86f0-28745c953c7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\State\Enmu\Meat\Body">
+      <UniqueIdentifier>{8d62ea03-c414-47d5-8a2c-ce4d3c7098d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94. Pattern\State\Enmu\Meat\Head">
+      <UniqueIdentifier>{ab474a26-6f88-4085-87d5-5baa000d8e17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Character\Enmu\EnmuMeat\Parts\Arm\Tentacle">
+      <UniqueIdentifier>{f2aeb05e-25e2-4f35-a28a-517b9857f597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Levels\Mode">
+      <UniqueIdentifier>{320476e3-7ca6-45ac-85d7-3982e6a90ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\UI\Ink">
+      <UniqueIdentifier>{a57eec3e-c13b-4171-ac53-619d26dd0234}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -222,7 +264,7 @@
     <ClInclude Include="..\public\FreeCamera.h">
       <Filter>01.GameObject\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\TitleCanvas.h">
+    <ClInclude Include="..\public\GameplayCanvas.h">
       <Filter>01.GameObject\UI\Title</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Terrain.h">
@@ -336,6 +378,69 @@
     <ClInclude Include="..\public\BodyColliderParts.h">
       <Filter>01.GameObject\Character</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_EnmuBoss.h">
+      <Filter>00.Levels\Enmu_Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EnmuArm.h">
+      <Filter>01.GameObject\Character\Enmu\EnmuMeat\Parts\Arm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EnmuParts.h">
+      <Filter>01.GameObject\Character\Enmu\EnmuMeat\Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EnmuMeat.h">
+      <Filter>01.GameObject\Character\Enmu\EnmuMeat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EnmuBody.h">
+      <Filter>01.GameObject\Character\Enmu\EnmuMeat\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EnmuHead.h">
+      <Filter>01.GameObject\Character\Enmu\EnmuMeat\Parts\Head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BossState.h">
+      <Filter>94. Pattern\State\Enmu\Meat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BossIdle.h">
+      <Filter>94. Pattern\State\Enmu\Meat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BossAngryFreeze.h">
+      <Filter>94. Pattern\State\Enmu\Meat\Arm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BossFollowPunch.h">
+      <Filter>94. Pattern\State\Enmu\Meat\Arm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BossFreezeAttack.h">
+      <Filter>94. Pattern\State\Enmu\Meat\Arm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BossHandAttack.h">
+      <Filter>94. Pattern\State\Enmu\Meat\Arm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BossPunch.h">
+      <Filter>94. Pattern\State\Enmu\Meat\Arm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BossTentacle.h">
+      <Filter>94. Pattern\State\Enmu\Meat\Arm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BossSwingAttack.h">
+      <Filter>94. Pattern\State\Enmu\Meat\Arm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BossOpen.h">
+      <Filter>94. Pattern\State\Enmu\Meat\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BossHurt.h">
+      <Filter>94. Pattern\State\Enmu\Meat\Head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EnmuTentacle.h">
+      <Filter>01.GameObject\Character\Enmu\EnmuMeat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateHurtAir.h">
+      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Mode.h">
+      <Filter>00.Levels\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UIAnimImage.h">
+      <Filter>01.GameObject\UI\Ink</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -405,7 +510,7 @@
     <ClCompile Include="..\private\FreeCamera.cpp">
       <Filter>01.GameObject\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\TitleCanvas.cpp">
+    <ClCompile Include="..\private\GameplayCanvas.cpp">
       <Filter>01.GameObject\UI\Title</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp">
@@ -531,6 +636,69 @@
     <ClCompile Include="..\private\BodyColliderParts.cpp">
       <Filter>01.GameObject\Character</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Level_EnmuBoss.cpp">
+      <Filter>00.Levels\Enmu_Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EnmuArm.cpp">
+      <Filter>01.GameObject\Character\Enmu\EnmuMeat\Parts\Arm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EnmuParts.cpp">
+      <Filter>01.GameObject\Character\Enmu\EnmuMeat\Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EnmuMeat.cpp">
+      <Filter>01.GameObject\Character\Enmu\EnmuMeat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EnmuBody.cpp">
+      <Filter>01.GameObject\Character\Enmu\EnmuMeat\Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EnmuHead.cpp">
+      <Filter>01.GameObject\Character\Enmu\EnmuMeat\Parts\Head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BossState.cpp">
+      <Filter>94. Pattern\State\Enmu\Meat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BossAngryFreeze.cpp">
+      <Filter>94. Pattern\State\Enmu\Meat\Arm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BossFollowPunch.cpp">
+      <Filter>94. Pattern\State\Enmu\Meat\Arm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BossFreezeAttack.cpp">
+      <Filter>94. Pattern\State\Enmu\Meat\Arm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BossHandAttack.cpp">
+      <Filter>94. Pattern\State\Enmu\Meat\Arm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BossPunch.cpp">
+      <Filter>94. Pattern\State\Enmu\Meat\Arm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BossTentacle.cpp">
+      <Filter>94. Pattern\State\Enmu\Meat\Arm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BossSwingAttack.cpp">
+      <Filter>94. Pattern\State\Enmu\Meat\Arm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BossOpen.cpp">
+      <Filter>94. Pattern\State\Enmu\Meat\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BossHurt.cpp">
+      <Filter>94. Pattern\State\Enmu\Meat\Head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BossIdle.cpp">
+      <Filter>94. Pattern\State\Enmu\Meat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EnmuTentacle.cpp">
+      <Filter>01.GameObject\Character\Enmu\EnmuMeat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateHurtAir.cpp">
+      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Mode.cpp">
+      <Filter>00.Levels\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UIAnimImage.cpp">
+      <Filter>01.GameObject\UI\Ink</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTex.hlsl">
@@ -543,6 +711,12 @@
       <Filter>100.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxAnimMesh.hlsl">
+      <Filter>100.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_UICompose.hlsl">
+      <Filter>100.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTexNonAlpha.hlsl">
       <Filter>100.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

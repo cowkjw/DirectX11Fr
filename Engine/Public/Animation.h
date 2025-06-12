@@ -15,7 +15,8 @@ public:
 	HRESULT Initialize(const aiAnimation* pAIAnimation, const vector<class CBone*>& Bones);
 	HRESULT InitializeByBinary(ifstream& ifs, const vector<class CBone*>& Bones);
 
-	_bool Update_Bones(_float fTimeDelta, const vector<CBone*>& Bones, _bool isLoop);
+//	_bool Update_Bones(_float fTimeDelta, const vector<CBone*>& Bones, _bool isLoop);
+	_bool Update_Bones(_float fTimeDelta,const vector<CBone*>& Bones, _bool isLoop, vector<string>* outEvents = nullptr);
 
 	void ExportBinary(ofstream& ofs);
 
@@ -40,6 +41,9 @@ public:
 		return m_fDuration / m_fTickPerSecond;
 	}
 
+	void AddEvent(AnimationEvent vEvent) { m_events.push_back(vEvent); }
+	vector<AnimationEvent>& GetEvents() { return m_events; }
+
 public:
 	void ResetTrack()
 	{
@@ -59,6 +63,7 @@ private:
 	char m_Name[MAX_PATH] = {};
 	_bool m_isLoop = false;
 	vector<class CBone*> m_Bones;
+	vector<AnimationEvent> m_events;
 public:
 	static CAnimation* Create(const aiAnimation* pAIAnimation, const vector<class CBone*>& Bones);
 	static CAnimation* CreateByBinary(ifstream& ifs, const vector<class CBone*>& Bones);

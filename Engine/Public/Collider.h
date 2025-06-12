@@ -8,17 +8,7 @@ BEGIN_NAMESPACE(Engine)
 class ENGINE_DLL CCollider : public CComponent
 {
 	friend class CCollisionMag;
-public:
-	enum class ColliderType
-	{
-		BOX,
-		SPHERE,
-		CAPSULE,
-		HITBOX,
-		HURTBOX,
-		ENVIRONMENT,
-		NONE
-	};
+
 protected:
 	CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CCollider(const CCollider& Prototype);

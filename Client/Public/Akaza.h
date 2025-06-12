@@ -34,6 +34,7 @@ public:
 public:
 	void SetComState(COM_STATE eComState) { m_eComState = eComState; }
 	COM_STATE GetComState() const { return m_eComState; }
+	virtual void TakeDamage(_float fDamage) override;
 private:
 	virtual HRESULT Ready_Components() override;
 	virtual void Ready_Animation() override;
@@ -41,6 +42,10 @@ private:
 	_bool IsCooldownReady(_float& fCooldownVar, _float fTimeDelta, _float fBaseDelay);
 	virtual void FillInput(InputData& outInput) override;
 	virtual void HandleInput() override;
+
+	void ActiveCollider();
+	void DeactiveCollider();
+
 
 private:
 	

@@ -3,6 +3,7 @@
 #include <JsonLoader.h>
 BEGIN_NAMESPACE(Engine)
 class CGameObject;
+class CAnimation;
 END_NAMESPACE
 
 BEGIN_NAMESPACE(Client)
@@ -23,6 +24,7 @@ private:
 	void UpdatePrototypeList();
 	void Get_PrototypeList();
 	void FBXLodaer();
+	void DrawAnimEventEditor();
 
 	CGameObject* ClonePrototype(const string& prototypeName, const wstring& instanceName,void* pArg = nullptr);
 

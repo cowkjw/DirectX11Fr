@@ -54,9 +54,9 @@ HRESULT CWeapon::Initialize(void* pArg)
 	m_pColliderCom2->SetListener(this);
 
 
-	m_pColliderCom->SetColliderType(CCollider::ColliderType::HITBOX);
-	m_pColliderCom1->SetColliderType(CCollider::ColliderType::HITBOX);
-	m_pColliderCom2->SetColliderType(CCollider::ColliderType::HITBOX);
+	m_pColliderCom->SetColliderType(ColliderType::HITBOX);
+	m_pColliderCom1->SetColliderType(ColliderType::HITBOX);
+	m_pColliderCom2->SetColliderType(ColliderType::HITBOX);
 
 	m_pColliderCom->SetActive(false);
 	m_pColliderCom1->SetActive(false);
@@ -73,7 +73,7 @@ void CWeapon::Update(_float fTimeDelta)
 {
 	if (auto pCharacter = static_cast<CBaseCharacter*>(m_pParent))
 	{
-		_bool bCanAttack = pCharacter->GetState() == CBaseCharacter::CSTATE::ATTACK || pCharacter->GetState() == CBaseCharacter::CSTATE::SKILL;
+	/*	_bool bCanAttack = pCharacter->GetState() == CBaseCharacter::CSTATE::ATTACK || pCharacter->GetState() == CBaseCharacter::CSTATE::SKILL;
 
 		m_pColliderCom->SetActive(bCanAttack);
 		m_pColliderCom1->SetActive(bCanAttack);
@@ -82,7 +82,7 @@ void CWeapon::Update(_float fTimeDelta)
 
 		m_pColliderCom->SetDrawDebug(bCanAttack);
 		m_pColliderCom1->SetDrawDebug(bCanAttack);
-		m_pColliderCom2->SetDrawDebug(bCanAttack);
+		m_pColliderCom2->SetDrawDebug(bCanAttack);*/
 	}
 }
 
@@ -154,6 +154,13 @@ HRESULT CWeapon::Render()
 	return S_OK;
 }
 
+void CWeapon::LaucnhTargetAirborne(CBaseCharacter* pTarget, _float fForce)
+{
+	if (!pTarget || pTarget->GetState()== CBaseCharacter::CSTATE::GUARD)
+		return;
+	pTarget->LaunchAirborne(fForce);
+}
+
 
 
 HRESULT CWeapon::Ready_Components()
@@ -164,7 +171,11 @@ HRESULT CWeapon::Ready_Components()
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_KoujuroWeapon"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+	{
+		if (FAILED(__super::Add_Component(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_KoujuroWeapon"),
+			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
+	}
 	///* For.Com_Collider */
 	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_Capsule"),
 	//	TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom))))
@@ -235,6 +246,8 @@ void CWeapon::Free()
 
 void CWeapon::OnCollisionEnter(CCollider* other)
 {
+	if (!m_bFirstCollision) return;
+	m_bFirstCollision = false;
 }
 
 void CWeapon::OnCollisionStay(CCollider* other, float fTimeDelta)
@@ -243,4 +256,5 @@ void CWeapon::OnCollisionStay(CCollider* other, float fTimeDelta)
 
 void CWeapon::OnCollisionExit(CCollider* other)
 {
+	m_bFirstCollision = false;
 }

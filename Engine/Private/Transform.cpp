@@ -200,16 +200,17 @@ void CTransform::RotateToDirection(_fvector dir)
 	m_bDirty = true;
 }
 
-void CTransform::FollowParent(const CTransform* pParentTransform)
+void CTransform::FollowParent(CTransform* pParentTransform)
 {
 	if (!pParentTransform) return;
 
  // 1) 부모 월드
-	XMMATRIX parentWInv = pParentTransform->Get_WorldMatrix_Inverse();
+	_float4x4  parentW = pParentTransform->Get_WorldMatrix();
+	XMMATRIX parentWMat = XMLoadFloat4x4(&parentW);
 	// 2) 내 월드
-	XMMATRIX myWorld = XMLoadFloat4x4(&m_WorldMatrix);
+	XMMATRIX myWorld = Get_WorldMatrix_Inverse();
 	// 3) 월드 = local × 부모월드
-	XMMATRIX worldM = XMMatrixMultiply(myWorld, parentWInv);
+	XMMATRIX worldM = XMMatrixMultiply(myWorld, parentWMat);
 	// 4) 결과 저장
 	XMStoreFloat4x4(&m_WorldMatrix, worldM);
 }

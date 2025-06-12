@@ -5,19 +5,23 @@
 void StateHurt::Enter(CBaseCharacter* pChar)
 {
 	auto pAnim = pChar->Get_Animator();
+
+
+
 	pAnim->SetBool("Hurted", true);
 	pAnim->SetTrigger("Hurt");
 	pAnim->SetBool("Move", false);
 	pChar->SetState(CBaseCharacter::CSTATE::HURT);
 }
 
-void StateHurt::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)
+void StateHurt::Update(CBaseCharacter* pChar, const InputData& input, _float fTimeDelta)
 {
 	CGameInstance* gi = CGameInstance::Get_Instance();
 	auto pAnim = pChar->Get_Animator();
 	auto animCtrl = pAnim->GetAnimController();
 	const string& stateName = animCtrl->GetCurrentState()->stateName;
-	if (pAnim->GetCurrentAnimProgress() >= 1.f)
+
+	if (pAnim->CheckBool("Hurted") == false)
 	{
 		_bool bMoving = !XMVector3Equal(input.moveDir, XMVectorZero());
 		if (bMoving)
@@ -30,10 +34,14 @@ void StateHurt::Update(CBaseCharacter* pChar, const InputData& input, float fTim
 		}
 		return;
 	}
+	///*if (pAnim->GetCurrentAnimProgress() >= 1.f)
+	//{
+	//
+	//}*/
 }
 
 void StateHurt::Exit(CBaseCharacter* pChar)
 {
 	auto pAnim = pChar->Get_Animator();
-	pAnim->SetBool("Hurted", false);
+	//pAnim->SetBool("Hurted", false);
 }

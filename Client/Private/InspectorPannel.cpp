@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "GameInstance.h"
 #include <EditorManager.h>
+#include "UIObject.h"
 #include "BoxCollider.h"
 #include "CapsuleCollider.h"
 #include "SphereCollider.h"
@@ -133,11 +134,20 @@ void CInspectorPannel::DrawInspector()
         trans->Set_State(STATE::POSITION, pos);
       if (ImGui::DragFloat3("Rotation", reinterpret_cast<float*>(&rot), 0.1f, -10000.f, 10000.f))
           trans->Rotate_EulerAngles(rot);
-    if (ImGui::DragFloat3("Scale", reinterpret_cast<_float*>(&scl), 0.1f, 0.1f, 1000.f))
+    if (ImGui::DragFloat3("Scale", reinterpret_cast<_float*>(&scl), 0.1f, 0.001f, 1000.f))
         trans->Scaling(scl);
 
+	if (auto pUI = dynamic_cast<CUIObject*>(CEditorManager::m_pSelectedObject))
+	{
+		// UI 전용 속성
+		ImGui::Text("UI Properties:");
+		_int sort = pUI->GetSortingOrder();
+		ImGui::InputInt("SortOrder", &sort);
+		pUI->SetSortingOrder(sort);
+	}
+
 	ImGui::Separator();
-	DrawColliderInspector();
+//	DrawColliderInspector();
 	// 분리된 컴포넌트 UI
 	DrawComponentList();
 	ImGui::Separator();

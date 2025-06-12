@@ -12,6 +12,8 @@
 #include "StateSkill1.h"
 #include "StateSkill2.h"
 #include "BodyColliderParts.h"
+#include "UIProgressBar.h"
+#include <JsonLoader.h>
 
 
 using AniCon = CAnimController::Condition;
@@ -40,13 +42,25 @@ HRESULT CAkaza::Initialize(void* pArg)
 	Desc.fSpeedPerSec = 40.f;
 	Desc.strName = TEXT("Akaza");
 
-	if (FAILED(CGameObject::Initialize(&Desc)))
+	if (FAILED(Ready_Components()))
+		return E_FAIL;
+
+
+	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
 
 	m_pTransformCom->Scaling(_float3(0.1f, 0.1f, 0.1f));
 
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
+
+	// 애니메이션 이벤트 등록
+	m_pAnimatorCom->RegisterEventListener("ActiveHitbox", [&](const string&) {
+		ActiveCollider();
+		});
+
+	m_pAnimatorCom->RegisterEventListener("DeactiveHitbox", [&](const string&) {
+		DeactiveCollider();
+		});
+
 
 	Ready_Animation();
 
@@ -112,13 +126,13 @@ void CAkaza::Priority_Update(_float fTimeDelta)
 	static _uint iAnim = 0;
 	if (m_pGameInstance->IsKeyPressed('N'))
 	{
-		m_pAnimatroCom->Set_Animation(iAnim, 0.15f);
+		m_pAnimatorCom->Set_Animation(iAnim, 0.15f);
 		iAnim++;
 	}
 
 	if (m_pGameInstance->IsKeyPressed('M'))
 	{
-		m_pAnimatroCom->Set_Animation(iAnim, 0.15f);
+		m_pAnimatorCom->Set_Animation(iAnim, 0.15f);
 		iAnim = max(0, iAnim - 1);
 	}
 
@@ -130,7 +144,7 @@ void CAkaza::Update(_float fTimeDelta)
 	//__super::Update(fTimeDelta);
 
 	//UpdateState(fTimeDelta);
-	//m_pAnimatroCom->GetAnimController()->Update(fTimeDelta);
+	//m_pAnimatorCom->GetAnimController()->Update(fTimeDelta);
 	//m_pModelCom->Play_Animation(fTimeDelta);
 
 	for (auto& child : m_vecChildren)
@@ -155,10 +169,10 @@ void CAkaza::Late_Update(_float fTimeDelta)
 	{
 		auto currentState = m_pState->GetStateName();
 
-		auto animCtrl = m_pAnimatroCom->GetAnimController();
+		auto animCtrl = m_pAnimatorCom->GetAnimController();
 		//if (animCtrl)
 		//{
-		//	auto currentAnim = m_pAnimatroCom->GetCurrentAnimName();
+		//	auto currentAnim = m_pAnimatorCom->GetCurrentAnimName();
 		//	char buf[MAX_PATH];
 		//sprintf_s(buf, "현재 애니메이션: %s", currentAnim);
 		//SetWindowTextA(g_hWnd, buf);
@@ -180,6 +194,17 @@ HRESULT CAkaza::Render()
 	return S_OK;
 }
 
+void CAkaza::TakeDamage(_float fDamage)
+{
+	__super::TakeDamage(fDamage);
+	auto pBar = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("RightLifeBar"));
+	if (pBar)
+	{
+		CUIProgressBar* pRightBar = static_cast<CUIProgressBar*>(pBar);
+		pRightBar->ApplyDamage(fDamage);
+	}
+}
+
 HRESULT CAkaza::Ready_Components()
 {
 	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxAnimMesh"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
@@ -191,10 +216,10 @@ HRESULT CAkaza::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-	/* For.Com_AnimController*/
-	if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Animator"),
-		TEXT("Com_Animator"), reinterpret_cast<CComponent**>(&m_pAnimatroCom), m_pModelCom)))
-		return E_FAIL;
+	///* For.Com_AnimController*/
+	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Animator"),
+	//	TEXT("Com_Animator"), reinterpret_cast<CComponent**>(&m_pAnimatorCom), m_pModelCom)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -202,8 +227,14 @@ HRESULT CAkaza::Ready_Components()
 void CAkaza::Ready_Animation()
 {
 
-	m_pAnimatroCom->PlayClip(m_pModelCom->GetAnimationClipByName("A_P1012_V00_C90_BaseNut01_1"));
-	auto ctrl = m_pAnimatroCom->GetAnimController();
+	m_pAnimatorCom->PlayClip(m_pModelCom->GetAnimationClipByName("A_P1012_V00_C90_BaseNut01_1"));
+	auto animations = m_pModelCom->GetAnimations();
+	CJsonLoader jsonLoader;
+	jsonLoader.LoadAnimEvent("../Asset/Json/Akaza_events.json", animations);
+	jsonLoader.Free();
+
+
+	auto ctrl = m_pAnimatorCom->GetAnimController();
 	// 2) 상태(State) 등록
 	   // Idle
 	auto idleAnim = m_pModelCom->GetAnimationClipByName("A_P1012_V00_C90_BaseNut01_1");
@@ -290,6 +321,10 @@ void CAkaza::Ready_Animation()
 	auto animHurtFront = m_pModelCom->GetAnimationClipByName("A_P0000_V00_C00_Dmg01_F");
 	animHurtFront->SetLoop(false);
 	size_t hurtFIdx = ctrl->AddState("Hurt_F", animHurtFront, 12);
+
+	auto animHurtAirborne = m_pModelCom->GetAnimationClipByName("A_P0000_V00_C00_Dmg01A_F"); // 공중 상태에서 
+	animHurtAirborne->SetLoop(false);
+	size_t hurtAirborneIdx = ctrl->AddState("Hurt_Airborne", animHurtAirborne, m_pModelCom->GetAnimationMap()[animHurtAirborne->Get_Name()]);
 
 
 
@@ -395,31 +430,32 @@ void CAkaza::Ready_Animation()
 
 
 	// 3) 파라미터(Parameter) 등록
-	m_pAnimatroCom->AddBool("Move");
-	m_pAnimatroCom->AddBool("Jump");
-	m_pAnimatroCom->AddBool("Guard");
-	m_pAnimatroCom->AddBool("Attacking");
-	m_pAnimatroCom->AddTrigger("JumpAttack");
-	m_pAnimatroCom->AddTrigger("Attack");
-	m_pAnimatroCom->AddTrigger("AttackDown");
-	m_pAnimatroCom->AddTrigger("AttackUp");
-	m_pAnimatroCom->AddTrigger("Skill0");
-	m_pAnimatroCom->AddTrigger("Skill1");
-	m_pAnimatroCom->AddTrigger("Skill2");
-	m_pAnimatroCom->AddTrigger("DashAttack");
-	m_pAnimatroCom->AddTrigger("StepBack");
-	m_pAnimatroCom->AddTrigger("StepFront");
-	m_pAnimatroCom->AddTrigger("StepLeft");
-	m_pAnimatroCom->AddTrigger("StepLeft2");
-	m_pAnimatroCom->AddTrigger("StepRight");
-	m_pAnimatroCom->AddTrigger("StepRight2");
-	m_pAnimatroCom->AddTrigger("StepRightJump");
-	m_pAnimatroCom->AddTrigger("StepLeftJump");
-	m_pAnimatroCom->AddTrigger("StepBackJump");
-	m_pAnimatroCom->AddTrigger("StepFrontJump");
-	m_pAnimatroCom->AddTrigger("Hurt");
-	m_pAnimatroCom->AddBool("Stepping"); // 스텝 중인지 여부
-	m_pAnimatroCom->AddBool("Hurted");
+	m_pAnimatorCom->AddBool("Move");
+	m_pAnimatorCom->AddBool("Jump");
+	m_pAnimatorCom->AddBool("Guard");
+	m_pAnimatorCom->AddBool("Attacking");
+	m_pAnimatorCom->AddTrigger("JumpAttack");
+	m_pAnimatorCom->AddTrigger("Attack");
+	m_pAnimatorCom->AddTrigger("AttackDown");
+	m_pAnimatorCom->AddTrigger("AttackUp");
+	m_pAnimatorCom->AddTrigger("Skill0");
+	m_pAnimatorCom->AddTrigger("Skill1");
+	m_pAnimatorCom->AddTrigger("Skill2");
+	m_pAnimatorCom->AddTrigger("DashAttack");
+	m_pAnimatorCom->AddTrigger("StepBack");
+	m_pAnimatorCom->AddTrigger("StepFront");
+	m_pAnimatorCom->AddTrigger("StepLeft");
+	m_pAnimatorCom->AddTrigger("StepLeft2");
+	m_pAnimatorCom->AddTrigger("StepRight");
+	m_pAnimatorCom->AddTrigger("StepRight2");
+	m_pAnimatorCom->AddTrigger("StepRightJump");
+	m_pAnimatorCom->AddTrigger("StepLeftJump");
+	m_pAnimatorCom->AddTrigger("StepBackJump");
+	m_pAnimatorCom->AddTrigger("StepFrontJump");
+	m_pAnimatorCom->AddTrigger("Hurt");
+	m_pAnimatorCom->AddBool("Stepping"); // 스텝 중인지 여부
+	m_pAnimatorCom->AddBool("Hurted");
+	m_pAnimatorCom->AddTrigger("HurtAir");
 
 
 	// 추적 대시 A_P1012_V00_C90_AtkSkl01
@@ -688,6 +724,20 @@ void CAkaza::Ready_Animation()
 	ctrl->AddTransition(hurtFIdx, idleIdx, cFin);
 	ctrl->AddTransition(hurtFIdx, runIdx, cSpeedUp, 0.1f);
 
+	CAnimController::Condition cHurtAir{ "HurtAir", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(runIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(runEndIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(idleIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+
+	ctrl->AddTransition(attack0Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack1Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack2Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack3Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack4Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack5Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(hurtAirborneIdx, idleIdx, cFin);
+	ctrl->AddTransition(hurtAirborneIdx, runIdx, cSpeedUp, 0.1f);
+
 }
 
 
@@ -708,11 +758,11 @@ void CAkaza::FillInput(InputData& outInput)
 	if (!pTarget)
 		return;
 
-	if (m_pAnimatroCom->CheckBool("Hurted"))
+	if (m_pAnimatorCom->CheckBool("Hurted"))
 		return; // 피격 중이면 입력 무시
 
 	float dt = CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
-	auto anim = m_pAnimatroCom; // 예: 애니메이터 컴포넌트 포인터
+	auto anim = m_pAnimatorCom; // 예: 애니메이터 컴포넌트 포인터
 
 	// 3) 거리/방향 계산 (XZ 평면)
 	XMVECTOR myPos = GetTransform()->Get_State(STATE::POSITION);
@@ -1055,6 +1105,28 @@ void CAkaza::HandleInput()
 			}
 		}
 		return;
+	}
+}
+
+void CAkaza::ActiveCollider()
+{
+	for (auto& pBodyColl : m_vecChildren)
+	{
+		if (dynamic_cast<CBodyColliderParts*>(pBodyColl))
+		{
+			pBodyColl->SetActive(true);
+		}
+	}
+}
+
+void CAkaza::DeactiveCollider()
+{
+	for (auto& pBodyColl : m_vecChildren)
+	{
+		if (dynamic_cast<CBodyColliderParts*>(pBodyColl))
+		{
+			pBodyColl->SetActive(false);
+		}
 	}
 }
 

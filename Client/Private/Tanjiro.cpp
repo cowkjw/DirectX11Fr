@@ -71,7 +71,7 @@ HRESULT CTanjiro::Ready_Components()
 
 	/* For.Com_AnimController*/
 	if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Animator"),
-		TEXT("Com_Animator"), reinterpret_cast<CComponent**>(&m_pAnimatroCom), m_pModelCom)))
+		TEXT("Com_Animator"), reinterpret_cast<CComponent**>(&m_pAnimatorCom), m_pModelCom)))
 		return E_FAIL;
 
 	return S_OK;

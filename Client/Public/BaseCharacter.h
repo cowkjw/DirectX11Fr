@@ -33,7 +33,7 @@ public:
 	
 public:
 	void Set_Weapon(const char* boneName, class CWeapon* pWeapon);
-	class CAnimator* Get_Animator() { return m_pAnimatroCom; }
+	class CAnimator* Get_Animator() { return m_pAnimatorCom; }
 	void ChangeState(class IState* pState);
 	const _wstring& GetCurrentStateName();
 	class CInputBuffer* GetInputBuffer() { return m_pInputBuffer; }
@@ -55,6 +55,18 @@ public:
 	const _float3& GetVelocity() const { return m_Velocity; }
 	void SetVelocity(const _float3& velocity) { m_Velocity = velocity; }
 
+	void LaunchAirborne(_float fJumpForce = 10.f);
+	void UpdateAirborne(_float fTimeDelta);
+	virtual void ActiveCollider() {};
+	virtual void DeactiveCollider() {};
+	virtual void TakeDamage(_float fDamage) {
+		m_fCurrentHP -= fDamage;
+		if (m_fCurrentHP <= 0.f)
+		{
+			m_fCurrentHP = 0.f;
+		}
+	}
+
 protected:
 	virtual void Ready_Animation();
 
@@ -62,7 +74,7 @@ protected:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	CCapsuleCollider* m_pColliderCom = { nullptr };
-	CAnimator* m_pAnimatroCom = { nullptr };
+	CAnimator* m_pAnimatorCom = { nullptr };
 	class IState* m_pState = { nullptr };
 
 protected:
@@ -70,6 +82,8 @@ protected:
 	virtual HRESULT Bind_Shaders();
 
 protected:
+	_bool m_bFirstCollision{ false }; // 첫 충돌 여부
+	_bool m_bAirborne{ false }; // 공중에 떠 있는지 여부
 	_bool m_bIsJumping{ false }; // 점프 중인지 여부
 	_float m_fMaxHP{ 0.f };           // 최대 체력
 	_float m_fCurrentHP{ 0.f };       // 현재 체력

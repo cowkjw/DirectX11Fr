@@ -147,7 +147,6 @@ void CCollisionMag::Update(_float fTimeDelta)
             ownerCollided.insert(ownerPair);
             currColliders.insert({ A, B });
 
-            // 충돌 “Enter” 혹은 “Stay” 분기
             if (!m_vCollisions.count({ A, B }))
             {
                 // 여기는 A,B가 이번 프레임 처음 충돌한 경우(Enter)
@@ -170,8 +169,8 @@ void CCollisionMag::Update(_float fTimeDelta)
                     pushed = A;
                 }
 
-                if (pusher->GetType() != CCollider::ColliderType::HITBOX
-                    && pushed->GetType() != CCollider::ColliderType::HITBOX)
+                if (pusher->GetType() != ColliderType::HITBOX
+                    && pushed->GetType() != ColliderType::HITBOX)
                 {
                     ResolvePenetrationXZ(pusher, pushed);
                 }
@@ -197,16 +196,16 @@ void CCollisionMag::Update(_float fTimeDelta)
                     pushed = A;
                 }
 
-                if (pusher->GetType() != CCollider::ColliderType::HITBOX
-                    && pushed->GetType() != CCollider::ColliderType::HITBOX)
+                if (pusher->GetType() != ColliderType::HITBOX
+                    && pushed->GetType() != ColliderType::HITBOX)
                 {
                     ResolvePenetrationXZ(pusher, pushed);
                 }
             }
-        } // for j
-    } // for i
+        } 
+    } 
 
-    // 7) 기존 충돌 목록(m_vCollisions)에 있는데, 이번 프레임 currColliders에 없으면 Exit
+
     for (auto& pairPrev : m_vCollisions)
     {
         if (!currColliders.count(pairPrev))
@@ -218,7 +217,6 @@ void CCollisionMag::Update(_float fTimeDelta)
         }
     }
 
-    // 8) m_vCollisions 갱신
     m_vCollisions = move(currColliders);
 }
 
@@ -452,7 +450,13 @@ void CCollisionMag::ResolvePenetrationXZ(CCollider* A, CCollider* B)
                 // B(Capsule 피격자)만 밀어내기
                CGameObject* goB = capB->GetOwner();
                 XMVECTOR posB = goB->GetTransform()->Get_State(STATE::POSITION);
-                goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+                float length = XMVectorGetX(XMVector3Length(push));  // push 벡터의 길이
+                if (length > 0.5f)
+                {
+                    float s = 0.5f / length;   // 목표 길이/현재 길이
+                    push = push * s;           // 방향 그대로, 크기만 줄임
+                }
+                goB->GetTransform()->Set_State(STATE::POSITION, posB - push);
             }
             return;
         }
@@ -536,94 +540,6 @@ void CCollisionMag::ResolvePenetrationXZ(CCollider* A, CCollider* B)
             return;
         }
     }
-
-    //if (auto boxA = dynamic_cast<CBoxCollider*>(A))
-    //{
-    //    if (auto capB = dynamic_cast<CCapsuleCollider*>(B))
-    //    {
-    //        // 캡슐 축의 중점을 구함
-    //        XMVECTOR midB = 0.5f * (capB->m_Capsule.A + capB->m_Capsule.B);
-    //        // 박스 중심을 가져옴
-    //        XMVECTOR centerA = XMLoadFloat3(&boxA->Box.Center);
-
-    //        // XZ 평면에서 두 점 사이 벡터 계산
-    //        XMVECTOR raw = centerA - midB;
-    //        XMVECTOR hor = XMVectorSet(
-    //            XMVectorGetX(raw),
-    //            0.0f,
-    //            XMVectorGetZ(raw),
-    //            0.0f
-    //        );
-    //        float dist = XMVectorGetX(XMVector3Length(hor));
-    //        // 박스 반지름(대략 extents 중 최대값) + 캡슐 반지름
-    //        float rBox = max(boxA->Box.Extents.x, boxA->Box.Extents.z);
-    //        float rCap = capB->m_Capsule.Radius;
-    //        float penetration = (rBox + rCap) - dist;
-    //        if (penetration > 0.0f)
-    //        {
-    //            if (dist < 1e-6f)
-    //            {
-    //                hor = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
-    //            }
-    //            else
-    //            {
-    //                hor = XMVector3Normalize(hor);
-    //            }
-    //            const float epsilon = 0.001f;
-    //            XMVECTOR push = hor * (penetration + epsilon);
-
-    //            // B(캡슐 소유자)만 밀어내기
-    //            CGameObject* goB = capB->GetOwner();
-    //            XMVECTOR posB = goB->GetTransform()->Get_State(STATE::POSITION);
-    //            goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
-    //        }
-    //        return;
-    //    }
-    //}
-
-    ////  A가 Box, B가 Sphere
-    //if (auto boxA = dynamic_cast<CBoxCollider*>(A))
-    //{
-    //    if (auto sphB = dynamic_cast<CSphereCollider*>(B))
-    //    {
-    //        // 구 중심과 박스 중심 계산
-    //        XMVECTOR centerS = XMLoadFloat3(&sphB->Sphere.Center);
-    //        XMVECTOR centerA = XMLoadFloat3(&boxA->Box.Center);
-
-    //        // XZ 평면에서 두 점 사이 벡터
-    //        XMVECTOR raw = centerS - centerA;
-    //        XMVECTOR hor = XMVectorSet(
-    //            XMVectorGetX(raw),
-    //            0.0f,
-    //            XMVectorGetZ(raw),
-    //            0.0f
-    //        );
-    //        float dist = XMVectorGetX(XMVector3Length(hor));
-    //        // 구 반지름 + 박스 반지름(대략 extents 중 최대값)
-    //        float rSphere = sphB->Sphere.Radius;
-    //        float rBox = max(boxA->Box.Extents.x, boxA->Box.Extents.z);
-    //        float penetration = (rSphere + rBox) - dist;
-    //        if (penetration > 0.0f)
-    //        {
-    //            if (dist < 1e-6f)
-    //            {
-    //                hor = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
-    //            }
-    //            else
-    //            {
-    //                hor = XMVector3Normalize(hor);
-    //            }
-    //            const float epsilon = 0.001f;
-    //            XMVECTOR push = hor * (penetration + epsilon);
-
-    //            // B(구 소유자)만 밀어내기
-    //            CGameObject* goB = sphB->GetOwner();
-    //            XMVECTOR posB = goB->GetTransform()->Get_State(STATE::POSITION);
-    //            goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
-    //        }
-    //        return;
-    //    }
-    //}
 }
 
 CCollisionMag* CCollisionMag::Create()

@@ -1,0 +1,333 @@
+{
+    "animations": [
+        {
+            "clipName": "A_P1011_V19_C00_AtkAngry01A_Cut",
+            "duration": 120.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkAngry01B_Cut",
+            "duration": 112.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl01_0",
+            "duration": 40.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl01_1",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl01_2",
+            "duration": 20.0,
+          "events": [
+            {
+              "name": "ActiveHitbox",
+              "time": 2.5
+            },
+            {
+              "name": "StrecthRadius",
+              "time": 2.5
+            }
+          ]
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl01_3",
+            "duration": 20.0,
+          "events": [
+            {
+              "name": "DeactiveHitbox",
+              "time": 1.0
+            },
+            {
+              "name": "ResetRadius",
+              "time": 1.0
+            }
+          ]
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl01_4",
+            "duration": 45.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl02_0",
+            "duration": 25.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl02_1",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl02_2",
+            "duration": 10.0,
+            "events": [
+                {
+                    "name": "ActiveHitbox",
+                    "time": 0.0
+                }
+            ]
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl02_3",
+            "duration": 20.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl02_4",
+            "duration": 54.0,
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                }
+            ]
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl03_0",
+            "duration": 45.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl03_1",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl03_2",
+            "duration": 20.0,
+            "events": [
+                {
+                    "name": "ActiveHitbox",
+                    "time": 10.000991821289063
+                }
+            ]
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl03_3",
+            "duration": 10.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl03_4",
+            "duration": 29.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl04_0",
+            "duration": 35.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl04_1",
+            "duration": 32.0,
+          "events": [
+            {
+              "name": "ActiveHitbox",
+              "time": 1.0
+            }
+          ]
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl04_2",
+            "duration": 28.0,
+            "events": [
+              {
+                "name": "ActiveHitbox",
+                "time": 1.0
+              }
+            ]
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl04_3",
+            "duration": 53.0,
+            "events": [
+               
+            ]
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl04_4",
+            "duration": 48.0,
+          "events": [
+            {
+              "name": "DeactiveHitbox",
+              "time": 5.0
+            }
+          ]
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl05_0",
+            "duration": 30.0,
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                }
+            ]
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl05_1",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl05_2",
+            "duration": 40.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl06_0",
+            "duration": 59.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl06_1",
+            "duration": 20.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl06_2",
+            "duration": 99.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl06_3",
+            "duration": 38.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl07_0",
+            "duration": 47.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl07_1",
+            "duration": 53.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl07_2",
+            "duration": 15.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl07_3",
+            "duration": 11.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl07_4",
+            "duration": 54.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl08",
+            "duration": 120.0,
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                }
+            ]
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl08A",
+            "duration": 150.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl08B",
+            "duration": 90.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl09_0",
+            "duration": 54.0,
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 5.0
+                }
+            ]
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl09_1",
+            "duration": 16.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl09_2",
+            "duration": 81.0,
+          "events": [
+            {
+              "name": "ActiveHitbox",
+              "time": 15.001615524291992
+            },
+            {
+              "name": "StrecthRadius",
+              "time": 15.001615524291992
+            },
+            {
+              "name": "DeactiveHitbox",
+              "time": 57.01068115234375
+            },
+            {
+              "name": "ResetRadius",
+              "time": 57.01068115234375
+            }
+
+          ]
+        },
+        {
+            "clipName": "A_P1011_V19_C00_AtkSkl11_0",
+            "duration": 85.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_BaseNut01_A",
+            "duration": 90.0,
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 20.0
+                }
+            ]
+        },
+        {
+            "clipName": "A_P1011_V19_C00_BaseNut01_B",
+            "duration": 90.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_DmgDown01_0",
+            "duration": 50.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_DmgDown01_1",
+            "duration": 50.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_DmgDown01_2",
+            "duration": 60.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_DmgL01",
+            "duration": 45.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P1011_V19_C00_OpenEyes01_1",
+            "duration": 200.0,
+            "events": []
+        }
+    ],
+    "object": "EnmuRightArm"
+}

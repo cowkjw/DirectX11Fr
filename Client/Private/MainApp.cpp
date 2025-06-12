@@ -22,6 +22,8 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(m_pGameInstance->Initialize_Engine(EngineDesc, &m_pDevice, &m_pContext)))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Demonslayer"), TEXT("../Asset/Resources/Fonts/Demonslayer.spritefont"))))
+		return E_FAIL;
 
 
 	Ready_Prototype_Component();
@@ -41,7 +43,6 @@ HRESULT CMainApp::Render()
 	// 1) 백버퍼 클리어
 	m_pGameInstance->Begin_Draw();
 	m_pGameInstance->Draw();
-
 
 
 	// 7) 스왑체인에 Present

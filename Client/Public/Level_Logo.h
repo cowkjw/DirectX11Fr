@@ -18,7 +18,11 @@ public:
 
 	HRESULT Ready_Layer_BackGround(const _wstring strLayerTag);
 
+	void Ready_UI_Setup();
+
 	void StartGamePlay();
+private:
+	_bool m_bIsEndInk = false;
 
 public:
 	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
