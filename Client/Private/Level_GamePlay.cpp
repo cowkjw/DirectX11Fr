@@ -58,7 +58,7 @@ HRESULT CLevel_GamePlay::Initialize()
 		CameraDesc.fNear = 0.1f;
 		CameraDesc.fFar = 1000.f;
 
-		if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_ThirdPersonCamera"),
+		if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::STATIC), TEXT("Prototype_GameObject_ThirdPersonCamera"),
 			ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_Camera"),&CameraDesc))
 			return E_FAIL;
 
@@ -70,7 +70,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	int a = 10;
+
 }
 
 HRESULT CLevel_GamePlay::Render()

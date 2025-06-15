@@ -228,6 +228,16 @@ void CCollisionMag::DebugDraw()
 	}
 }
 
+void CCollisionMag::Clear()
+{
+	for (auto& collider : m_vColliders)
+	{
+		Safe_Release(collider);
+	}
+	m_vColliders.clear();
+	m_vCollisions.clear();
+}
+
 void CCollisionMag::ResolvePenetrationXZ(CCollider* A, CCollider* B)
 {
     if (auto capA = dynamic_cast<CCapsuleCollider*>(A))

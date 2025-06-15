@@ -33,6 +33,9 @@ public:
 	void SetTarget(class CGameObject* pTarget) { m_pTarget = pTarget; }
 
 private:
+	void InitializeCameraPosition();
+
+private:
 	_float			m_fSmooth = { }; // 카메라 움직임 스무스정도
 	_float3 		m_vOffset = { 0.f, 0.f, 0.f };
 	CGameObject* m_pTarget = nullptr; // Target

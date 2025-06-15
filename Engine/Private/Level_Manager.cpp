@@ -37,6 +37,8 @@ HRESULT CLevel_Manager::Change_Level()
     m_iCurrentLevelIndex = m_iNewLevelIndex;
 	m_pNewLevel = nullptr;
 
+    m_pGameInstance->SetChangeLevel(true);
+
     return S_OK;
 }
 

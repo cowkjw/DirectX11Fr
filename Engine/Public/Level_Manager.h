@@ -20,6 +20,7 @@ public:
 	HRESULT Change_Level();
 	void Update(_float fTimeDelta);
 	HRESULT Render();
+	_int Get_CurrentLevelIndex() const { return m_iCurrentLevelIndex; }
 
 
 private:

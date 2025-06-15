@@ -127,7 +127,7 @@ PS_OUT PS_MAIN_TOON(PS_IN In)
     // Å÷ ½¦ÀÌµù Àû¿ë
     float toonShade = ToonStep(g_fToonThreshold, g_fToonSoftness, NdotL);
 
-    // 3´Ü°è ½¦ÀÌµù (±Í¸êÀÇ Ä®³¯ ½ºÅ¸ÀÏ) - ¹à±â Á¶Á¤
+    // 3´Ü°è ½¦ÀÌµù ¹à±â Á¶Á¤
     float shadeLevel;
     if (NdotL > 0.7f)
         shadeLevel = 0.9f;      // ¹àÀº ¿µ¿ª (´ú ¹à°Ô)

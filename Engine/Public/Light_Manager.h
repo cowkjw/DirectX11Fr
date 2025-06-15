@@ -16,6 +16,8 @@ public:
 public:
 	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
 
+	void Clear_Lights();
+
 private:
 	vector<class CLight*>				m_Lights;
 	

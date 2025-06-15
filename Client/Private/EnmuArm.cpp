@@ -50,13 +50,13 @@ HRESULT CEnmuArm::Initialize(void* pArg)
 	if (m_bIsLeftArm)
 	{	// -21,0.0,0.0
 	//	_float4 vPos = { -20.f,0.f,0.f,1.f };
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-21.f, 0.f, 0.f, 1.f));
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(70.f, 0.f, 0.f, 1.f));
 
 	}
 	else
 	{
 		// 21.68,0.0,0.0
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(21.f, 0.f, 0.f, 1.f));
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-70.f, 0.f, 0.f, 1.f));
 	}
 
 

@@ -94,6 +94,8 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 
 void CGameInstance::Fixed_Update(_float fTimeDelta)
 {
+	if (!m_bChangedLevel)
+		return;
 	m_pCollisionMag->Update(fTimeDelta);
 }
 
@@ -155,6 +157,7 @@ void CGameInstance::Clear(_uint iLevelIndex)
 	m_pPrototype_Manager->Clear(iLevelIndex);
 
 	m_pResourceMag->Clear();
+	//ClearLights();
 }
 
 void CGameInstance::ClearObejcts(_uint iLevelIndex)
@@ -177,7 +180,12 @@ _float CGameInstance::Compute_Random(_float fMin, _float fMax)
 
 HRESULT CGameInstance::Change_Level(_uint iLevelIndex, CLevel* pNewLevel)
 {
+	m_bChangedLevel = false;
  	return m_pLevel_Manager->Prepanding_Change_Level(iLevelIndex, pNewLevel);
+}
+_int CGameInstance::Get_CurrentLevelIndex()
+{
+ return m_pLevel_Manager->Get_CurrentLevelIndex();
 }
 #pragma endregion
 
@@ -540,6 +548,12 @@ void CGameInstance::Unregister_Collider(CCollider* pCollider)
 		return;
 	m_pCollisionMag->Unregister(pCollider);
 }
+void CGameInstance::ClearColliders()
+{
+	if (nullptr == m_pCollisionMag)
+		return;
+	m_pCollisionMag->Clear();
+}
 #pragma endregion
 
 #pragma region LIGHT_MANAGER
@@ -551,6 +565,12 @@ const LIGHT_DESC* CGameInstance::Get_Light(_uint iIndex)
 HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
 {
 	return m_pLight_Manager->Add_Light(LightDesc);
+}
+void CGameInstance::ClearLights()
+{
+	if (nullptr == m_pLight_Manager)
+		return;
+	m_pLight_Manager->Clear_Lights();
 }
 #pragma endregion
 

@@ -113,11 +113,11 @@ HRESULT CLevel_Logo::Render()
 		auto pStartBt = dynamic_cast<CUIButton*>(pButton);
 		if (pStartBt && pStartBt->IsHovered())
 		{
-			m_pGameInstance->Draw_Font(TEXT("Demonslayer"), TEXT("게임 시작"), _float2(970.f, 440.f), XMVectorSet(0.f,0.f,0.f, 1.f));
+			m_pGameInstance->Draw_Font(TEXT("Demonslayer"), TEXT("게임 시작"), _float2(990.f, 440.f), XMVectorSet(0.f,0.f,0.f, 1.f));
 		}
 		else
 		{
-			m_pGameInstance->Draw_Font(TEXT("Demonslayer"), TEXT("게임 시작"), _float2(970.f, 440.f), XMVectorSet(1.f, 1.f, 1.f, 1.f));
+			m_pGameInstance->Draw_Font(TEXT("Demonslayer"), TEXT("게임 시작"), _float2(990.f, 440.f), XMVectorSet(1.f, 1.f, 1.f, 1.f));
 		}
 	}
 	

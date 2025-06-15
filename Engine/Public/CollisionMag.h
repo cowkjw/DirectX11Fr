@@ -23,6 +23,7 @@ public:
 
 	void Update(_float fTimeDelta);
 	void DebugDraw();
+	void Clear();
 
 private:
 	void ResolvePenetrationXZ(class CCollider* A, class CCollider* B);

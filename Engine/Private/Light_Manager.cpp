@@ -24,6 +24,15 @@ HRESULT CLight_Manager::Add_Light(const LIGHT_DESC& LightDesc)
 	return S_OK;
 }
 
+void CLight_Manager::Clear_Lights()
+{
+	for (auto& pLight : m_Lights)
+	{
+		Safe_Release(pLight);
+	}
+	m_Lights.clear();
+}
+
 
 CLight_Manager* CLight_Manager::Create()
 {

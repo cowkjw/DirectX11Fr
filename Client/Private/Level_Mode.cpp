@@ -151,7 +151,7 @@ void CLevel_Mode::Ready_UI_Setup()
 void CLevel_Mode::StartGamePlay()
 {
 	if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
-		CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY))))
+		CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::ENMU_BOSS))))
 		return;
 }
 

@@ -36,6 +36,8 @@ HRESULT CEnmuBody::Initialize(void* pArg)
 
 	Ready_Animation();
 
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -20.f, 0.f, 1.f));
+
 
     return S_OK;
 }
@@ -166,7 +168,7 @@ void CEnmuBody::Ready_Animation()
 
 void CEnmuBody::Ready_Collider()
 {
-	if (FAILED(Add_Component(TEXT("Com_Collider"), CSphereCollider::Create(m_pDevice, m_pContext, 40.f), reinterpret_cast<CComponent**>(&m_pColliderCom))))
+	if (FAILED(Add_Component(TEXT("Com_Collider"), CSphereCollider::Create(m_pDevice, m_pContext, 60.f), reinterpret_cast<CComponent**>(&m_pColliderCom))))
 		return;
 	m_pColliderCom->Initialize(nullptr);
 	m_pColliderCom->SetColliderType(ColliderType::HURTBOX);

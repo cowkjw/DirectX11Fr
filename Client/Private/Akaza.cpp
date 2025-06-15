@@ -116,7 +116,7 @@ HRESULT CAkaza::Initialize(void* pArg)
 		}
 	}
 
-	m_iShaderPass = 2;
+	m_iShaderPass = 3;
 	return S_OK;
 }
 

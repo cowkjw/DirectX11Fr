@@ -31,8 +31,15 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, m_eNextLevelID);
 	if (nullptr == m_pLoader)
 		return E_FAIL;
+	m_pGameInstance->ClearColliders();
 
-	SetUpUI();
+	static _bool firstLoad = true;
+	if (firstLoad)
+	{
+		firstLoad = false;
+	}
+
+		SetUpUI();
 
 	return S_OK;
 }
@@ -41,6 +48,7 @@ void CLevel_Loading::Update(_float fTimeDelta)
 {
 	static _bool bIsFirst = true;
 	m_pGameInstance->ClearUI();
+	
 	if (true == m_pLoader->isFinished())
 	{
 		CLevel* pLevel = { nullptr };

@@ -61,28 +61,22 @@ HRESULT CTanjiro::Initialize(void* pArg)
 	m_pColliderCom->SetOffset(_float3(0.f, 8.1f, 0.f));
 
 
-	//CBodyColliderParts::BODYCOLLIDERPARTS_DESC desc{};
-	//desc.vColliderOffsets.push_back(_float3(0.f, 0.f, 0.f));
-	//AddChild(CBodyColliderParts::Create(m_pDevice, m_pContext));
+	CGameObject* pWeapon = m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("Weapon"));
 
-	//m_vecChildren.back()->Initialize(&desc);
-	//if (auto parts = dynamic_cast<CBodyColliderParts*>(m_vecChildren.back()))
-	//{
-	//	CBone* pBoneRHand = m_pModelCom->Get_Bone("R_Foot_1");
-	//	if (!pBoneRHand)
-	//	{
-	//		MSG_BOX("CKyojuro::Initialize - Bone not found");
-	//		return E_FAIL;
-	//	}
-	//	parts->Set_BoneSocket(pBoneRHand);
-	//	parts->SetActive(false);
-	//}
+		//Set_Weapon("R_Hand_1", dynamic_cast<CWeapon*>(pWeapon));
+	Set_Weapon("R_Hand_1_Lct", dynamic_cast<CWeapon*>(pWeapon));
+
+	if (m_pWeapon) // 자식벡터로 넣지는 않음
+	{
+		m_pWeapon->SetParent(this);
+	//	m_pWeapon->GetTransform()->Scaling(_float3(10.f,10.f,10.f));
+	}
 
 	m_pColliderCom->SetListener(this);
 	ChangeState(new StateIdle(TEXT("Idle")));
 	m_iShaderPass = 2;
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 100.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -18.f, -170.f, 1.f));
 
 
 

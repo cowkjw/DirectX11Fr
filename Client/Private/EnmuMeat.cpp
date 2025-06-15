@@ -225,10 +225,14 @@ HRESULT CEnmuMeat::Ready_Parts()
 	armDesc.sModelKey = TEXT("Prototype_Component_Model_EnmuLeftArm");
 
 	AddChild(CEnmuArm::Create(m_pDevice, m_pContext, &armDesc));
+	m_vecChildren.back()->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // ¿ŞÆÈÀº 180µµ È¸Àü
 	armDesc.sModelKey = TEXT("Prototype_Component_Model_EnmuRightArm");
 	AddChild(CEnmuArm::Create(m_pDevice, m_pContext, &armDesc));
+	m_vecChildren.back()->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // ¿ŞÆÈÀº 180µµ È¸Àü
 	AddChild(CEnmuBody::Create(m_pDevice, m_pContext));
+	m_vecChildren.back()->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // ¿ŞÆÈÀº 180µµ È¸Àü
 	AddChild(CEnmuHead::Create(m_pDevice, m_pContext));
+	m_vecChildren.back()->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // ¿ŞÆÈÀº 180µµ È¸Àü
 
 	return S_OK;
 }

@@ -31,10 +31,12 @@ public:
 	_float Compute_Random(_float fMin, _float fMax);
 
 	void SetActivePicking(_bool bActive) { m_bActivePicking = bActive; }
+	void SetChangeLevel(_bool bChange) { m_bChangedLevel = bChange; }
 
 #pragma region LEVEL_MANAGER
 public:
 	HRESULT Change_Level(_uint iLevelIndex, class CLevel* pNewLevel);
+	_int Get_CurrentLevelIndex();
 #pragma endregion
 
 #pragma region PROTOTYPE_MANAGER
@@ -123,12 +125,13 @@ public:
 #pragma region COLLIDER
 	void Register_Collider(class CCollider* pCollider);
 	void Unregister_Collider(class CCollider* pCollider);
-
+	void ClearColliders();
 #pragma endregion
 
 #pragma region LIGHT_MANAGER
 	const LIGHT_DESC* Get_Light(_uint iIndex);
 	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
+	void ClearLights();
 #pragma endregion
 
 #pragma region FONT_MANAGER
@@ -155,6 +158,7 @@ private:
 
 
 	_bool m_bActivePicking = { false }; // 피킹 활성화 여부
+	_bool m_bChangedLevel = { false }; // 레벨 변경 여부
 
 public:
 	void Release_Engine();

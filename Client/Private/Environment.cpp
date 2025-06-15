@@ -49,6 +49,8 @@ HRESULT CEnvironment::Initialize(void* pArg)
 	//	return E_FAIL;
 	m_pTransformCom->Scaling(_float3(0.2f, 0.2f, 0.2f));
 
+
+
 	return S_OK;
 }
 
@@ -62,6 +64,11 @@ void CEnvironment::Update(_float fTimeDelta)
 		{
 			bIsFirst = false;
 		}
+	/*	if (m_pGameInstance->Get_CurrentLevelIndex() == 4)
+		{
+			m_iShaderPass = 0;
+			bIsFirst = false;
+		}*/
 	}
 }
 

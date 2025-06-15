@@ -1,6 +1,6 @@
 [
     {
-        "CreateLevel": 0,
+        "CreateLevel": 4,
         "ID": 17,
         "Position": [
             0.0,
@@ -50,7 +50,7 @@
         "tag": ""
     },
     {
-        "CreateLevel": 0,
+        "CreateLevel": 4,
         "ID": 32,
         "NumTextures": 1,
         "Position": [
@@ -116,7 +116,7 @@
         "tag": ""
     },
     {
-        "CreateLevel": 0,
+        "CreateLevel": 4,
         "ID": 29,
         "NumTextures": 1,
         "Position": [
@@ -182,7 +182,7 @@
         "tag": ""
     },
     {
-        "CreateLevel": 0,
+        "CreateLevel": 4,
         "ID": 31,
         "NumTextures": 1,
         "Position": [
@@ -249,7 +249,7 @@
     },
     {
         "BGImage": {
-            "CreateLevel": 0,
+            "CreateLevel": 4,
             "ID": 26,
             "NumTextures": 1,
             "Position": [
@@ -314,9 +314,9 @@
             "parentId": 25,
             "tag": ""
         },
-        "CreateLevel": 0,
+        "CreateLevel": 4,
         "DamageImage": {
-            "CreateLevel": 0,
+            "CreateLevel": 4,
             "ID": 28,
             "NumTextures": 1,
             "Position": [
@@ -382,7 +382,7 @@
             "tag": ""
         },
         "FillImage": {
-            "CreateLevel": 0,
+            "CreateLevel": 4,
             "ID": 27,
             "NumTextures": 1,
             "Position": [
@@ -496,7 +496,7 @@
         "tag": ""
     },
     {
-        "CreateLevel": 0,
+        "CreateLevel": 4,
         "ID": 26,
         "NumTextures": 1,
         "Position": [
@@ -563,7 +563,7 @@
     },
     {
         "BGImage": {
-            "CreateLevel": 0,
+            "CreateLevel": 4,
             "ID": 19,
             "NumTextures": 1,
             "Position": [
@@ -628,9 +628,9 @@
             "parentId": 18,
             "tag": ""
         },
-        "CreateLevel": 0,
+        "CreateLevel": 4,
         "DamageImage": {
-            "CreateLevel": 0,
+            "CreateLevel": 4,
             "ID": 21,
             "NumTextures": 1,
             "Position": [
@@ -696,7 +696,7 @@
             "tag": ""
         },
         "FillImage": {
-            "CreateLevel": 0,
+            "CreateLevel": 4,
             "ID": 20,
             "NumTextures": 1,
             "Position": [
@@ -810,7 +810,7 @@
         "tag": ""
     },
     {
-        "CreateLevel": 0,
+        "CreateLevel": 4,
         "ID": 30,
         "NumTextures": 1,
         "Position": [
@@ -876,7 +876,7 @@
         "tag": ""
     },
     {
-        "CreateLevel": 0,
+        "CreateLevel": 4,
         "ID": 27,
         "NumTextures": 1,
         "Position": [

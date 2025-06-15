@@ -100,7 +100,7 @@ PS_OUT PS_MAIN_TOON(PS_IN In)
     PS_OUT Out;
 
     // 디퓨즈 텍스처 샘플링
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearClampSampler, In.vTexcoord);
 
     // 알파 테스트 (필요시 주석 해제)
     /*if (vMtrlDiffuse.a < 0.1f)
@@ -117,6 +117,73 @@ PS_OUT PS_MAIN_TOON(PS_IN In)
     float toonShade = ToonStep(g_fToonThreshold, g_fToonSoftness, NdotL);
 
     // 3단계 쉐이딩 (귀멸의 칼날 스타일) - 밝기 조정
+    float shadeLevel;
+    if (NdotL > 0.7f)
+        shadeLevel = 0.9f;      // 밝은 영역 (덜 밝게)
+    else if (NdotL > 0.3f)
+        shadeLevel = 0.6f;      // 중간 영역
+    else
+        shadeLevel = 0.35f;     // 어두운 영역
+
+    // 부드러운 전환을 위한 보간
+    float smoothShade = lerp(shadeLevel * 0.8f, shadeLevel,
+        smoothstep(0.0f, 0.1f, abs(NdotL - 0.7f)) *
+        smoothstep(0.0f, 0.1f, abs(NdotL - 0.3f)));
+
+    // 림 라이팅 계산 (캐릭터 외곽선 강조)
+    float3 viewDir = normalize(In.vViewDir);
+    float rimDot = 1.0f - dot(viewDir, normal);
+    float rimIntensity = pow(rimDot, g_fRimPower);
+    rimIntensity = smoothstep(0.6f, 1.0f, rimIntensity);
+
+    // 최종 색상 계산
+    float4 baseColor = vMtrlDiffuse * g_vLightDiffuse;
+
+    // 그림자 영역에 색조 변화 적용
+    float4 shadedColor = lerp(baseColor * g_vShadowColor, baseColor, smoothShade);
+
+    // 밝은 영역에 하이라이트 적용 (덜 강하게)
+    if (smoothShade > 0.8f)
+    {
+        shadedColor = lerp(shadedColor, shadedColor * g_vHighlightColor,
+            (smoothShade - 0.8f) * 2.0f); // 강도 감소
+    }
+
+    // 앰비언트 라이팅 추가 (덜 밝게)
+    float4 ambientColor = g_vLightAmbient * g_vMtrlAmibient * vMtrlDiffuse * 0.5f;
+
+    // 림 라이팅 적용 (덜 강하게)
+    float4 rimLighting = g_vRimColor * rimIntensity * 0.2f;
+
+    // 최종 색상 합성 (전체 밝기 조절)
+    Out.vColor = (shadedColor + ambientColor + rimLighting) * g_fOverallBrightness;
+    Out.vColor.a = vMtrlDiffuse.a;
+
+    return Out;
+}
+
+PS_OUT PS_MAIN_WrapTOON(PS_IN In)
+{
+    PS_OUT Out;
+
+    // 디퓨즈 텍스처 샘플링
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+
+    // 알파 테스트 (필요시 주석 해제)
+    /*if (vMtrlDiffuse.a < 0.1f)
+        discard;*/
+
+        // 노말 정규화
+    float3 normal = normalize(In.vNormal.xyz);
+    float3 lightDir = normalize(-g_vLightDir.xyz);
+
+    // 기본 라이팅 계산
+    float NdotL = dot(normal, lightDir);
+
+    // 툰 쉐이딩 적용
+    float toonShade = ToonStep(g_fToonThreshold, g_fToonSoftness, NdotL);
+
+    // 3단계 쉐이딩 밝기 조정
     float shadeLevel;
     if (NdotL > 0.7f)
         shadeLevel = 0.9f;      // 밝은 영역 (덜 밝게)
@@ -217,5 +284,14 @@ technique11 DefaultTechnique
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN_TOON();
+    }
+    
+    pass ToonShadingWrap
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_WrapTOON();
     }
 }

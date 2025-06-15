@@ -29,7 +29,7 @@ HRESULT CEnmuParts::Initialize(void* pArg)
 	if (FAILED(CGameObject::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Scaling(_float3(0.1f, 0.1f, 0.1f));
+	m_pTransformCom->Scaling(_float3(0.15f, 0.15f, 0.15f));
 	return S_OK;
 }
 

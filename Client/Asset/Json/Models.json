@@ -81,6 +81,11 @@
       "Anim": false
     },
     {
+      "tag": "EnmuGround",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/Ground/EnmuGround.bin",
+      "Anim": false
+    },
+    {
       "tag": "TrainHead",
       "path": "../Asset/Resources/Models/Map/TrainHead.bin",
       "Anim": false
@@ -128,6 +133,31 @@
     {
       "tag": "MiddleTree",
       "path": "../Asset/Resources/Models/Map/MiddleTree.bin",
+      "Anim": false
+    },
+    {
+      "tag": "EnmuFar1",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/EnmuFar1.bin",
+      "Anim": false
+    },
+    {
+      "tag": "EnmuFar2",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/EnmuFar2.bin",
+      "Anim": false
+    },
+    {
+      "tag": "EnmuTrees",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/EnmuTrees.bin",
+      "Anim": false
+    },
+    {
+      "tag": "EnmuFarHill",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/EnmuFarHill.bin",
+      "Anim": false
+    },
+    {
+      "tag": "EnmuTrainBody",
+      "path": "../Asset/Resources/Models/Map/EnmuMap/EnmuTrainBody.bin",
       "Anim": false
     }
   ]
