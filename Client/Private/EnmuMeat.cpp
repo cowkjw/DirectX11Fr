@@ -79,7 +79,7 @@ void CEnmuMeat::Priority_Update(_float fTimeDelta)
 {
 	if (!m_pTarget)
 	{
-		m_pTarget = static_cast<CBaseCharacter*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("Kyojuro")));
+		m_pTarget = static_cast<CBaseCharacter*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("Tanjiro")));
 
 		for (auto& tentacle : m_vecTentacles)
 		{

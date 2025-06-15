@@ -65,166 +65,96 @@ void CThirdPersonCamera::Update(_float fTimeDelta)
 }
 void CThirdPersonCamera::Late_Update(_float fTimeDelta)
 {
-	//if (!m_pTargetTransform)
-	//	return;
 
-	XMVECTOR playerPos = m_pTargetTransform->Get_State(STATE::POSITION);
-	XMVECTOR enemyPos = m_pLockOnTarget
-		? m_pLockOnTarget->GetTransform()->Get_State(STATE::POSITION)
-		: playerPos;
-	XMVECTOR midPos = XMVectorLerp(playerPos, enemyPos, 0.5f);
+    if (!m_pTargetTransform || !m_pLockOnTarget)
+        return;
 
-	// 2) 오프셋 회전 → 원하는 카메라 위치
-	XMVECTOR targetQuat = m_pTargetTransform->Get_RotationQuaternion();
-	XMVECTOR offsetV = XMLoadFloat3(&m_vOffset);
-	XMVECTOR worldOff = RotateVectorByQuaternion(offsetV, targetQuat);
-	XMVECTOR desiredCamPos = playerPos + worldOff;
+    XMVECTOR playerPos = m_pTargetTransform->Get_State(STATE::POSITION);
+    XMVECTOR enemyPos = m_pLockOnTarget->GetTransform()->Get_State(STATE::POSITION);
 
-	// 3) 뷰 매트릭스 계산 (camera at 원하는 위치, lookAt 중간 지점)
-	XMVECTOR camUp = m_pTransformCom->Get_State(STATE::UP);
-	XMMATRIX view = XMMatrixLookAtLH(desiredCamPos, midPos, camUp);
+    // 1. 두 캐릭터의 중점과 거리 계산
+    XMVECTOR midPoint = XMVectorLerp(playerPos, enemyPos, 0.5f);
+    float distance = XMVectorGetX(XMVector3Length(enemyPos - playerPos));
 
-	// 4) 데드존 보정
-	const float deadZoneX = 1000.f, deadZoneY = 2000.0f;
-	XMVECTOR viewPos = XMVector3TransformCoord(playerPos, view);
-	float    vx = XMVectorGetX(viewPos);
-	float    vy = XMVectorGetY(viewPos);
-	XMVECTOR camRight = m_pTransformCom->Get_State(STATE::RIGHT);
-	if (vx > deadZoneX) desiredCamPos += camRight * (vx - deadZoneX);
-	else if (vx < -deadZoneX) desiredCamPos += camRight * (vx + deadZoneX);
-	if (vy > deadZoneY) desiredCamPos += camUp * (vy - deadZoneY);
-	else if (vy < -deadZoneY) desiredCamPos += camUp * (vy + deadZoneY);
+    // 2. 고정된 카메라 높이와 기본 거리 설정
+    //float fixedCameraHeight = 15.0f;  // 고정된 Y 위치
+    float baseCameraDistance = max(m_fMinCameraDistance, distance * m_fDistanceMultiplier); // 거리에 따른 기본 카메라 거리
 
-	// 5) 보간으로 최종 위치
-	float    t = m_fSmooth * fTimeDelta;
-	t = min(t, 1.0f);
-	XMVECTOR currCamPos = m_pTransformCom->Get_State(STATE::POSITION);
-	XMVECTOR lerpPos = XMVectorLerp(currCamPos, desiredCamPos, t);
-	m_pTransformCom->Set_State(STATE::POSITION, lerpPos);
+    // 3. 현재 카메라 위치
+    XMVECTOR currentCamPos = m_pTransformCom->Get_State(STATE::POSITION);
 
-	// 6) 중간 지점 바라보게
-	m_pTransformCom->LookAtXZ(midPos);
+    // 4. 데드존 설정 (화면상의 영역)
+    float deadZoneWidth = 30.f;   // 좌우 데드존
+    float deadZoneHeight = 10.0f;  // 상하 데드존
 
-	//if (!m_pTargetTransform)
-	//	return;
+    // 5. 두 캐릭터를 모두 포함하는 바운딩 박스 계산
+    XMVECTOR boundsMin = XMVectorMin(playerPos, enemyPos);
+    XMVECTOR boundsMax = XMVectorMax(playerPos, enemyPos);
+    XMVECTOR boundsCenter = (boundsMin + boundsMax) * 0.5f;
 
-	//// 1) 플레이어 위치와 락온 대상(또는 플레이어) 위치 중간 지점 계산
-	//XMVECTOR playerPos = m_pTargetTransform->Get_State(STATE::POSITION);
-	//XMVECTOR enemyPos = m_pLockOnTarget
-	//	? m_pLockOnTarget->GetTransform()->Get_State(STATE::POSITION)
-	//	: playerPos;
-	//XMVECTOR midPos = XMVectorLerp(playerPos, enemyPos, 0.5f);
+    // Y는 고정
+    boundsCenter = XMVectorSetY(boundsCenter, XMVectorGetY(midPoint));
 
-	//// 2) 로컬 오프셋을 회전(quaternion) 적용해서 XZ 오프셋만 구함
-	//XMVECTOR targetQuat = m_pTargetTransform->Get_RotationQuaternion();
-	//XMVECTOR offsetV = XMLoadFloat3(&m_vOffset);
+    // 6. 바운딩 박스 크기에 따른 카메라 거리 조정
+    float boundsWidth = XMVectorGetX(boundsMax) - XMVectorGetX(boundsMin);
+    float boundsDepth = XMVectorGetZ(boundsMax) - XMVectorGetZ(boundsMin);
+    float requiredDistance = max(boundsWidth, boundsDepth) * 0.6f + baseCameraDistance;
 
-	//// Y 컴포넌트는 나중에 별도로 설정하므로 0으로
-	//offsetV = XMVectorSetY(offsetV, 0.f);
-	//XMVECTOR worldOff = XMVector3Rotate(offsetV, targetQuat);
+    // 7. 원하는 카메라 위치 계산 (바운딩 박스 중심에서 뒤쪽으로)
+    XMVECTOR forwardDir = XMVector3Normalize(boundsCenter - currentCamPos);
+    forwardDir = XMVectorSetY(forwardDir, 0); // Y축 제거 (수평 방향만)
 
-	//// 3) 원하는 카메라 위치 (XZ는 회전 오프셋, Y는 플레이어 Y + m_vOffset.y 고정)
-	//XMVECTOR desiredCamPos = playerPos + worldOff;
-	//float   fixedY = XMVectorGetY(playerPos) + m_vOffset.y;
-	//desiredCamPos = XMVectorSetY(desiredCamPos, fixedY);
+    XMVECTOR desiredCamPos = boundsCenter - XMVector3Normalize(forwardDir) * requiredDistance;
+    desiredCamPos = XMVectorSetY(desiredCamPos, m_fFixedHeight); // Y 고정
 
-	//// 4) 뷰 매트릭스 계산 (보정 전 테스트용, 필요에 따라 사용)
-	//// XMVECTOR camUp = m_pTransformCom->Get_State(STATE::UP);
-	//// XMMATRIX view = XMMatrixLookAtLH(desiredCamPos, midPos, camUp);
+    // 8. 데드존 체크 - 현재 카메라에서 바운딩 박스가 화면 밖으로 나가는지 확인
+    XMVECTOR camToBounds = boundsCenter - currentCamPos;
+    float camToBoundsX = XMVectorGetX(camToBounds);
+    float camToBoundsZ = XMVectorGetZ(camToBounds);
 
-	//// 5) 데드존 보정 (XZ 평면 기준)
-	//const float deadZoneX = 1000.f;
-	//const float deadZoneY = 2000.f;
-	//XMVECTOR viewPos = XMVector3TransformCoord(playerPos,
-	//	XMMatrixLookAtLH(desiredCamPos, midPos,
-	//		m_pTransformCom->Get_State(STATE::UP)));
-	//float vx = XMVectorGetX(viewPos);
-	//float vy = XMVectorGetY(viewPos);
+    // 데드존을 벗어났을 때만 카메라 이동
+    XMVECTOR moveOffset = XMVectorZero();
 
-	//XMVECTOR camRight = m_pTransformCom->Get_State(STATE::RIGHT);
-	//XMVECTOR camUp = m_pTransformCom->Get_State(STATE::UP);
+    if (abs(camToBoundsX) > deadZoneWidth) {
+        float moveX = (abs(camToBoundsX) - deadZoneWidth) * (camToBoundsX > 0 ? 1 : -1);
+        moveOffset = XMVectorSetX(moveOffset, moveX);
+    }
 
-	//if (vx > deadZoneX) desiredCamPos += camRight * (vx - deadZoneX);
-	//if (vx < -deadZoneX) desiredCamPos += camRight * (vx + deadZoneX);
-	//if (vy > deadZoneY) desiredCamPos += camUp * (vy - deadZoneY);
-	//if (vy < -deadZoneY) desiredCamPos += camUp * (vy + deadZoneY);
+    if (abs(camToBoundsZ) > deadZoneWidth) {
+        float moveZ = (abs(camToBoundsZ) - deadZoneWidth) * (camToBoundsZ > 0 ? 1 : -1);
+        moveOffset = XMVectorSetZ(moveOffset, moveZ);
+    }
 
-	//// Y는 여전히 고정
-	//desiredCamPos = XMVectorSetY(desiredCamPos, fixedY);
+    // 9. 최종 카메라 위치 계산
+    if (XMVectorGetX(XMVector3Length(moveOffset)) > 0.1f) {
+        desiredCamPos = currentCamPos + moveOffset;
+        desiredCamPos = XMVectorSetY(desiredCamPos, m_fFixedHeight);
+    }
+    else {
+        desiredCamPos = currentCamPos; // 데드존 내부면 이동하지 않음
+    }
 
-	//// 6) 최종 보간 (XZ 평면 보간, Y 고정)
-	//float t = m_fSmooth * fTimeDelta;
-	//if (t > 1.f) t = 1.f;
+    // 10. 거리 체크 - 너무 가까우면 뒤로 이동
+    float currentDistance = XMVectorGetX(XMVector3Length(boundsCenter - desiredCamPos));
+    if (currentDistance < requiredDistance) {
+        XMVECTOR toCam = XMVector3Normalize(desiredCamPos - boundsCenter);
+        toCam = XMVectorSetY(toCam, 0); // Y축 제거
+        desiredCamPos = boundsCenter + XMVector3Normalize(toCam) * requiredDistance;
+        desiredCamPos = XMVectorSetY(desiredCamPos, m_fFixedHeight);
+    }
 
-	//XMVECTOR currPos = m_pTransformCom->Get_State(STATE::POSITION);
-	//// XZ는 lerp, Y는 fixedY
-	//XMVECTOR lerpPos = XMVectorLerp(currPos, desiredCamPos, t);
-	//XMVECTOR finalPos = XMVectorSetY(lerpPos, fixedY);
+    // 11. 스무스 보간
+    float t = min(m_fSmooth * fTimeDelta, 1.0f);
+    XMVECTOR lerpPos = XMVectorLerp(currentCamPos, desiredCamPos, t);
 
-	//m_pTransformCom->Set_State(STATE::POSITION, finalPos);
+    m_pTransformCom->Set_State(STATE::POSITION, lerpPos);
 
-	//// 7) 카메라가 바라보는 지점의 Y도 플레이어 높이로 맞춰주면 수평 유지
-	//midPos = XMVectorSetY(midPos, XMVectorGetY(playerPos));
-	//m_pTransformCom->LookAtXZ(playerPos);
+    // 12. 카메라가 바라볼 지점 (두 캐릭터의 중점, 약간 높이 조정)
+    XMVECTOR lookAtPoint = boundsCenter;
+    lookAtPoint = XMVectorSetY(lookAtPoint, XMVectorGetY(boundsCenter) + 3.0f);
+
+    m_pTransformCom->LookAtXZ(lookAtPoint);
 }
-
-//void CThirdPersonCamera::Late_Update(_float fTimeDelta)
-//{
-//	if (!m_pTargetTransform)
-//		return;
-//
-//	// 1) 플레이어 월드 위치·쿼터니언 회전
-//	XMVECTOR targetPos = m_pTargetTransform->Get_State(STATE::POSITION);
-//	XMVECTOR targetQuat = m_pTargetTransform->Get_RotationQuaternion();
-//
-//	// 2) 기본 오프셋 회전 적용 → 목표 카메라 월드 위치
-//	XMVECTOR offsetV = XMLoadFloat3(&m_vOffset);
-//	XMVECTOR worldOff = RotateVectorByQuaternion(offsetV, targetQuat);
-//	XMVECTOR desiredCamPos = XMVectorAdd(targetPos, worldOff);
-//
-//	// 3) 데드존 크기 (뷰 공간에서의 월드 단위)
-//	const float deadZoneX = 200.0f;   // 좌우  ±5 유닛
-//	const float deadZoneY = 200.0f;   // 상하  ±2 유닛
-//
-//	// 4) 뷰 공간으로 변환 (월드 → 카메라 기준 좌표)
-//	XMMATRIX view = m_pGameInstance->Get_Transform_Matrix(TRANSFORM::VIEW);
-//	XMVECTOR viewPos = XMVector3TransformCoord(targetPos, view);
-//	float vx = XMVectorGetX(viewPos);
-//	float vy = XMVectorGetY(viewPos);
-//
-//	// 5) 뷰 축 (카메라 우, 상 방향) 가져오기
-//	XMVECTOR camRight = m_pTransformCom->Get_State(STATE::RIGHT);
-//	XMVECTOR camUp = m_pTransformCom->Get_State(STATE::UP);
-//
-//	// 6) 데드존 넘은 만큼만 카메라 목표 위치 보정
-//	if (vx > deadZoneX)
-//		desiredCamPos += camRight * (vx - deadZoneX);
-//	if (vx < -deadZoneX) 
-//		desiredCamPos += camRight * (vx + deadZoneX);
-//	if (vy > deadZoneY) 
-//		desiredCamPos += camUp * (vy - deadZoneY);
-//	if (vy < -deadZoneY)
-//		desiredCamPos += camUp * (vy + deadZoneY);
-//
-//	// 7) 현재 카메라 위치 → 부드럽게 보간
-//	_float t = m_fSmooth * fTimeDelta;
-//	t = (t > 1.f ? 1.f : t);
-//	XMVECTOR currCamPos = m_pTransformCom->Get_State(STATE::POSITION);
-//	XMVECTOR lerpPos = XMVectorLerp(currCamPos, desiredCamPos, t);
-//	m_pTransformCom->Set_State(STATE::POSITION, lerpPos);
-//
-//
-//	CGameObject* pCharacter = m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("BaseCharacter"));
-//
-//	if (pCharacter)
-//	{
-//		m_pTargetTransform = pCharacter->GetTransform();
-//		targetPos = m_pTargetTransform->Get_State(STATE::POSITION);
-//		m_pTransformCom->LookAt(targetPos);
-//	}
-//	// 8) 항상 플레이어 바라보게
-//	
-//}
 
 CThirdPersonCamera* CThirdPersonCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

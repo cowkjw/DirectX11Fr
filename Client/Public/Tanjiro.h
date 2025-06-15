@@ -17,10 +17,13 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+	virtual void TakeDamage(_float fDamage) override;
 
 private:
 	virtual HRESULT Ready_Components() override;
 	virtual void Ready_Animation() override;
+	void ActiveCollider();
+	void DeactiveCollider();
 
 
 public:

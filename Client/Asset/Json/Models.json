@@ -16,6 +16,11 @@
       "Anim": false
     },
     {
+      "tag": "Grass2",
+      "path": "../Asset/Resources/Models/Map/Grass2.bin",
+      "Anim": false
+    },
+    {
       "tag": "FarBackground2",
       "path": "../Asset/Resources/Models/Map/FarBackground2.bin",
       "Anim": false
@@ -76,10 +81,54 @@
       "Anim": false
     },
     {
-      "tag": "EnmuGround",
-      "path": "../Asset/Resources/Models/Map/EnmuMap/Ground/EnmuGround.bin",
+      "tag": "TrainHead",
+      "path": "../Asset/Resources/Models/Map/TrainHead.bin",
+      "Anim": false
+    },
+    {
+      "tag": "TrainHead2",
+      "path": "../Asset/Resources/Models/Map/TrainHead2.bin",
+      "Anim": false
+    },
+    {
+      "tag": "TrainBody",
+      "path": "../Asset/Resources/Models/Map/TrainBody.bin",
+      "Anim": false
+    },
+    {
+      "tag": "TrainBody2",
+      "path": "../Asset/Resources/Models/Map/TrainBody2.bin",
+      "Anim": false
+    },
+    {
+      "tag": "TrainBody3",
+      "path": "../Asset/Resources/Models/Map/TrainBody3.bin",
+      "Anim": false
+    },
+    {
+      "tag": "Rail",
+      "path": "../Asset/Resources/Models/Map/Rail.bin",
+      "Anim": false
+    },
+    {
+      "tag": "Middle",
+      "path": "../Asset/Resources/Models/Map/Middle.bin",
+      "Anim": false
+    },
+    {
+      "tag": "Middle2",
+      "path": "../Asset/Resources/Models/Map/Middle2.bin",
+      "Anim": false
+    },
+    {
+      "tag": "SmallCliff",
+      "path": "../Asset/Resources/Models/Map/SmallCliff.bin",
+      "Anim": false
+    },
+    {
+      "tag": "MiddleTree",
+      "path": "../Asset/Resources/Models/Map/MiddleTree.bin",
       "Anim": false
     }
-
   ]
 }

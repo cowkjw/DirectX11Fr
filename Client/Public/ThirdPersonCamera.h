@@ -39,6 +39,13 @@ private:
 	CGameObject* m_pLockOnTarget = nullptr; // Target
 	CTransform* m_pTargetTransform = nullptr; // Target Transform
 
+
+	float m_fFixedHeight = 15.f;      // 카메라 고정 높이
+	float m_fDeadZoneWidth = 30.f;    // 좌우 데드존 크기
+	float m_fDeadZoneHeight = 10.0f;   // 상하 데드존 크기
+	float m_fMinCameraDistance = 30.0f; // 최소 카메라 거리
+	float m_fDistanceMultiplier = 0.4f; // 거리 배수
+
 public:
 	static CThirdPersonCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;

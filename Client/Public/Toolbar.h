@@ -25,6 +25,7 @@ private:
 	void Get_PrototypeList();
 	void FBXLodaer();
 	void DrawAnimEventEditor();
+	void SpawnMouse(void* pArg = nullptr);
 
 	CGameObject* ClonePrototype(const string& prototypeName, const wstring& instanceName,void* pArg = nullptr);
 

@@ -76,6 +76,31 @@ void CLevel_Logo::Update(_float fTimeDelta)
 		SetWindowTextA(g_hWnd, buf);
 	}
 
+	auto logoImage = static_cast<CUIImage*>(m_pGameInstance->Get_UI(TEXT("TitleCanvas"), TEXT("Logo")));
+	if (logoImage)
+	{
+		_float3 scale = logoImage->GetTransform()->Get_Scaled();
+		static _bool bScaleUp = true;
+		if (m_fMaxScale > scale.x&& bScaleUp)
+		{
+			scale.x += 500.f*fTimeDelta;
+			scale.y += 500.f * fTimeDelta;
+			logoImage->GetTransform()->Scaling(scale);
+		}
+		else
+		{
+			bScaleUp = false;
+		}
+		if (!bScaleUp)
+		{
+			if (m_fFinalScale < scale.x)
+			{
+				scale.x -= 300.f * fTimeDelta;
+				scale.y -= 300.f * fTimeDelta;
+				logoImage->GetTransform()->Scaling(scale);
+			}
+		}
+	}
 
 }
 
@@ -133,6 +158,7 @@ void CLevel_Logo::Ready_UI_Setup()
 		{
 			pStartBt->Set_OnClick([this]() {
 				StartGamePlay();
+
 				});
 		}
 	}
@@ -148,16 +174,17 @@ void CLevel_Logo::Ready_UI_Setup()
 		uiEffect->Set_Color(_float4(1.f,1.f,1.f, 0.5f)); // 반투명하게 설정
 	}
 
-	/*auto pInkImage = dynamic_cast<CUIImage*>(m_pGameInstance->Get_UI(TEXT("StaticCanvas"), TEXT("Ink")));
-	if (pInkImage)
+	auto logoImage = static_cast<CUIImage*>(m_pGameInstance->Get_UI(TEXT("TitleCanvas"), TEXT("Logo")));
+	if (logoImage)
 	{
-		pInkImage->EnableUVAnim(5, 6, 1.f);
-	}*/
+		logoImage->GetTransform()->Scaling(_float3(300.f, 300.f, 1.f)); // 크기 조정
+	}
 
 }
 
 void CLevel_Logo::StartGamePlay()
 {
+
 	if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
 		CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::MODE))))
 		return;

@@ -40,6 +40,11 @@ public:
 	void SetIsBarChild(_bool bIsBar) { m_bParentIsBar = bIsBar; }
 	void SetShaderPass(_uint iPass) { m_iShaderPass = iPass; }
 	void SetRatio(_float ratio) { m_fRatio = ratio; }
+
+	// 마스크 설정 메서드
+	void EnableMask(const _wstring& maskKey);
+	void SetUseMask(_bool useMask) { m_bUseMask = useMask; }
+	void SetMaskParams(_float threshold, _float2 uvOffset, _float2 uvScale);
 protected:
 	CShader* m_pShaderCom = { nullptr };
 	CTexture* m_pTextureCom = { nullptr };
@@ -57,6 +62,24 @@ protected:
 	_float m_fCols = 1.f; // UV 애니메이션 열
 	_float m_fRatio = 0.f;
 	_uint m_iShaderPass = 0; // 셰이더 패스 인덱스
+
+
+	// 프레임 기반으로
+	_float m_fFrameTime{ 0.f };      // 한 프레임이 지속되는 시간
+	_float m_fCurrentTime{ 0.f };    // 현재 누적 시간
+	_int m_iCurrentFrame{ 0 };     // 현재 프레임 인덱스
+	_int m_iTotalFrames{ 0 };      // 총 프레임 수
+	_bool m_bIsFrameBased{ false }; // 프레임 기반 애니메이션인지 여부
+
+	// 마스크 처리용
+	_bool    m_bUseMask = false;
+	_float   m_fMaskThreshold = 0.f;
+	_float2 m_maskUVOffset = { 0.f, 0.f };
+	_float2 m_maskUVScale = { 1.f, 1.f };
+
+	CTexture* m_pMaskTextureCom = nullptr;
+	_int       m_iMaskTexIndex = 0;
+
 
 protected:
 	HRESULT Ready_Components();

@@ -17,8 +17,16 @@ HRESULT CLevel_EnmuBoss::Initialize()
 {
 
 
+	CBaseCharacter* pTanjiro = static_cast<CBaseCharacter*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_Tanjiro"),
+		ToIndex(LEVEL::ENMU_BOSS), TEXT("Tanjiro")));
+
+	if (!pTanjiro)
+		return E_FAIL;
 
 	CJsonLoader jsonLoader(m_pDevice,m_pContext);
+	jsonLoader.Load_Objects("../Asset/Json/EnmuBossCanvas.json", [&]() {
+		// 이곳에 로드 후 처리할 작업을 추가합니다.
+		});
 	jsonLoader.Load_Objects("../Asset/Json/EnmuBossObj.json", [&]() {
 		// 이곳에 로드 후 처리할 작업을 추가합니다.
 		});
@@ -35,15 +43,10 @@ HRESULT CLevel_EnmuBoss::Initialize()
 		return E_FAIL;
 
 
-	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_KoujuroWeapon"),
-		ToIndex(LEVEL::ENMU_BOSS), TEXT("Weapon")))
-		return E_FAIL;
+	//if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_KoujuroWeapon"),
+	//	ToIndex(LEVEL::ENMU_BOSS), TEXT("Weapon")))
+	//	return E_FAIL;
 
-	CBaseCharacter* pKyojuro = static_cast<CBaseCharacter*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_Kyojuro"),
-		ToIndex(LEVEL::ENMU_BOSS), TEXT("Kyojuro")));
-
-	if (!pKyojuro)
-		return E_FAIL;
 
 
 
@@ -57,7 +60,7 @@ void CLevel_EnmuBoss::Update(_float fTimeDelta)
 
 HRESULT CLevel_EnmuBoss::Render()
 {
-	SetWindowText(g_hWnd, TEXT("엔무 보스 레벨"));
+	/*SetWindowText(g_hWnd, TEXT("엔무 보스 레벨"));*/
 
 	return S_OK;
 }
@@ -74,12 +77,12 @@ HRESULT CLevel_EnmuBoss::Ready_Layer_Characters()
 	if (!pEnmu)
 		return E_FAIL;
 
-	//// Prototype_GameObject_Kyojuro
-	//CBaseCharacter* pKyojuro = static_cast<CBaseCharacter*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Kyojuro"),
-	//	ToIndex(LEVEL::GAMEPLAY), strLayerTag));
+	// Prototype_GameObject_Kyojuro
+	CBaseCharacter* pTanjiro = static_cast<CBaseCharacter*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_Tanjiro"),
+		ToIndex(LEVEL::GAMEPLAY), TEXT("Tanjiro")));
 
-	//if (!pKyojuro)
-	//	return E_FAIL;
+	if (!pTanjiro)
+		return E_FAIL;
 
 	//pAkaza->Set_Target(TEXT("Kyojuro"), LEVEL::GAMEPLAY);
 	//pKyojuro->Set_Target(TEXT("Akaza"), LEVEL::GAMEPLAY);

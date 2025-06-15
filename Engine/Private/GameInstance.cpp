@@ -102,6 +102,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 	m_pTransformPipeline->Update();
 
+	if(m_bActivePicking)
 	m_pPicking->Update(*m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::VIEW), *m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::PROJECTION));
 
 	m_pFrustumCull->Update(*m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::VIEW), *m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::PROJECTION));
@@ -364,6 +365,11 @@ const _float4* CGameInstance::Get_CamPosition() const
 {
 	return m_pTransformPipeline->Get_CamPosition();
 }
+
+_vector CGameInstance::UnprojectToGround(_float mx, _float my, const D3D11_VIEWPORT& vp)
+{
+	return m_pTransformPipeline->UnprojectToGround(mx,my,vp);
+}
 #pragma endregion
 
 #pragma region UI
@@ -394,6 +400,12 @@ CUIObject* CGameInstance::Get_UI(const _wstring& canvasName, const _wstring& uiN
 CGameObject* CGameInstance::CreateUI(void* pDesc, UI_TYPE eUIType)
 {
 	return m_pUIManager->CreateUI(static_cast<CUIObject::UIOBJECT_DESC*>(pDesc), eUIType);
+}
+CGameObject* CGameInstance::GetCanvasUI(const _wstring& canvasName)
+{
+	if (nullptr == m_pUIManager)
+		return nullptr;
+	return m_pUIManager->GetCanvasUI(canvasName);
 }
 void CGameInstance::ClearUI()
 {

@@ -268,10 +268,13 @@ void CToolbar::DrawToolbar()
 		}
 		ImGui::EndCombo();
 	}
-
+	static _bool spawnMouse = false;
+	ImGui::Checkbox("SpawnMouse", &spawnMouse);
 	// 생성 버튼
 	if (ImGui::Button("Create Object"))
 	{
+	
+
 		CGameObject* obj = nullptr;
 		if (isUI)
 		{
@@ -294,6 +297,7 @@ void CToolbar::DrawToolbar()
 			wstring wname = m_NameBuf[0]
 				? StringToWString(m_NameBuf)
 				: StringToWString(m_CurrentPrototype);
+		
 			obj = ClonePrototype(m_CurrentPrototype, wname);
 			// 생성 후 입력란 초기화
 			m_NameBuf[0] = '\0';
@@ -304,8 +308,13 @@ void CToolbar::DrawToolbar()
 		{
 			CEditorManager::m_vecSceneObjects.push_back(obj);
 		}
+		
 	}
-
+	/*if (spawnMouse)
+	{
+		if(m_pGameInstance->IsMousePressed(0))
+		SpawnMouse();
+	}*/
 
 	ImGui::Separator();
 	ImGui::InputText("Scene Path", m_FilePathBuf, IM_ARRAYSIZE(m_FilePathBuf), ImGuiInputTextFlags_ReadOnly);
@@ -383,6 +392,7 @@ void CToolbar::SetLevelEnumToString()
 	m_LevelStringMap["GamePlay"] = 3;
 	m_LevelStringMap["EnmuBoss"] = 4;
 	m_LevelStringMap["ModeSelect"] = 6;
+	m_LevelStringMap["Loading"] = 1;
 }
 
 void CToolbar::UpdatePrototypeList()
@@ -662,6 +672,34 @@ void CToolbar::DrawAnimEventEditor()
 		}
 	}
 	ImGui::End();
+}
+
+void CToolbar::SpawnMouse(void* pArg)
+{
+	ImVec2 winPos = ImGui::GetItemRectMin();
+	ImVec2 mpos = ImGui::GetMousePos();
+	float mx = mpos.x - winPos.x;
+	float my = mpos.y - winPos.y;
+	D3D11_VIEWPORT			ViewportDesc{};
+	_uint					iNumViewports = { 1 };
+
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+	XMVECTOR worldPos = m_pGameInstance->UnprojectToGround(mx, my, ViewportDesc);
+
+	// 3) 일정 거리 이상 이동했을 때만 생성 (너무 빡빡하면 성능 저하)
+	static XMVECTOR lastPos = XMVectorSet(FLT_MAX, 0, 0, 0);
+	if (XMVectorGetX(XMVector3Length(worldPos - lastPos)) < 0.2f)
+		return;
+	lastPos = worldPos;
+
+	// 4) 프로토타입 복제 & 위치 설정
+	CGameObject* obj = ClonePrototype(m_CurrentPrototype, L"", pArg);
+	if (!obj) return;
+	// TransformComponent 가져와서 위치 직접 세팅
+	auto pTrans = obj->GetTransform();
+	if (pTrans)
+		pTrans->Set_State(STATE::POSITION,worldPos);
+	CEditorManager::m_vecSceneObjects.push_back(obj);
 }
 
 CGameObject* CToolbar::ClonePrototype(const string& prototypeName, const wstring& instanceName, void* pArg)

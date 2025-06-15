@@ -116,7 +116,7 @@ HRESULT CAkaza::Initialize(void* pArg)
 		}
 	}
 
-
+	m_iShaderPass = 2;
 	return S_OK;
 }
 
@@ -207,7 +207,7 @@ void CAkaza::TakeDamage(_float fDamage)
 
 HRESULT CAkaza::Ready_Components()
 {
-	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxAnimMesh"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_Toon"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 
@@ -754,7 +754,7 @@ _bool CAkaza::IsCooldownReady(_float& fCooldownVar, _float fTimeDelta, _float fB
 
 void CAkaza::FillInput(InputData& outInput)
 {
-	CBaseCharacter* pTarget = Get_Target();
+	CBaseCharacter* pTarget = dynamic_cast<CBaseCharacter*>(Get_Target());
 	if (!pTarget)
 		return;
 
@@ -880,7 +880,7 @@ void CAkaza::FillInput(InputData& outInput)
 
 void CAkaza::HandleInput()
 {
-	CBaseCharacter* pTarget = Get_Target();
+	CBaseCharacter* pTarget = dynamic_cast<CBaseCharacter*>(Get_Target());
 	if (!pTarget)
 		return;
 

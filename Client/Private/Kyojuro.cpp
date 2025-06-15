@@ -96,7 +96,7 @@ HRESULT CKyojuro::Initialize(void* pArg)
 	//	return E_FAIL;
 	m_pColliderCom->SetListener(this);
 	ChangeState(new StateIdle(TEXT("Idle")));
-	m_iShaderPass = 1;
+	m_iShaderPass = 2;
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 100.f, 1.f));
 
@@ -159,7 +159,7 @@ void CKyojuro::TakeDamage(_float fDamage)
 
 HRESULT CKyojuro::Ready_Components()
 {
-	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxAnimMesh"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_Toon"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 

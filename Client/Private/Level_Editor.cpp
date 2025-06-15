@@ -40,6 +40,7 @@ HRESULT CLevel_Editor::Initialize()
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
 
+	m_pGameInstance->SetActivePicking(true);
 
 	return S_OK;
 }

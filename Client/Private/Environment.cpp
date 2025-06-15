@@ -48,11 +48,21 @@ HRESULT CEnvironment::Initialize(void* pArg)
 	//	TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 	//	return E_FAIL;
 	m_pTransformCom->Scaling(_float3(0.2f, 0.2f, 0.2f));
+
 	return S_OK;
 }
 
 void CEnvironment::Update(_float fTimeDelta)
 {
+	static _bool bIsFirst = true;
+	if (bIsFirst)
+	{
+		m_iShaderPass = m_strModelTag.find(L"Sky") != _wstring::npos ? 0 : 1; // Sky는 0번 패스, 나머지는 1번 패스
+		if (m_iShaderPass == 0)
+		{
+			bIsFirst = false;
+		}
+	}
 }
 
 void CEnvironment::Late_Update(_float fTimeDelta)
@@ -73,7 +83,7 @@ HRESULT CEnvironment::Render()
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Begin(0)))
+		if (FAILED(m_pShaderCom->Begin(m_iShaderPass)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))
@@ -130,8 +140,8 @@ HRESULT CEnvironment::Bind_Shaders()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
-		return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
+	//	return E_FAIL;
 
 	return S_OK;
 }

@@ -34,7 +34,7 @@
     },
     {
         "CreateLevel": 0,
-        "ID": 14,
+        "ID": 18,
         "ProtoLevel": 0,
         "ProtoTypeTag": "",
         "components": {
@@ -62,7 +62,7 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    21.68,
+                    -21.0,
                     0.0,
                     0.0
                 ],
@@ -72,9 +72,9 @@
                     0.0
                 ],
                 "Scale": [
-                    0.05,
-                    0.05,
-                    0.05
+                    0.10,
+                    0.10,
+                    0.10
                 ]
             }
         },
@@ -85,7 +85,55 @@
     },
     {
         "CreateLevel": 0,
-        "ID": 15,
+        "ID": 19,
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "components": {
+            "Com_Collider0": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": false,
+                "IsTrigger": false,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Priority": 0,
+                "Radius": 15.0,
+                "Type": "SphereCollider"
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -42.12,
+                    -16.65,
+                    18.67
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.10,
+                    0.09,
+                    0.10
+                ]
+            }
+        },
+        "isActive": true,
+        "name": "Body_Parts",
+        "parentId": 18,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 0,
+        "ID": 20,
         "ProtoLevel": 0,
         "ProtoTypeTag": "",
         "components": {
@@ -113,7 +161,7 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    -21.0,
+                    21.0,
                     0.0,
                     0.0
                 ],
@@ -123,9 +171,9 @@
                     0.0
                 ],
                 "Scale": [
-                    0.05,
-                    0.05,
-                    0.05
+                    0.10,
+                    0.10,
+                    0.10
                 ]
             }
         },
@@ -136,7 +184,55 @@
     },
     {
         "CreateLevel": 0,
-        "ID": 16,
+        "ID": 21,
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "components": {
+            "Com_Collider0": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": false,
+                "IsTrigger": false,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Priority": 0,
+                "Radius": 15.0,
+                "Type": "SphereCollider"
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    42.12,
+                    -16.65,
+                    18.67
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.10,
+                    0.09,
+                    0.09
+                ]
+            }
+        },
+        "isActive": true,
+        "name": "Body_Parts",
+        "parentId": 20,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 0,
+        "ID": 22,
         "ProtoLevel": 0,
         "ProtoTypeTag": "",
         "components": {
@@ -145,6 +241,21 @@
                 "ComponentLevel": 0,
                 "ComponentTag": "Prototype_Component_Animator",
                 "IsActive": true
+            },
+            "Com_Collider": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "IsTrigger": false,
+                "Offset": [
+                    0.0,
+                    180.0,
+                    0.0
+                ],
+                "Priority": 5,
+                "Radius": 40.0,
+                "Type": "SphereCollider"
             },
             "Com_Model": {
                 "ComponentCreateLevel": 0,
@@ -174,9 +285,9 @@
                     0.0
                 ],
                 "Scale": [
-                    0.05,
-                    0.05,
-                    0.05
+                    0.10,
+                    0.10,
+                    0.10
                 ]
             }
         },
@@ -187,7 +298,7 @@
     },
     {
         "CreateLevel": 0,
-        "ID": 17,
+        "ID": 23,
         "ProtoLevel": 0,
         "ProtoTypeTag": "",
         "components": {
@@ -225,15 +336,707 @@
                     0.0
                 ],
                 "Scale": [
-                    0.05,
-                    0.05,
-                    0.05
+                    0.10,
+                    0.10,
+                    0.10
                 ]
             }
         },
         "isActive": true,
         "name": "EnmuHead",
         "parentId": 13,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 0,
+        "ID": 24,
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "components": {
+            "Com_Collider0": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": false,
+                "IsTrigger": false,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Priority": 5,
+                "Radius": 5.0,
+                "Type": "SphereCollider"
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.81,
+                    11.04,
+                    11.94
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.09,
+                    0.09,
+                    0.09
+                ]
+            }
+        },
+        "isActive": false,
+        "name": "Body_Parts",
+        "parentId": 23,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 27,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    69.44,
+                    0.0,
+                    -54.88
+                ],
+                "Rotation": [
+                    0.0,
+                    127.60,
+                    180.0
+                ],
+                "Scale": [
+                    8.00,
+                    8.0,
+                    8.00
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_01b",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 28,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -64.78,
+                    0.0,
+                    -8.68
+                ],
+                "Rotation": [
+                    -0.0,
+                    -126.20,
+                    180.0
+                ],
+                "Scale": [
+                    4.99,
+                    5.0,
+                    4.99
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_02a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 29,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    102.39,
+                    0.0,
+                    -3.64
+                ],
+                "Rotation": [
+                    0.0,
+                    127.45,
+                    180.0
+                ],
+                "Scale": [
+                    6.00,
+                    6.0,
+                    6.00
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_02b",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 30,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -83.52,
+                    0.0,
+                    28.66
+                ],
+                "Rotation": [
+                    -0.0,
+                    -119.36,
+                    180.0
+                ],
+                "Scale": [
+                    7.99,
+                    8.0,
+                    7.99
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_03a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 31,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    118.94,
+                    0.0,
+                    34.75
+                ],
+                "Rotation": [
+                    0.0,
+                    103.88,
+                    180.0
+                ],
+                "Scale": [
+                    7.00,
+                    7.0,
+                    7.00
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_03b",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 32,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    12.31,
+                    0.0,
+                    -57.47
+                ],
+                "Rotation": [
+                    -0.0,
+                    -173.99,
+                    180.0
+                ],
+                "Scale": [
+                    14.99,
+                    15.0,
+                    14.99
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_03c",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 33,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -104.59,
+                    -8.74,
+                    60.73
+                ],
+                "Rotation": [
+                    -0.0,
+                    -97.86,
+                    180.0
+                ],
+                "Scale": [
+                    7.99,
+                    8.0,
+                    7.99
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_04a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 34,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    145.22,
+                    0.0,
+                    72.07
+                ],
+                "Rotation": [
+                    0.0,
+                    121.75,
+                    180.0
+                ],
+                "Scale": [
+                    5.99,
+                    6.0,
+                    5.99
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_05a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 35,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -103.01,
+                    -3.50,
+                    92.30
+                ],
+                "Rotation": [
+                    -0.0,
+                    -73.58,
+                    0.0
+                ],
+                "Scale": [
+                    5.99,
+                    6.0,
+                    5.99
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_05a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 36,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    161.22,
+                    0.0,
+                    102.33
+                ],
+                "Rotation": [
+                    0.0,
+                    102.56,
+                    180.0
+                ],
+                "Scale": [
+                    8.00,
+                    8.0,
+                    8.00
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_05a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 37,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    210.11,
+                    -48.25,
+                    127.91
+                ],
+                "Rotation": [
+                    -0.0,
+                    -26.10,
+                    0.0
+                ],
+                "Scale": [
+                    10.89,
+                    4.19,
+                    22.31
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeat_01a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 38,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    128.22,
+                    10.57,
+                    -23.90
+                ],
+                "Rotation": [
+                    0.0,
+                    128.47,
+                    180.0
+                ],
+                "Scale": [
+                    8.00,
+                    8.0,
+                    8.00
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_02a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 39,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -102.86,
+                    0.0,
+                    0.29
+                ],
+                "Rotation": [
+                    -0.0,
+                    -126.43,
+                    180.0
+                ],
+                "Scale": [
+                    12.00,
+                    12.0,
+                    12.00
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_02a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 40,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -108.88,
+                    0.94,
+                    91.98
+                ],
+                "Rotation": [
+                    -0.0,
+                    -97.37,
+                    180.0
+                ],
+                "Scale": [
+                    8.0,
+                    8.0,
+                    8.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_03a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
         "tag": ""
     }
 ]

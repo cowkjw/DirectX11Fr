@@ -36,7 +36,7 @@ void StateMove::Update(CBaseCharacter* pChar, const InputData& input, float fTim
 		return;
 	}
 
-	if (input.doSkill1)
+	if (input.doSkill1) // 이동 스킬
 	{
 		pChar->ChangeState(new StateSkill1(TEXT("Skill1")));
 		return;

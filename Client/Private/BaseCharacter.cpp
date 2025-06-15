@@ -446,6 +446,13 @@ HRESULT CBaseCharacter::Bind_Shaders()
 		return E_FAIL;
 	//if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
 	//	return E_FAIL;
+
+
+	//m_pShaderCom->Bind_RawValue("g_fToonThreshold", &fToonThreshold, sizeof(float));
+	//m_pShaderCom->Bind_RawValue("g_vShadowColor", &vShadowColor, sizeof(float4));
+
+	//// Å÷ ½¦ÀÌµù ÆÐ½º·Î ·»´õ¸µ
+	//m_pShader->Begin(2); // ToonShading ÆÐ½º
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::PROJECTION))))
@@ -462,8 +469,8 @@ HRESULT CBaseCharacter::Bind_Shaders()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
-		return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
+	//	return E_FAIL;
 
 	return S_OK;
 }

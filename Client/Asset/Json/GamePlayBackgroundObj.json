@@ -25,17 +25,17 @@
                 "Position": [
                     0.0,
                     0.0,
-                    0.0
+                    -74.90
                 ],
                 "Rotation": [
                     0.0,
                     0.0,
-                    0.0
+                    -0.0
                 ],
                 "Scale": [
-                    0.25,
-                    0.25,
-                    0.25
+                    0.30,
+                    0.30,
+                    0.30
                 ]
             }
         },
@@ -71,7 +71,7 @@
                 "Position": [
                     0.0,
                     0.0,
-                    0.0
+                    4.67
                 ],
                 "Rotation": [
                     0.0,
@@ -79,9 +79,9 @@
                     0.0
                 ],
                 "Scale": [
-                    1.5,
-                    1.5,
-                    1.5
+                    2.40,
+                    2.40,
+                    2.40
                 ]
             }
         },
@@ -97,6 +97,25 @@
         "ProtoLevel": 3,
         "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
         "components": {
+            "Com_Collider0": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "Prototype_Component_BoxCollider",
+                "HalfExtents": [
+                    146.88,
+                    27.10,
+                    14.80
+                ],
+                "IsActive": true,
+                "IsTrigger": false,
+                "Offset": [
+                    0.0,
+                    37.59,
+                    -196.38
+                ],
+                "Priority": 9,
+                "Type": "BoxCollider"
+            },
             "Com_Model": {
                 "ComponentCreateLevel": 0,
                 "ComponentLevel": 0,
@@ -125,9 +144,9 @@
                     0.0
                 ],
                 "Scale": [
-                    1.20,
-                    1.2,
-                    1.20
+                    1.60,
+                    1.60,
+                    1.60
                 ]
             }
         },
@@ -163,7 +182,7 @@
                 "Position": [
                     61.84,
                     0.0,
-                    -48.16
+                    -48.15
                 ],
                 "Rotation": [
                     0.0,
@@ -209,7 +228,7 @@
                 "Position": [
                     -56.47,
                     0.0,
-                    -88.60
+                    -88.58
                 ],
                 "Rotation": [
                     0.0,
@@ -255,7 +274,7 @@
                 "Position": [
                     -101.04,
                     0.0,
-                    -36.50
+                    -36.5
                 ],
                 "Rotation": [
                     0.0,
@@ -272,6 +291,2260 @@
         "isActive": true,
         "modelTag": "Grass1",
         "name": "Grass1",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 23,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -23.12,
+                    0.0,
+                    79.62
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallStone",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 24,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    77.33,
+                    1.77e-07,
+                    64.83
+                ],
+                "Rotation": [
+                    -12.30,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    9.97,
+                    10.0,
+                    9.97
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass1",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 25,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -187.10,
+                    1.69,
+                    -4.07
+                ],
+                "Rotation": [
+                    -25.20,
+                    87.05,
+                    -1.61
+                ],
+                "Scale": [
+                    7.00,
+                    7.0,
+                    7.00
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "TrainHead",
+        "name": "TrainHead",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 26,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -182.58,
+                    -24.95,
+                    -40.20
+                ],
+                "Rotation": [
+                    35.04,
+                    -64.79,
+                    37.77
+                ],
+                "Scale": [
+                    4.96,
+                    4.96,
+                    4.94
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "TrainHead2",
+        "name": "TrainHead2",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 27,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -176.41,
+                    21.93,
+                    19.79
+                ],
+                "Rotation": [
+                    53.40,
+                    -81.01,
+                    -22.37
+                ],
+                "Scale": [
+                    4.96,
+                    4.92,
+                    4.94
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "TrainBody",
+        "name": "TrainBody",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 28,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -135.80,
+                    7.61,
+                    155.97
+                ],
+                "Rotation": [
+                    64.0,
+                    -63.47,
+                    -2.40
+                ],
+                "Scale": [
+                    4.96,
+                    4.88,
+                    4.96
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "TrainBody2",
+        "name": "TrainBody2",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 29,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -95.87,
+                    3.97,
+                    237.08
+                ],
+                "Rotation": [
+                    34.43,
+                    -55.15,
+                    -8.96
+                ],
+                "Scale": [
+                    4.97,
+                    4.96,
+                    4.98
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "TrainBody2",
+        "name": "TrainBody3",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 30,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -40.79,
+                    -3.48,
+                    309.76
+                ],
+                "Rotation": [
+                    24.45,
+                    -15.22,
+                    -4.15
+                ],
+                "Scale": [
+                    4.98,
+                    4.98,
+                    4.96
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "TrainBody3",
+        "name": "TrainBody4",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 31,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    -39.68
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass1",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 32,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    28.76,
+                    1.18e-07,
+                    -108.44
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass1",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 33,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    108.12,
+                    0.0,
+                    -104.22
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallStone",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 34,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    158.38,
+                    0.0,
+                    -31.87
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallStone",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 35,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -178.32,
+                    0.0,
+                    44.72
+                ],
+                "Rotation": [
+                    -0.0,
+                    -71.16,
+                    0.0
+                ],
+                "Scale": [
+                    4.95,
+                    5.0,
+                    4.95
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Rail",
+        "name": "Rail",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 36,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -147.22,
+                    0.0,
+                    138.99
+                ],
+                "Rotation": [
+                    -0.0,
+                    -69.41,
+                    0.0
+                ],
+                "Scale": [
+                    5.0,
+                    5.0,
+                    5.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Rail",
+        "name": "Rail2",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 37,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -116.01,
+                    0.0,
+                    231.58
+                ],
+                "Rotation": [
+                    0.0,
+                    -69.41,
+                    0.0
+                ],
+                "Scale": [
+                    5.0,
+                    5.0,
+                    5.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Rail",
+        "name": "Rail3",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 38,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -84.90,
+                    0.0,
+                    325.35
+                ],
+                "Rotation": [
+                    -0.0,
+                    -69.40,
+                    0.0
+                ],
+                "Scale": [
+                    5.0,
+                    5.0,
+                    5.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Rail",
+        "name": "Rail4",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 39,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    106.11,
+                    0.0,
+                    277.01
+                ],
+                "Rotation": [
+                    -0.0,
+                    -68.79,
+                    0.0
+                ],
+                "Scale": [
+                    5.0,
+                    5.0,
+                    5.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Middle",
+        "name": "Middle",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 40,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    218.83,
+                    9.0,
+                    12.14
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    5.0,
+                    5.0,
+                    5.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Middle",
+        "name": "Middle2",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 41,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    58.72,
+                    0.0,
+                    -236.05
+                ],
+                "Rotation": [
+                    0.0,
+                    87.05,
+                    -0.0
+                ],
+                "Scale": [
+                    4.98,
+                    5.0,
+                    4.98
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Middle2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 42,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -176.91,
+                    0.0,
+                    -119.80
+                ],
+                "Rotation": [
+                    0.0,
+                    158.27,
+                    180.0
+                ],
+                "Scale": [
+                    4.98,
+                    4.98,
+                    4.98
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Middle2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 43,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    215.22,
+                    0.0,
+                    -122.30
+                ],
+                "Rotation": [
+                    0.0,
+                    32.70,
+                    -0.0
+                ],
+                "Scale": [
+                    6.98,
+                    7.0,
+                    6.98
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Middle",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 44,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -49.88,
+                    0.0,
+                    -27.37
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Grass2",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 45,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -100.41,
+                    0.0,
+                    -16.18
+                ],
+                "Rotation": [
+                    -0.0,
+                    -73.87,
+                    0.0
+                ],
+                "Scale": [
+                    10.0,
+                    32.5,
+                    10.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallCliff",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 46,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -85.11,
+                    0.0,
+                    57.83
+                ],
+                "Rotation": [
+                    -0.0,
+                    -68.41,
+                    0.0
+                ],
+                "Scale": [
+                    9.97,
+                    40.20,
+                    9.97
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallCliff",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 47,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    91.12,
+                    0.0,
+                    105.30
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallStone",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 48,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    167.11,
+                    0.0,
+                    47.40
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 49,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -43.40,
+                    0.0,
+                    -19.87
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 50,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -48.72,
+                    0.0,
+                    -11.22
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 51,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    10.38,
+                    0.0,
+                    48.52
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 52,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -41.09,
+                    0.0,
+                    -29.61
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 53,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -48.75,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 54,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    45.95
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 55,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    13.55,
+                    0.0,
+                    43.65
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 56,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    159.44,
+                    0.0,
+                    41.27
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 57,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    5.55,
+                    0.0,
+                    38.09
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 58,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    165.05,
+                    0.0,
+                    35.86
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 59,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    24.53,
+                    0.0,
+                    -117.12
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 60,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    16.70,
+                    0.0,
+                    -119.91
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 61,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    7.55,
+                    0.0,
+                    -123.91
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 62,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    26.11,
+                    0.0,
+                    -126.51
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 63,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    172.80,
+                    0.0,
+                    36.43
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Grass2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 64,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    54.86,
+                    0.0,
+                    227.08
+                ],
+                "Rotation": [
+                    0.0,
+                    43.04,
+                    -0.0
+                ],
+                "Scale": [
+                    4.0,
+                    4.0,
+                    4.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "MiddleTree",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 65,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    225.58,
+                    0.0,
+                    69.12
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    4.0,
+                    4.0,
+                    4.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "MiddleTree",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 66,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    263.57,
+                    0.0,
+                    121.51
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    4.0,
+                    4.0,
+                    4.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "MiddleTree",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 67,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -39.45,
+                    -1.19e-07,
+                    189.30
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    5.0,
+                    5.0,
+                    5.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "MiddleTree",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 68,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    189.36,
+                    7.45e-09,
+                    163.38
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    5.0,
+                    5.0,
+                    5.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "MiddleTree",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 69,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    63.13,
+                    -2.98e-08,
+                    -198.49
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    6.0,
+                    6.0,
+                    6.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "MiddleTree",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 70,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -165.77,
+                    4.46e-08,
+                    -126.76
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    6.0,
+                    6.0,
+                    6.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "MiddleTree",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 71,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    264.70,
+                    0.0,
+                    -41.04
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    7.0,
+                    7.0,
+                    7.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "MiddleTree",
+        "name": "Prototype_GameObject_Envirnoment",
         "parentId": 0,
         "tag": ""
     }

@@ -45,7 +45,7 @@ public:
 	void SetIsJumping(_bool bIsJumping) { m_bIsJumping = bIsJumping; }
 	_bool IsJumping() const { return m_bIsJumping; }
 	void Set_Target(const _wstring& name, LEVEL eLevel);
-	CBaseCharacter* Get_Target() const { return m_pTarget; }
+	CGameObject* Get_Target() const { return m_pTarget; }
 	void SetLastStepDirection(EDirection eDirection) { m_eLastStepDirection = eDirection; }
 
 	void SetState(CSTATE eState) { m_eState = eState; } // 캐릭터 상태
@@ -91,7 +91,7 @@ protected:
 	_float m_fTimeDelta{ 0.f };
 	CSTATE m_eState{ CSTATE::IDLE }; // 현재 상태
 	class CWeapon* m_pWeapon{ nullptr }; // 무기
-	CBaseCharacter* m_pTarget{ nullptr };
+	CGameObject* m_pTarget{ nullptr };
 
 	class CInputBuffer* m_pInputBuffer{ nullptr }; // 입력 버퍼 (커맨드 패턴)
 	_float m_fTotalTime{ 0.f }; // 총 시간 

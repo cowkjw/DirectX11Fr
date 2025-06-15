@@ -23,6 +23,8 @@ public:
 	void StartGamePlay();
 private:
 	_bool m_bIsEndInk = false;
+	_float m_fMaxScale = 430.0f; // 최대 스케일
+	_float m_fFinalScale = 400.f;
 
 public:
 	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -209,6 +209,96 @@
       "path": "../Asset/Resources/Textures/GamePlayUI/Gauge_Brth.png",
       "numTextures": 1,
       "static": true
+    },
+    {
+      "key": "NameKyo",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Name_Kyojuro00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "NameAka",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Name_Akaza00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "NameEn",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Name_Enmu00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "NameTan",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Name_Tanjiro00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "InfinityTime",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Num_Timer_Inf.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "LodingBg",
+      "path": "../Asset/Resources/Textures/Loding/BG.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "LodingBg",
+      "path": "../Asset/Resources/Textures/Loding/BG.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "LoadDone",
+      "path": "../Asset/Resources/Textures/Loding/Lang_Load_Done.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Loading",
+      "path": "../Asset/Resources/Textures/Loding/Load.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "LoadAnim",
+      "path": "../Asset/Resources/Textures/Loding/Load_Anim.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Shoji2",
+      "path": "../Asset/Resources/Textures/Loding/Shoji2.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Shoji_R",
+      "path": "../Asset/Resources/Textures/Loding/Shoji_R.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Shoji_L",
+      "path": "../Asset/Resources/Textures/Loding/Shoji_L.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Mask_Shoji_R",
+      "path": "../Asset/Resources/Textures/Loding/Mask_Shoji_R.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Mask_Shoji_L",
+      "path": "../Asset/Resources/Textures/Loding/Mask_Shoji_L.png",
+      "numTextures": 1,
+      "static": true
     }
 
   ]

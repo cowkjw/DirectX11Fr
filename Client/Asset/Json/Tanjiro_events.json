@@ -1,0 +1,638 @@
+{
+    "animations": [
+        {
+            "clipName": "A_P0000_V00_C00_Death",
+            "duration": 76.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_Dmg01A_B",
+            "duration": 20.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_Dmg01A_F",
+            "duration": 20.0,
+            "events": [
+                {
+                    "name": "EndHurt",
+                    "time": 19.09600067138672
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.5429999828338623
+                }
+            ]
+        },
+        {
+            "clipName": "A_P0000_V00_C00_Dmg01A_L",
+            "duration": 20.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_Dmg01A_R",
+            "duration": 20.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_Dmg01A_U",
+            "duration": 20.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_Dmg01_B",
+            "duration": 18.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_Dmg01_F",
+            "duration": 18.0,
+            "events": [
+                {
+                    "name": "EndHurt",
+                    "time": 16.50116729736328
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                }
+            ]
+        },
+        {
+            "clipName": "A_P0000_V00_C00_Dmg01_L",
+            "duration": 18.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_Dmg01_R",
+            "duration": 18.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_Dmg01_U",
+            "duration": 18.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_DmgBlowF01_0",
+            "duration": 20.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_DmgBlowF01_1",
+            "duration": 15.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_DmgBlowF01_2",
+            "duration": 24.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_DmgBound01_0",
+            "duration": 17.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_DmgBound02_2",
+            "duration": 19.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_DmgFall01_0",
+            "duration": 10.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_DmgFall01_1",
+            "duration": 10.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_DmgFall01_2",
+            "duration": 50.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_DmgGuardBrk01",
+            "duration": 32.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_DmgStrikeF01_0",
+            "duration": 2.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0000_V00_C00_DmgStrikeF01_1",
+            "duration": 10.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkAwake01",
+            "duration": 38.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkAwake01_Cut_Fadd",
+            "duration": 120.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkAwake01_Cut_Wep",
+            "duration": 121.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkCmbAW01",
+            "duration": 22.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkCmbAW02",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkCmbS01_0",
+            "duration": 14.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkCmbS01_1",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkCmbS01_2",
+            "duration": 58.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkCmbTrackA01_0",
+            "duration": 10.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkCmbTrackA01_1",
+            "duration": 16.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkCmbTrackA01_2",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkCmbW01",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkCmbW02",
+            "duration": 32.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkCmbW03",
+            "duration": 40.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkCmbW03D01",
+            "duration": 78.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkCmbW03U01",
+            "duration": 44.0,
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                }
+            ]
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkCmbW04",
+            "duration": 52.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl01_0",
+            "duration": 70.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl01_3",
+            "duration": 70.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl01_Cut",
+            "duration": 80.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl01_Dmg",
+            "duration": 80.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl01_Dmg_1",
+            "duration": 76.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl01_Fadd",
+            "duration": 80.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl02A_0",
+            "duration": 10.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl02_0",
+            "duration": 10.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl02_1",
+            "duration": 5.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl02_2",
+            "duration": 36.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl03A_0",
+            "duration": 33.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl03_0",
+            "duration": 46.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl03_1",
+            "duration": 10.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl03_2",
+            "duration": 34.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl04",
+            "duration": 45.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl04A_0",
+            "duration": 8.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl04A_1",
+            "duration": 10.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSkl04A_2",
+            "duration": 29.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSpl01_0",
+            "duration": 34.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSpl01_1",
+            "duration": 12.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSpl01_2",
+            "duration": 36.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkSpl01_3",
+            "duration": 1.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkThrow01",
+            "duration": 35.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkThrow01_Cut",
+            "duration": 106.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkThrow01_Cut_Fadd",
+            "duration": 106.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkThrow01_Dmg",
+            "duration": 106.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkUniqueAct01",
+            "duration": 90.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_AtkUniqueW01",
+            "duration": 22.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseBattleST01_0",
+            "duration": 60.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseBattleST01_1",
+            "duration": 90.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseCharge01_0",
+            "duration": 12.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseCharge01_1",
+            "duration": 60.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseCharge01_2",
+            "duration": 10.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseDashF01_0",
+            "duration": 10.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseDashF01_1",
+            "duration": 10.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseDashF01_2",
+            "duration": 25.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseDmgReturn01",
+            "duration": 10.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseDmgReturn02",
+            "duration": 20.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseGuard01_0",
+            "duration": 2.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseGuard01_1",
+            "duration": 44.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseGuard01_2",
+            "duration": 11.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseGuard01_Advancing",
+            "duration": 15.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseGuardHit01_Add",
+            "duration": 12.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseGuardHit02_Add",
+            "duration": 20.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseJump01_0",
+            "duration": 4.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseJump01_1",
+            "duration": 11.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseJump01_2",
+            "duration": 10.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseJump01_3",
+            "duration": 16.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseNut01_1",
+            "duration": 69.0,
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                }
+            ]
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseNut01_1_VP",
+            "duration": 69.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseRepel01",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseRepel01_Hit",
+            "duration": 26.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseRun01_0",
+            "duration": 6.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseRun01_1",
+            "duration": 24.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseRun01_2",
+            "duration": 15.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseStepAB01",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseStepAF01",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseStepAL01",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseStepAR01",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseStepB01",
+            "duration": 20.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseStepF01",
+            "duration": 17.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseStepL01",
+            "duration": 20.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseStepL02",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseStepR01",
+            "duration": 20.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseStepR02",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseTired01_0",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseTired01_1",
+            "duration": 40.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BaseTired01_2",
+            "duration": 40.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_BossSkl04",
+            "duration": 63.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_SplSsrED01_0",
+            "duration": 55.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_SplSsrED_0",
+            "duration": 55.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_SplSsrReady01_0",
+            "duration": 20.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_SplSsr_c010_Dmg",
+            "duration": 47.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_SplSsr_c010_P0001",
+            "duration": 47.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_SplSsr_c020_Dmg",
+            "duration": 26.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_SplSsr_c020_P0001",
+            "duration": 26.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_SplSsr_c030_P0001",
+            "duration": 20.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_SplSsr_c040_P0001",
+            "duration": 61.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_SplSsr_c070_Dmg",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_SplSsr_c070_P0001",
+            "duration": 30.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_SplSsr_c080_Dmg",
+            "duration": 89.0,
+            "events": []
+        },
+        {
+            "clipName": "A_P0001_V00_C00_SplSsr_c080_P0001",
+            "duration": 89.0,
+            "events": []
+        }
+    ],
+    "object": "Tanjiro"
+}

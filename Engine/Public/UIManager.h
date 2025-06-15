@@ -25,6 +25,8 @@ public:
 	void ClearCanvas();
 	CUIObject* GetUI(const _wstring& canvasName,const _wstring& uiName);
 	CGameObject* CreateUI(CUIObject::UIOBJECT_DESC* pDesc, UI_TYPE eUIType);
+	CGameObject* GetCanvasUI(const _wstring& canvasName);
+
 
 private:
 	unordered_map<_wstring, CUICanvas*> m_mapCanvasUI;

@@ -76,6 +76,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		// 이곳에 로드 후 처리할 작업을 추가합니다.
 		});
 
+	jsonLoader.Load_Textures("../Asset/Json/Textures.json", [&]() {
+		// 이곳에 로드 후 처리할 작업을 추가합니다.
+		});
+
 	jsonLoader.Free();
 
 	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),

@@ -26,6 +26,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
+
 private:
 	CShader*			m_pShaderCom = { nullptr };
 	CTexture*			m_pTextureCom = { nullptr };
@@ -33,6 +34,7 @@ private:
 
 private:
 	HRESULT Ready_Components();
+	HRESULT Bind_Shaders();
 
 public:
 	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

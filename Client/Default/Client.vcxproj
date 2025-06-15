@@ -194,6 +194,7 @@
     <ClInclude Include="..\public\JsonLoader.h" />
     <ClInclude Include="..\Public\Kyojuro.h" />
     <ClInclude Include="..\Public\Level_Editor.h" />
+    <ClInclude Include="..\Public\Level_Enmu.h" />
     <ClInclude Include="..\Public\Level_EnmuBoss.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
@@ -283,6 +284,7 @@
     <ClCompile Include="..\private\JsonLoader.cpp" />
     <ClCompile Include="..\Private\Kyojuro.cpp" />
     <ClCompile Include="..\Private\Level_Editor.cpp" />
+    <ClCompile Include="..\Private\Level_Enmu.cpp" />
     <ClCompile Include="..\Private\Level_EnmuBoss.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
@@ -329,7 +331,9 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_Toon.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_UICompose.hlsl" />
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_UIMask.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxAnimMesh.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxNorTex.hlsl" />

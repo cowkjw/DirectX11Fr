@@ -383,34 +383,34 @@ void CTransform::LookAtXZ(_fvector vAt)
 
 void CTransform::UpdateEulerAngles()
 {
-	_vector scale, quat, translation;
-	XMMatrixDecompose(&scale, &quat, &translation, XMLoadFloat4x4(&m_WorldMatrix));
+	XMFLOAT4X4 worldF4x4 = Get_WorldMatrix();
+	XMMATRIX matW = XMLoadFloat4x4(&worldF4x4);
 
-	// 2) 쿼터니언을 XMFLOAT4 로
-	_float4 q;
-	XMStoreFloat4(&q, quat);
 
-	// 3) quaternion → Euler (radian) (Pitch=X, Yaw=Y, Roll=Z)
+	XMVECTOR vScale, qRot, vTrans;
+	if (!XMMatrixDecompose(&vScale, &qRot, &vTrans, matW))
+		return; // 분해 실패 시 리턴
 
-	_float sinr_cosp = 2.0f * (q.w * q.x + q.y * q.z);
-	_float cosr_cosp = 1.0f - 2.0f * (q.x * q.x + q.y * q.y);
-	_float roll = atan2f(sinr_cosp, cosr_cosp);
 
-	_float sinp = 2.0f * (q.w * q.y - q.z * q.x);
-	_float pitch;
-	if (fabsf(sinp) >= 1.0f)
-		pitch = copysignf(XM_PI / 2.0f, sinp); // gimbal lock
-	else
-		pitch = asinf(sinp);
+	XMFLOAT4 quatF;
+	XMStoreFloat4(&quatF, qRot);
+	float x = quatF.x, y = quatF.y, z = quatF.z, w = quatF.w;
 
-	_float siny_cosp = 2.0f * (q.w * q.z + q.x * q.y);
-	_float cosy_cosp = 1.0f - 2.0f * (q.y * q.y + q.z * q.z);
-	_float yaw = atan2f(siny_cosp, cosy_cosp);
 
-	// 4) 라디안 → 도(°) 변환해서 저장
-	m_vEulerAngles.x = XMConvertToDegrees(pitch);
-	m_vEulerAngles.y = XMConvertToDegrees(yaw);
-	m_vEulerAngles.z = XMConvertToDegrees(roll);
+	float pitchRad = std::asin(2.0f * (w * x - y * z));
+	float yawRad = std::atan2(2.0f * (w * y + x * z),
+		1.0f - 2.0f * (x * x + y * y));
+	float rollRad = std::atan2(2.0f * (w * z + x * y),
+		1.0f - 2.0f * (y * y + z * z));
+
+	// 5) 도 단위로 변환
+	float pitch = XMConvertToDegrees(pitchRad);
+	float yaw = XMConvertToDegrees(yawRad);
+	float roll = XMConvertToDegrees(rollRad);
+
+	// 6) 저장
+	m_vEulerAngles = { pitch, yaw, roll };
+	m_bDirty = true;
 }
 
 HRESULT CTransform::Bind_ShaderResource(CShader* pShader, const _char* pConstantName)

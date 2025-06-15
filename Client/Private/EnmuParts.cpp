@@ -30,7 +30,6 @@ HRESULT CEnmuParts::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pTransformCom->Scaling(_float3(0.1f, 0.1f, 0.1f));
-
 	return S_OK;
 }
 
@@ -77,7 +76,7 @@ HRESULT CEnmuParts::Render()
 
 HRESULT CEnmuParts::Ready_Components()
 {
-	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxAnimMesh"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_Toon"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	return S_OK;
@@ -106,8 +105,8 @@ HRESULT CEnmuParts::Bind_Shaders()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
-		return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
+	//	return E_FAIL;
 
 	return S_OK;
 }

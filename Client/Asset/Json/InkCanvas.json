@@ -1,0 +1,119 @@
+[
+
+  {
+    "CreateLevel":6,
+    "ID": 41,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 1,
+    "UI": true,
+    "UIType": 3,
+    "components": {
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
+        "Position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
+    },
+    "isActive": true,
+    "name": "InkCanvas",
+    "parentId": 0,
+    "tag": ""
+  },
+  {
+    "CreateLevel": 6,
+    "ID": 39,
+    "NumTextures": 1,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "ShaderKey": "Shader_UIMask",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 0,
+    "TextureIndex": 0,
+    "TextureKey": "Ink",
+    "UI": true,
+    "UIType": 0,
+    "components": {
+      "Com_Shader": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Texture": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
+        "Position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          1280.0,
+          720.0,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
+    },
+    "isActive": false,
+    "name": "InkMask",
+    "parentId": 41,
+    "tag": ""
+  }
+]

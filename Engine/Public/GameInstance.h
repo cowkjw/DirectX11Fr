@@ -30,6 +30,8 @@ public:
 	_float Compute_Random_Normal();
 	_float Compute_Random(_float fMin, _float fMax);
 
+	void SetActivePicking(_bool bActive) { m_bActivePicking = bActive; }
+
 #pragma region LEVEL_MANAGER
 public:
 	HRESULT Change_Level(_uint iLevelIndex, class CLevel* pNewLevel);
@@ -89,6 +91,7 @@ public:
 	const _float4x4* Get_Transform_Float4x4(TRANSFORM eState) const;
 	const _matrix Get_Transform_Matrix(TRANSFORM eState) const;
 	const _float4* Get_CamPosition() const;
+	_vector UnprojectToGround(_float mx, _float my, const D3D11_VIEWPORT& vp);
 #pragma endregion
 
 #pragma region UI
@@ -97,6 +100,7 @@ public:
 	void RemoveUI(const _wstring& canvasName, const _wstring& uiName);
 	class CUIObject* Get_UI(const _wstring& canvasName, const _wstring& uiName);
 	CGameObject* CreateUI(void* pDesc, UI_TYPE eUIType);
+	CGameObject* GetCanvasUI(const _wstring& canvasName);
 	void ClearUI();
 #pragma endregion
 
@@ -149,9 +153,13 @@ private:
 	class CLight_Manager* m_pLight_Manager = { nullptr };
 	class CFontMag* m_pFont_Manager = { nullptr };
 
+
+	_bool m_bActivePicking = { false }; // 피킹 활성화 여부
+
 public:
 	void Release_Engine();
 	virtual void Free() override;
 };
 
 END_NAMESPACE
+

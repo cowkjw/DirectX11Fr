@@ -37,6 +37,7 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	_wstring m_strModelTag = L"";
+	_uint m_iShaderPass{ 0 };
 public:
 	static CEnvironment* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;

@@ -27,8 +27,13 @@ HRESULT CLevel_Mode::Initialize()
 	//	 });
  //}
 
+
 	CJsonLoader jsonLoader;
 	jsonLoader.Load_Objects("../Asset/Json/ModeObjects.json", [&]() {
+		// 이곳에 로드 후 처리할 작업을 추가합니다.
+		});
+
+	jsonLoader.Load_Objects("../Asset/Json/InkCanvas.json", [&]() {
 		// 이곳에 로드 후 처리할 작업을 추가합니다.
 		});
 

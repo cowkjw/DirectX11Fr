@@ -91,11 +91,19 @@ void CUIManager::RemoveUI(const _wstring& canvasName, const _wstring& uiName)
 
 void CUIManager::ClearCanvas()
 {
-	for (auto& Pair : m_mapCanvasUI)
+
+	for (auto it = m_mapCanvasUI.begin(); it != m_mapCanvasUI.end();)
 	{
-		Safe_Release(Pair.second);
+		if (it->second->GetCreateLevel()!=0)
+		{
+			Safe_Release(it->second);
+			it = m_mapCanvasUI.erase(it);
+		}
+		else
+		{
+			++it;
+		}
 	}
-	m_mapCanvasUI.clear();
 }
 
 CUIObject* CUIManager::GetUI(const _wstring& canvasName, const _wstring& uiName)
@@ -141,6 +149,16 @@ CGameObject* CUIManager::CreateUI(CUIObject::UIOBJECT_DESC* pDesc, UI_TYPE eUITy
 	if (eUIType == UI_TYPE::CANVAS)
 		AddCanvasUI(static_cast<CUICanvas*>(pUI));
 	return pUI;
+}
+
+CGameObject* CUIManager::GetCanvasUI(const _wstring& canvasName)
+{
+	auto iter = m_mapCanvasUI.find(canvasName);
+	if (iter != m_mapCanvasUI.end())
+	{
+		return iter->second;
+	}
+	return nullptr;
 }
 
 CUIManager* CUIManager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

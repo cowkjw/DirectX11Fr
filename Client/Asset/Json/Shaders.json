@@ -35,6 +35,18 @@
       "path": "../Asset/ShaderFiles/Shader_VtxPosTexNonAlpha.hlsl",
       "layout": "VTXPOSTEX",
       "static": true
+    },
+    {
+      "key": "Shader_Toon",
+      "path": "../Asset/ShaderFiles/Shader_Toon.hlsl",
+      "layout": "VTXANIMMESH",
+      "static": true
+    },
+    {
+      "key": "Shader_UIMask",
+      "path": "../Asset/ShaderFiles/Shader_UIMask.hlsl",
+      "layout": "VTXPOSTEX",
+      "static": true
     }
   ]
 }

@@ -90,8 +90,10 @@ PS_OUT PS_ClampMAIN(PS_IN In)
 {
     PS_OUT Out;
 
+   
     // 1) UV 스케일·오프셋 계산
     float2 uv = In.vTexcoord * g_uvScale + g_uvOffset;
+
 
     // 2) HP 비율보다 오른쪽이면 픽셀 버리기
     //    (버려지면 그 픽셀은 그려지지 않음)
@@ -100,6 +102,8 @@ PS_OUT PS_ClampMAIN(PS_IN In)
 
     // 3) 나머지 픽셀만 텍스처 샘플링
     Out.vColor = g_Texture.Sample(LinearClampSampler, uv) * g_Color;
+	if (Out.vColor.a < 0.01f)
+		clip(-1); // 알파값이 거의 0이면 픽셀 버리기
     return Out;
 }
 

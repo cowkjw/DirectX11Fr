@@ -54,6 +54,27 @@ void CUIImage::Update(_float fTimeDelta)
 		m_UVScale[0] = 1.f / m_fCols; // UV scale
 		m_UVScale[1] = 1.f / m_fRows; // UV scale
 	}
+
+	if (m_bIsFrameBased)
+	{
+		// 시간 누적
+		m_fCurrentTime += fTimeDelta;
+
+		// 프레임 전환 체크
+		if (m_fCurrentTime >= m_fFrameTime)
+		{
+			m_fCurrentTime = 0.f;
+			m_iCurrentFrame = (m_iCurrentFrame + 1) % m_iTotalFrames;
+
+			// 현재 프레임의 행/열 계산
+			_int row = m_iCurrentFrame / static_cast<_int>(m_fCols);
+			_int col = m_iCurrentFrame % static_cast<_int>(m_fCols);
+
+			// UV 오프셋 계산
+			m_UVOffset[0] = col * m_UVScale[0];
+			m_UVOffset[1] = row * m_UVScale[1];
+		}
+	}
 }
 
 void CUIImage::Late_Update(_float fTimeDelta)
@@ -72,7 +93,7 @@ HRESULT CUIImage::Render()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (m_bIsUVAnim|| m_bParentIsBar)
+	if (m_bIsUVAnim|| m_bParentIsBar||m_bIsFrameBased|| m_bUseMask)
 	{
 		m_pShaderCom->Bind_RawValue("g_uvOffset", &m_UVOffset,sizeof(_float2));
 		m_pShaderCom->Bind_RawValue("g_uvScale", &m_UVScale, sizeof(_float2));
@@ -84,6 +105,18 @@ HRESULT CUIImage::Render()
 	}
 
 	m_pShaderCom->Bind_RawValue("g_Color", &m_vColor, sizeof(_float4));
+
+
+	_uint use = m_bUseMask ? 1u : 0u;
+	m_pShaderCom->Bind_RawValue("useMask", &use, sizeof(_uint));
+	m_pShaderCom->Bind_RawValue("maskThreshold", &m_fMaskThreshold, sizeof(_float));
+	m_pShaderCom->Bind_RawValue("maskUVOffset", &m_maskUVOffset, sizeof(_float2));
+	m_pShaderCom->Bind_RawValue("maskUVScale", &m_maskUVScale, sizeof(_float2));
+
+	// 마스크 텍스처 (t1) 바인딩
+	if (m_bUseMask && m_iMaskTexIndex >= 0)
+		m_pMaskTextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_iMaskTexIndex);
+
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_iTextureIndex)))
 		return E_FAIL;
@@ -114,6 +147,15 @@ json CUIImage::Serialize()
 		j["UVOffset"] = { m_UVOffset[0], m_UVOffset[1] };
 		j["UVSpeed"] = { m_UVSpeed[0], m_UVSpeed[1] };
 		j["UVScale"] = { m_UVScale[0], m_UVScale[1] };
+
+	}
+	if (m_bIsFrameBased)
+	{
+
+		j["FrameTime"] = m_fFrameTime;
+	j["TotalFrames"] = m_iTotalFrames;
+	j["Cols"] = m_fCols;
+	j["Rows"] = m_fRows;
 	}
 	return j;
 }
@@ -137,25 +179,63 @@ void CUIImage::Deserialize(const json& j)
 		m_UVScale[0] = j["UVScale"][0].get<_float>();
 		m_UVScale[1] = j["UVScale"][1].get<_float>();
 	}
+
+	if (j.contains("FrameTime"))
+	{
+		m_fFrameTime = j["FrameTime"].get<_float>();
+	}
+	if (j.contains("TotalFrames"))
+	{
+		m_iTotalFrames = j["TotalFrames"].get<_int>();
+	}
+	if (j.contains("Cols"))
+	{
+		m_fCols = j["Cols"].get<_float>();
+	}
+	if (j.contains("Rows"))
+	{
+		m_fRows = j["Rows"].get<_float>();
+	}
 }
 
 void CUIImage::EnableUVAnim(_int cols, _int rows, _float frameSec)
 {
-	m_bIsUVAnim = true;
+	m_bIsFrameBased = true;
 	m_fCols = static_cast<_float>(cols);
 	m_fRows = static_cast<_float>(rows);
+	m_iTotalFrames = cols * rows;
+	m_fFrameTime = frameSec;
 
 	// 한 프레임 크기
 	m_UVScale[0] = 1.f / m_fCols;
 	m_UVScale[1] = 1.f / m_fRows;
 
-	// 한 프레임마다 UVOffset이 이동할 속도 = (프레임 크기) / (프레임 지속시간)
-	m_UVSpeed[0] = m_UVScale[0] / frameSec;
-	m_UVSpeed[1] = 0.f;  // 만약 세로 방향으로도 애니메이션이 필요하면 이쪽도 설정
-
 	// 초기화
+	m_fCurrentTime = 0.f;
+	m_iCurrentFrame = 0;
 	m_UVOffset[0] = 0.f;
 	m_UVOffset[1] = 0.f;
+}
+
+void CUIImage::EnableMask(const _wstring& maskKey)
+{
+	m_bUseMask = true;
+
+	m_iShaderPass = 0;
+	// Com_Texture 를 하나 더 추가해서 maskTexture 로 사용
+	CGameObject::Add_Component(
+		TEXT("Com_MaskTexture"),
+		m_pGameInstance->GetTexture(maskKey, true),
+		reinterpret_cast<CComponent**>(&m_pMaskTextureCom)
+	);
+	m_iMaskTexIndex = m_pMaskTextureCom->Get_NumTextures() > 0 ? 0 : -1;
+}
+
+void CUIImage::SetMaskParams(_float threshold, _float2 uvOffset, _float2 uvScale)
+{
+	m_fMaskThreshold = threshold;
+	m_maskUVOffset = uvOffset;
+	m_maskUVScale = uvScale;
 }
 
 
@@ -201,5 +281,6 @@ void CUIImage::Free()
 		Safe_Release(m_pShaderCom);
 		Safe_Release(m_pTextureCom);
 		Safe_Release(m_pVIBufferCom);
+		Safe_Release(m_pMaskTextureCom);
 	}
 }

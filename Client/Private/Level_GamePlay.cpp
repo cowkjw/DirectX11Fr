@@ -15,10 +15,10 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 HRESULT CLevel_GamePlay::Initialize()
 {
 	CJsonLoader jsonLoader(m_pDevice,m_pContext);
-	jsonLoader.Load_Objects("../Asset/Json/StaticCanvas.json", [&]() {
+	jsonLoader.Load_Objects("../Asset/Json/GamePlayCanvas.json", [&]() {
 		// 이곳에 로드 후 처리할 작업을 추가합니다.
 		});
-	jsonLoader.Load_Objects("../Asset/Json/GamePlayBackgroundObj2.json", [&]() {
+	jsonLoader.Load_Objects("../Asset/Json/GamePlayBackgroundObj.json", [&]() {
 		// 이곳에 로드 후 처리할 작업을 추가합니다.
 		});
 
@@ -122,7 +122,7 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, 1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(0.5f, 0.7f, 0.5f, 1.f);
+	LightDesc.vDiffuse = _float4(0.6f, 0.8f, 0.6f, 1.f);
 	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 

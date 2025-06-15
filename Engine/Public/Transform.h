@@ -95,7 +95,6 @@ public:
 
 	_float Get_SpeedPerSec() const { return m_fSpeedPerSec; }
 	_float Get_RotationPerSec() const { return m_fRotationPerSec; }
-private:
 
 public:
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);

@@ -17,8 +17,19 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	void MoveCloud(_float fTimeDelta);
+	void SetUpUI();
+	void UpdateShojiOpen(_float fTimeDelta);
+
+private:
 	LEVEL				m_eNextLevelID = { LEVEL::END };
 	class CLoader*		m_pLoader = { nullptr };
+	_float   m_fCloudTime = 0.f;               // 클라우드 애니메이션 누적 시간
+	_vector  m_vCloudOrigin[4];
+
+	_vector  m_vShojiOrigin[2];
+	_float   m_fShojiTime = 0.f;
+	_float   m_fShojiDuration = 1.5f;
 
 
 
