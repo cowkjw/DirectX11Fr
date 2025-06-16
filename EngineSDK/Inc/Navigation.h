@@ -38,6 +38,14 @@ public:
 
 	static _float4x4 GetWorldMatrix() { return m_WorldMatrix; }
 	void DeleteCell(const _vector& vWorldPos);
+	_vector GetHitCellNormal(_int iIndex);
+	_int GetIndex() const { return m_iIndex; }
+	class CCell* GetCellByIndex(_int iIndex) const
+	{
+		if (iIndex < 0 || iIndex >= static_cast<_int>(m_Cells.size()))
+			return nullptr;
+		return m_Cells[iIndex];
+	}
 #ifdef _DEBUG
 public:
 	HRESULT Render();

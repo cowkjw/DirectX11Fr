@@ -101,10 +101,17 @@ void CNavigation::Update(_fmatrix WorldMatrix)
 
 _bool CNavigation::isMove(_fvector vWorldPos)
 {
-	_vector		vLocalPos = XMVector3TransformCoord(vWorldPos, XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)));
+	//_vector		vLocalPos = XMVector3TransformCoord(vWorldPos, XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)));
 
 	_int		iNeighborIndex = { -1 };
 
+	if (m_iIndex < 0 || m_iIndex >= static_cast<_int>(m_Cells.size()))
+	{
+		/* 인덱스가 유효하지 않다면 */
+		m_iIndex = FindIndexCell(vWorldPos);
+		if (m_iIndex < 0)
+			return false;
+	}
 	if (true == m_Cells[m_iIndex]->isIn(vWorldPos, &iNeighborIndex))
 		return true;
 
@@ -151,7 +158,7 @@ HRESULT CNavigation::SaveCells(const _tchar* pFilePath)
 		return E_FAIL;
 
 	_ulong dwByte = 0;
-	// 셀 개수 헤더로 쓰기 (선택 사항)
+	// 셀 개수 헤더로 쓰기 
 	uint32_t count = static_cast<uint32_t>(m_Cells.size());
 	if (!WriteFile(hFile, &count, sizeof(count), &dwByte, nullptr)
 		|| dwByte != sizeof(count))
@@ -193,7 +200,7 @@ HRESULT CNavigation::LoadCells(const _tchar* pFilePath)
 		return E_FAIL;
 
 	_ulong dwByte = 0;
-	// 셀 개수 읽기 (헤더가 있을 때)
+	// 셀 개수 읽기 
 	uint32_t count = 0;
 	if (!ReadFile(hFile, &count, sizeof(count), &dwByte, nullptr)
 		|| dwByte != sizeof(count))
@@ -321,6 +328,20 @@ void CNavigation::DeleteCell(const _vector& vWorldPos)
 		m_iIndex = -1; // 삭제 후 인덱스 초기화
 	}
 }
+
+_vector CNavigation::GetHitCellNormal(_int iIndex)
+{
+	if (iIndex < 0 || iIndex >= (int)m_Cells.size())
+		return XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	_vector vA = m_Cells[iIndex]->Get_Point(CCell::POINT_A);
+	_vector vB = m_Cells[iIndex]->Get_Point(CCell::POINT_B);
+	_vector vC = m_Cells[iIndex]->Get_Point(CCell::POINT_C);
+	_vector vAB = XMVectorSubtract(vB, vA);
+	_vector vAC = XMVectorSubtract(vC, vA);
+	return XMVector3Normalize(XMVector3Cross(vAB, vAC));
+}
+
 
 #ifdef _DEBUG
 HRESULT CNavigation::Render()

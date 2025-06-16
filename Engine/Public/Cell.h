@@ -30,6 +30,7 @@ public:
 	_bool isIn(_fvector vLocalPos, _int* pNeighborIndex);
 	_bool Compare(_fvector vSour, _fvector vDest);
 	_float Compute_Height(_fvector vLocalPos);
+	_bool Slide(const _vector& oldPos,	const _vector& vDelta,_vector& outSlidePos	) const;
 
 #ifdef _DEBUG
 public:

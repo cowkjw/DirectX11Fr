@@ -1,6 +1,7 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "Navigation.h"
+#include "Cell.h"
 #include "Shader.h"
 
 CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -114,13 +115,53 @@ void CTransform::Go_Left(_float fTimeDelta, CNavigation* pNav)
 
 void CTransform::MoveDirection(_fvector vDirection, _float fTimeDelta, CNavigation* pNav)
 {
-	_vector vPosition = Get_State(STATE::POSITION);
-	// 방향 벡터 정규화해서 그 방향으로 더해주기
-	vPosition += XMVector3Normalize(vDirection) * m_fSpeedPerSec * fTimeDelta;
-	// 새로운 위치로 상태 업데이트
-	if (nullptr == pNav || true == pNav->isMove(vPosition))
+	//_vector vPosition = Get_State(STATE::POSITION);
+	//// 방향 벡터 정규화해서 그 방향으로 더해주기
+	//vPosition += XMVector3Normalize(vDirection) * m_fSpeedPerSec * fTimeDelta;
+	//// 새로운 위치로 상태 업데이트
+	//if (nullptr == pNav || true == pNav->isMove(vPosition))
+	//{
+	//	Set_State(STATE::POSITION, vPosition);
+	//	m_bDirty = true;
+	//}
+	//else
+	//{
+	//	_vector vNormal = pNav->GetHitCellNormal(pNav->GetIndex());
+	//	_vector vDelta = XMVector3Normalize(vDirection) * m_fSpeedPerSec * fTimeDelta;
+	//	// 3) 슬라이딩 벡터 계산: vSlide = vDelta - (vDelta·n) * n
+	//	float   dotND = XMVectorGetX(XMVector3Dot(vDelta, vNormal));
+	//	_vector vSlide = vDelta - vNormal * dotND;
+	//	_vector vSlidePos = vPosition + vSlide;
+
+	//	// 4) 슬라이딩 이동 적용
+	//	if (pNav->isMove(vSlidePos))
+	//	{
+	//		Set_State(STATE::POSITION, vSlidePos);
+	//		m_bDirty = true;
+	//	}
+	//}
+
+	_vector vOldPos = Get_State(STATE::POSITION);
+
+	// 1) delta 계산 & 신규 위치 시도
+	_vector vDelta = XMVector3Normalize(vDirection) * m_fSpeedPerSec * fTimeDelta;
+	_vector vNewPos = vOldPos + vDelta;
+	if (nullptr == pNav || pNav->isMove(vNewPos))
 	{
-		Set_State(STATE::POSITION, vPosition);
+		Set_State(STATE::POSITION, vNewPos);
+		m_bDirty = true;
+		return;
+	}
+
+	//충돌한 셀의 법선 가져오기
+	_int     idx = pNav->GetIndex();            
+	CCell* pCell = pNav->GetCellByIndex(idx);     
+	if (!pCell) 
+		return; // 셀이 없으면 그냥 리턴
+	_vector slidePos;
+	if (pCell->Slide(vOldPos, vDelta, slidePos) && pNav->isMove(slidePos))
+	{
+		Set_State(STATE::POSITION, slidePos);
 		m_bDirty = true;
 	}
 }
