@@ -21,9 +21,9 @@ float g_fToonThreshold = 0.5f;        // 툰 쉐이딩 임계값
 float g_fToonSoftness = 0.05f;        // 경계선 부드러움 정도
 float4 g_vShadowColor = float4(0.5f, 0.5f, 0.65f, 1.0f);  // 그림자 색상 (약간 푸른빛)
 float4 g_vHighlightColor = float4(1.05f, 1.05f, 1.0f, 1.0f); // 하이라이트 색상 (덜 밝게)
-float g_fRimPower = 3.0f;             // 림 라이팅 강도
+float g_fRimPower = 6.0f;             // 림 라이팅 강도
 float4 g_vRimColor = float4(0.6f, 0.7f, 0.8f, 1.0f);     // 림 라이팅 색상 (덜 밝게)
-float g_fOverallBrightness = 0.85f;   // 전체 밝기 조절
+float g_fOverallBrightness = 0.65f;   // 전체 밝기 조절
 
 struct VS_IN
 {
