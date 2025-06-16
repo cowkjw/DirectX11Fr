@@ -34,7 +34,7 @@ void StateAttack2::Update(CBaseCharacter* pChar, const InputData& input, float f
 
 	if (pAnim->GetCurrentAnimProgress() <= 0.35f)
 	{
-		pChar->GetTransform()->Go_Straight(fTimeDelta);
+		pChar->GetTransform()->Go_Straight(fTimeDelta,pChar->GetNavigation());
 	}
 
 

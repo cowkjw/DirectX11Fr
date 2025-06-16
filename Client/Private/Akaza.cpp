@@ -14,6 +14,7 @@
 #include "BodyColliderParts.h"
 #include "UIProgressBar.h"
 #include <JsonLoader.h>
+#include "Navigation.h"
 
 
 using AniCon = CAnimController::Condition;
@@ -117,6 +118,8 @@ HRESULT CAkaza::Initialize(void* pArg)
 	}
 
 	m_iShaderPass = 3;
+
+	m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
 	return S_OK;
 }
 
@@ -220,6 +223,15 @@ HRESULT CAkaza::Ready_Components()
 	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Animator"),
 	//	TEXT("Com_Animator"), reinterpret_cast<CComponent**>(&m_pAnimatorCom), m_pModelCom)))
 	//	return E_FAIL;
+
+	/* For.Com_Navigation */
+	CNavigation::NAVIGATION_DESC		NaviDesc{};
+	NaviDesc.iIndex = 1;
+
+	if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
+
 
 	return S_OK;
 }

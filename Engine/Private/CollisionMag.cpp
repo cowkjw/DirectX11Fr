@@ -3,6 +3,7 @@
 #include "SphereCollider.h"
 #include "CapsuleCollider.h"
 #include  "GameObject.h"
+#include "Navigation.h"
 
 void CCollisionMag::Update(_float fTimeDelta)
 {
@@ -240,6 +241,10 @@ void CCollisionMag::Clear()
 
 void CCollisionMag::ResolvePenetrationXZ(CCollider* A, CCollider* B)
 {
+	auto ownerA = A->GetOwner();
+	auto ownerANavi = static_cast<CNavigation*>(ownerA->Get_Component(TEXT("Com_Navigation")));
+	auto ownerB = B->GetOwner();
+	auto ownerBNavi = static_cast<CNavigation*>(ownerB->Get_Component(TEXT("Com_Navigation")));
     if (auto capA = dynamic_cast<CCapsuleCollider*>(A))
     {
         if (auto capB = dynamic_cast<CCapsuleCollider*>(B))
@@ -280,7 +285,25 @@ void CCollisionMag::ResolvePenetrationXZ(CCollider* A, CCollider* B)
                 // B(피격자)만 밀어내기
                 CGameObject* goB = capB->GetOwner();
                 XMVECTOR posB = goB->GetTransform()->Get_State(STATE::POSITION);
-                goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+				if (ownerBNavi && ownerBNavi->isMove(posB + push))
+				{
+					goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+				}
+                else
+                {
+					// 만약 이동 불가능하면, 캡슐 A를 밀어내기
+					XMVECTOR posA = capA->GetOwner()->GetTransform()->Get_State(STATE::POSITION);
+                    if (ownerANavi && ownerANavi->isMove(posA - push))
+                    {
+						capA->GetOwner()->GetTransform()->Set_State(STATE::POSITION, posA - push);
+					}
+                    else
+                    {
+                        // 둘 다 이동 불가능하면 그냥 무시
+                        // (이 경우는 거의 없지만, 혹시 모를 상황 대비)
+                        return;
+                    }
+                }
             }
             return;
         }
@@ -324,7 +347,25 @@ void CCollisionMag::ResolvePenetrationXZ(CCollider* A, CCollider* B)
                 // B(Sphere 피격자)만 밀어내기
                 CGameObject* goB = sphB->GetOwner();
                 XMVECTOR posB = goB->GetTransform()->Get_State(STATE::POSITION);
-                goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+                if (ownerBNavi && ownerBNavi->isMove(posB + push))
+                {
+                    goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+                }
+                else
+                {
+                    // 만약 이동 불가능하면, 캡슐 A를 밀어내기
+                    XMVECTOR posA = capA->GetOwner()->GetTransform()->Get_State(STATE::POSITION);
+                    if (ownerANavi && ownerANavi->isMove(posA - push))
+                    {
+                        capA->GetOwner()->GetTransform()->Set_State(STATE::POSITION, posA - push);
+                    }
+                    else
+                    {
+                        // 둘 다 이동 불가능하면 그냥 무시
+                        // (이 경우는 거의 없지만, 혹시 모를 상황 대비)
+                        return;
+                    }
+                }
             }
             return;
         }
@@ -379,7 +420,25 @@ void CCollisionMag::ResolvePenetrationXZ(CCollider* A, CCollider* B)
                 // B(Box 피격자)만 밀어내기
                 CGameObject* goB = boxB->GetOwner();
                 XMVECTOR posB = goB->GetTransform()->Get_State(STATE::POSITION);
-                goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+                if (ownerBNavi && ownerBNavi->isMove(posB + push))
+                {
+                    goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+                }
+                else
+                {
+                    // 만약 이동 불가능하면, 캡슐 A를 밀어내기
+                    XMVECTOR posA = capA->GetOwner()->GetTransform()->Get_State(STATE::POSITION);
+                    if (ownerANavi && ownerANavi->isMove(posA - push))
+                    {
+                        capA->GetOwner()->GetTransform()->Set_State(STATE::POSITION, posA - push);
+                    }
+                    else
+                    {
+                        // 둘 다 이동 불가능하면 그냥 무시
+                        // (이 경우는 거의 없지만, 혹시 모를 상황 대비)
+                        return;
+                    }
+                }
             }
             return;
         }
@@ -418,7 +477,25 @@ void CCollisionMag::ResolvePenetrationXZ(CCollider* A, CCollider* B)
                 // B(Sphere 피격자)만 밀어내기
                 CGameObject* goB = sphB->GetOwner();
                 XMVECTOR posB = goB->GetTransform()->Get_State(STATE::POSITION);
-                goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+                if (ownerBNavi && ownerBNavi->isMove(posB + push))
+                {
+                    goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+                }
+                else
+                {
+                    // 만약 이동 불가능하면, 캡슐 A를 밀어내기
+                    XMVECTOR posA = sphA->GetOwner()->GetTransform()->Get_State(STATE::POSITION);
+                    if (ownerANavi && ownerANavi->isMove(posA - push))
+                    {
+                        sphA->GetOwner()->GetTransform()->Set_State(STATE::POSITION, posA - push);
+                    }
+                    else
+                    {
+                        // 둘 다 이동 불가능하면 그냥 무시
+                        // (이 경우는 거의 없지만, 혹시 모를 상황 대비)
+                        return;
+                    }
+                }
             }
             return;
         }
@@ -466,7 +543,25 @@ void CCollisionMag::ResolvePenetrationXZ(CCollider* A, CCollider* B)
                     float s = 0.5f / length;   // 목표 길이/현재 길이
                     push = push * s;           // 방향 그대로, 크기만 줄임
                 }
-                goB->GetTransform()->Set_State(STATE::POSITION, posB - push);
+                if (ownerBNavi && ownerBNavi->isMove(posB + push))
+                {
+                    goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+                }
+                else
+                {
+                    // 만약 이동 불가능하면, 캡슐 A를 밀어내기
+                    XMVECTOR posA = sphA->GetOwner()->GetTransform()->Get_State(STATE::POSITION);
+                    if (ownerANavi && ownerANavi->isMove(posA - push))
+                    {
+                        sphA->GetOwner()->GetTransform()->Set_State(STATE::POSITION, posA - push);
+                    }
+                    else
+                    {
+                        // 둘 다 이동 불가능하면 그냥 무시
+                        // (이 경우는 거의 없지만, 혹시 모를 상황 대비)
+                        return;
+                    }
+                }
             }
             return;
         }
@@ -502,7 +597,25 @@ void CCollisionMag::ResolvePenetrationXZ(CCollider* A, CCollider* B)
                 // B(Box 피격자)만 밀어내기
                 CGameObject* goB = boxB->GetOwner();
                 XMVECTOR posB = goB->GetTransform()->Get_State(STATE::POSITION);
-                goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+                if (ownerBNavi && ownerBNavi->isMove(posB + push))
+                {
+                    goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+                }
+                else
+                {
+                    // 만약 이동 불가능하면, 캡슐 A를 밀어내기
+                    XMVECTOR posA = sphA->GetOwner()->GetTransform()->Get_State(STATE::POSITION);
+                    if (ownerANavi && ownerANavi->isMove(posA - push))
+                    {
+                        sphA->GetOwner()->GetTransform()->Set_State(STATE::POSITION, posA - push);
+                    }
+                    else
+                    {
+                        // 둘 다 이동 불가능하면 그냥 무시
+                        // (이 경우는 거의 없지만, 혹시 모를 상황 대비)
+                        return;
+                    }
+                }
             }
             return;
         }
@@ -545,7 +658,25 @@ void CCollisionMag::ResolvePenetrationXZ(CCollider* A, CCollider* B)
                 // B(Box 피격자)만 밀어내기
                 CGameObject* goB = boxB->GetOwner();
                 XMVECTOR posB = goB->GetTransform()->Get_State(STATE::POSITION);
-                goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+                if (ownerBNavi && ownerBNavi->isMove(posB + push))
+                {
+                    goB->GetTransform()->Set_State(STATE::POSITION, posB + push);
+                }
+                else
+                {
+                    // 만약 이동 불가능하면, 캡슐 A를 밀어내기
+                    XMVECTOR posA = boxA->GetOwner()->GetTransform()->Get_State(STATE::POSITION);
+                    if (ownerANavi && ownerANavi->isMove(posA - push))
+                    {
+                        boxA->GetOwner()->GetTransform()->Set_State(STATE::POSITION, posA - push);
+                    }
+                    else
+                    {
+                        // 둘 다 이동 불가능하면 그냥 무시
+                        // (이 경우는 거의 없지만, 혹시 모를 상황 대비)
+                        return;
+                    }
+                }
             }
             return;
         }

@@ -26,11 +26,16 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
+public:
+	const _float3& GetPickedPosition() const { return m_vPickedPosition; }
+
 
 private:
 	CShader*			m_pShaderCom = { nullptr };
 	CTexture*			m_pTextureCom = { nullptr };
 	CVIBuffer_Terrain*	m_pVIBufferCom = { nullptr };
+
+	_float3			m_vPickedPosition = { 0.f, 0.f, 0.f }; // 마우스 클릭으로 선택된 위치
 
 private:
 	HRESULT Ready_Components();

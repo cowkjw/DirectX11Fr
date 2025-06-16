@@ -1,5 +1,6 @@
 #include "Transform.h"
 #include "GameObject.h"
+#include "Navigation.h"
 #include "Shader.h"
 
 CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -55,48 +56,73 @@ void CTransform::Scaling(const _float3& vScale)
 	Set_State(STATE::LOOK, XMVector3Normalize(Get_State(STATE::LOOK)) * vScale.z);
 }
 
-void CTransform::Go_Straight(_float fTimeDelta)
+void CTransform::Go_Straight(_float fTimeDelta, CNavigation* pNav)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vLook = Get_State(STATE::LOOK);
 
 	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE::POSITION, vPosition);
-	m_bDirty = true;
+	if (nullptr == pNav || true == pNav->isMove(vPosition))
+	{
+		Set_State(STATE::POSITION, vPosition);
+		m_bDirty = true;
+	}
 }
 
-void CTransform::Go_Backward(_float fTimeDelta)
+void CTransform::Go_Backward(_float fTimeDelta, CNavigation* pNav)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vLook = Get_State(STATE::LOOK);
 
 	vPosition -= XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE::POSITION, vPosition);
-	m_bDirty = true;
+	if (nullptr == pNav || true == pNav->isMove(vPosition))
+	{
+		Set_State(STATE::POSITION, vPosition);
+		m_bDirty = true;
+	}
 }
 
-void CTransform::Go_Right(_float fTimeDelta)
+void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNav)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vRight = Get_State(STATE::RIGHT);
 
 	vPosition += XMVector3Normalize(vRight) * m_fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE::POSITION, vPosition);
-	m_bDirty = true;
+	if (nullptr == pNav || true == pNav->isMove(vPosition))
+	{
+		Set_State(STATE::POSITION, vPosition);
+		m_bDirty = true;
+	}
 }
 
-void CTransform::Go_Left(_float fTimeDelta)
+void CTransform::Go_Left(_float fTimeDelta, CNavigation* pNav)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vRight = Get_State(STATE::RIGHT);
 
 	vPosition -= XMVector3Normalize(vRight) * m_fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE::POSITION, vPosition);
-	m_bDirty = true;
+	if (nullptr == pNav || true == pNav->isMove(vPosition))
+	{
+		Set_State(STATE::POSITION, vPosition);
+		m_bDirty = true;
+	}
+}
+
+void CTransform::MoveDirection(_fvector vDirection, _float fTimeDelta, CNavigation* pNav)
+{
+	_vector vPosition = Get_State(STATE::POSITION);
+	// 방향 벡터 정규화해서 그 방향으로 더해주기
+	vPosition += XMVector3Normalize(vDirection) * m_fSpeedPerSec * fTimeDelta;
+	// 새로운 위치로 상태 업데이트
+	if (nullptr == pNav || true == pNav->isMove(vPosition))
+	{
+		Set_State(STATE::POSITION, vPosition);
+		m_bDirty = true;
+	}
 }
 
 void CTransform::Follow_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance)

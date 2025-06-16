@@ -7,6 +7,7 @@
 #include "StateHurtAir.h"
 #include "Weapon.h"	
 #include "Environment.h"
+#include "Navigation.h"
 
 
 CBaseCharacter::CBaseCharacter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -143,6 +144,7 @@ HRESULT CBaseCharacter::Render()
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}
+
 	return S_OK;
 }
 
@@ -347,7 +349,12 @@ void CBaseCharacter::OnCollisionEnter(CCollider* other)
 		// Y 성분은 원래대로 유지
 		_float origY = GetTransform()->Get_State(STATE::POSITION).m128_f32[1];
 		newPos = XMVectorSetY(newPos, origY);
-		GetTransform()->Set_State(STATE::POSITION, newPos);
+		if (m_pNavigationCom)
+		{
+			if(m_pNavigationCom->isMove(newPos))
+				GetTransform()->Set_State(STATE::POSITION, newPos);
+		}
+		
 
 		if (m_eState != CSTATE::HURT && m_eState != CSTATE::GUARD)
 		{
@@ -507,6 +514,7 @@ void CBaseCharacter::Free()
 	Safe_Release(m_pColliderCom);
 	Safe_Delete(m_pState);
 	Safe_Release(m_pInputBuffer);
+	Safe_Release(m_pNavigationCom);
 }
 
 

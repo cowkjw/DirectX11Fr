@@ -2,7 +2,7 @@
 
 #include "VIBuffer.h"
 
-NS_BEGIN(Engine)
+BEGIN_NAMESPACE(Engine)
 
 class ENGINE_DLL CVIBuffer_Cell final : public CVIBuffer
 {
@@ -21,5 +21,4 @@ public:
 	virtual void Free() override;
 
 };
-
-NS_END
+END_NAMESPACE

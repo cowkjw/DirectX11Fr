@@ -7,6 +7,7 @@
 #include "BodyColliderParts.h"
 #include <JsonLoader.h>
 #include "UIProgressBar.h"
+#include "Navigation.h"
 
 using AniCon = CAnimController::Condition;
 CKyojuro::CKyojuro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -99,7 +100,7 @@ HRESULT CKyojuro::Initialize(void* pArg)
 	m_iShaderPass = 2;
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 100.f, 1.f));
-
+	m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
 	return S_OK;
 }
 
@@ -171,6 +172,14 @@ HRESULT CKyojuro::Ready_Components()
 			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 			return E_FAIL;
 	}
+
+	/* For.Com_Navigation */
+	CNavigation::NAVIGATION_DESC		NaviDesc{};
+	NaviDesc.iIndex = 4;
+
+	if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
 
 
 	return S_OK;

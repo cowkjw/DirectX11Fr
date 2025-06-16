@@ -26,7 +26,7 @@ void StateSkill1::Update(CBaseCharacter* pChar, const InputData& input, float fT
 	const string& stateName = animCtrl->GetCurrentState()->stateName;
 	if (anim->GetCurrentAnimProgress() <= 0.7f)
 	{
-		pChar->GetTransform()->Go_Straight(fTimeDelta);
+		pChar->GetTransform()->Go_Straight(fTimeDelta, pChar->GetNavigation());
 	}
 
 	if (anim->GetCurrentAnimProgress() >= 1.f)

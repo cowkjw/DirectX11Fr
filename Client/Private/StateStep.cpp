@@ -184,7 +184,7 @@ void StateStep::Update(CBaseCharacter* pChar, const InputData& input, float fTim
 	}
 
 	// t < 1: 기존대로 이동 및 바라보기
-	pChar->GetTransform()->MoveDirection(m_vStepDir, fTimeDelta);
+	pChar->GetTransform()->MoveDirection(m_vStepDir, fTimeDelta,pChar->GetNavigation());
 	if (pChar->Get_Target())
 		pChar->GetTransform()->LookAtXZ(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
 }

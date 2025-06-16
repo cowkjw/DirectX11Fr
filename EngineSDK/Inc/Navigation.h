@@ -26,17 +26,38 @@ public:
 	_bool isMove(_fvector vWorldPos);
 	_vector SetUp_Height(_fvector vWorldPos);
 
+	HRESULT SaveCells(const _tchar* pFilePath);
+	HRESULT LoadCells(const _tchar* pFilePath);
+	void AddCell(class CCell* pCell);
+	void ClearCells();
+	_int GetCellCount() const { return static_cast<_int>(m_Cells.size()); }
+	vector<class CCell*>& GetCells() { return m_Cells; }
+
+	void SetIndex(_int iIndex) { m_iIndex = iIndex; }
+	_int FindIndexCell(const _vector& vWorldPos);
+
+	static _float4x4 GetWorldMatrix() { return m_WorldMatrix; }
+	void DeleteCell(const _vector& vWorldPos);
 #ifdef _DEBUG
 public:
 	HRESULT Render();
 
 #endif
 
+private:
+	_float CrossZ(const _float3& a, const _float3& b, const _float3& c) const
+	{
+		return (b.x - a.x) * (c.z - a.z) - (b.z - a.z) * (c.x - a.x);
+	}
+	_bool SnapVertex(_float3& p, _float eps = 1e-3f);
+
 private:	
 	vector<class CCell*>				m_Cells;
 	_int								m_iIndex = { -1 };
 
 	static _float4x4					m_WorldMatrix;
+
+	vector<_float3> m_Vertices;
 
 #ifdef _DEBUG
 	class CShader* m_pShader = { nullptr };

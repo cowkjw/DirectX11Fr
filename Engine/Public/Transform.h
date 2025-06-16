@@ -3,6 +3,7 @@
 #include "Component.h"
 
 BEGIN_NAMESPACE(Engine)
+class CNavigation;
 
 class ENGINE_DLL CTransform final : public CComponent
 {
@@ -39,19 +40,11 @@ public:
 	void Scaling(_float fX = 1.f, _float fY = 1.f, _float fZ = 1.f);
 	void Scaling(const _float3& vScale);
 public:
-	void Go_Straight(_float fTimeDelta);
-	void Go_Backward(_float fTimeDelta);
-	void Go_Right(_float fTimeDelta);
-	void Go_Left(_float fTimeDelta);
-	void MoveDirection(_fvector vDirection, _float fTimeDelta)
-	{
-		_vector vPosition = Get_State(STATE::POSITION);
-		// 방향 벡터 정규화해서 그 방향으로 더해주기
-		vPosition += XMVector3Normalize(vDirection) * m_fSpeedPerSec * fTimeDelta;
-		// 새로운 위치로 상태 업데이트
-		Set_State(STATE::POSITION, vPosition);
-		m_bDirty = true;
-	}
+	void Go_Straight(_float fTimeDelta, CNavigation* pNav = nullptr);
+	void Go_Backward(_float fTimeDelta, CNavigation* pNav = nullptr);
+	void Go_Right(_float fTimeDelta, CNavigation* pNav = nullptr);
+	void Go_Left(_float fTimeDelta, CNavigation* pNav = nullptr);
+	void MoveDirection(_fvector vDirection, _float fTimeDelta, CNavigation* pNav = nullptr);
 	void Follow_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance);
 
 	void Rotate_EulerAngles(const _float3& vEulerAngles);

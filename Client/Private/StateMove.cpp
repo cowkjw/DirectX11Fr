@@ -102,7 +102,7 @@ void StateMove::Update(CBaseCharacter* pChar, const InputData& input, float fTim
 	{
 		auto pTransform =  pChar->GetTransform();
 		pTransform->RotateToDirection(input.moveDir);
-		pTransform->MoveDirection(input.moveDir, fTimeDelta);
+		pTransform->MoveDirection(input.moveDir, fTimeDelta,pChar->GetNavigation());
 
 	}
 	else

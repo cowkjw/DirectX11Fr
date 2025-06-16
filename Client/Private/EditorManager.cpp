@@ -6,7 +6,9 @@
 #include "UIButton.h"
 #include "UIImage.h"
 #include "Mesh.h"
+#include "Toolbar.h"
 #include "Gizmo.h"
+#include <Terrain.h>
 
 CGameObject* CEditorManager::m_pSelectedObject = nullptr;
 vector<CGameObject*> CEditorManager::m_vecSceneObjects;
@@ -41,48 +43,13 @@ HRESULT CEditorManager::Initialize()
 
 void CEditorManager::Update(_float fTimeDelta)
 {
-	//if (m_pGameInstance->IsMousePressed(0))
-	//{
-	//	list<CGameObject*> ObjectList;
-	//	for (const auto& obj : m_vecSceneObjects)
-	//	{
-	//		if (obj && obj->IsActive())
-	//		{
-	//			_float3 vPickedPos{};
-	//			auto pModel =dynamic_cast<CModel*>(obj->Get_Component(TEXT("Com_Model")));
-	//			if (pModel)
-	//			{
-	//				auto Meshes = pModel->Get_Meshes();
-	//				for (auto pMesh : Meshes)
-	//				{
-	//					auto pBuffer = static_cast<CVIBuffer*>(pMesh);
-	//					if (pBuffer&& pBuffer->Compute_PickedPosition(obj->GetTransform()->Get_WorldMatrix_Inverse(), vPickedPos))
-	//					{
-	//						ObjectList.push_back(obj);
-	//					}
-	//			
-	//				}
-	//			}
-	//		}
-	//	}
-	//	ObjectList.sort([](CGameObject* pA, CGameObject* pB) {
-	//		return pA->GetTransform()->Get_WorldMatrix_Inverse().r[3].m128_f32[2] < pB->GetTransform()->Get_WorldMatrix_Inverse().r[3].m128_f32[2];
-	//		});
-
-	//	if (!ObjectList.empty())
-	//	{
-	//		m_pSelectedObject = ObjectList.front();
-	//	}
-
-	//}
-
 	ImGuiIO& io = ImGui::GetIO();
 	if (!io.WantCaptureMouse)
 	{
-		// 2) 마우스 왼쪽 버튼 눌렀을 때만 피킹
-		if (m_pGameInstance->IsMousePressed(0))
+		_bool rightClick = m_pGameInstance->IsMousePressed(1);
+		if (m_pGameInstance->IsMousePressed(0)|| rightClick)
 		{
-			std::vector<std::pair<float, CGameObject*>> hitList;
+			vector<pair<_float, CGameObject*>> hitList;
 			XMMATRIX viewMatrix = XMLoadFloat4x4(m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW));
 
 			for (auto* obj : m_vecSceneObjects)
@@ -92,9 +59,28 @@ void CEditorManager::Update(_float fTimeDelta)
 
 				auto pModel = dynamic_cast<CModel*>(obj->Get_Component(TEXT("Com_Model")));
 				if (!pModel)
-					continue;
+				{
+					auto pTerrain = dynamic_cast<CTerrain*>(obj);
+					if (!pTerrain)
+						continue;
 
-				bool hit = false;
+					auto pToolbar = dynamic_cast<CToolbar*>(m_vecPannels[2]);
+					if (pToolbar)
+					{
+						if (rightClick)
+						{
+							pToolbar->DeletePoints(pTerrain->GetPickedPosition());
+						}
+						else
+						{
+							pToolbar->CreatePoints(pTerrain->GetPickedPosition());
+						}
+
+					}
+					break;
+				}
+
+				_bool hit = false;
 				_float hitDepth = 0.f;
 
 				// 메시별 픽킹 검사
@@ -112,13 +98,29 @@ void CEditorManager::Update(_float fTimeDelta)
 						XMVECTOR vWorldPos = XMVector4Transform(vLocal4, XMLoadFloat4x4(&obj->GetTransform()->Get_WorldMatrix()));
 						XMVECTOR vViewPos = XMVector3TransformCoord(vWorldPos, viewMatrix);
 						hitDepth = XMVectorGetZ(vViewPos);
+					
+						auto pToolbar = dynamic_cast<CToolbar*>(m_vecPannels[2]);
+						if (pToolbar)
+						{
+							_float3 vWorldHit;
 
+							XMStoreFloat3(&vWorldHit, vWorldPos);
+							if (rightClick)
+							{
+								pToolbar->DeletePoints(vWorldHit);
+							}
+							else
+							{
+								pToolbar->CreatePoints(vWorldHit);
+							}
+						
+						}
 						hit = true;
 						break;  
 					}
 				}
 
-				if (hit)
+				if (hit&&!rightClick)
 					hitList.emplace_back(hitDepth, obj);
 			}
 

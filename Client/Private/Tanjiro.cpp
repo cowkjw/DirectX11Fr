@@ -9,6 +9,7 @@
 #include "UIProgressBar.h"
 #include <EnmuMeat.h>
 #include <EnmuParts.h>
+#include "Navigation.h"
 
 using AniCon = CAnimController::Condition;
 CTanjiro::CTanjiro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -44,6 +45,7 @@ HRESULT CTanjiro::Initialize(void* pArg)
 
 	m_pTransformCom->Scaling(_float3(0.1f, 0.1f, 0.1f));
 
+
 	m_pAnimatorCom->RegisterEventListener("ActiveHitbox", [&](const string&) {
 		ActiveCollider();
 		});
@@ -77,6 +79,8 @@ HRESULT CTanjiro::Initialize(void* pArg)
 	m_iShaderPass = 2;
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -18.f, -170.f, 1.f));
+
+	m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
 
 
 
@@ -140,6 +144,8 @@ void CTanjiro::Late_Update(_float fTimeDelta)
 
 HRESULT CTanjiro::Render()
 {
+	if (m_pNavigationCom)
+		m_pNavigationCom->Render();
 	return __super::Render();
 }
 
@@ -170,6 +176,21 @@ HRESULT CTanjiro::Ready_Components()
 	}
 
 
+	/* For.Com_Navigation */
+	CNavigation::NAVIGATION_DESC		NaviDesc{};
+	NaviDesc.iIndex = 4;
+
+	if (FAILED(__super::Add_Component(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
+
+	
+	
+	auto pEnmuGround = m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("EnmuGround"));
+	/*if (pEnmuGround)
+	{
+		m_pNavigationCom->Update(XMLoadFloat4x4(&pEnmuGround->GetTransform()->Get_WorldMatrix()));
+	}*/
 	return S_OK;
 }
 

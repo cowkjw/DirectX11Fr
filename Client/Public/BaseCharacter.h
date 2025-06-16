@@ -67,6 +67,7 @@ public:
 		}
 	}
 
+	class CNavigation* GetNavigation() const { return m_pNavigationCom; }
 protected:
 	virtual void Ready_Animation();
 
@@ -76,7 +77,7 @@ protected:
 	CCapsuleCollider* m_pColliderCom = { nullptr };
 	CAnimator* m_pAnimatorCom = { nullptr };
 	class IState* m_pState = { nullptr };
-
+	class CNavigation* m_pNavigationCom = { nullptr }; // 네비게이션 컴포넌트
 protected:
 	virtual HRESULT Ready_Components();
 	virtual HRESULT Bind_Shaders();

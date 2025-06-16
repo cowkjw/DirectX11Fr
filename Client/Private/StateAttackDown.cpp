@@ -24,7 +24,7 @@ void StateAttackDown::Update(CBaseCharacter* pChar, const InputData& input, floa
 	_float fProgress = anim->GetCurrentAnimProgress();
 	if (fProgress <= 0.5f)
 	{
-		pChar->GetTransform()->Go_Straight(fTimeDelta);
+		pChar->GetTransform()->Go_Straight(fTimeDelta,pChar->GetNavigation());
 	}
 
 	if (input.doSkill1)

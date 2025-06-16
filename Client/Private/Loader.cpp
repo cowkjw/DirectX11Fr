@@ -15,6 +15,7 @@
 #include "ThirdPersonCamera.h"	
 #include "Environment.h"
 #include "EnmuMeat.h"
+#include "Navigation.h"
 #include "EnmuTentacle.h"
 
 //#include "player.h"
@@ -308,22 +309,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 	//	CSky::Create(m_pDevice, m_pContext))))
 	//	return E_FAIL;
 
+		/* Prototype_Component_Navigation */
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../Asset/NavMesh/NavMeshGamePlay.dat")))))
+		return E_FAIL;
 
 
-	///* For.Prototype_GameObject_Player */
-	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Player"),
-	//	CPlayer::Create(m_pGraphic_Device))))
-	//	return E_FAIL;
-
-	///* For.Prototype_GameObject_Sky */
-	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Sky"),
-	//	CSky::Create(m_pGraphic_Device))))
-	//	return E_FAIL;
-
-	///* For.Prototype_GameObject_Effect */
-	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Effect"),
-	//	CEffect::Create(m_pGraphic_Device))))
-	//	return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
@@ -456,6 +447,12 @@ HRESULT CLoader::Loading_For_Editor()
 		return E_FAIL;
 
 
+	///* Prototype_Component_Navigation */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Navigation"),
+	//	CNavigation::Create(m_pDevice, m_pContext, nullptr))))
+	//	return E_FAIL;
+
+
 	m_isFinished = true;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
@@ -584,6 +581,12 @@ HRESULT CLoader::Loading_For_EnmuBoss()
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_EnmuTentacle"),
 		CEnmuTentacle::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	/* Prototype_Component_Navigation */
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Navigation"),
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../Asset/NavMesh/NavMeshEnmuBoss2.dat")))))
+		return E_FAIL;
+
 
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));

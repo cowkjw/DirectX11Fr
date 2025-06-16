@@ -26,7 +26,7 @@ void StateAttackUp::Update(CBaseCharacter* pChar, const InputData& input, float 
 
 	if (fProgress <= 0.4f)
 	{
-		pChar->GetTransform()->Go_Straight(fTimeDelta);
+		pChar->GetTransform()->Go_Straight(fTimeDelta, pChar->GetNavigation());
 	}
 
 	if (input.doSkill1)

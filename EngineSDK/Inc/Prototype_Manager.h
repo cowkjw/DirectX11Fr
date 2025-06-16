@@ -6,6 +6,7 @@
 #include "CapsuleCollider.h"
 #include "SphereCollider.h"
 #include "VIBuffer_Rect.h"
+#include "VIBuffer_Cell.h"
 #include "BoxCollider.h"
 #include "Transform.h"
 #include "Animator.h"

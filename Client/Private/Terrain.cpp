@@ -45,15 +45,19 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 
 void CTerrain::Update(_float fTimeDelta)
 {
-	/*if (m_pGameInstance->IsMousePressed(0))
+	if (m_pGameInstance->Get_CurrentLevelIndex()==5&&(m_pGameInstance->IsMousePressed(0)|| m_pGameInstance->IsMousePressed(1)))
 	{
-
-		_float3		vTmp{};
-		if (m_pVIBufferCom->Compute_PickedPosition(m_pTransformCom->Get_WorldMatrix_Inverse(), vTmp))
+		if (m_pVIBufferCom->Compute_PickedPosition(m_pTransformCom->Get_WorldMatrix_Inverse(), m_vPickedPosition))
 		{
-			int a = 10;
+			_float4x4 wm = m_pTransformCom->Get_WorldMatrix();
+			_matrix  World = XMLoadFloat4x4(&wm);
+
+			_vector local = XMLoadFloat3(&m_vPickedPosition);
+			_vector world = XMVector3TransformCoord(local, World);
+
+			XMStoreFloat3(&m_vPickedPosition, world);
 		}
-	}*/
+	}
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)

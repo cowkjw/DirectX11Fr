@@ -11,6 +11,8 @@
 #include "Animator.h"  
 #include "AnimController.h"
 #include <Environment.h>
+#include "Cell.h"
+#include "Navigation.h"
 
 
 CToolbar::CToolbar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -30,6 +32,9 @@ HRESULT CToolbar::Initialize()
 
 	m_JsonLoader = new CJsonLoader(m_pDevice, m_pContext);
 
+	m_pNavigation = CNavigation::Create(m_pDevice, m_pContext,nullptr);
+	if (nullptr == m_pNavigation)
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -42,6 +47,10 @@ HRESULT CToolbar::Render()
 	DrawToolbar();
 	FBXLodaer();
 	DrawAnimEventEditor();
+	if (m_pNavigation)
+	{
+		m_pNavigation->Render();
+	}
 	return S_OK;
 }
 
@@ -374,6 +383,57 @@ void CToolbar::DrawToolbar()
 	}
 
 
+	ImGui::Checkbox("NavMeshTool", &m_bIsNavMeshCreating);
+	if (m_bIsNavMeshCreating)
+	{
+		CreateNavMesh();
+	}
+
+	ImGui::Separator();
+	ImGui::InputText("NavMesh Path", m_NavFilePathBuf, IM_ARRAYSIZE(m_NavFilePathBuf), ImGuiInputTextFlags_ReadOnly);
+	ImGui::SameLine();
+	if (ImGui::Button("...."))  // 파일 다이얼로그 버튼
+	{
+		// OPENFILENAME 구조체 초기화
+		OPENFILENAMEA ofn{};
+		ofn.lStructSize = sizeof(ofn);
+		ofn.hwndOwner = GetActiveWindow();           // ImGui 창의 HWND를 넘겨주세요
+		ofn.lpstrFilter = "DataFile\0*.dat\0All Files\0*.*\0";
+		ofn.lpstrFile = m_NavFilePathBuf;               // 선택된 파일 경로 버퍼
+		ofn.nMaxFile = sizeof(m_NavFilePathBuf);
+		ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
+
+		// 열기 대화상자 표시
+		if (GetOpenFileNameA(&ofn))
+		{
+
+		}
+	}
+	if (ImGui::Button("Save NavMesh"))
+	{
+		if (m_NavFilePathBuf[0] == '\0')
+		{
+			ImGui::OpenPopup("Save NavMesh Error");
+		}
+		else
+		{
+			m_pNavigation->SaveCells(StringToWString(m_NavFilePathBuf).c_str());
+		}
+	}
+	if (ImGui::Button("Load NavMesh"))
+	{
+		if (m_NavFilePathBuf[0] == '\0')
+		{
+			ImGui::OpenPopup("Load NavMesh Error");
+		}
+		else
+		{
+			m_pNavigation->LoadCells(StringToWString(m_NavFilePathBuf).c_str());
+		}
+	}
+
+
+
 	ImGui::End();
 }
 
@@ -702,6 +762,11 @@ void CToolbar::SpawnMouse(void* pArg)
 	CEditorManager::m_vecSceneObjects.push_back(obj);
 }
 
+void CToolbar::CreateNavMesh()
+{
+
+}
+
 CGameObject* CToolbar::ClonePrototype(const string& prototypeName, const wstring& instanceName, void* pArg)
 {
 	auto& protoMap = m_pPrototypes[m_iCurrentSelectedLevel];
@@ -735,6 +800,52 @@ CGameObject* CToolbar::ClonePrototype(const string& prototypeName, const wstring
 
 }
 
+void CToolbar::CreatePoints(const _float3& worldPos)
+{
+	if (!m_bIsNavMeshCreating)
+		return;
+
+
+
+	m_NavMeshPoints.push_back(worldPos);
+
+	if (m_NavMeshPoints.size() % 3 == 0)
+	{
+		//// 최초 삼각형일 때만 전체 삭제
+		//if (m_NavMeshPoints.size() == 3)
+		//	m_NavMeshPoints->ClearCells();
+
+		// 바로 직전 3점으로만 Tri 만들기
+		size_t i = m_NavMeshPoints.size() - 3;
+		_float3 a = m_NavMeshPoints[i + 0];
+		_float3 b = m_NavMeshPoints[i + 1];
+		_float3 c = m_NavMeshPoints[i + 2];
+
+		// 시계방향 보정
+		if (CrossZ(a, b, c) > 0) 
+			swap(b, c);
+
+		_float3 vPts[3] = { a, b, c };
+		CCell* pCell = CCell::Create(
+			m_pDevice, m_pContext,
+			vPts,
+			m_pNavigation->GetCellCount()
+		);
+		if (pCell)
+			m_pNavigation->AddCell(pCell);
+		m_NavMeshPoints.clear();
+	}
+}
+
+void CToolbar::DeletePoints(const _float3& worldPos)
+{
+	if (m_pNavigation&&m_bIsNavMeshCreating)
+	{
+		_vector vPos = XMLoadFloat3(&worldPos);
+		m_pNavigation->DeleteCell(vPos);
+	}
+}
+
 CToolbar* CToolbar::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CToolbar* pInstance = new CToolbar(pDevice, pContext);
@@ -755,4 +866,5 @@ void CToolbar::Free()
 	m_LevelStringMap.clear();
 	m_CurrentPrototype = "";
 	Safe_Release(m_JsonLoader);
+	Safe_Release(m_pNavigation);
 }
