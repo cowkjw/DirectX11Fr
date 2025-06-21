@@ -1,13 +1,14 @@
 #include "Kyojuro.h"
-#include "GameInstance.h"
-#include "Animation.h"
-#include "StateIdle.h"
-#include "InputBuffer.h"
-#include "Weapon.h"	
 #include "BodyColliderParts.h"
-#include <JsonLoader.h>
+#include "GameInstance.h"
 #include "UIProgressBar.h"
+#include "InputBuffer.h"
+#include <JsonLoader.h>
+#include "Animation.h"
 #include "Navigation.h"
+#include "StateIdle.h"
+#include "StateHurt.h"
+#include "Weapon.h"	
 
 using AniCon = CAnimController::Condition;
 CKyojuro::CKyojuro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -57,25 +58,26 @@ HRESULT CKyojuro::Initialize(void* pArg)
 		m_pWeapon->SetParent(this);
 	}
 
-	// 애니메이션 이벤트 등록
-	m_pAnimatorCom->RegisterEventListener("ActiveHitbox", [&](const string&) {
-		ActiveCollider();
-		});
-
-	m_pAnimatorCom->RegisterEventListener("DeactiveHitbox", [&](const string&) {
-		DeactiveCollider();
-		});
-
-
+	
+	ReadyAnimEvents();
 	Ready_Animation();
+
 
 	Add_Component(TEXT("Com_CapsuleCollider"), CCapsuleCollider::Create(m_pDevice, m_pContext, 3.5f, 77.f), reinterpret_cast<CComponent**>(&m_pColliderCom));
 
 	m_pColliderCom->Initialize(nullptr);
 	m_pColliderCom->SetOffset(_float3(0.f, 8.1f, 0.f));
+	m_pColliderCom->SetListener(this);
+	Add_Component(TEXT("Com_RangeCollider"), CSphereCollider::Create(m_pDevice, m_pContext,15.f), reinterpret_cast<CComponent**>(&m_pRangeColliderCom));
 
+	m_pRangeColliderCom->Initialize(nullptr);
+	m_pRangeColliderCom->SetOffset(_float3(0.f, 16.f, 0.f));
+	m_pRangeColliderCom->SetListener(this);
+	m_pRangeColliderCom->SetColliderType(ColliderType::RANGE);
+	m_pRangeColliderCom->SetActive(false); // 초기에는 비활성화
 
 	CBodyColliderParts::BODYCOLLIDERPARTS_DESC desc{};
+	desc.fRadius = 5.f;
 	desc.vColliderOffsets.push_back(_float3(0.f, 0.f, 0.f));
 	AddChild(CBodyColliderParts::Create(m_pDevice, m_pContext));
 
@@ -95,12 +97,16 @@ HRESULT CKyojuro::Initialize(void* pArg)
 	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_CapsuleCollider"),
 	//	TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom))))
 	//	return E_FAIL;
-	m_pColliderCom->SetListener(this);
+
 	ChangeState(new StateIdle(TEXT("Idle")));
 	m_iShaderPass = 2;
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 100.f, 1.f));
-	m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(100.f, 0.f, 50.f, 1.f));
+	m_pTransformCom->Rotate_EulerAngles(_float3(0.f, -45.f, 0.f));
+	if (m_pNavigationCom)
+	{
+		m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
+	}
 	return S_OK;
 }
 
@@ -116,6 +122,7 @@ void CKyojuro::Update(_float fTimeDelta)
 	{
 		child->Update(fTimeDelta);
 	}
+
 }
 
 void CKyojuro::Late_Update(_float fTimeDelta)
@@ -149,14 +156,124 @@ HRESULT CKyojuro::Render()
 
 void CKyojuro::TakeDamage(_float fDamage)
 {
+	if (m_eState == CSTATE::GUARD)
+	{
+		fDamage *= 0.5f; // 가드 중에는 피해량 감소
+	}
+	if (m_eState == CSTATE::SKILL2)
+		return;
 	__super::TakeDamage(fDamage);
 	auto pLeftBar = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("LeftLifeBar"));
+	if (!m_bAirborne && !m_bIsBound)
+	{
+		ChangeState(new StateHurt());
+	}
 	if (pLeftBar)
 	{
 		CUIProgressBar* pLifeBar = static_cast<CUIProgressBar*>(pLeftBar);
 		pLifeBar->ApplyDamage(fDamage);
 	}
 }
+
+void CKyojuro::OnAttackHit(CGameObject* pTarget)
+{
+	if (pTarget)
+	{
+		switch (m_eState)
+		{
+		case CSTATE::ATTACK:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				pCharacter->TakeDamage(10.f);
+				auto pState = pCharacter->GetState();
+				if (pCharacter->IsAirborne())
+				{
+					pCharacter->LaunchAirborne(40.f);
+					pCharacter->PushBack(this);
+				}
+			}
+			break;
+		case CSTATE::ATTACK2:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				pCharacter->TakeDamage(15.f);
+				if (pCharacter->IsAirborne())
+				{
+					pCharacter->LaunchAirborne(40.f);
+					pCharacter->PushBack(this);
+				}
+			}
+			break;
+		case CSTATE::ATTACK3:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				pCharacter->TakeDamage(20.f);
+				if (pCharacter->IsAirborne())
+				{
+					pCharacter->LaunchAirborne(40.f);
+					pCharacter->PushBack(this);
+				}
+			}
+			break;
+		case CSTATE::ATTACK4:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				pCharacter->TakeDamage(25.f);
+				if (pCharacter->IsAirborne())
+				{
+					pCharacter->LaunchAirborne(40.f);
+					pCharacter->PushBack(this);
+				}
+			}
+			break;
+		case CSTATE::ATTACK_DOWN:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				pCharacter->TakeDamage(30.f);
+			}
+			break;
+		case CSTATE::ATTACK_UP:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				pCharacter->TakeDamage(7.f);
+				m_bCanBlowAttack = true;
+			}
+			break;
+		case CSTATE::SKILL:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				pCharacter->TakeDamage(15.f);
+				pCharacter->LaunchAirborne(40.f);
+			}
+			break;
+		case CSTATE::SKILL1:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				// 바운드가 아닐 때 히트 판정을 낼 수 있음
+				if (pCharacter->GetState() != CBaseCharacter::CSTATE::BOUND)
+				{
+					pCharacter->LaunchAirborne(60.f,true);
+					pCharacter->TakeDamage(15.f);
+				}
+			}
+			break;
+		case CSTATE::SKILL2:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+			
+				m_bCanRangeAttack = true; // 스킬 사용 후 다음 공격 가능
+			}
+			break;
+		}
+	}
+}
+
+void CKyojuro::OnCollisionEnter(CCollider* other)
+{
+	CBaseCharacter::OnCollisionEnter(other);
+}
+
+
 
 HRESULT CKyojuro::Ready_Components()
 {
@@ -168,9 +285,12 @@ HRESULT CKyojuro::Ready_Components()
 	if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Kyoujuro"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 	{
-		if (FAILED(__super::Add_Component(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_Kyoujuro"),
-			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 			return E_FAIL;
+	}
+	if (m_pGameInstance->Get_CurrentLevelIndex() == 3)
+	{
+
+		
 	}
 
 	/* For.Com_Navigation */
@@ -182,7 +302,56 @@ HRESULT CKyojuro::Ready_Components()
 		return E_FAIL;
 
 
+
 	return S_OK;
+}
+
+void CKyojuro::ReadyAnimEvents()
+{// 애니메이션 이벤트 등록
+	m_pAnimatorCom->RegisterEventListener("ActiveHitbox", [&](const string&) {
+		ActiveCollider();
+		});
+
+	m_pAnimatorCom->RegisterEventListener("DeactiveHitbox", [&](const string&) {
+		DeactiveCollider();
+		});
+
+	m_pAnimatorCom->RegisterEventListener("GuardSkill", [&](const string&) {
+		m_Velocity.y = 50.f;
+		m_bAirborne = true;
+		});
+
+
+	m_pAnimatorCom->RegisterEventListener("ActiveRangebox", [&](const string&) {
+		if (m_pRangeColliderCom)
+		{
+			m_pRangeColliderCom->SetActive(true);
+			m_pRangeColliderCom->SetDrawDebug(true);
+		}
+		});
+	m_pAnimatorCom->RegisterEventListener("DeactiveRangebox", [&](const string&) {
+		if (m_pRangeColliderCom)
+		{
+			m_pRangeColliderCom->SetActive(false);
+			m_pRangeColliderCom->SetDrawDebug(false);
+		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("GuardSkillAirborne", [&](const string& eventName) {
+
+		if (auto pChar = dynamic_cast<CBaseCharacter*>(m_pTarget))
+		{
+			if (m_bCanRangeAttack)
+			{
+				pChar->LaunchAirborneFall(60.f);
+				pChar->LaunchAirborneFall(20.f);
+				pChar->TakeDamage(20.f);
+				m_bCanRangeAttack = false;
+			}
+		}
+
+		});
+
 }
 
 void CKyojuro::Ready_Animation()
@@ -224,8 +393,9 @@ void CKyojuro::Ready_Animation()
 	size_t jump0Idx = ctrl->AddState("Jump0", jumpClips[0], 2);
 	size_t jump1Idx = ctrl->AddState("Jump1", jumpClips[1], 2);
 	size_t jump3Idx = ctrl->AddState("Jump3", jumpClips[3], 2);
-	jumpClips[1]->SetTickPerSecond(18.f); // 1번 점프 속도
-	jumpClips[3]->SetTickPerSecond(35.f); 
+	jumpClips[1]->SetTickPerSecond(20.f); // 1번 점프 속도
+	jumpClips[2]->SetTickPerSecond(45.f); 
+	jumpClips[3]->SetTickPerSecond(45.f); 
 
 	vector<CAnimation*> comboAttackClips;
 	for (int i = 1; i <= 4; ++i)
@@ -314,7 +484,7 @@ void CKyojuro::Ready_Animation()
 		a->SetLoop(false);
 		guardSkillClips.push_back(a);
 	}
-
+	guardSkillClips[1]->SetTickPerSecond(40.f); // 1번 스킬 속도 조정
 	// A_P0012_V00_C00_AtkUniqueAct01_0 상승염천
 	size_t guardSkill0Idx = ctrl->AddState("guardSkill0", guardSkillClips[0], 5);
 	size_t guardSkill1Idx = ctrl->AddState("guardSkill1", guardSkillClips[1], 5);
@@ -379,6 +549,9 @@ void CKyojuro::Ready_Animation()
 	}
 	size_t skill1Idx = ctrl->AddState("skill1", skill1Clips[0], 10);
 	size_t skill1EndIdx = ctrl->AddState("skill1End", skill1Clips[1], 10);
+	skill1Clips[0]->SetTickPerSecond(30.f); // 스킬 속도 조정
+	skill1Clips[1]->SetTickPerSecond(60.f); 
+
 
 
 	// 3) 파라미터(Parameter) 등록
@@ -571,6 +744,7 @@ void CKyojuro::Ready_Animation()
 	//ctrl->AddTransition(attack3Idx, skillDefaultIdx, cRisingSun);
 	//ctrl->AddTransition(attack4Idx, skillDefaultIdx, cRisingSun);
 	//ctrl->AddTransition(attack5Idx, skillDefaultIdx, cRisingSun);
+	ctrl->AddTransition(idleIdx, guardSkill0Idx, cRisingSun, 0.1f);
 	ctrl->AddTransition(guard0Idx, guardSkill0Idx, cRisingSun, 0.1f);
 	ctrl->AddTransition(guard1Idx, guardSkill0Idx, cRisingSun, 0.1f);
 	ctrl->AddTransition(guard2Idx, guardSkill0Idx, cRisingSun, 0.1f);
@@ -672,6 +846,7 @@ void CKyojuro::Ready_Animation()
 	ctrl->AddTransition(skill1Idx, hurtFIdx, cHurt, 0.1f);
 	ctrl->AddTransition(skill1EndIdx, hurtFIdx, cHurt, 0.1f);
 	ctrl->AddTransition(skillDefaultIdx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(guardSkill2Idx, hurtFIdx, cHurt, 0.1f);
 
 	ctrl->AddTransition(hurtFIdx, idleIdx, cFin);
 	ctrl->AddTransition(hurtFIdx, runIdx, cSpeedUp, 0.1f);
@@ -735,12 +910,13 @@ void CKyojuro::DeactiveCollider()
 			collider2->SetActive(false);
 			collider2->SetDrawDebug(false);
 		}
+		m_pWeapon->ClearDamagedTargets();
 	}
 	for (auto& pBodyColl : m_vecChildren)
 	{
-		if (dynamic_cast<CBodyColliderParts*>(pBodyColl))
+		if (auto bodyCol = dynamic_cast<CBodyColliderParts*>(pBodyColl))
 		{
-			pBodyColl->SetActive(false);
+			bodyCol->SetActive(false);
 		}
 	}
 }

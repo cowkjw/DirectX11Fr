@@ -168,7 +168,7 @@ void CEnmuBody::Ready_Animation()
 
 void CEnmuBody::Ready_Collider()
 {
-	if (FAILED(Add_Component(TEXT("Com_Collider"), CSphereCollider::Create(m_pDevice, m_pContext, 60.f), reinterpret_cast<CComponent**>(&m_pColliderCom))))
+	if (FAILED(Add_Component(TEXT("Com_Collider"), CSphereCollider::Create(m_pDevice, m_pContext, 50.f), reinterpret_cast<CComponent**>(&m_pColliderCom))))
 		return;
 	m_pColliderCom->Initialize(nullptr);
 	m_pColliderCom->SetColliderType(ColliderType::HURTBOX);
@@ -220,17 +220,17 @@ void CEnmuBody::Free()
 
 void CEnmuBody::OnCollisionEnter(CCollider* other)
 {
-	if (other->GetType() == ColliderType::HITBOX)
-	{
-		if (other->GetOwner()->Get_Name() == TEXT("Weapon"))
-		{
-			auto pEnmu = dynamic_cast<CEnmuMeat*>(GetParent());
-			if (pEnmu)
-			{
-				pEnmu->Hit(10.f); // 单固瘤 贸府
-			}
-		}
-	}
+	//if (other->GetType() == ColliderType::HITBOX)
+	//{
+	//	if (other->GetOwner()->Get_Name() == TEXT("Weapon"))
+	//	{
+	//		auto pEnmu = dynamic_cast<CEnmuMeat*>(GetParent());
+	//		if (pEnmu)
+	//		{
+	//			pEnmu->Hit(10.f); // 单固瘤 贸府
+	//		}
+	//	}
+	//}
 }
 
 void CEnmuBody::OnCollisionStay(CCollider* other, float fTimeDelta)

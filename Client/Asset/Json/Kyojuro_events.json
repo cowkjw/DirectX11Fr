@@ -198,11 +198,11 @@
             "events": [
                 {
                     "name": "ActiveHitbox",
-                    "time": 9.000781059265137
+                    "time": 2.299999952316284
                 },
                 {
                     "name": "DeactiveHitbox",
-                    "time": 20.00369644165039
+                    "time": 10.979999542236328
                 }
             ]
         },
@@ -212,11 +212,19 @@
             "events": [
                 {
                     "name": "ActiveHitbox",
-                    "time": 6.500724792480469
+                    "time": 2.740000009536743
                 },
                 {
                     "name": "DeactiveHitbox",
-                    "time": 30.503883361816406
+                    "time": 6.0
+                },
+                {
+                    "name": "ActiveHitbox",
+                    "time": 12.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 20.0
                 }
             ]
         },
@@ -226,11 +234,19 @@
             "events": [
                 {
                     "name": "ActiveHitbox",
-                    "time": 16.668437957763672
+                    "time": 8.0
                 },
                 {
                     "name": "DeactiveHitbox",
-                    "time": 51.26070022583008
+                    "time": 13.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 40.0
+                },
+                {
+                    "name": "ActiveHitbox",
+                    "time": 26.0
                 }
             ]
         },
@@ -244,7 +260,15 @@
                 },
                 {
                     "name": "DeactiveHitbox",
-                    "time": 48.004981994628906
+                    "time": 30.34000015258789
+                },
+                {
+                    "name": "ActiveHitbox",
+                    "time": 21.0023193359375
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 14.260000228881836
                 }
             ]
         },
@@ -254,11 +278,31 @@
             "events": [
                 {
                     "name": "ActiveHitbox",
-                    "time": 10.000993728637695
+                    "time": 10.334267616271973
                 },
                 {
                     "name": "DeactiveHitbox",
-                    "time": 49.671878814697266
+                    "time": 17.668411254882813
+                },
+                {
+                    "name": "ActiveHitbox",
+                    "time": 27.0
+                },
+                {
+                    "name": "HitedAir",
+                    "time": 27.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 43.674224853515625
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
                 }
             ]
         },
@@ -299,7 +343,12 @@
         {
             "clipName": "A_P0012_V00_C00_AtkSkl02",
             "duration": 80.0,
-            "events": []
+            "events": [
+                {
+                    "name": "EndAttack",
+                    "time": 80.0
+                }
+            ]
         },
         {
             "clipName": "A_P0012_V00_C00_AtkSkl02A",
@@ -352,6 +401,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 2.0
+                },
+                {
+                    "name": "EndAttack",
+                    "time": 2.0
                 }
             ]
         },
@@ -388,17 +441,46 @@
         {
             "clipName": "A_P0012_V00_C00_AtkUniqueAct01_0",
             "duration": 40.0,
-            "events": []
+            "events": [
+                {
+                    "name": "GuardSkill",
+                    "time": 16.50112533569336
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                },
+                {
+                    "name": "ActiveRangebox",
+                    "time": 3.0
+                },
+                {
+                    "name": "GuardSkillAirborne",
+                    "time": 16.5
+                },
+                {
+                    "name": "DeactiveRangebox",
+                    "time": 21.0
+                }
+            ]
         },
         {
             "clipName": "A_P0012_V00_C00_AtkUniqueAct01_1",
             "duration": 10.0,
-            "events": []
+            "events": [
+       
+            ]
         },
         {
             "clipName": "A_P0012_V00_C00_AtkUniqueAct01_2",
             "duration": 27.0,
-            "events": []
+            "events": [
+          
+                {
+                    "name": "EndAttack",
+                    "time": 20.0017032623291
+                }
+            ]
         },
         {
             "clipName": "A_P0012_V00_C00_BaseCharge01_0",
@@ -494,18 +576,6 @@
             "clipName": "A_P0012_V00_C00_BaseNut01_1",
             "duration": 80.0,
             "events": [
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 0.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 0.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 0.0
-                },
                 {
                     "name": "DeactiveHitbox",
                     "time": 0.0

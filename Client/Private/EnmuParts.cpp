@@ -30,6 +30,7 @@ HRESULT CEnmuParts::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pTransformCom->Scaling(_float3(0.15f, 0.15f, 0.15f));
+	m_iShaderPass = 0;
 	return S_OK;
 }
 
@@ -105,8 +106,8 @@ HRESULT CEnmuParts::Bind_Shaders()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
 		return E_FAIL;
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
-	//	return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
+		return E_FAIL;
 
 	return S_OK;
 }

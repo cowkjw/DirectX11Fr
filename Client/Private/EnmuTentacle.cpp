@@ -43,11 +43,13 @@ HRESULT CEnmuTentacle::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
 	m_pTransformCom->Scaling(_float3(0.05f, 0.05f, 0.05f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -18.f,0.f, 1.f));
 	return S_OK;
 }
 
 void CEnmuTentacle::Update(_float fTimeDelta)
 {
+
 
 	m_pAnimatorCom->GetAnimController()->Update(fTimeDelta);
 	m_pModelCom->Play_Animation(fTimeDelta);

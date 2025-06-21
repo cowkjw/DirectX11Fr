@@ -18,6 +18,7 @@ public:
 	virtual HRESULT Render() override;
 
 	virtual void TakeDamage(_float fDamage) override;
+	virtual void OnAttackHit(CGameObject* pTarget) override;
 
 private:
 	virtual HRESULT Ready_Components() override;

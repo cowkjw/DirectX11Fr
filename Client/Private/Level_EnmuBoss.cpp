@@ -81,7 +81,7 @@ HRESULT CLevel_EnmuBoss::Ready_Layer_Characters()
 
 	// Prototype_GameObject_Kyojuro
 	CBaseCharacter* pTanjiro = static_cast<CBaseCharacter*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_Tanjiro"),
-		ToIndex(LEVEL::GAMEPLAY), TEXT("Tanjiro")));
+		ToIndex(LEVEL::ENMU_BOSS), TEXT("Tanjiro")));
 
 	if (!pTanjiro)
 		return E_FAIL;

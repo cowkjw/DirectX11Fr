@@ -299,6 +299,12 @@
       "path": "../Asset/Resources/Textures/Loding/Mask_Shoji_L.png",
       "numTextures": 1,
       "static": true
+    },
+    {
+      "key": "WarningDecal",
+      "path": "../Asset/Resources/Textures/Effect/Warning%d.dds",
+      "numTextures": 3,
+      "static": true
     }
 
   ]

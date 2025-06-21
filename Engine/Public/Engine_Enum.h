@@ -20,6 +20,7 @@ namespace Engine
 		HITBOX,
 		HURTBOX,
 		ENVIRONMENT,
+		RANGE,
 		NONE
 	};
 	

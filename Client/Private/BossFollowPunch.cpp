@@ -1,5 +1,6 @@
 #include "BossFollowPunch.h"
 #include "BossIdle.h"
+#include <EnmuArm.h>
 
 void BossFollowPunch::Enter(CEnmuMeat* pChar)
 {
@@ -26,8 +27,17 @@ void BossFollowPunch::Enter(CEnmuMeat* pChar)
 	{
 		m_pRightArmBone = pModel->Get_Bone("R_TentaclesArmA_7");
 	}
-
+	
+	
 	pChar->SetState(EnmuState::FOLLOWPUNCH);
+
+	m_pWarningZone = CGameInstance::Get_Instance()->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_WarningZone"), ToIndex(LEVEL::ENMU_BOSS)
+		, TEXT("WarningZone"));
+
+	if (m_pWarningZone)
+	{
+		m_pWarningZone->GetTransform()->Scaling(_float3(40.f, 40.f, 40.f));
+	}
 }
 
 void BossFollowPunch::Update(CEnmuMeat* pChar, _float fTimeDelta)
@@ -40,7 +50,9 @@ void BossFollowPunch::Update(CEnmuMeat* pChar, _float fTimeDelta)
 
 	_vector vTargetPos = pChar->GetTarget()->GetTransform()->Get_State(STATE::POSITION);
 	_vector vMyPos = pChar->GetTransform()->Get_State(STATE::POSITION);
-	_vector vDir = XMVector3Normalize(vTargetPos - vMyPos);
+	_vector rawDir = XMVector3Normalize(vTargetPos - vMyPos);
+	// 180° 회전 보정
+	_vector vDir = XMVectorSetX(rawDir, -XMVectorGetX(rawDir));
 	// 아직 오른쪽 공격 안했고 공격 시간까지 안됐으면 일단 따라다니게
 	if (!m_bAttackedRight && m_fTimeElapsed < RIGHTARM_START_TIME)
 	{
@@ -75,50 +87,10 @@ void BossFollowPunch::Update(CEnmuMeat* pChar, _float fTimeDelta)
 
 void BossFollowPunch::Exit(CEnmuMeat* pChar)
 {
-	auto leftArm = pChar->GetPart(CEnmuMeat::Parts::LEFTARM);
-	auto rightArm = pChar->GetPart(CEnmuMeat::Parts::RIGHTARM);
+	auto leftArm = dynamic_cast<CEnmuArm*>(pChar->GetPart(CEnmuMeat::Parts::LEFTARM));
+	auto rightArm = dynamic_cast<CEnmuArm*>(pChar->GetPart(CEnmuMeat::Parts::RIGHTARM));
 
-	leftArm->GetTransform()->RotateToDirection(XMVectorSet(0.f, 0.f, 1.f, 0.f)); // 기본 방향으로 회전
-	rightArm->GetTransform()->RotateToDirection(XMVectorSet(0.f, 0.f, 1.f, 0.f)); // 기본 방향으로 회전
-}
+	leftArm->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // 기본 방향으로 회전
+	rightArm->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // 기본 방향으로 회전
 
-_matrix BossFollowPunch::ComputeMatrix(CEnmuMeat* pChar, _bool bIsLeft)
-{
-	auto pBone = bIsLeft ? m_pLeftArmBone : m_pRightArmBone;
-	auto armPart = bIsLeft ? pChar->GetPart(CEnmuMeat::Parts::LEFTARM) :
-		pChar->GetPart(CEnmuMeat::Parts::RIGHTARM);
-
-	// 1) 뼈의 실제 월드 위치 계산
-	_matrix boneLocal = XMLoadFloat4x4(pBone->Get_CombinedTransformationMatrix());
-	_matrix armLocal = XMLoadFloat4x4(&armPart->GetTransform()->Get_WorldMatrix());
-	_matrix boneWorldMatrix = XMMatrixMultiply(boneLocal, armLocal);
-
-	XMVECTOR vBoneWorldPos = XMVector3Transform(XMVectorSet(0, 0, 0, 1), boneWorldMatrix);
-	XMVECTOR vTargetPos = pChar->GetTarget()->GetTransform()->Get_State(STATE::POSITION);
-
-	// 2) 뼈 위치에서 타겟으로의 방향 계산
-	XMVECTOR vDelta = vTargetPos - vBoneWorldPos;
-	XMVECTOR vDirNorm = XMVector3Normalize(vDelta);
-
-	// 나머지는 동일...
-	float dx = XMVectorGetX(vDirNorm);
-	float dy = XMVectorGetY(vDirNorm);
-	float dz = XMVectorGetZ(vDirNorm);
-
-	float horizontalDist = sqrtf(dx * dx + dz * dz);
-	float yaw = atan2f(dx, dz);
-	float pitch = atan2f(dy, horizontalDist);
-	float roll = atan2f(dz, dx); // roll은 z축 회전
-
-	if (pitch < 0.f)
-	{
-		pitch += 2 * XM_PI; // pitch를 0~2π 범위로 조정
-	}
-	if (roll < 0.f)
-	{
-		roll += 2 * XM_PI; // roll을 0~2π 범위로 조정
-	}
-
-	_matrix rotM = XMMatrixRotationRollPitchYaw(pitch, 0.f, roll);
-	return rotM;
 }

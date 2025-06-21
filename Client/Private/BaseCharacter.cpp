@@ -1,13 +1,17 @@
 #include "BaseCharacter.h"
 #include "GameInstance.h"
-#include "Animation.h"
-#include "StateIdle.h"
-#include "InputBuffer.h"
-#include "StateHurt.h"
+#include "StateBoundHurt.h"
+#include "StateHurtBlow.h"
+#include "StateHurtDown.h"
 #include "StateHurtAir.h"
-#include "Weapon.h"	
+#include "InputBuffer.h"
 #include "Environment.h"
 #include "Navigation.h"
+#include "StateHurt.h"
+#include "StateIdle.h"
+#include "Animation.h"
+#include "Weapon.h"	
+
 
 
 CBaseCharacter::CBaseCharacter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -30,6 +34,7 @@ CBaseCharacter::CBaseCharacter(const CBaseCharacter& Prototype)
 	, m_pTarget{ Prototype.m_pTarget }
 	, m_iShaderPass{ Prototype.m_iShaderPass }
 	, m_pState{ nullptr }
+	, m_pRangeColliderCom{ Prototype.m_pRangeColliderCom }
 {
 
 }
@@ -53,15 +58,28 @@ HRESULT CBaseCharacter::Initialize(void* pArg)
 
 	m_fTotalTime = 0.f;
 
-	m_pAnimatorCom->RegisterEventListener("HitedAir", [&](const string& eventName) {
-		LaunchAirborne(25.f);
-		});
+
 
 	m_pAnimatorCom->RegisterEventListener("EndHurt", [&](const string& eventName) {
 		//	ChangeState(new StateIdle(TEXT("Idle")));
 		m_pAnimatorCom->SetBool("Hurted", false);
 		});
 
+	m_pAnimatorCom->RegisterEventListener("HitedAir", [&](const string& eventName) {
+
+		if (auto pChar = dynamic_cast<CBaseCharacter*>(m_pTarget))
+		{
+			if (m_bCanBlowAttack && pChar->GetState() != CSTATE::GUARD)
+				pChar->Blow(this, 45.f);
+		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("EndAttack", [&](const string& eventName) {
+		if (m_pAnimatorCom)
+		{
+			m_pAnimatorCom->SetBool("Attacking", false);
+		}
+		});
 	return S_OK;
 }
 
@@ -74,16 +92,33 @@ void CBaseCharacter::Priority_Update(_float fTimeDelta)
 void CBaseCharacter::Update(_float fTimeDelta)
 {
 
-	HandleInput();
+	/*HandleInput();
 	m_fTotalTime += fTimeDelta;
 	m_pInputBuffer->Update(m_fTotalTime);
+	if(!m_bAirborne&&!m_bIsJumping)
 	UpdateState(fTimeDelta);
 
 	if (m_bAirborne)
 	{
 		UpdateAirborne(fTimeDelta);
+	}*/
+
+	if (m_fHitStopTime > 0.f)
+	{
+		m_fHitStopTime -= fTimeDelta;
+		fTimeDelta *= 0.1f; // HitStop 동안 시간 느리게 흐름
 	}
 
+	if (!m_bAirborne && !m_bIsBound)
+		HandleInput();
+
+	m_fTotalTime += fTimeDelta;
+	m_pInputBuffer->Update(m_fTotalTime);
+
+	if (!m_bAirborne && !m_bIsJumping)
+		UpdateState(fTimeDelta);
+	else
+		UpdateAirborne(fTimeDelta);
 
 
 	// 3) 애니메이션 업데이트
@@ -95,41 +130,14 @@ void CBaseCharacter::Update(_float fTimeDelta)
 void CBaseCharacter::Late_Update(_float fTimeDelta)
 {
 	CGameObject::Late_Update(fTimeDelta);
-	//_float3 tmp{};  
-	//XMStoreFloat3(&tmp, m_pTransformCom->Get_State(STATE::POSITION));  
-	//if (m_pGameInstance->IsAABBInFrustum(tmp, m_pTransformCom->Get_Scaled()))  
-	//{  
-	//  
-	//}
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
 }
 
 HRESULT CBaseCharacter::Render()
 {
-	//if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-	//	return E_FAIL;
-	//if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW))))
-	//	return E_FAIL;
-	//if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::PROJECTION))))
-	//	return E_FAIL;
-
 	Bind_Shaders();
 
-
 	_uint		iNumMesh = m_pModelCom->Get_NumMeshes();
-
-	//for (_uint i = 0; i < iNumMesh; i++)
-	//{
-	//	if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
-	//		return E_FAIL;
-
-	//	if (FAILED(m_pShaderCom->Begin(0)))
-	//		return E_FAIL;
-
-	//	if (FAILED(m_pModelCom->Render(i)))
-	//		return E_FAIL;
-	//}
-
 
 	for (_uint i = 0; i < iNumMesh; i++)
 	{
@@ -325,45 +333,7 @@ void CBaseCharacter::OnCollisionEnter(CCollider* other)
 			return; // 자기 자신과 충돌은 무시
 		}
 
-		// 나와 공격자 사이의 방향 계산 (XZ 평면)
-		XMVECTOR myPos = GetTransform()->Get_State(STATE::POSITION);
-		XMVECTOR attackerPos = pAttacker->GetTransform()->Get_State(STATE::POSITION);
-
-		// Y 성분 무시하고 XZ 기준으로 방향 계산
-		myPos = XMVectorSetY(myPos, 0.f);
-		attackerPos = XMVectorSetY(attackerPos, 0.f);
-		XMVECTOR diff = myPos - attackerPos; // 공격자 위치에서 내 위치로 향하는 벡터
-		// 길이가 0에 가까우면 기본 뒤로 방향(=attacker가 바라보는 정반대) 사용
-		_float length{};
-		XMStoreFloat(&length, XMVector3LengthSq(diff));
-		XMVECTOR backDir = length > 0.0001f
-			? XMVector3Normalize(diff)
-			: XMVectorNegate(pAttacker->GetTransform()->Get_State(STATE::LOOK));
-
-		// 뒤로 밀려나는 거리
-		const _float knockbackDistance = 2.f;
-		XMVECTOR offset = XMVectorScale(backDir, knockbackDistance);
-
-		// 4) 현재 위치에 offset을 더해 새로운 위치로 설정
-		XMVECTOR newPos = XMVectorAdd(myPos, offset);
-		// Y 성분은 원래대로 유지
-		_float origY = GetTransform()->Get_State(STATE::POSITION).m128_f32[1];
-		newPos = XMVectorSetY(newPos, origY);
-		if (m_pNavigationCom)
-		{
-			if(m_pNavigationCom->isMove(newPos))
-				GetTransform()->Set_State(STATE::POSITION, newPos);
-		}
-		
-
-		if (m_eState != CSTATE::HURT && m_eState != CSTATE::GUARD)
-		{
-			ChangeState(new StateHurt());
-			TakeDamage(2.f); // 피해량 조정 가능
-		}
-
-		_float distanceZ = XMVectorGetZ(newPos - attackerPos);
-
+		PushBack(pAttacker); // 공격자에게서 뒤로 밀려남
 
 	}
 	m_bFirstCollision = true; // 첫 충돌 처리 완료
@@ -381,31 +351,190 @@ void CBaseCharacter::OnCollisionExit(CCollider* other)
 	m_bFirstCollision = false; // 충돌 종료 시 첫 충돌 상태 해제
 }
 
-void CBaseCharacter::LaunchAirborne(_float fJumpForce)
+void CBaseCharacter::LaunchAirborne(_float fJumpForce, _bool bIsBound)
 {
+	m_Velocity.x = 0.f;
+	m_Velocity.z = 0.f;
+	/*if (m_bIsBound)
+		return;*/
+	if (m_bAirborne)
+		m_Velocity.y = std::min(m_Velocity.y + fJumpForce , 38.f);
+	else
+		m_Velocity.y = fJumpForce;
 	m_bAirborne = true;
-	m_Velocity.y = fJumpForce; // 점프 힘 추가
 	m_bIsJumping = true; // 점프 상태로 설정
-	ChangeState(new StateHurtAir());
+
+	if (!bIsBound)
+	{
+		ChangeState(new StateHurtAir());
+	}
+	else
+	{
+		m_bIsBound = bIsBound; // 바운드 여부 설정
+		ChangeState(new StateBoundHurt());
+	}
+}
+
+void CBaseCharacter::LaunchAirborneFall(_float fJumpForce)
+{
+	m_Velocity.x = 0.f;
+	m_Velocity.z = 0.f;
+	if (m_bAirborne)
+		m_Velocity.y = std::min(m_Velocity.y + fJumpForce, 100.f);
+	else
+		m_Velocity.y = fJumpForce;
+	m_bAirborne = true;
+	m_bIsJumping = true; // 점프 상태로 설정
+	ChangeState(new StateHurtBlow());
+}
+
+void CBaseCharacter::Blow(CGameObject* pAttacker, _float fBlowForce)
+{
+	if (m_bAirborne || m_bIsBound)
+		return; // 이미 공중에 있거나 바운드 상태면 무시
+	if (m_eState != CSTATE::GUARD)
+	{
+	// 공격자의 위치에서 나를 향하는 방향 벡터 계산
+	XMVECTOR attackerPos = pAttacker->GetTransform()->Get_State(STATE::POSITION);
+	XMVECTOR myPos = m_pTransformCom->Get_State(STATE::POSITION);
+	XMVECTOR direction = XMVector3Normalize(myPos - attackerPos);
+	// 뒤로 밀려나는 힘 적용
+	XMStoreFloat3(&m_Velocity, XMVectorScale(direction, fBlowForce));
+	m_Velocity.y = fBlowForce+5.f; // Y축 방향으로 힘 추가
+	m_bAirborne = true; // 공중 상태로 전환
+	m_bIsJumping = true; // 점프 상태로 설정
+
+		ChangeState(new StateHurtBlow());
+	}
+	m_bCanBlowAttack = false; // 블로우 공격 후에는 다시 사용할 수 없도록 설정
 }
 
 void CBaseCharacter::UpdateAirborne(_float fTimeDelta)
 {
-	_vector vVel = XMLoadFloat3(&m_Velocity);
-	_vector gravity = XMLoadFloat3(&GRAVITY) * fTimeDelta * 6.5f;
+	
+	XMVECTOR vVel = XMLoadFloat3(&m_Velocity);
+	XMVECTOR gravity = m_bIsBound ? XMLoadFloat3(&GRAVITY) * fTimeDelta*10.f: XMLoadFloat3(&GRAVITY) * fTimeDelta * 9.6f;
 	vVel += gravity;
 	XMStoreFloat3(&m_Velocity, vVel);
-	_vector pos = m_pTransformCom->Get_State(STATE::POSITION);
-	pos += vVel * fTimeDelta;
-	m_pTransformCom->Set_State(STATE::POSITION, pos);
 
-	if (m_pTransformCom->Get_State(STATE::POSITION).m128_f32[1] < 0.f) // 바닥에 닿으면
+	XMVECTOR pos = m_pTransformCom->Get_State(STATE::POSITION);
+	pos += vVel * fTimeDelta;
+	if (m_pNavigationCom)
 	{
-		m_bAirborne = false; // 공중 상태 해제
-		m_Velocity.y = 0.f; // 속도 초기화
-		m_bIsJumping = false; // 점프 상태 해제
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetY(m_pTransformCom->Get_State(STATE::POSITION), 0.f)); // 바닥에 고정
+		if (m_pNavigationCom->isMove(pos))
+		{
+
+			m_pTransformCom->Set_State(STATE::POSITION, pos);
+		}
+		else
+		{
+			_vector tmpPos = m_pTransformCom->Get_State(STATE::POSITION);
+			tmpPos = XMVectorSetY(tmpPos, XMVectorGetY(pos));
+			m_pTransformCom->Set_State(STATE::POSITION, tmpPos);
+		}
 	}
+
+	// 바닥 충돌 처리
+	if (pos.m128_f32[1] <= m_fGoroundHeight)
+	{
+		if (m_bIsBound)
+		{
+			m_Velocity.y = 40.f;  // 한 번만 튀기고
+			m_bIsBound = false;  // 이후엔 낙하로 전환
+		}
+		else
+		{
+			m_Velocity.y = 0.f;
+			m_bAirborne = false;
+			m_bIsJumping = false;
+			m_bFalling = false;
+		}
+
+		// 바닥에 고정
+		XMVECTOR curPos = m_pTransformCom->Get_State(STATE::POSITION);
+		curPos = XMVectorSetY(curPos, m_fGoroundHeight);
+		if(m_pNavigationCom)
+		{
+			if (m_pNavigationCom->isMove(curPos))
+				m_pTransformCom->Set_State(STATE::POSITION, curPos);
+		}
+	}
+}
+
+void CBaseCharacter::UpdateBounding(_float fTimeDelta)
+{
+	if (m_bIsBound)
+	{
+		_vector pos = m_pTransformCom->Get_State(STATE::POSITION);
+
+		if (pos.m128_f32[1] < m_fGoroundHeight) // 바닥에 닿으면
+		{
+			m_bIsBound = false; // 바운드 상태 해제
+			m_Velocity.y = 0.f; // 속도 초기화
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetY(pos, 0.f)); // 바닥에 고정
+			if (m_eState != CSTATE::HURT && m_eState != CSTATE::GUARD)
+			{
+				ChangeState(new StateIdle(TEXT("Idle")));
+			}
+		}
+		else
+		{
+			pos += XMLoadFloat3(&m_Velocity) * fTimeDelta;
+			m_pTransformCom->Set_State(STATE::POSITION, pos);
+		}
+	}
+}
+
+void CBaseCharacter::PushBack(CBaseCharacter* pAttacker)
+{	// 나와 공격자 사이의 방향 계산 (XZ 평면)
+	XMVECTOR myPos = GetTransform()->Get_State(STATE::POSITION);
+	XMVECTOR attackerPos = pAttacker->GetTransform()->Get_State(STATE::POSITION);
+
+	// Y 성분 무시하고 XZ 기준으로 방향 계산
+	myPos = XMVectorSetY(myPos, 0.f);
+	attackerPos = XMVectorSetY(attackerPos, 0.f);
+	XMVECTOR diff = myPos - attackerPos; // 공격자 위치에서 내 위치로 향하는 벡터
+	// 길이가 0에 가까우면 기본 뒤로 방향(=attacker가 바라보는 정반대) 사용
+	_float length{};
+	XMStoreFloat(&length, XMVector3LengthSq(diff));
+	XMVECTOR backDir = length > 0.0001f
+		? XMVector3Normalize(diff)
+		: XMVectorNegate(pAttacker->GetTransform()->Get_State(STATE::LOOK));
+
+	// 뒤로 밀려나는 거리
+	const _float knockbackDistance = 2.f;
+	XMVECTOR offset = XMVectorScale(backDir, knockbackDistance);
+
+	// 4) 현재 위치에 offset을 더해 새로운 위치로 설정
+	XMVECTOR newPos = XMVectorAdd(myPos, offset);
+	// Y 성분은 원래대로 유지
+	_float origY = GetTransform()->Get_State(STATE::POSITION).m128_f32[1];
+	newPos = XMVectorSetY(newPos, origY);
+	if (m_pNavigationCom)
+	{
+		if (m_pNavigationCom->isMove(newPos))
+			GetTransform()->Set_State(STATE::POSITION, newPos);
+	}
+
+	m_pTransformCom->LookAtXZ(pAttacker->GetTransform()->Get_State(STATE::POSITION));
+
+	//if (m_eState != CSTATE::HURT && m_eState != CSTATE::GUARD)
+	//{
+	//	//ChangeState(new StateHurt());
+	//	//TakeDamage(2.f); // 피해량 조정 가능
+	//}
+}
+
+void CBaseCharacter::HurtDown()
+{
+	if (m_bAirborne || m_bIsBound)
+		return; // 이미 공중에 있거나 바운드 상태면 무시
+	ChangeState(new StateHurtDown());
+}
+
+void CBaseCharacter::StartHitStop(_float duration)
+{
+	m_fHitStopTime = duration;
 }
 
 void CBaseCharacter::Ready_Animation()
@@ -515,6 +644,8 @@ void CBaseCharacter::Free()
 	Safe_Delete(m_pState);
 	Safe_Release(m_pInputBuffer);
 	Safe_Release(m_pNavigationCom);
+	Safe_Release(m_pRangeColliderCom);
+	
 }
 
 

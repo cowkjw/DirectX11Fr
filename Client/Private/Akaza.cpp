@@ -4,6 +4,7 @@
 #include "StateIdle.h"
 #include "InputBuffer.h"
 #include "StateMove.h"	
+#include "StateHurt.h"
 #include "StateAttack1.h"	
 #include "StateJump.h"
 #include "StateStep.h"
@@ -63,6 +64,7 @@ HRESULT CAkaza::Initialize(void* pArg)
 		});
 
 
+
 	Ready_Animation();
 
 
@@ -94,7 +96,7 @@ HRESULT CAkaza::Initialize(void* pArg)
 
 			if (i == 0)
 			{
-				pBoneRHand =m_pModelCom->Get_Bone("L_Hand_1");
+				pBoneRHand = m_pModelCom->Get_Bone("L_Hand_1");
 			}
 			else if (i == 1)
 			{
@@ -119,7 +121,11 @@ HRESULT CAkaza::Initialize(void* pArg)
 
 	m_iShaderPass = 3;
 
-	m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
+	if (m_pNavigationCom)
+	{
+		m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
+	}
+
 	return S_OK;
 }
 
@@ -200,6 +206,10 @@ HRESULT CAkaza::Render()
 void CAkaza::TakeDamage(_float fDamage)
 {
 	__super::TakeDamage(fDamage);
+	if(!m_bAirborne&&!m_bIsBound)
+	{
+		ChangeState(new StateHurt());
+	}
 	auto pBar = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("RightLifeBar"));
 	if (pBar)
 	{
@@ -207,6 +217,108 @@ void CAkaza::TakeDamage(_float fDamage)
 		pRightBar->ApplyDamage(fDamage);
 	}
 }
+
+void CAkaza::OnAttackHit(CGameObject* pTarget)
+{
+	if (pTarget)
+	{
+		switch (m_eState)
+		{
+		case CSTATE::ATTACK:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				pCharacter->TakeDamage(3.f);
+				auto pState = pCharacter->GetState();
+				if (pCharacter->IsAirborne())
+				{
+					pCharacter->LaunchAirborne(40.f);
+					pCharacter->PushBack(this);
+				}
+			}
+			break;
+		case CSTATE::ATTACK2:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				pCharacter->TakeDamage(5.f);
+				if (pCharacter->IsAirborne())
+				{
+					pCharacter->LaunchAirborne(40.f);
+					pCharacter->PushBack(this);
+				}
+			}
+			break;
+		case CSTATE::ATTACK3:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				pCharacter->TakeDamage(8.f);
+				if (pCharacter->IsAirborne())
+				{
+					pCharacter->LaunchAirborne(40.f);
+					pCharacter->PushBack(this);
+				}
+			}
+			break;
+		case CSTATE::ATTACK4:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				pCharacter->TakeDamage(5.f);
+				if (pCharacter->IsAirborne())
+				{
+					pCharacter->LaunchAirborne(40.f);
+					pCharacter->PushBack(this);
+				}
+			}
+			break;
+		case CSTATE::ATTACK_DOWN:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				pCharacter->TakeDamage(30.f);
+			}
+			break;
+		case CSTATE::ATTACK_UP:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				pCharacter->TakeDamage(30.f);
+			}
+			break;
+		case CSTATE::SKILL:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+			}
+			break;
+		case CSTATE::SKILL1:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				// 바운드가 아닐 때 히트 판정을 낼 수 있음
+				if (pCharacter->GetState() != CBaseCharacter::CSTATE::BOUND)
+				{
+					pCharacter->TakeDamage(3.f);
+				}
+			}
+			break;
+		case CSTATE::SKILL2:
+			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			{
+				pCharacter->TakeDamage(50.f);
+			}
+			break;
+		}
+	}
+}
+
+void CAkaza::OnCollisionEnter(CCollider* other)
+{
+	CBaseCharacter::OnCollisionEnter(other);
+
+	if (other->GetType() == ColliderType::RANGE)
+	{
+		if (auto pAttacker = dynamic_cast<CBaseCharacter*>(other->GetOwner()))
+		{
+			pAttacker->OnAttackHit(this);
+		}
+	}
+}
+
 
 HRESULT CAkaza::Ready_Components()
 {
@@ -224,6 +336,13 @@ HRESULT CAkaza::Ready_Components()
 	//	TEXT("Com_Animator"), reinterpret_cast<CComponent**>(&m_pAnimatorCom), m_pModelCom)))
 	//	return E_FAIL;
 
+
+	//if (m_pGameInstance->Get_CurrentLevelIndex() == 3)
+	//{
+
+
+
+	//}
 	/* For.Com_Navigation */
 	CNavigation::NAVIGATION_DESC		NaviDesc{};
 	NaviDesc.iIndex = 1;
@@ -231,8 +350,6 @@ HRESULT CAkaza::Ready_Components()
 	if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
-
-
 	return S_OK;
 }
 
@@ -338,6 +455,26 @@ void CAkaza::Ready_Animation()
 	animHurtAirborne->SetLoop(false);
 	size_t hurtAirborneIdx = ctrl->AddState("Hurt_Airborne", animHurtAirborne, m_pModelCom->GetAnimationMap()[animHurtAirborne->Get_Name()]);
 
+
+	// A_P0000_V00_C00_DmgFall01_0
+	vector<CAnimation*> fallClips;
+	for (_int i = 0; i < 3; i++)
+	{
+		auto name = "A_P0000_V00_C00_DmgFall01_" + to_string(i);
+		auto anim = m_pModelCom->GetAnimationClipByName(name.c_str());
+		anim->SetLoop(false);
+		fallClips.push_back(anim);
+	}
+
+	size_t fall0Idx = ctrl->AddState("Hurt_Fall0", fallClips[0], m_pModelCom->GetAnimationMap()[fallClips[0]->Get_Name()]);
+	size_t fall1Idx = ctrl->AddState("Hurt_Fall1", fallClips[1], m_pModelCom->GetAnimationMap()[fallClips[1]->Get_Name()]);
+	size_t fall2Idx = ctrl->AddState("Hurt_Fall2", fallClips[2], m_pModelCom->GetAnimationMap()[fallClips[2]->Get_Name()]);
+
+
+	// 바운드 애니메이션 A_P0000_V00_C00_DmgBound01_0
+	CAnimation* animBound = m_pModelCom->GetAnimationClipByName("A_P0000_V00_C00_DmgBound01_0");
+	animBound->SetLoop(false);
+	size_t boundIdx = ctrl->AddState("Hurt_Bound", animBound, m_pModelCom->GetAnimationMap()[animBound->Get_Name()]);
 
 
 	// A_P1012_V00_C90_BaseGuard01_0
@@ -468,6 +605,8 @@ void CAkaza::Ready_Animation()
 	m_pAnimatorCom->AddBool("Stepping"); // 스텝 중인지 여부
 	m_pAnimatorCom->AddBool("Hurted");
 	m_pAnimatorCom->AddTrigger("HurtAir");
+	m_pAnimatorCom->AddTrigger("HurtBound");
+	m_pAnimatorCom->AddTrigger("HurtBlow");
 
 
 	// 추적 대시 A_P1012_V00_C90_AtkSkl01
@@ -725,6 +864,7 @@ void CAkaza::Ready_Animation()
 	ctrl->AddTransition(runIdx, hurtFIdx, cHurt, 0.1f);
 	ctrl->AddTransition(runEndIdx, hurtFIdx, cHurt, 0.1f);
 	ctrl->AddTransition(idleIdx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(hurtFIdx, hurtFIdx, cHurt, 0.3f);
 
 	ctrl->AddTransition(attack0Idx, hurtFIdx, cHurt, 0.1f);
 	ctrl->AddTransition(attack1Idx, hurtFIdx, cHurt, 0.1f);
@@ -740,6 +880,8 @@ void CAkaza::Ready_Animation()
 	ctrl->AddTransition(runIdx, hurtAirborneIdx, cHurtAir, 0.1f);
 	ctrl->AddTransition(runEndIdx, hurtAirborneIdx, cHurtAir, 0.1f);
 	ctrl->AddTransition(idleIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(hurtAirborneIdx, hurtAirborneIdx, cHurtAir, 0.5f);
+
 
 	ctrl->AddTransition(attack0Idx, hurtAirborneIdx, cHurtAir, 0.1f);
 	ctrl->AddTransition(attack1Idx, hurtAirborneIdx, cHurtAir, 0.1f);
@@ -749,6 +891,55 @@ void CAkaza::Ready_Animation()
 	ctrl->AddTransition(attack5Idx, hurtAirborneIdx, cHurtAir, 0.1f);
 	ctrl->AddTransition(hurtAirborneIdx, idleIdx, cFin);
 	ctrl->AddTransition(hurtAirborneIdx, runIdx, cSpeedUp, 0.1f);
+
+	AniCon cHurtBound{ "HurtBound", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(runIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(runEndIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(idleIdx, boundIdx, cHurtBound, 0.1f);
+
+	ctrl->AddTransition(attack0Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack1Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack2Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack3Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack4Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack5Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(stepBackIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(stepFrontIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(stepLeftIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(stepRightIdx, boundIdx, cHurtBound, 0.1f);
+
+	// 공중에서 혹시나 공격받으면 공중 히트 애니메이션으로 전이
+	ctrl->AddTransition(boundIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(fall0Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(fall1Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(fall2Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+
+	ctrl->AddTransition(boundIdx, fall0Idx, cFin, 0.1f);
+	ctrl->AddTransition(fall0Idx, fall1Idx, cFin, 0.1f);
+	ctrl->AddTransition(fall1Idx, fall2Idx, cFin, 0.1f);
+
+	ctrl->AddTransition(fall2Idx, idleIdx, cFin);
+	ctrl->AddTransition(fall2Idx, runIdx, cSpeedUp, 0.1f);
+
+	// Blow 는 Fall 애니메이션
+
+	CAnimController::Condition cHurtBlow{ "HurtBlow", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(runIdx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(runEndIdx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(idleIdx, boundIdx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(hurtFIdx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(skill1Idx0, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(skill1EndIdx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(skillDefaultIdx, fall0Idx, cHurtBlow, 0.1f);
+
+	ctrl->AddTransition(attack0Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack1Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack2Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack3Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack4Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack5Idx, fall0Idx, cHurtBlow, 0.1f);
+
+
 
 }
 
@@ -986,7 +1177,9 @@ void CAkaza::HandleInput()
 		return;
 	}
 	// 4-4) 플레이어 ATTACK 상태
-	else if (playerState == CBaseCharacter::CSTATE::ATTACK)
+	else if (playerState == CBaseCharacter::CSTATE::ATTACK
+		|| playerState == CBaseCharacter::CSTATE::ATTACK2|| playerState == CBaseCharacter::CSTATE::ATTACK3
+		|| playerState == CBaseCharacter::CSTATE::ATTACK4)
 	{
 		// (1) 랜덤 확률로 가드하기
 		if (m_Distribution(m_RandGen) < 0.55f)
@@ -1035,7 +1228,7 @@ void CAkaza::HandleInput()
 			}
 			else
 			{
-				m_pInputBuffer->AddCommand({ ECommand::Skill0, m_fTotalTime });
+				m_pInputBuffer->AddCommand({ ECommand::Skill1, m_fTotalTime });
 				return;
 			}
 		}
@@ -1069,7 +1262,9 @@ void CAkaza::HandleInput()
 		return;
 	}
 	// 4-6) 플레이어 SKILL 상태
-	else if (playerState == CBaseCharacter::CSTATE::SKILL)
+	else if (playerState == CBaseCharacter::CSTATE::SKILL
+		|| playerState == CBaseCharacter::CSTATE::SKILL1
+		|| playerState == CBaseCharacter::CSTATE::SKILL2)
 	{
 		auto r = m_Distribution(m_RandGen);
 		if (r < 0.55f)

@@ -32,7 +32,7 @@ public:
 	}
 
 	void LaucnhTargetAirborne(class CBaseCharacter* pTarget, _float fForce = 10.f);
-
+	void ClearDamagedTargets() {	m_DamagedTargets.clear();	}
 private:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
@@ -46,6 +46,9 @@ private:
 private:
 	virtual HRESULT Ready_Components();
 	virtual HRESULT Bind_Shaders();
+
+private:
+	unordered_set<CGameObject*> m_DamagedTargets;
 
 public:
 	static CWeapon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

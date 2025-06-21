@@ -29,7 +29,7 @@ void StateJump::Enter(CBaseCharacter* pChar)
 		JUMP_SPEED,
 		XMVector3Equal(dir, XMVectorZero()) ? 0.f : m_direction.z * HORIZ_SPEED
 	};
-
+	pChar->SetVelocity(m_velocity);
 	pChar->SetState(CBaseCharacter::CSTATE::JUMP);
 }
 
@@ -58,23 +58,23 @@ void StateJump::Update(CBaseCharacter* pChar, const InputData& input, float fTim
 		m_velocity.y += GRAVITY * 0.7f * fTimeDelta;
 	}
 
-	// 3) 위치 갱신
-	XMVECTOR pos = pChar->GetTransform()->Get_State(STATE::POSITION);
-	pos += XMVectorSet(m_velocity.x * fTimeDelta,
-		m_velocity.y * fTimeDelta,
-		m_velocity.z * fTimeDelta, 0);
+	//// 3) 위치 갱신
+	//XMVECTOR pos = pChar->GetTransform()->Get_State(STATE::POSITION);
+	//pos += XMVectorSet(m_velocity.x * fTimeDelta,
+	//	m_velocity.y * fTimeDelta,
+	//	m_velocity.z * fTimeDelta, 0);
 
-	float newY = XMVectorGetY(pos);
-	if (newY <= GROUND_Y)
-	{
-		// 땅에 닿았으니 위치를 GROUND_Y에 고정
-		pos = XMVectorSetY(pos, GROUND_Y);
+	//float newY = XMVectorGetY(pos);
+	//if (newY <= GROUND_Y)
+	//{
+	//	// 땅에 닿았으니 위치를 GROUND_Y에 고정
+	//	pos = XMVectorSetY(pos, GROUND_Y);
 
-		// 수직 속도 초기화 (아래로 계속 누적되는 걸 방지)
-		m_velocity.y = 0.0f;
+	//	// 수직 속도 초기화 (아래로 계속 누적되는 걸 방지)
+	//	m_velocity.y = 0.0f;
 
-		pChar->SetIsJumping(false);
-		// 점프 상태 종료 플래그가 있으면 꺼줍니다.
+	//	pChar->SetIsJumping(false);
+	//	// 점프 상태 종료 플래그가 있으면 꺼줍니다.
 		_bool moving = gi->IsKeyDown(VK_UP) || gi->IsKeyDown(VK_DOWN) ||
 			gi->IsKeyDown(VK_LEFT) || gi->IsKeyDown(VK_RIGHT);
 		if (moving)
@@ -87,8 +87,7 @@ void StateJump::Update(CBaseCharacter* pChar, const InputData& input, float fTim
 			pChar->ChangeState(new StateIdle(TEXT("Idle")));
 			return;
 		}
-	}
-	pChar->GetTransform()->Set_State(STATE::POSITION, pos);
+	//pChar->GetTransform()->Set_State(STATE::POSITION, pos);
 	_vector dir = XMVectorZero();
 	if (gi->IsKeyDown(VK_UP))
 	{

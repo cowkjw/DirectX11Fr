@@ -11,7 +11,7 @@ void StateHurtAir::Enter(CBaseCharacter* pChar)
 	
 	pAnim->SetBool("Move", false);
 	pChar->DeactiveCollider();
-	pChar->SetState(CBaseCharacter::CSTATE::HURT);
+	pChar->SetState(CBaseCharacter::CSTATE::AIR);
 }
 
 void StateHurtAir::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)

@@ -5,6 +5,7 @@
 #include "GameInstance.h"
 #include "BaseCharacter.h"
 #include "AnimController.h"
+#include "WarningZoneDecal.h"
 
 BEGIN_NAMESPACE(Client)
 class BossState

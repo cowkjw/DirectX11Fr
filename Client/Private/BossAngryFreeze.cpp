@@ -1,5 +1,6 @@
 #include "BossAngryFreeze.h"
 #include "BossIdle.h"
+#include <EnmuArm.h>
 void BossAngryFreeze::Enter(CEnmuMeat* pChar)
 {
 	auto leftArm = pChar->GetPart(CEnmuMeat::Parts::LEFTARM);
@@ -10,8 +11,8 @@ void BossAngryFreeze::Enter(CEnmuMeat* pChar)
 	pAnimatorRight->SetTrigger("AngryFreeze");
 
 	pChar->SetState(EnmuState::ANGRYFREEZEATTACK);
-	leftArm->GetTransform()->Rotate_EulerAngles(_float3(0.0f, 90.f, 0.f)); // ¿ÞÆÈ È¸Àü
-	rightArm->GetTransform()->Rotate_EulerAngles(_float3(0.0f, -90.f, 0.f)); // ¿À¸¥ÆÈ È¸Àü
+	leftArm->GetTransform()->Rotate_EulerAngles(_float3(0.0f, 90.f+180.f, 0.f)); // ¿ÞÆÈ È¸Àü
+	rightArm->GetTransform()->Rotate_EulerAngles(_float3(0.0f, -90.f + 180.f, 0.f)); // ¿À¸¥ÆÈ È¸Àü
 }
 
 void BossAngryFreeze::Update(CEnmuMeat* pChar, _float fTimeDelta)
@@ -29,7 +30,15 @@ void BossAngryFreeze::Update(CEnmuMeat* pChar, _float fTimeDelta)
 
 void BossAngryFreeze::Exit(CEnmuMeat* pChar)
 {
-	pChar->GetPart(CEnmuMeat::Parts::LEFTARM)->GetTransform()->Rotate_EulerAngles(_float3(0.0f, -90.f, 0.f)); // ¿ÞÆÈ ¿ø·¡´ë·Î
-	pChar->GetPart(CEnmuMeat::Parts::RIGHTARM)->GetTransform()->Rotate_EulerAngles(_float3(0.0f, 90.f, 0.f)); // ¿À¸¥ÆÈ ¿ø·¡´ë·Î
+	auto leftArm = dynamic_cast<CEnmuArm*>(pChar->GetPart(CEnmuMeat::Parts::LEFTARM));
+	auto rightArm = dynamic_cast<CEnmuArm*>(pChar->GetPart(CEnmuMeat::Parts::RIGHTARM));
+	if (leftArm)
+	{
+		leftArm->StartRotateY(0.5f, 180.f);
+	}
+	if (rightArm)
+	{
+		rightArm->StartRotateY(0.5f, 180.f);
+	}
 
 }

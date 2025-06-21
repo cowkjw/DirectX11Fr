@@ -17,6 +17,7 @@
 #include "EnmuMeat.h"
 #include "Navigation.h"
 #include "EnmuTentacle.h"
+#include "WarningZoneDecal.h"
 
 //#include "player.h"
 //#include "Effect.h"
@@ -451,6 +452,9 @@ HRESULT CLoader::Loading_For_Editor()
 	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Navigation"),
 	//	CNavigation::Create(m_pDevice, m_pContext, nullptr))))
 	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_WarningZone"),
+		CWarningZoneDecal::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 
 	m_isFinished = true;
@@ -585,6 +589,10 @@ HRESULT CLoader::Loading_For_EnmuBoss()
 	/* Prototype_Component_Navigation */
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Navigation"),
 		CNavigation::Create(m_pDevice, m_pContext, TEXT("../Asset/NavMesh/NavMeshEnmuBoss2.dat")))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_WarningZone"),
+		CWarningZoneDecal::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

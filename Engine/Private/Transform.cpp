@@ -264,6 +264,7 @@ void CTransform::RotateToDirection(_fvector dir)
 	Set_State(STATE::UP, newUp);
 	Set_State(STATE::LOOK, newLook);
 
+	UpdateEulerAngles();
 	m_bDirty = true;
 }
 
@@ -271,15 +272,21 @@ void CTransform::FollowParent(CTransform* pParentTransform)
 {
 	if (!pParentTransform) return;
 
- // 1) 부모 월드
-	_float4x4  parentW = pParentTransform->Get_WorldMatrix();
-	XMMATRIX parentWMat = XMLoadFloat4x4(&parentW);
-	// 2) 내 월드
-	XMMATRIX myWorld = Get_WorldMatrix_Inverse();
-	// 3) 월드 = local × 부모월드
-	XMMATRIX worldM = XMMatrixMultiply(myWorld, parentWMat);
+	// 1) 부모의 월드 매트릭스
+	_float4x4 parentWorld = pParentTransform->Get_WorldMatrix();
+	XMMATRIX parentWorldMatrix = XMLoadFloat4x4(&parentWorld);
+
+	// 2) 자식의 로컬 매트릭스 (보통 Identity이거나 초기 상태)
+	// 만약 로컬 매트릭스가 따로 없다면 현재 월드 매트릭스를 로컬로 사용
+	XMMATRIX childLocalMatrix = XMLoadFloat4x4(&m_WorldMatrix);
+
+	// 3) 새로운 월드 매트릭스 = 로컬 × 부모월드
+	XMMATRIX newWorldMatrix = XMMatrixMultiply(childLocalMatrix, parentWorldMatrix);
+
 	// 4) 결과 저장
-	XMStoreFloat4x4(&m_WorldMatrix, worldM);
+	XMStoreFloat4x4(&m_WorldMatrix, newWorldMatrix);
+
+	m_bDirty = true;
 }
 
 json CTransform::Serialize()

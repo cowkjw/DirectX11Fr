@@ -33,7 +33,7 @@ void StateIdle::Update(CBaseCharacter* pChar, const InputData& input, float fTim
     // มกวม
     if (input.doJump) 
     {
-        buf->PopCommand(ECommand::Jump,.1);
+        buf->PopCommand(ECommand::Jump,1);
         pChar->ChangeState(new StateJump(TEXT("Jump")));
         return;
     }

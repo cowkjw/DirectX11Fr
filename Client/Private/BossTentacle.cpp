@@ -31,11 +31,10 @@ void BossTentacle::Update(CEnmuMeat* pChar, _float fTimeDelta)
 	{
 		_vector vTargetPos = pChar->GetTarget()->GetTransform()->Get_State(STATE::POSITION);
 		_float y = XMVectorGetY(vTargetPos);
-		y = 0.f; // y축은 0으로 고정 (지면에 촉수 소환)
 		vTargetPos = XMVectorSet(XMVectorGetX(vTargetPos), 0.f, XMVectorGetZ(vTargetPos), 1.f); // y축을 0으로 설정
 		_vector vMyPos = pChar->GetPart(CEnmuMeat::Parts::BODY)->GetTransform()->Get_State(STATE::POSITION);
-		y = XMVectorGetY(vMyPos);
-		vMyPos = XMVectorSet(XMVectorGetX(vMyPos), 0.f, XMVectorGetZ(vMyPos), 1.f); // y축을 0으로 설정
+		y = -18.f; // 
+		vMyPos = XMVectorSet(XMVectorGetX(vMyPos), y, XMVectorGetZ(vMyPos), 1.f); // y축을 0으로 설정
 		_vector vDir = XMVector3Normalize(vTargetPos - vMyPos);
 
 		if (m_fNextAttackTime <= m_fAttackTimeElapsed) // 다음 공격 쿨타임 지났으면

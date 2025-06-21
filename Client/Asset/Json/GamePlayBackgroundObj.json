@@ -97,25 +97,6 @@
         "ProtoLevel": 3,
         "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
         "components": {
-            "Com_Collider0": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "Prototype_Component_BoxCollider",
-                "HalfExtents": [
-                    146.88,
-                    27.10,
-                    14.80
-                ],
-                "IsActive": true,
-                "IsTrigger": false,
-                "Offset": [
-                    0.0,
-                    37.59,
-                    -196.38
-                ],
-                "Priority": 9,
-                "Type": "BoxCollider"
-            },
             "Com_Model": {
                 "ComponentCreateLevel": 0,
                 "ComponentLevel": 0,

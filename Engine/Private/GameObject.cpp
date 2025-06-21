@@ -118,16 +118,17 @@ void CGameObject::Update(_float fTimeDelta)
 
 void CGameObject::Late_Update(_float fTimeDelta)
 {
-	/*if (m_pTransformCom && m_pTransformCom->IsDirty())
+	if (m_pTransformCom && m_pTransformCom->IsDirty())
 	{
 		for (auto& child : m_vecChildren)
 		{
 			if (child && child->IsActive())
+			{
 				child->GetTransform()->FollowParent(m_pTransformCom);
-
+			}
 		}
 		m_pTransformCom->SetDirty(false);
-	}*/
+	}
 }
 
 void CGameObject::AddChild(CGameObject* pGameObject)

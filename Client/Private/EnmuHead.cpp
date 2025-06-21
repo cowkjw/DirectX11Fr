@@ -27,7 +27,8 @@ HRESULT CEnmuHead::Initialize(void* pArg)
 
 	Ready_Animation();
 
-
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f,-18.f,-10.f,1.f));
+	m_pTransformCom->Scaling(_float3(0.1f, 0.1f, 0.1f));
     return S_OK;
 }
 
@@ -125,7 +126,7 @@ void CEnmuHead::Ready_Collider()
 	//
 	CBodyColliderParts::BODYCOLLIDERPARTS_DESC desc{};
 	desc.vColliderOffsets.push_back(_float3(0.f, 0.f, 0.f));
-	desc.fRadius = 5.f;
+	desc.fRadius = 20.f;
 	
 		m_pBodyCollider = CBodyColliderParts::Create(m_pDevice, m_pContext);
 		m_pBodyCollider->Set_BoneSocket(m_pModelCom->Get_Bone("C_Head_1"));

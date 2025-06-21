@@ -31,7 +31,7 @@ void StateGuard::Update(CBaseCharacter* pChar, const InputData& input, float fTi
 
 	if (input.doSkill2)
 	{
-		buf->PopCommand(ECommand::Skill2, 1);
+		//buf->PopCommand(ECommand::Skill2, 1);
 		pChar->ChangeState(new StateSkill2(TEXT("Skill2")));
 		return;
 	}

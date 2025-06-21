@@ -2,6 +2,8 @@
 #include "StateIdle.h"
 #include "StateMove.h"
 
+
+// 이동하면서 스킬
 void StateSkill1::Enter(CBaseCharacter* pChar)
 {
 	auto pAnim = pChar->Get_Animator();
@@ -9,7 +11,7 @@ void StateSkill1::Enter(CBaseCharacter* pChar)
 	pAnim->SetTrigger("Skill1");
 	pAnim->SetBool("Move", false);
 	pAnim->SetBool("Jump", false);
-	pChar->SetState(CBaseCharacter::CSTATE::SKILL);
+	pChar->SetState(CBaseCharacter::CSTATE::SKILL1);
 }
 
 
@@ -29,7 +31,7 @@ void StateSkill1::Update(CBaseCharacter* pChar, const InputData& input, float fT
 		pChar->GetTransform()->Go_Straight(fTimeDelta, pChar->GetNavigation());
 	}
 
-	if (anim->GetCurrentAnimProgress() >= 1.f)
+	if (anim->CheckBool("Attacking") == false)
 	{
 		_bool moving = !XMVector3Equal(input.moveDir, XMVectorZero());
 		pChar->GetInputBuffer()->ClearBuffer();
@@ -47,6 +49,4 @@ void StateSkill1::Update(CBaseCharacter* pChar, const InputData& input, float fT
 
 void StateSkill1::Exit(CBaseCharacter* pChar)
 {
-	auto pAnim = pChar->Get_Animator();
-	pAnim->SetBool("Attacking", false);
 }

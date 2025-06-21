@@ -4,6 +4,7 @@
 #include "Bone.h"
 #include "Model.h"
 #include <JsonLoader.h>
+#include <BaseCharacter.h>
 
 
 
@@ -50,13 +51,13 @@ HRESULT CEnmuArm::Initialize(void* pArg)
 	if (m_bIsLeftArm)
 	{	// -21,0.0,0.0
 	//	_float4 vPos = { -20.f,0.f,0.f,1.f };
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(70.f, 0.f, 0.f, 1.f));
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(70.f, -10.f, 30.f, 1.f));
 
 	}
 	else
 	{
 		// 21.68,0.0,0.0
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-70.f, 0.f, 0.f, 1.f));
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-70.f, -10.f, 30.f, 1.f));
 	}
 
 
@@ -77,6 +78,28 @@ void CEnmuArm::Update(_float fTimeDelta)
 	for (auto& child : m_vecChildren)
 	{
 		child->Update(fTimeDelta);
+	}
+	if (m_bRotating)
+	{
+		// 1) 타이머 증가
+		m_fRotateTimer += fTimeDelta;
+		_float t = m_fRotateTimer / m_fRotateDur;
+		if (t >= 1.f)
+		{
+			t = 1.f;
+			m_bRotating = false;
+		}
+
+		// 2) LERP 로 Y각 계산
+		_float newYaw = m_fStartYaw + (m_fTargetYaw - m_fStartYaw) * t;
+
+		// 3) 현재 X,Z 각은 그대로, Y만 교체
+		_float3 vRot = m_pTransformCom->Get_EulerAngles();
+		vRot.y = newYaw;
+		m_pTransformCom->Rotate_EulerAngles(vRot);
+
+		// 보간 중에는 나머지 로직 스킵
+		return;
 	}
 }
 
@@ -122,7 +145,7 @@ HRESULT CEnmuArm::Ready_Components()
 		});
 
 	m_pAnimatorCom->RegisterEventListener("StrecthRadius", [&](const string&) {
-		SetCollisionRadius(60.f);
+		SetCollisionRadius(35.f);
 		});
 
 	m_pAnimatorCom->RegisterEventListener("ResetRadius", [&](const string&) {
@@ -600,7 +623,7 @@ void CEnmuArm::Ready_Collider()
 {
 	CBodyColliderParts::BODYCOLLIDERPARTS_DESC desc{};
 	desc.vColliderOffsets.push_back(_float3(0.f, 0.f, 0.f));
-	desc.fRadius = 15.f;
+	desc.fRadius = 30.f;
 	if (m_bIsLeftArm)
 	{
 		m_pBodyColliderCom = CBodyColliderParts::Create(m_pDevice, m_pContext);
@@ -634,6 +657,19 @@ void CEnmuArm::DeactiveCollider()
 void CEnmuArm::SetCollisionRadius(_float fRadius)
 {
 	m_pBodyColliderCom->Set_Radius(0,fRadius);
+}
+
+void CEnmuArm::StartRotateY(_float duration, _float targetYawDeg)
+{
+	auto v = m_pTransformCom->Get_EulerAngles();
+	m_fStartYaw = v.y;                    // 현재 Y값 저장
+	m_fTargetYaw = targetYawDeg;           // 목표 Y값 세팅
+	m_fRotateDur = duration;
+	m_fRotateTimer = 0.f;
+
+	if (m_fStartYaw == m_fTargetYaw) // 현재 Y값과 목표 Y값이 같으면 회전하지 않음
+		return;
+	m_bRotating = true;
 }
 
 CEnmuArm* CEnmuArm::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

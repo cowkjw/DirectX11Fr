@@ -2,14 +2,17 @@
 #include "StateIdle.h"
 #include "StateMove.h"
 
+
+// 가드 스킬
 void StateSkill2::Enter(CBaseCharacter* pChar)
 {
 	auto pAnim = pChar->Get_Animator();
 	pAnim->SetBool("Attacking", true);
 	pAnim->SetTrigger("Skill2");
 	pAnim->SetBool("Move", false);
-	pAnim->SetBool("Jump", false);
-	pChar->SetState(CBaseCharacter::CSTATE::SKILL);
+	pAnim->SetBool("Guard", true);
+
+	pChar->SetState(CBaseCharacter::CSTATE::SKILL2);
 }
 
 
@@ -24,8 +27,8 @@ void StateSkill2::Update(CBaseCharacter* pChar, const InputData& input, float fT
 
     _float progress = anim->GetCurrentAnimProgress();
 
-    if (progress >= 1.f)
-    {
+	if (anim->CheckBool("Attacking") == false)
+	{
 		_bool bMoving = !XMVector3Equal(input.moveDir, XMVectorZero());
 		if (bMoving)
 		{

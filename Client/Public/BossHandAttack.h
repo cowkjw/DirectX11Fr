@@ -19,6 +19,7 @@ private:
 	const _float LEFTARM_START_TIME = 3.5f; // 왼팔 공격 시작 시간
 	const _float RIGHTARM_START_TIME = 2.5f; // 오른팔 공격 시작 시간
 	const _float ATTACK_END_TIME = 5.f;
+	array<CGameObject*, 2> m_pWarnings;
 };
 END_NAMESPACE
 

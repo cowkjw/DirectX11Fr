@@ -24,7 +24,7 @@ void StateSkill0::Update(CBaseCharacter* pChar, const InputData& input, float fT
 	{
 		pChar->GetTransform()->LookAtXZ(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
 	}
-	if (stateName == "skill0" && anim->GetCurrentAnimProgress() >= 1.f)
+	if (anim->CheckBool("Attacking") == false)
 	{
 		_bool moving = gi->IsKeyDown(VK_UP) || gi->IsKeyDown(VK_DOWN) ||
 			gi->IsKeyDown(VK_LEFT) || gi->IsKeyDown(VK_RIGHT);

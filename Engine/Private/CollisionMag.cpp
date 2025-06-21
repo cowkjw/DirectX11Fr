@@ -7,88 +7,6 @@
 
 void CCollisionMag::Update(_float fTimeDelta)
 {
-	//if (m_vColliders.empty()) return; // 충돌체가 없으면 업데이트하지 않음
-	//for (auto& collider : m_vColliders)
- //   {
-	//	collider->Update();
-	//}
-
- //   set<pair<CCollider*, CCollider*>> curr;
- //   for (size_t i = 0; i < m_vColliders.size(); ++i)
- //   {
- //       for (size_t j = i + 1; j < m_vColliders.size(); ++j) 
- //       {
-	//		auto A = m_vColliders[i], B = m_vColliders[j]; // A, B 순서대로 비교
-
- //           if (!A->IsActive() || !B->IsActive()) continue;
-
-	//		if (m_vColliders[i]->GetOwner() == m_vColliders[j]->GetOwner()
- //               || m_vColliders[i]->GetOwner()->GetParent()==m_vColliders[j]->GetOwner()
- //               || m_vColliders[j]->GetOwner()->GetParent() == m_vColliders[i]->GetOwner()) // 같은 오브젝트는 비교하지 않음
-	//			continue;
- //           if (A->Intersects(B))
- //           {
-	//			curr.insert({ A,B }); // 현재 충돌 상태를 저장
- //               CCollider* pusher = A;
- //               CCollider* pushed = B;
- //               if (!m_vCollisions.count({ A,B })) // 처음이면 
- //               {
- //                   A->NotifyEnter(B);
- //                   B->NotifyEnter(A);
- //                   A->SetCollision(true); // 충돌 상태 설정
- //                   B->SetCollision(true);
-
- //                   if (A->GetPriority() > B->GetPriority())
- //                   {
- //                       pusher = A;
- //                       pushed = B;
- //                   }
- //                   else if (B->GetPriority() > A->GetPriority())
- //                   {
- //                       pusher = B;
- //                       pushed = A;
- //                   }
-
- //                   if (pusher->GetType() == CCollider::ColliderType::HITBOX
- //                       || pushed->GetType() == CCollider::ColliderType::HITBOX)
- //                       continue;
-	//				ResolvePenetrationXZ(pusher, pushed); // 충돌 해소
- //               }
-	//			else // 이미 충돌 중이면
- //               {
- //                   A->NotifyStay(B, fTimeDelta);
- //                   B->NotifyStay(A, fTimeDelta);
- //                   A->SetCollision(true); // 충돌 상태 설정
- //                   B->SetCollision(true);
- //                   if (A->GetPriority() > B->GetPriority())
- //                   {
- //                       pusher = A;
- //                       pushed = B;
- //                   }
- //                   else if (B->GetPriority() > A->GetPriority())
- //                   {
- //                       pusher = B;
- //                       pushed = A;
-	//				}
- //                   if (pusher->GetType() == CCollider::ColliderType::HITBOX
- //                       || pushed->GetType() == CCollider::ColliderType::HITBOX)
- //                       continue;
- //                   ResolvePenetrationXZ(pusher, pushed); // 충돌 해소
- //               }
- //           }
- //       }
- //   }
- //   for (auto& p : m_vCollisions) 
- //   {
-	//	if (!curr.count(p)) // 현재 충돌 상태에 없으면
- //       {
- //           p.first->NotifyExit(p.second);
- //           p.second->NotifyExit(p.first);
- //           p.first->SetCollision(false); // 충돌 상태 설정
- //           p.second->SetCollision(false);
- //       }
- //   }
-	//m_vCollisions = move(curr); // 현재 충돌 상태로 업데이트
 
     if (m_vColliders.empty())
         return;
@@ -171,7 +89,8 @@ void CCollisionMag::Update(_float fTimeDelta)
                 }
 
                 if (pusher->GetType() != ColliderType::HITBOX
-                    && pushed->GetType() != ColliderType::HITBOX)
+                    && pushed->GetType() != ColliderType::HITBOX && pusher->GetType() != ColliderType::RANGE &&
+                    pushed->GetType() != ColliderType::RANGE)
                 {
                     ResolvePenetrationXZ(pusher, pushed);
                 }
@@ -198,7 +117,9 @@ void CCollisionMag::Update(_float fTimeDelta)
                 }
 
                 if (pusher->GetType() != ColliderType::HITBOX
-                    && pushed->GetType() != ColliderType::HITBOX)
+                    && pushed->GetType() != ColliderType::HITBOX
+                   && pusher->GetType()!=ColliderType::RANGE&&
+                    pushed->GetType()!=ColliderType::RANGE)
                 {
                     ResolvePenetrationXZ(pusher, pushed);
                 }

@@ -14,11 +14,10 @@ public:
 	void Enter(CEnmuMeat* pChar) override;
 	void Update(CEnmuMeat* pChar, _float fTimeDelta) override;
 	void Exit(CEnmuMeat* pChar) override;
-	
-private:
-	_matrix ComputeMatrix(CEnmuMeat* pChar,_bool bIsLeft);
 private:
 	_float m_fTimeElapsed{ 0.f };
+	_float m_fInitialLeftY;
+	_float m_fInitialRightY;
 	_bool m_bAttackedLeft = false; // ¿ÞÆÈ °ø°Ý ¿©ºÎ
 	_bool m_bAttackedRight = false; // ¿À¸¥ÆÈ °ø°Ý ¿©ºÎ
 	const _float LEFTARM_START_TIME = 3.5f; // ¿ÞÆÈ °ø°Ý ½ÃÀÛ ½Ã°£
@@ -26,6 +25,8 @@ private:
 	const _float ATTACK_END_TIME = 7.5f;
 	class CBone* m_pLeftArmBone{ nullptr };
 	class CBone* m_pRightArmBone{ nullptr };
+
+	CGameObject* m_pWarningZone{ nullptr };
 };
 END_NAMESPACE
 

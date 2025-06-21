@@ -35,6 +35,8 @@ public:
 	void SetComState(COM_STATE eComState) { m_eComState = eComState; }
 	COM_STATE GetComState() const { return m_eComState; }
 	virtual void TakeDamage(_float fDamage) override;
+	virtual void OnAttackHit(CGameObject* pTarget) override;
+	virtual void OnCollisionEnter(CCollider* other) override;
 private:
 	virtual HRESULT Ready_Components() override;
 	virtual void Ready_Animation() override;

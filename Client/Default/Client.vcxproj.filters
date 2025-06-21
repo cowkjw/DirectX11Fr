@@ -199,6 +199,12 @@
     <Filter Include="00.Levels\Enmu">
       <UniqueIdentifier>{4e40a775-33c2-4384-a033-5d731806f3a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.GameObject\Decal">
+      <UniqueIdentifier>{83a95800-dea7-423e-8432-f0077034ba51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Decal\Warining">
+      <UniqueIdentifier>{1656aafc-07dd-41e8-ba60-30291206bd41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -446,6 +452,21 @@
     </ClInclude>
     <ClInclude Include="..\Public\Level_Enmu.h">
       <Filter>00.Levels\Enmu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateBoundHurt.h">
+      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateHurtBlow.h">
+      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateHurtDown.h">
+      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Decal.h">
+      <Filter>01.GameObject\Decal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\WarningZoneDecal.h">
+      <Filter>01.GameObject\Decal\Warining</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -708,6 +729,21 @@
     <ClCompile Include="..\Private\Level_Enmu.cpp">
       <Filter>00.Levels\Enmu</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\StateBoundHurt.cpp">
+      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateHurtBlow.cpp">
+      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateHurtDown.cpp">
+      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Decal.cpp">
+      <Filter>01.GameObject\Decal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\WarningZoneDecal.cpp">
+      <Filter>01.GameObject\Decal\Warining</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTex.hlsl">
@@ -732,6 +768,9 @@
       <Filter>100.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Asset\ShaderFiles\Shader_UIMask.hlsl">
+      <Filter>100.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_DecalMask.hlsl">
       <Filter>100.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

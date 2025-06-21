@@ -15,12 +15,12 @@
             "duration": 20.0,
             "events": [
                 {
-                    "name": "EndHurt",
-                    "time": 19.09600067138672
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
                 },
                 {
-                    "name": "DeactiveHitbox",
-                    "time": 1.5429999828338623
+                    "name": "EndHurt",
+                    "time": 19.0
                 }
             ]
         },
@@ -49,12 +49,12 @@
             "duration": 18.0,
             "events": [
                 {
-                    "name": "EndHurt",
-                    "time": 16.50116729736328
-                },
-                {
                     "name": "DeactiveHitbox",
                     "time": 1.0
+                },
+                {
+                    "name": "EndHurt",
+                    "time": 17.5
                 }
             ]
         },
@@ -91,7 +91,12 @@
         {
             "clipName": "A_P0000_V00_C00_DmgBound01_0",
             "duration": 17.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.13600000739097595
+                }
+            ]
         },
         {
             "clipName": "A_P0000_V00_C00_DmgBound02_2",
@@ -101,17 +106,32 @@
         {
             "clipName": "A_P0000_V00_C00_DmgFall01_0",
             "duration": 10.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P0000_V00_C00_DmgFall01_1",
             "duration": 10.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                }
+            ]
         },
         {
             "clipName": "A_P0000_V00_C00_DmgFall01_2",
             "duration": 50.0,
-            "events": []
+            "events": [
+                {
+                    "name": "EndHurt",
+                    "time": 49.5
+                }
+            ]
         },
         {
             "clipName": "A_P0000_V00_C00_DmgGuardBrk01",
@@ -186,17 +206,52 @@
         {
             "clipName": "A_P0001_V00_C00_AtkCmbW01",
             "duration": 30.0,
-            "events": []
+            "events": [
+                {
+                    "name": "ActiveHitbox",
+                    "time": 5.000525951385498
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 16.501516342163086
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_AtkCmbW02",
             "duration": 32.0,
-            "events": []
+            "events": [
+                {
+                    "name": "ActiveHitbox",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 9.010000228881836
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 3.0
+                },
+                {
+                    "name": "ActiveHitbox",
+                    "time": 4.0
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_AtkCmbW03",
             "duration": 40.0,
-            "events": []
+            "events": [
+                {
+                    "name": "ActiveHitbox",
+                    "time": 11.668477058410645
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 27.086610794067383
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_AtkCmbW03D01",
@@ -208,15 +263,28 @@
             "duration": 44.0,
             "events": [
                 {
+                    "name": "ActiveHitbox",
+                    "time": 6.667160511016846
+                },
+                {
                     "name": "DeactiveHitbox",
-                    "time": 36.0
+                    "time": 14.668058395385742
                 }
             ]
         },
         {
             "clipName": "A_P0001_V00_C00_AtkCmbW04",
             "duration": 52.0,
-            "events": []
+            "events": [
+                {
+                    "name": "ActiveHitbox",
+                    "time": 7.000718593597412
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 18.50190544128418
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_AtkSkl01_0",
@@ -256,17 +324,52 @@
         {
             "clipName": "A_P0001_V00_C00_AtkSkl02_0",
             "duration": 10.0,
-            "events": []
+            "events": [
+                {
+                    "name": "ActiveHitbox",
+                    "time": 1.1729999780654907
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_AtkSkl02_1",
             "duration": 5.0,
-            "events": []
+            "events": [
+                {
+                    "name": "ActiveHitbox",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                },
+                {
+                    "name": "ActiveHitbox",
+                    "time": 2.000211000442505
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 3.0
+                },
+                {
+                    "name": "ActiveHitbox",
+                    "time": 4.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 5.0
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_AtkSkl02_2",
             "duration": 36.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 2.0299999713897705
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_AtkSkl03A_0",
@@ -411,17 +514,32 @@
         {
             "clipName": "A_P0001_V00_C00_BaseGuard01_0",
             "duration": 2.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0689999982714653
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_BaseGuard01_1",
             "duration": 44.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.8209999799728394
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_BaseGuard01_2",
             "duration": 11.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.7630000114440918
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_BaseGuard01_Advancing",
@@ -465,6 +583,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
                 }
             ]
         },
@@ -486,17 +608,32 @@
         {
             "clipName": "A_P0001_V00_C00_BaseRun01_0",
             "duration": 6.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_BaseRun01_1",
             "duration": 24.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.7680000066757202
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_BaseRun01_2",
             "duration": 15.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.3200000524520874
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_BaseStepAB01",
@@ -521,27 +658,52 @@
         {
             "clipName": "A_P0001_V00_C00_BaseStepB01",
             "duration": 20.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_BaseStepF01",
             "duration": 17.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_BaseStepL01",
             "duration": 20.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_BaseStepL02",
             "duration": 30.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_BaseStepR01",
             "duration": 20.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_BaseStepR02",

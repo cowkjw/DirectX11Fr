@@ -18,14 +18,16 @@ public:
 	virtual HRESULT Render() override;
 
 	virtual void TakeDamage(_float fDamage) override;
+	virtual void OnAttackHit(CGameObject* pTarget) override;
+	virtual void OnCollisionEnter(CCollider* other) override;
 
 
 private:
 	virtual HRESULT Ready_Components() override;
+	void ReadyAnimEvents();
 	virtual void Ready_Animation() override;
 	void ActiveCollider();
 	void DeactiveCollider();
-	void BoundingTarget();
 
 
 private:

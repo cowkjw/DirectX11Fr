@@ -1,6 +1,7 @@
 #include "Weapon.h"
 #include "GameInstance.h"
 #include <BaseCharacter.h>
+#include <EnmuParts.h>
 
 CWeapon::CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -38,17 +39,17 @@ HRESULT CWeapon::Initialize(void* pArg)
 
 	m_pTransformCom->Scaling(_float3(0.1f, 0.1f, 0.1f));
 
-	Add_Component(TEXT("Com_Collider"), CSphereCollider::Create(m_pDevice, m_pContext,1.5f), reinterpret_cast<CComponent**>(&m_pColliderCom));
+	Add_Component(TEXT("Com_Collider"), CSphereCollider::Create(m_pDevice, m_pContext,2.f), reinterpret_cast<CComponent**>(&m_pColliderCom));
 	m_pColliderCom->SetOffset(_float3(-3.3f, 12.5f, 24.3f)); // z는 앞으로 하면서 y값 올려야함
 	m_pColliderCom->Initialize(nullptr);
 	m_pColliderCom->SetListener(this);
 
-	Add_Component(TEXT("Com_Collider1"), CSphereCollider::Create(m_pDevice, m_pContext, 1.5f), reinterpret_cast<CComponent**>(&m_pColliderCom1));
+	Add_Component(TEXT("Com_Collider1"), CSphereCollider::Create(m_pDevice, m_pContext, 2.f), reinterpret_cast<CComponent**>(&m_pColliderCom1));
 	m_pColliderCom1->SetOffset(_float3(-5.6f, 21.2f, 49.6f)); // z는 앞으로 하면서 y값 올려야함
 	m_pColliderCom1->Initialize(nullptr);
 	m_pColliderCom1->SetListener(this);
 
-	Add_Component(TEXT("Com_Collider2"), CSphereCollider::Create(m_pDevice, m_pContext, 1.5f), reinterpret_cast<CComponent**>(&m_pColliderCom2));
+	Add_Component(TEXT("Com_Collider2"), CSphereCollider::Create(m_pDevice, m_pContext, 2.f), reinterpret_cast<CComponent**>(&m_pColliderCom2));
 	m_pColliderCom2->SetOffset(_float3(-9.3f, 29.9f,72.9f)); // z는 앞으로 하면서 y값 올려야함
 	m_pColliderCom2->Initialize(nullptr);
 	m_pColliderCom2->SetListener(this);
@@ -246,15 +247,42 @@ void CWeapon::Free()
 
 void CWeapon::OnCollisionEnter(CCollider* other)
 {
-	if (!m_bFirstCollision) return;
-	m_bFirstCollision = false;
+	if (auto pTarget = dynamic_cast<CBaseCharacter*>(other->GetOwner()))
+	{
+		if (m_DamagedTargets.find(pTarget) != m_DamagedTargets.end())
+			return; // 이미 데미지를 입힌 대상이면 무시
+		m_DamagedTargets.insert(pTarget); // 데미지를 입힌 대상에 추가
+
+		if (auto pChar = dynamic_cast<CBaseCharacter*>(m_pParent))
+		{
+			if (pTarget->GetState() != CBaseCharacter::CSTATE::DIE)
+			{
+				pChar->OnAttackHit(pTarget);
+			}
+		}
+	}
+	// 때린게 엔무 파츠면
+	else if (auto pBossParts = dynamic_cast<CEnmuParts*>(other->GetOwner()))
+	{
+		if (m_DamagedTargets.find(pBossParts) != m_DamagedTargets.end())
+			return; // 이미 데미지를 입힌 대상이면 무시
+		m_DamagedTargets.insert(pBossParts); // 데미지를 입힌 대상에 추가
+		if (auto pBoss = static_cast<CEnmuMeat*>(pBossParts->GetParent()))
+		{
+			if (auto pChar = dynamic_cast<CBaseCharacter*>(m_pParent))
+			{
+				pChar->OnAttackHit(pBoss);
+			}
+		}
+	}
 }
 
 void CWeapon::OnCollisionStay(CCollider* other, float fTimeDelta)
 {
+
 }
 
 void CWeapon::OnCollisionExit(CCollider* other)
 {
-	m_bFirstCollision = false;
+
 }

@@ -1,6 +1,7 @@
 #include "BodyColliderParts.h"
 #include <BaseCharacter.h>
 #include "GameInstance.h"
+#include <EnmuParts.h>
 
 CBodyColliderParts::CBodyColliderParts(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -33,7 +34,7 @@ HRESULT CBodyColliderParts::Initialize(void* pArg)
 	{
 		BODYCOLLIDERPARTS_DESC* pDesc = reinterpret_cast<BODYCOLLIDERPARTS_DESC*>(pArg);
 		auto vecOffsets =  pDesc->vColliderOffsets;
-
+		m_eDefaultType = pDesc->eDefaultType;
 		m_pColliderComs.reserve(vecOffsets.size());
 
 		for (size_t i = 0;i<vecOffsets.size();i++)
@@ -166,11 +167,20 @@ void CBodyColliderParts::OnDisable()
 {
 	if (m_pColliderComs.empty())
 		return;
+	_bool bIsHitBox = false;
 	for (auto& pCollider : m_pColliderComs)
 	{
 		pCollider->SetActive(false); // 초기에는 비활성화
 		pCollider->SetDrawDebug(false);
+
+		if (pCollider->GetType() == ColliderType::HITBOX)
+		{
+			bIsHitBox = true;
+		}
 	}
+
+	if(bIsHitBox)
+		 m_DamagedTargets.clear();
 }
 
 void CBodyColliderParts::Set_Radius(_uint iIndex, _float fRadius)
@@ -223,6 +233,28 @@ void CBodyColliderParts::Free()
 
 void CBodyColliderParts::OnCollisionEnter(CCollider* other)
 {
+	if (auto pTarget = dynamic_cast<CBaseCharacter*>(other->GetOwner()))
+	{
+		if (m_DamagedTargets.find(pTarget) != m_DamagedTargets.end())
+			return; // 이미 데미지를 입힌 대상이면 무시
+		m_DamagedTargets.insert(pTarget); // 데미지를 입힌 대상에 추가
+
+		if (auto pChar = dynamic_cast<CBaseCharacter*>(m_pParent))
+		{
+			if (pTarget->GetState() != CBaseCharacter::CSTATE::DIE)
+			{
+				pChar->OnAttackHit(pTarget);
+			}
+		}
+		else if (auto pBossParts = dynamic_cast<CEnmuParts*>(m_pParent))
+		{
+			auto pBoss =static_cast<CEnmuMeat*>(pBossParts->GetParent());
+			if (pBoss)
+			{
+				pBoss->OnAttackHit(pTarget);
+			}
+		}
+	}
 }
 
 void CBodyColliderParts::OnCollisionStay(CCollider* other, float fTimeDelta)

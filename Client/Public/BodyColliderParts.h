@@ -48,6 +48,7 @@ public:
 	}
 
 	void Set_Radius(_uint iIndex, _float fRadius);
+	
 
 private:
 	vector<CSphereCollider*> m_pColliderComs;
@@ -56,6 +57,10 @@ private:
 
 private:
 	virtual HRESULT Ready_Components();
+
+private:
+	unordered_set<CGameObject*> m_DamagedTargets;
+	ColliderType m_eDefaultType = ColliderType::HITBOX; // 기본 콜라이더 타입
 
 public:
 	static CBodyColliderParts* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

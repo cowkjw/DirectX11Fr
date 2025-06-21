@@ -130,7 +130,7 @@ _bool CCell::Slide(const _vector& oldPos, const _vector& vDelta, _vector& outSli
 	////_float slideLen = XMVectorGetX(XMVector3Length(rawSld));
 	////if (slideLen < THRESH)
 	////	return false; // 슬라이딩 벡터가 너무 작으면 슬라이딩 불필요
-	outSlidePos = oldPos + slide;
+	outSlidePos = oldPos + slide*1.5f;
 	return true;
 
 	//_vector tryPos = oldPos + vDelta;

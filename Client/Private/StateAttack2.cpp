@@ -10,7 +10,8 @@ void StateAttack2::Enter(CBaseCharacter* pChar)
 	pChar->Get_Animator()->SetTrigger("Attack");
 	pChar->Get_Animator()->SetBool("Attacking", true);
 	pChar->Get_Animator()->SetBool("Move", false);
-	pChar->SetState(CBaseCharacter::CSTATE::ATTACK);
+	//pChar->SetState(CBaseCharacter::CSTATE::ATTACK);
+	pChar->SetState(CBaseCharacter::CSTATE::ATTACK2);
 }
 
 void StateAttack2::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)

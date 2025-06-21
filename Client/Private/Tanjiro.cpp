@@ -10,6 +10,9 @@
 #include <EnmuMeat.h>
 #include <EnmuParts.h>
 #include "Navigation.h"
+#include "StateHurt.h"
+#include "StateHurtAir.h"
+#include "StateHurtBlow.h"
 
 using AniCon = CAnimController::Condition;
 CTanjiro::CTanjiro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -80,9 +83,12 @@ HRESULT CTanjiro::Initialize(void* pArg)
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -18.f, -170.f, 1.f));
 
+	if (m_pNavigationCom)
+	{
 	m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
+	}
 
-
+	m_fGoroundHeight = -18.f; // 초기 지면 높이 설정
 
     return S_OK;
 }
@@ -144,19 +150,78 @@ void CTanjiro::Late_Update(_float fTimeDelta)
 
 HRESULT CTanjiro::Render()
 {
+#ifdef DEBUG
 	if (m_pNavigationCom)
 		m_pNavigationCom->Render();
+#endif // DEBUG
+
+	
 	return __super::Render();
 }
 
 void CTanjiro::TakeDamage(_float fDamage)
 {
+	if (m_eState == CSTATE::DOWN)
+	{
+		__super::TakeDamage(fDamage);
+		return;
+	}
+	if (m_eState == CSTATE::GUARD)
+	{
+		fDamage *= 0.5f; // 가드 중에는 피해량 감소
+	}
+	if (m_eState == CSTATE::SKILL2)
+		return;
 	__super::TakeDamage(fDamage);
+	if (!m_bAirborne && !m_bIsBound)
+	{
+		ChangeState(new StateHurt());
+	}
 	auto pBar = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("LeftLifeBar"));
 	if (pBar)
 	{
 		CUIProgressBar* pRightBar = static_cast<CUIProgressBar*>(pBar);
 		pRightBar->ApplyDamage(fDamage);
+	}
+}
+
+void CTanjiro::OnAttackHit(CGameObject* pTarget)
+{
+	if (auto pBoss = dynamic_cast<CEnmuMeat*>(pTarget))
+	{
+		_bool bIsOpen = pBoss->GetState() == EnmuState::OPEN;
+		switch (m_eState)
+		{
+		case CSTATE::ATTACK:
+			bIsOpen ? pBoss->Hit(3.f) : pBoss->Hit(4.5f);
+			break;
+		case CSTATE::ATTACK2:
+			bIsOpen ? pBoss->Hit(4.f) : pBoss->Hit(5.f);
+			break;
+		case CSTATE::ATTACK3:
+			bIsOpen ? pBoss->Hit(3.f) : pBoss->Hit(4.5f);
+			break;
+		case CSTATE::ATTACK4:
+			pBoss->Hit(5.f);
+			break;
+		case CSTATE::ATTACK_DOWN:
+			pBoss->Hit(5.f);
+			break;
+		case CSTATE::ATTACK_UP:
+			pBoss->Hit(5.f);
+			break;
+		case CSTATE::SKILL:
+			pBoss->Hit(10.f);
+			break;
+		case CSTATE::SKILL1:
+			pBoss->Hit(20.f);
+			break;
+		case CSTATE::SKILL2:
+			pBoss->Hit(30.f);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -184,13 +249,8 @@ HRESULT CTanjiro::Ready_Components()
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
 
-	
-	
-	auto pEnmuGround = m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("EnmuGround"));
-	/*if (pEnmuGround)
-	{
-		m_pNavigationCom->Update(XMLoadFloat4x4(&pEnmuGround->GetTransform()->Get_WorldMatrix()));
-	}*/
+	//
+	//
 	return S_OK;
 }
 
@@ -293,6 +353,31 @@ void CTanjiro::Ready_Animation()
 	auto animHurtFront = m_pModelCom->GetAnimationClipByName("A_P0000_V00_C00_Dmg01_F");
 	animHurtFront->SetLoop(false);
 	size_t hurtFIdx = ctrl->AddState("Hurt_F", animHurtFront, m_pModelCom->GetAnimationMap()[animHurtFront->Get_Name()]);
+	
+	auto animHurtAirborne = m_pModelCom->GetAnimationClipByName("A_P0000_V00_C00_Dmg01A_F"); // 공중 상태에서 
+	animHurtAirborne->SetLoop(false);
+	size_t hurtAirborneIdx = ctrl->AddState("Hurt_Airborne", animHurtAirborne, m_pModelCom->GetAnimationMap()[animHurtAirborne->Get_Name()]);
+
+	// A_P0000_V00_C00_DmgFall01_0
+	vector<CAnimation*> fallClips;
+	for (_int i = 0; i < 3; i++)
+	{
+		auto name = "A_P0000_V00_C00_DmgFall01_" + to_string(i);
+		auto anim = m_pModelCom->GetAnimationClipByName(name.c_str());
+		anim->SetLoop(false);
+		fallClips.push_back(anim);
+	}
+
+	size_t fall0Idx = ctrl->AddState("Hurt_Fall0", fallClips[0], m_pModelCom->GetAnimationMap()[fallClips[0]->Get_Name()]);
+	size_t fall1Idx = ctrl->AddState("Hurt_Fall1", fallClips[1], m_pModelCom->GetAnimationMap()[fallClips[1]->Get_Name()]);
+	size_t fall2Idx = ctrl->AddState("Hurt_Fall2", fallClips[2], m_pModelCom->GetAnimationMap()[fallClips[2]->Get_Name()]);
+
+
+	// 바운드 애니메이션 A_P0000_V00_C00_DmgBound01_0
+	CAnimation* animBound = m_pModelCom->GetAnimationClipByName("A_P0000_V00_C00_DmgBound01_0");
+	animBound->SetLoop(false);
+	size_t boundIdx = ctrl->AddState("Hurt_Bound", animBound, m_pModelCom->GetAnimationMap()[animBound->Get_Name()]);
+
 
 	// A_P0001_V00_C00_BaseGuard01_0
 
@@ -413,9 +498,15 @@ void CTanjiro::Ready_Animation()
 	m_pAnimatorCom->AddTrigger("StepLeftJump");
 	m_pAnimatorCom->AddTrigger("StepBackJump");
 	m_pAnimatorCom->AddTrigger("StepFrontJump");
+	m_pAnimatorCom->AddTrigger("HurtAir");
+	m_pAnimatorCom->AddTrigger("HurtBound");
+	m_pAnimatorCom->AddTrigger("HurtBlow");
+	m_pAnimatorCom->AddTrigger("HurtDown");
 	m_pAnimatorCom->AddTrigger("Hurt");
 	m_pAnimatorCom->AddBool("Stepping"); // 스텝 중인지 여부
 	m_pAnimatorCom->AddBool("Hurted");
+
+
 
 
 
@@ -675,15 +766,144 @@ void CTanjiro::Ready_Animation()
 
 	ctrl->AddTransition(hurtFIdx, idleIdx, cFin);
 	ctrl->AddTransition(hurtFIdx, runIdx, cSpeedUp, 0.1f);
+
+
+
+	AniCon cHurtAir{ "HurtAir", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(runIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(runEndIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(idleIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(hurtAirborneIdx, hurtAirborneIdx, cHurtAir, 0.5f);
+
+
+	ctrl->AddTransition(attack0Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack1Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack2Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack3Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack4Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack5Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(hurtAirborneIdx, idleIdx, cFin);
+	ctrl->AddTransition(hurtAirborneIdx, runIdx, cSpeedUp, 0.1f);
+
+	AniCon cHurtBound{ "HurtBound", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(runIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(runEndIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(idleIdx, boundIdx, cHurtBound, 0.1f);
+
+	ctrl->AddTransition(attack0Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack1Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack2Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack3Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack4Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack5Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(stepBackIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(stepFrontIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(stepLeftIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(stepRightIdx, boundIdx, cHurtBound, 0.1f);
+
+	// 공중에서 혹시나 공격받으면 공중 히트 애니메이션으로 전이
+	ctrl->AddTransition(boundIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(fall0Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(fall1Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(fall2Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+
+	ctrl->AddTransition(boundIdx, fall0Idx, cFin, 0.1f);
+	ctrl->AddTransition(fall0Idx, fall1Idx, cFin, 0.1f);
+	ctrl->AddTransition(fall1Idx, fall2Idx, cFin, 0.1f);
+
+	ctrl->AddTransition(fall2Idx, idleIdx, cFin);
+	ctrl->AddTransition(fall2Idx, runIdx, cSpeedUp, 0.1f);
+
+	// Blow 는 Fall 애니메이션
+
+	AniCon cHurtBlow{ "HurtBlow", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(runIdx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(runEndIdx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(idleIdx, boundIdx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(hurtFIdx, fall0Idx, cHurtBlow, 0.1f);
+	//ctrl->AddTransition(skill, fall0Idx, cHurtBlow, 0.1f);
+	//ctrl->AddTransition(skill1EndIdx, fall0Idx, cHurtBlow, 0.1f);
+	//ctrl->AddTransition(skillDefaultIdx, fall0Idx, cHurtBlow, 0.1f);
+
+	ctrl->AddTransition(attack0Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack1Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack2Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack3Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack4Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack5Idx, fall0Idx, cHurtBlow, 0.1f);
+
+	AniCon cHurtDown{ "HurtDown", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(runIdx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(runEndIdx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(idleIdx, fall2Idx, cHurtDown, 0.1f);
+
+	ctrl->AddTransition(attack0Idx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(attack1Idx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(attack2Idx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(attack3Idx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(attack4Idx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(attack5Idx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(stepBackIdx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(stepFrontIdx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(stepLeftIdx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(stepRightIdx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(fall2Idx, fall2Idx, cHurtDown, 0.4f);
+
+
 }
 
 void CTanjiro::ActiveCollider()
 {
+	if (m_pWeapon)
+	{
+		auto collider = static_cast<CSphereCollider*>(m_pWeapon->Get_Component(TEXT("Com_Collider")));
+		auto collider1 = static_cast<CSphereCollider*>(m_pWeapon->Get_Component(TEXT("Com_Collider1")));
+		auto collider2 = static_cast<CSphereCollider*>(m_pWeapon->Get_Component(TEXT("Com_Collider2")));
 
+		if (collider)
+		{
+			collider->SetActive(true);
+			collider->SetDrawDebug(true);
+		}
+		if (collider1)
+		{
+			collider1->SetActive(true);
+			collider1->SetDrawDebug(true);
+		}
+		if (collider2)
+		{
+			collider2->SetActive(true);
+			collider2->SetDrawDebug(true);
+		}
+	}
 }
 
 void CTanjiro::DeactiveCollider()
 {
+	if (m_pWeapon)
+	{
+		auto collider = static_cast<CSphereCollider*>(m_pWeapon->Get_Component(TEXT("Com_Collider")));
+		auto collider1 = static_cast<CSphereCollider*>(m_pWeapon->Get_Component(TEXT("Com_Collider1")));
+		auto collider2 = static_cast<CSphereCollider*>(m_pWeapon->Get_Component(TEXT("Com_Collider2")));
+
+
+		if (collider)
+		{
+			collider->SetActive(false);
+			collider->SetDrawDebug(false);
+		}
+		if (collider1)
+		{
+			collider1->SetActive(false);
+			collider1->SetDrawDebug(false);
+		}
+		if (collider2)
+		{
+			collider2->SetActive(false);
+			collider2->SetDrawDebug(false);
+		}
+		m_pWeapon->ClearDamagedTargets();
+	}
 }
 
 CTanjiro* CTanjiro::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -47,10 +47,10 @@ HRESULT CToolbar::Render()
 	DrawToolbar();
 	FBXLodaer();
 	DrawAnimEventEditor();
-	if (m_pNavigation)
-	{
-		m_pNavigation->Render();
-	}
+#ifdef DEBUG
+	if (m_pNavigationCom)
+		m_pNavigationCom->Render();
+#endif // DEBUG
 	return S_OK;
 }
 

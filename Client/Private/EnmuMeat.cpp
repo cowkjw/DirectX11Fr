@@ -6,6 +6,7 @@
 #include "GameInstance.h"
 #include "EnmuTentacle.h"
 #include "BaseCharacter.h"
+#include "UIProgressBar.h"
 
 CEnmuMeat::CEnmuMeat(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -72,6 +73,8 @@ HRESULT CEnmuMeat::Initialize(void* pArg)
 		}
 	}
 
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 10.f, 1.f));
+
 	return S_OK;
 }
 
@@ -116,6 +119,7 @@ void CEnmuMeat::Update(_float fTimeDelta)
 
 void CEnmuMeat::Late_Update(_float fTimeDelta)
 {
+	CGameObject::Late_Update(fTimeDelta);
 	for (auto& child : m_vecChildren)
 	{
 		if (child->IsActive())
@@ -123,6 +127,8 @@ void CEnmuMeat::Late_Update(_float fTimeDelta)
 			child->Late_Update(fTimeDelta);
 		}
 	}
+
+	m_bAttacking = false;
 }
 
 HRESULT CEnmuMeat::Render()
@@ -140,6 +146,7 @@ HRESULT CEnmuMeat::Render()
 
 void CEnmuMeat::SetState(EnmuState eState)
 {
+	m_eState = eState;
 	for (auto& child : m_vecChildren)
 	{
 		if (auto pEnmuParts = static_cast<CEnmuParts*>(child))
@@ -165,6 +172,9 @@ void CEnmuMeat::SpawnTentacle(_int iIndex, _vector vPos, _vector vDir)
 		return;
 	pTentacle->GetTransform()->LookAtXZ(vPos);
 	pTentacle->GetTransform()->RotateToDirection(vDir);
+
+	vPos.m128_f32[1] = -18.f;
+
 	pTentacle->GetTransform()->Set_State(STATE::POSITION, vPos);
 }
 
@@ -218,6 +228,66 @@ _float CEnmuMeat::GetDistanceToTarget() const
 	return XMVectorGetZ(XMVector3Length(diff));
 }
 
+_float CEnmuMeat::Hit(_float fDamage)
+{
+	m_fHp -= fDamage;
+	if (m_fHp <= 0.f)
+	{
+		m_fHp = 0.f;
+		SetState(EnmuState::DIE);
+	}
+	auto pBody = GetPart(Parts::BODY);
+	if (pBody)
+	{
+	pBody->Get_Animator()->SetTrigger("Hurt");
+	}
+	auto pBar = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("RightLifeBar"));
+	if (pBar)
+	{
+		CUIProgressBar* pRightBar = static_cast<CUIProgressBar*>(pBar);
+		pRightBar->ApplyDamage(fDamage);
+	}
+	return m_fHp;
+}
+
+void CEnmuMeat::OnAttackHit(CGameObject* pTarget)
+{
+	if (m_bAttacking)
+		return; // ÀÌ¹Ì °ø°Ý ÁßÀÌ¸é ¹«½Ã
+	if (auto pChar = dynamic_cast<CBaseCharacter*>(pTarget))
+	{
+		m_bAttacking = true;
+		switch (m_eState)
+		{
+		case EnmuState::PUNCH:
+			pChar->Blow(this, 40.f);
+			pChar->TakeDamage(15.f);
+			break;
+		case EnmuState::FOLLOWPUNCH:
+			pChar->HurtDown();
+			pChar->TakeDamage(15.f);
+			break;
+		case EnmuState::HANDATTACK:
+			pChar->HurtDown();
+			pChar->TakeDamage(15.f);
+			break;
+		case EnmuState::TENTACLEATTACK:
+			break;
+		case EnmuState::FREEZEATTACK:
+			break;
+		case EnmuState::ANGRYFREEZEATTACK:
+			break;
+		case EnmuState::SWINGATTACK:
+			/*pChar->Blow(this, 40.f);
+			pChar->TakeDamage(15.f);*/
+
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 HRESULT CEnmuMeat::Ready_Parts()
 {
 
@@ -225,14 +295,14 @@ HRESULT CEnmuMeat::Ready_Parts()
 	armDesc.sModelKey = TEXT("Prototype_Component_Model_EnmuLeftArm");
 
 	AddChild(CEnmuArm::Create(m_pDevice, m_pContext, &armDesc));
-	m_vecChildren.back()->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // ¿ÞÆÈÀº 180µµ È¸Àü
+	m_vecChildren.back()->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // 
 	armDesc.sModelKey = TEXT("Prototype_Component_Model_EnmuRightArm");
 	AddChild(CEnmuArm::Create(m_pDevice, m_pContext, &armDesc));
-	m_vecChildren.back()->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // ¿ÞÆÈÀº 180µµ È¸Àü
+	m_vecChildren.back()->GetTransform()->Rotate_EulerAngles(_float3(0.f, -180.f, 0.f)); // 
 	AddChild(CEnmuBody::Create(m_pDevice, m_pContext));
-	m_vecChildren.back()->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // ¿ÞÆÈÀº 180µµ È¸Àü
+	m_vecChildren.back()->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // 
 	AddChild(CEnmuHead::Create(m_pDevice, m_pContext));
-	m_vecChildren.back()->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // ¿ÞÆÈÀº 180µµ È¸Àü
+	m_vecChildren.back()->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // 
 
 	return S_OK;
 }

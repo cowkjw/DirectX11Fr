@@ -177,6 +177,7 @@
     <ClInclude Include="..\Public\Client_Struct.h" />
     <ClInclude Include="..\public\Command.h" />
     <ClInclude Include="..\Public\CompositeNode.h" />
+    <ClInclude Include="..\public\Decal.h" />
     <ClInclude Include="..\public\EnmuArm.h" />
     <ClInclude Include="..\Public\EnmuBody.h" />
     <ClInclude Include="..\Public\EnmuHead.h" />
@@ -214,9 +215,12 @@
     <ClInclude Include="..\public\StateAttack4.h" />
     <ClInclude Include="..\public\StateAttackDown.h" />
     <ClInclude Include="..\public\StateAttackUp.h" />
+    <ClInclude Include="..\public\StateBoundHurt.h" />
     <ClInclude Include="..\public\StateGuard.h" />
     <ClInclude Include="..\public\StateHurtAir.h" />
     <ClInclude Include="..\public\StateHurt.h" />
+    <ClInclude Include="..\public\StateHurtBlow.h" />
+    <ClInclude Include="..\public\StateHurtDown.h" />
     <ClInclude Include="..\public\StateIdle.h" />
     <ClInclude Include="..\public\StateJump.h" />
     <ClInclude Include="..\public\StateJumpAttack.h" />
@@ -233,6 +237,7 @@
     <ClInclude Include="..\public\EditorManager.h" />
     <ClInclude Include="..\public\Toolbar.h" />
     <ClInclude Include="..\public\UIAnimImage.h" />
+    <ClInclude Include="..\public\WarningZoneDecal.h" />
     <ClInclude Include="..\public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -267,6 +272,7 @@
     <ClCompile Include="..\private\BossState.cpp" />
     <ClCompile Include="..\private\BossSwingAttack.cpp" />
     <ClCompile Include="..\private\BossTentacle.cpp" />
+    <ClCompile Include="..\private\Decal.cpp" />
     <ClCompile Include="..\private\EnmuArm.cpp" />
     <ClCompile Include="..\Private\EnmuBody.cpp" />
     <ClCompile Include="..\Private\EnmuHead.cpp" />
@@ -302,9 +308,12 @@
     <ClCompile Include="..\private\StateAttack4.cpp" />
     <ClCompile Include="..\private\StateAttackDown.cpp" />
     <ClCompile Include="..\private\StateAttackUp.cpp" />
+    <ClCompile Include="..\private\StateBoundHurt.cpp" />
     <ClCompile Include="..\private\StateGuard.cpp" />
     <ClCompile Include="..\private\StateHurtAir.cpp" />
     <ClCompile Include="..\private\StateHurt.cpp" />
+    <ClCompile Include="..\private\StateHurtBlow.cpp" />
+    <ClCompile Include="..\private\StateHurtDown.cpp" />
     <ClCompile Include="..\private\StateIdle.cpp" />
     <ClCompile Include="..\private\StateJump.cpp" />
     <ClCompile Include="..\private\StateJumpAttack.cpp" />
@@ -320,6 +329,7 @@
     <ClCompile Include="..\private\EditorManager.cpp" />
     <ClCompile Include="..\private\Toolbar.cpp" />
     <ClCompile Include="..\private\UIAnimImage.cpp" />
+    <ClCompile Include="..\private\WarningZoneDecal.cpp" />
     <ClCompile Include="..\private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
@@ -331,6 +341,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_DecalMask.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_Toon.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_UICompose.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_UIMask.hlsl" />

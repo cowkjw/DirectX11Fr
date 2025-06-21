@@ -45,8 +45,6 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Begin_Draw();
 	m_pGameInstance->Draw();
 
-
-	// 7) 스왑체인에 Present
 	m_pGameInstance->End_Draw();
 
 	return S_OK;
