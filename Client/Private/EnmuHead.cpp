@@ -1,6 +1,7 @@
 #include "EnmuHead.h"
 #include "GameInstance.h"
 #include "BodyColliderParts.h"
+#include <BaseCharacter.h>
 
 using AniCon = CAnimController::Condition;
 CEnmuHead::CEnmuHead(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -27,7 +28,7 @@ HRESULT CEnmuHead::Initialize(void* pArg)
 
 	Ready_Animation();
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f,-18.f,-12.f,1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f,-18.f,-15.f,1.f));
 	m_pTransformCom->Scaling(_float3(0.1f, 0.1f, 0.1f));
     return S_OK;
 }
@@ -126,7 +127,7 @@ void CEnmuHead::Ready_Collider()
 	//
 	CBodyColliderParts::BODYCOLLIDERPARTS_DESC desc{};
 	desc.vColliderOffsets.push_back(_float3(0.f, 0.f, 0.f));
-	desc.fRadius = 25.f;
+	desc.fRadius = 27.f;
 	
 		m_pBodyCollider = CBodyColliderParts::Create(m_pDevice, m_pContext);
 		m_pBodyCollider->Set_BoneSocket(m_pModelCom->Get_Bone("C_Head_1"));
@@ -181,6 +182,13 @@ void CEnmuHead::Free()
 
 void CEnmuHead::OnCollisionEnter(CCollider* other)
 {
+	if (other->GetType() == ColliderType::HITBOX)
+	{
+		if (auto pChar = dynamic_cast<CBaseCharacter*>(other->GetOwner()))
+		{
+			pChar->OnAttackHit(this);
+		}
+	}
 }
 
 void CEnmuHead::OnCollisionStay(CCollider* other, float fTimeDelta)

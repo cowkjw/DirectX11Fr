@@ -12,7 +12,7 @@
             1.0,
             1.0
         ],
-        "SortingOrder": 1,
+        "SortingOrder": 3,
         "UI": true,
         "UIType": 3,
         "components": {
@@ -154,7 +154,7 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    563.97,
+                    563.96,
                     279.0,
                     0.0
                 ],
@@ -1112,8 +1112,8 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    14.00,
-                    241.00,
+                    14.0,
+                    241.0,
                     0.20
                 ],
                 "Rotation": [
@@ -1136,6 +1136,204 @@
         },
         "isActive": true,
         "name": "Timer",
+        "parentId": 17,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 50,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "Lang_Round_Start",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    270.0,
+                    170.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": false,
+        "name": "StartImage",
+        "parentId": 17,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 51,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 1,
+        "TextureIndex": 0,
+        "TextureKey": "Lang_Round_Stop",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    450.0,
+                    200.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": false,
+        "name": "StopImage",
+        "parentId": 17,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 52,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 2,
+        "TextureIndex": 0,
+        "TextureKey": "Lang_Round_Fin",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    450.0,
+                    200.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": false,
+        "name": "FinImage",
         "parentId": 17,
         "tag": ""
     }

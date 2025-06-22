@@ -186,8 +186,8 @@ void CTanjiro::TakeDamage(_float fDamage)
 	auto pBar = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("LeftLifeBar"));
 	if (pBar)
 	{
-		CUIProgressBar* pRightBar = static_cast<CUIProgressBar*>(pBar);
-		pRightBar->ApplyDamage(fDamage);
+		CUIProgressBar* pLeftBar = static_cast<CUIProgressBar*>(pBar);
+		pLeftBar->ApplyDamage(fDamage / m_fMaxHP * 100.f);
 	}
 }
 

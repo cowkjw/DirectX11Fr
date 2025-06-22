@@ -342,8 +342,18 @@ _vector CNavigation::GetHitCellNormal(_int iIndex)
 	return XMVector3Normalize(XMVector3Cross(vAB, vAC));
 }
 
-
+void CNavigation::DeleteCell(_int iIndex)
+{
+	if (iIndex < 0 || iIndex >= (int)m_Cells.size())
+		return;
+	CCell* pCellToDelete = m_Cells[iIndex];
+	m_Cells.erase(m_Cells.begin() + iIndex);
+	Safe_Release(pCellToDelete);
+	SetUp_Neighbors();
+	m_iIndex = -1; // 삭제 후 인덱스 초기화
+}
 #ifdef _DEBUG
+
 HRESULT CNavigation::Render()
 {	
 	m_pShader->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW));

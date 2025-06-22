@@ -150,7 +150,7 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
             break;
 
         case 4: // BossFollowPunch  (191 ~ 220)
-            if (pChar->m_CD_FollowPunch == 0.f && fDist > 190.f && fDist <= 220.f)
+            if (pChar->m_CD_FollowPunch == 0.f && fDist > 160.f && fDist <= 180.f)
                 chosenIdx = 4;
             break;
 
@@ -171,8 +171,8 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
         return;
     }
 
-    //// 테스트용
-    chosenIdx = 4;
+    ////// 테스트용
+    //chosenIdx = 6;
   
     // 7) chosenIdx에 따라 상태 전이 및 쿨타임 재설정
     switch (chosenIdx)
@@ -189,12 +189,12 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
 
     case 2: // BossFreezeAttack
         pChar->ChangeState(new BossFreezeAttack(TEXT("BossFreezeAttack")));
-        pChar->m_CD_Freeze = 10.f;
+        pChar->m_CD_Freeze = 9.f;
         break;
 
     case 3: // BossSwingAttack
         pChar->ChangeState(new BossSwingAttack(TEXT("BossSwingAttack")));
-        pChar->m_CD_Swing = 7.f;
+        pChar->m_CD_Swing = 12.f;
         break;
 
     case 4: // BossFollowPunch
@@ -206,6 +206,10 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
         pChar->ChangeState(new BossTentacle(TEXT("BossTentacleAttack")));
         pChar->m_CD_Tentacle = 9.f;
         break;
+	//case 6: // BossOpen
+	//	pChar->ChangeState(new BossOpen(TEXT("BossOpen")));
+	////	pChar->m_CD_Open = 10.f;
+	//	break;
     }
 
     m_bPatternUsed[chosenIdx] = true;

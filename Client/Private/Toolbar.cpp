@@ -384,7 +384,7 @@ void CToolbar::DrawToolbar()
 	ImGui::Checkbox("NavMeshTool", &m_bIsNavMeshCreating);
 	if (m_bIsNavMeshCreating)
 	{
-		CreateNavMesh();
+		ShowCells();
 	}
 
 	ImGui::Separator();
@@ -761,9 +761,50 @@ void CToolbar::SpawnMouse(void* pArg)
 	CEditorManager::m_vecSceneObjects.push_back(obj);
 }
 
-void CToolbar::CreateNavMesh()
-{
 
+void CToolbar::ShowCells()
+{
+	if (m_pNavigation && m_bIsNavMeshCreating)
+	{
+		static const auto& cells = m_pNavigation->GetCells();  // 셀 리스트 (const ref)
+		static int selectedCellIndex = -1;
+
+		ImGui::Begin("Cell List");
+
+		for (int i = 0; i < static_cast<int>(cells.size()); ++i)
+		{
+			char label[32];
+			sprintf_s(label, "Cell %d", i);
+
+			if (ImGui::Selectable(label, selectedCellIndex == i))
+			{
+				selectedCellIndex = i;
+				m_pNavigation->SetIndex(i);  // 셀 인덱스 전달
+			}
+		}
+		ImGui::Separator();
+
+		// 선택 초기화 버튼
+		if (ImGui::Button("Reset Selection"))
+		{
+			selectedCellIndex = -1;
+			m_pNavigation->SetIndex(-1); // 선택 해제
+		}
+
+		// 선택된 셀 삭제 버튼
+		if (selectedCellIndex != -1)
+		{
+			ImGui::SameLine();
+			if (ImGui::Button("Delete Selected"))
+			{
+				m_pNavigation->DeleteCell(selectedCellIndex); // 셀 삭제
+				selectedCellIndex = -1;
+				m_pNavigation->SetIndex(-1); // 선택 해제
+			}
+		}
+
+	}
+	ImGui::End();
 }
 
 CGameObject* CToolbar::ClonePrototype(const string& prototypeName, const wstring& instanceName, void* pArg)

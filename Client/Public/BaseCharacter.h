@@ -90,6 +90,7 @@ public:
 
 	// 히트 스탑
 	void StartHitStop(_float duration);
+	void SetGameStarted(_bool bStarted) { m_bGameStarted = bStarted; }
 protected:
 	virtual void Ready_Animation();
 
@@ -112,9 +113,10 @@ protected:
 	_bool m_bCanBlowAttack{ false };
 	_bool m_bCanRangeAttack{ false }; // 범위 공격 가능 여부 ex) 아카자 스킬이나 쿄주로 방어 스킬
 	_bool m_bFalling{ false }; // 낙하 중인지 여부
+	_bool m_bGameStarted{ false }; // 게임 시작 여부
 
-	_float m_fMaxHP{ 0.f };           // 최대 체력
-	_float m_fCurrentHP{ 0.f };       // 현재 체력
+	_float m_fMaxHP{ 100.f };           // 최대 체력
+	_float m_fCurrentHP{ 100.f };       // 현재 체력
 	_float m_fStamina{ 0.f };         // 스태미나(호흡력)
 	_float m_fTimeDelta{ 0.f };
 	_float m_fTotalTime{ 0.f }; // 총 시간 

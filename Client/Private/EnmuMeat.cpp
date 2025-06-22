@@ -261,7 +261,7 @@ _float CEnmuMeat::Hit(_float fDamage)
 	if (pBar)
 	{
 		CUIProgressBar* pRightBar = static_cast<CUIProgressBar*>(pBar);
-		pRightBar->ApplyDamage(fDamage);
+		pRightBar->ApplyDamage(fDamage / m_fMaxHp * 100.f);
 	}
 	return m_fHp;
 }

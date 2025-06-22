@@ -6,6 +6,7 @@
 #include "StateHurtAir.h"
 #include "InputBuffer.h"
 #include "Environment.h"
+#include "StateDeath.h"
 #include "Navigation.h"
 #include "StateHurt.h"
 #include "StateIdle.h"
@@ -35,6 +36,7 @@ CBaseCharacter::CBaseCharacter(const CBaseCharacter& Prototype)
 	, m_iShaderPass{ Prototype.m_iShaderPass }
 	, m_pState{ nullptr }
 	, m_pRangeColliderCom{ Prototype.m_pRangeColliderCom }
+	, m_bGameStarted{ Prototype.m_bGameStarted }
 {
 
 }
@@ -85,42 +87,49 @@ HRESULT CBaseCharacter::Initialize(void* pArg)
 
 void CBaseCharacter::Priority_Update(_float fTimeDelta)
 {
-
+	if (m_fCurrentHP <= 0.f && m_eState != CSTATE::DIE)
+	{
+		ChangeState(new StateDeath());
+		return;
+	}
 
 }
 
 void CBaseCharacter::Update(_float fTimeDelta)
 {
-
-	/*HandleInput();
-	m_fTotalTime += fTimeDelta;
-	m_pInputBuffer->Update(m_fTotalTime);
-	if(!m_bAirborne&&!m_bIsJumping)
-	UpdateState(fTimeDelta);
-
-	if (m_bAirborne)
+	if (m_eState != CSTATE::DIE && m_bGameStarted)
 	{
-		UpdateAirborne(fTimeDelta);
-	}*/
+		/*HandleInput();
+		m_fTotalTime += fTimeDelta;
+		m_pInputBuffer->Update(m_fTotalTime);
+		if(!m_bAirborne&&!m_bIsJumping)
+		UpdateState(fTimeDelta);
 
-	if (m_fHitStopTime > 0.f)
-	{
-		m_fHitStopTime -= fTimeDelta;
-		fTimeDelta *= 0.1f; // HitStop 동안 시간 느리게 흐름
+		if (m_bAirborne)
+		{
+			UpdateAirborne(fTimeDelta);
+		}*/
+
+		if (m_fHitStopTime > 0.f)
+		{
+			m_fHitStopTime -= fTimeDelta;
+			fTimeDelta *= 0.1f; // HitStop 동안 시간 느리게 흐름
+		}
+
+		if (!m_bAirborne && !m_bIsBound)
+			HandleInput();
+
+		m_fTotalTime += fTimeDelta;
+		m_pInputBuffer->Update(m_fTotalTime);
+
+
+
+
 	}
-
-	if (!m_bAirborne && !m_bIsBound)
-		HandleInput();
-
-	m_fTotalTime += fTimeDelta;
-	m_pInputBuffer->Update(m_fTotalTime);
-
 	if (!m_bAirborne && !m_bIsJumping)
 		UpdateState(fTimeDelta);
 	else
 		UpdateAirborne(fTimeDelta);
-
-
 	// 3) 애니메이션 업데이트
 	m_pAnimatorCom->GetAnimController()->Update(fTimeDelta);
 	m_pModelCom->Play_Animation(fTimeDelta);
@@ -358,7 +367,7 @@ void CBaseCharacter::LaunchAirborne(_float fJumpForce, _bool bIsBound)
 	/*if (m_bIsBound)
 		return;*/
 	if (m_bAirborne)
-		m_Velocity.y = std::min(m_Velocity.y + fJumpForce , 38.f);
+		m_Velocity.y = std::min(m_Velocity.y + fJumpForce, 38.f);
 	else
 		m_Velocity.y = fJumpForce;
 	m_bAirborne = true;
@@ -394,15 +403,15 @@ void CBaseCharacter::Blow(CGameObject* pAttacker, _float fBlowForce)
 		return; // 이미 공중에 있거나 바운드 상태면 무시
 	if (m_eState != CSTATE::GUARD)
 	{
-	// 공격자의 위치에서 나를 향하는 방향 벡터 계산
-	XMVECTOR attackerPos = pAttacker->GetTransform()->Get_State(STATE::POSITION);
-	XMVECTOR myPos = m_pTransformCom->Get_State(STATE::POSITION);
-	XMVECTOR direction = XMVector3Normalize(myPos - attackerPos);
-	// 뒤로 밀려나는 힘 적용
-	XMStoreFloat3(&m_Velocity, XMVectorScale(direction, fBlowForce));
-	m_Velocity.y = fBlowForce+5.f; // Y축 방향으로 힘 추가
-	m_bAirborne = true; // 공중 상태로 전환
-	m_bIsJumping = true; // 점프 상태로 설정
+		// 공격자의 위치에서 나를 향하는 방향 벡터 계산
+		XMVECTOR attackerPos = pAttacker->GetTransform()->Get_State(STATE::POSITION);
+		XMVECTOR myPos = m_pTransformCom->Get_State(STATE::POSITION);
+		XMVECTOR direction = XMVector3Normalize(myPos - attackerPos);
+		// 뒤로 밀려나는 힘 적용
+		XMStoreFloat3(&m_Velocity, XMVectorScale(direction, fBlowForce));
+		m_Velocity.y = fBlowForce + 5.f; // Y축 방향으로 힘 추가
+		m_bAirborne = true; // 공중 상태로 전환
+		m_bIsJumping = true; // 점프 상태로 설정
 
 		ChangeState(new StateHurtBlow());
 	}
@@ -411,9 +420,9 @@ void CBaseCharacter::Blow(CGameObject* pAttacker, _float fBlowForce)
 
 void CBaseCharacter::UpdateAirborne(_float fTimeDelta)
 {
-	
+
 	XMVECTOR vVel = XMLoadFloat3(&m_Velocity);
-	XMVECTOR gravity = m_bIsBound ? XMLoadFloat3(&GRAVITY) * fTimeDelta*10.f: XMLoadFloat3(&GRAVITY) * fTimeDelta * 9.6f;
+	XMVECTOR gravity = m_bIsBound ? XMLoadFloat3(&GRAVITY) * fTimeDelta * 10.f : XMLoadFloat3(&GRAVITY) * fTimeDelta * 9.6f;
 	vVel += gravity;
 	XMStoreFloat3(&m_Velocity, vVel);
 
@@ -453,7 +462,7 @@ void CBaseCharacter::UpdateAirborne(_float fTimeDelta)
 		// 바닥에 고정
 		XMVECTOR curPos = m_pTransformCom->Get_State(STATE::POSITION);
 		curPos = XMVectorSetY(curPos, m_fGoroundHeight);
-		if(m_pNavigationCom)
+		if (m_pNavigationCom)
 		{
 			if (m_pNavigationCom->isMove(curPos))
 				m_pTransformCom->Set_State(STATE::POSITION, curPos);
@@ -645,7 +654,7 @@ void CBaseCharacter::Free()
 	Safe_Release(m_pInputBuffer);
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pRangeColliderCom);
-	
+
 }
 
 

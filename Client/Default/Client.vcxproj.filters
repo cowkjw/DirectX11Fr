@@ -205,6 +205,9 @@
     <Filter Include="01.GameObject\Decal\Warining">
       <UniqueIdentifier>{1656aafc-07dd-41e8-ba60-30291206bd41}</UniqueIdentifier>
     </Filter>
+    <Filter Include="94. Pattern\State\DefaultState\Death">
+      <UniqueIdentifier>{adab60d5-0183-4841-b304-ede3efbcac80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -467,6 +470,9 @@
     </ClInclude>
     <ClInclude Include="..\public\WarningZoneDecal.h">
       <Filter>01.GameObject\Decal\Warining</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StateDeath.h">
+      <Filter>94. Pattern\State\DefaultState\Death</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -743,6 +749,9 @@
     </ClCompile>
     <ClCompile Include="..\private\WarningZoneDecal.cpp">
       <Filter>01.GameObject\Decal\Warining</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateDeath.cpp">
+      <Filter>94. Pattern\State\DefaultState\Death</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

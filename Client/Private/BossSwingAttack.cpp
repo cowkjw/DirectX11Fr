@@ -44,30 +44,31 @@ void BossSwingAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
 		m_bAttacked = true;
 		pAnimatorLeft->SetTrigger("SwingAttack");
 		pAnimatorRight->SetTrigger("SwingAttack");
-		if (pWarning)
+		
+	}
+	if (!m_bDected &&pWarning && m_fTimeElapsed >= CHARGING_TIME + m_fActiveWarningTime)
+	{
+		pWarning->SetActive(false); // 경고존 비활성화
+
+		if (pChar->GetTarget())
 		{
-			pWarning->SetActive(false); // 경고존 비활성화
+			// 원 안에 있었는지 
+			_vector vTargetPos = pChar->GetTarget()->GetTransform()->Get_State(STATE::POSITION);
+			_vector vMyPos = pWarning->GetTransform()->Get_State(STATE::POSITION);
+			_vector vDelta = vTargetPos - vMyPos;
 
-			if (pChar->GetTarget())
+			// 거리 제곱 계산
+			_float fDistSq = XMVectorGetX(XMVector3LengthSq(vDelta));
+			_float radiusSq = 176.f * 176.f;
+
+			if (fDistSq <= radiusSq)
 			{
-				// 원 안에 있었는지 
-				_vector vTargetPos = pChar->GetTarget()->GetTransform()->Get_State(STATE::POSITION);
-				_vector vMyPos = pWarning->GetTransform()->Get_State(STATE::POSITION);
-				_vector vDelta = vTargetPos - vMyPos;
-
-				// 거리 제곱 계산
-				_float fDistSq = XMVectorGetX(XMVector3LengthSq(vDelta));
-				_float radiusSq = 176.f * 176.f;
-
-				if (fDistSq <= radiusSq)
-				{
-					pChar->GetTarget()->StartHitStop(0.5f);
-					pChar->GetTarget()->TakeDamage(20.f);
-					pChar->GetTarget()->Blow(pChar, 40.f);
-				}
-
+				pChar->GetTarget()->StartHitStop(0.5f);
+				pChar->GetTarget()->TakeDamage(20.f);
+				pChar->GetTarget()->Blow(pChar, 40.f);
 			}
 		}
+		m_bDected = true; // 경고존 활성화 후 한 번만
 	}
 
 	if (m_bAttacked && m_fTimeElapsed >= ATTACK_END_TIME)

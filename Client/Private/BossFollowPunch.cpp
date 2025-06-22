@@ -46,7 +46,7 @@ void BossFollowPunch::Enter(CEnmuMeat* pChar)
 
 	if (m_pWarningZone)
 	{
-		m_pWarningZone->GetTransform()->Scaling(_float3(40.f, 40.f, 40.f));
+		m_pWarningZone->GetTransform()->Scaling(_float3(85.f, 85.f, 85.f));
 	}
 }
 
@@ -71,8 +71,8 @@ void BossFollowPunch::Update(CEnmuMeat* pChar, _float fTimeDelta)
 		rightArm->GetTransform()->RotateToDirection(XMVector3Normalize(rawDir));
 
 		_vector warningDir = XMVector3Normalize(rawDir);
-		_vector warningPos = vRightArmPos + warningDir * 50.f;
-		warningPos = XMVectorSetY(warningPos, -18.f);
+		_vector warningPos = vRightArmPos + warningDir * 165.f;
+		warningPos = XMVectorSetY(warningPos, -17.f);
 		m_pWarningZone->GetTransform()->Set_State(STATE::POSITION, warningPos);
 	
 	}
@@ -93,11 +93,20 @@ void BossFollowPunch::Update(CEnmuMeat* pChar, _float fTimeDelta)
 		_vector rawDir = XMVector3Normalize(vTargetPos - vLeftArmPos);
 
 		leftArm->GetTransform()->RotateToDirection(XMVector3Normalize(rawDir));
+
+		_vector warningDir = XMVector3Normalize(rawDir);
+		_vector warningPos = vLeftArmPos + warningDir * 165.f;
+		warningPos = XMVectorSetY(warningPos, -17.f);
+		m_pWarningZone->GetTransform()->Set_State(STATE::POSITION, warningPos);
 	}
 	else if (!m_bAttackedLeft && m_fTimeElapsed >= LEFTARM_START_TIME)
 	{
 		pAnimatorLeft->SetTrigger("FollowPunch");
 		m_bAttackedLeft = true;
+		if (m_pWarningZone)
+		{
+			m_pWarningZone->SetActive(false);
+		}
 	}
 
 	if (m_fTimeElapsed >= ATTACK_END_TIME)

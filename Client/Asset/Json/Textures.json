@@ -347,6 +347,24 @@
       "path": "../Asset/Resources/Textures/StoryBoard/Lang_Title08.png",
       "numTextures": 1,
       "static": true
+    },
+    {
+      "key": "Lang_Round_Start",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Lang_Round_Start.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Lang_Round_Stop",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Lang_Round_Stop.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Lang_Round_Fin",
+      "path": "../Asset/Resources/Textures/GamePlayUI/Lang_Round_Fin.png",
+      "numTextures": 1,
+      "static": true
     }
 
 

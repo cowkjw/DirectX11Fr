@@ -6,6 +6,7 @@
 #include "EnmuMeat.h"
 #include "EnmuTentacle.h"
 #include "Level_Loading.h"
+#include "UIImage.h"
 #include <Weapon.h>
 
 CLevel_EnmuBoss::CLevel_EnmuBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -43,8 +44,16 @@ HRESULT CLevel_EnmuBoss::Initialize()
 	//	ToIndex(LEVEL::ENMU_BOSS), TEXT("Layer_Camera")))
 	//	return E_FAIL;
 
-	
 
+	auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StartImage"));
+	if (pUiImage)
+	{
+		pUiImage->SetActive(true);
+		m_bStartGame = true;
+	}
+
+	m_pTanjiro = static_cast<CBaseCharacter*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("Tanjiro")));
+	m_pEnmu = static_cast<CEnmuMeat*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("EnmuMeat")));
 	return S_OK;
 }
 
@@ -56,6 +65,7 @@ void CLevel_EnmuBoss::Update(_float fTimeDelta)
 			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::BATTLE))))
 			return;
 	}
+	UpdateGameFlow(fTimeDelta);
 }
 
 HRESULT CLevel_EnmuBoss::Render()
@@ -129,6 +139,94 @@ HRESULT CLevel_EnmuBoss::Ready_Lights()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CLevel_EnmuBoss::UpdateGameFlow(_float fTimeDelta)
+{
+	
+	if (m_bStartGame)
+	{
+		m_fStartImageElapsedTime += fTimeDelta;
+		if (m_fStartImageElapsedTime >= m_fStartImageTime)
+		{
+			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StartImage"));
+			if (pUiImage)
+			{
+				pUiImage->SetActive(false);
+			}
+			m_bStartGame = false;
+			if (m_pTanjiro)
+			{
+				m_pTanjiro->SetGameStarted(true);
+			}
+			if (m_pEnmu)
+			{
+				m_pEnmu->SetGameStarted(true);
+			}
+		}
+	}
+
+	if (m_pTanjiro)
+	{
+		if (m_pTanjiro->GetState() == CBaseCharacter::CSTATE::DIE)
+		{
+			m_bEndGame = true;
+			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StopImage"));
+			if (pUiImage)
+			{
+				pUiImage->SetActive(true);
+			}
+
+		}
+	}
+	else if (m_pEnmu)
+	{
+		if (m_pEnmu->GetState() == EnmuState::DIE)
+		{
+			m_bEndGame = true;
+			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StopImage"));
+			if (pUiImage)
+			{
+				pUiImage->SetActive(true);
+			}
+		}
+	}
+
+	if (m_bEndGame)
+	{
+		m_fStopImageElapsedTime += fTimeDelta;
+		if (m_fStopImageElapsedTime >= m_fStopImageTime)
+		{
+			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StopImage"));
+			if (pUiImage)
+			{
+				pUiImage->SetActive(false);
+				auto pFinImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("FinImage"));
+				if (pFinImage)
+				{
+					pFinImage->SetActive(true);
+				}
+			}
+			m_bIsGameOver = true;
+		}
+	}
+
+	if (m_bIsGameOver)
+	{
+		m_fFinalImageElapsedTime += fTimeDelta;
+		if (m_fFinalImageElapsedTime >= m_fFinalImageTime)
+		{
+			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("FinImage"));
+			if (pUiImage)
+			{
+				pUiImage->SetActive(false);
+			}
+			m_bIsGameOver = false;
+			if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
+				CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::BATTLE))))
+				return;
+		}
+	}
 }
 
 CLevel_EnmuBoss* CLevel_EnmuBoss::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -77,7 +77,7 @@ HRESULT CKyojuro::Initialize(void* pArg)
 	m_pRangeColliderCom->SetActive(false); // 초기에는 비활성화
 
 	CBodyColliderParts::BODYCOLLIDERPARTS_DESC desc{};
-	desc.fRadius = 5.f;
+	desc.fRadius = 8.f;
 	desc.vColliderOffsets.push_back(_float3(0.f, 0.f, 0.f));
 	AddChild(CBodyColliderParts::Create(m_pDevice, m_pContext));
 
@@ -101,7 +101,7 @@ HRESULT CKyojuro::Initialize(void* pArg)
 	ChangeState(new StateIdle(TEXT("Idle")));
 	m_iShaderPass = 2;
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(100.f, 0.f, 50.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(90.f, 0.f, 50.f, 1.f));
 	m_pTransformCom->Rotate_EulerAngles(_float3(0.f, -45.f, 0.f));
 	if (m_pNavigationCom)
 	{
@@ -173,7 +173,7 @@ void CKyojuro::TakeDamage(_float fDamage)
 	if (pLeftBar)
 	{
 		CUIProgressBar* pLifeBar = static_cast<CUIProgressBar*>(pLeftBar);
-		pLifeBar->ApplyDamage(fDamage);
+		pLifeBar->ApplyDamage(fDamage / m_fMaxHP * 100.f);
 	}
 }
 

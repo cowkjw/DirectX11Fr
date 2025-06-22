@@ -126,14 +126,15 @@ HRESULT CAkaza::Initialize(void* pArg)
 		m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
 	}
 
-	//m_fMaxHP = 400.f;
-	//m_fCurrentHP = m_fMaxHP;
+	m_fMaxHP = 250.f;
+	m_fCurrentHP = m_fMaxHP;
 
 	return S_OK;
 }
 
 void CAkaza::Priority_Update(_float fTimeDelta)
 {
+	CBaseCharacter::Priority_Update(fTimeDelta);
 
 	static _uint iAnim = 0;
 	if (m_pGameInstance->IsKeyPressed('N'))
@@ -148,6 +149,20 @@ void CAkaza::Priority_Update(_float fTimeDelta)
 		iAnim = max(0, iAnim - 1);
 	}
 
+	//if (m_fCurrentHP <= 0.f)
+	//{
+	//	if (m_pState)
+	//	{
+	//		if (m_pState->GetStateName() != "Die")
+	//		{
+	//			ChangeState(new StateDie());
+	//		}
+	//	}
+	//	else
+	//	{
+	//		ChangeState(new StateDie());
+	//	}
+	//}
 
 }
 
@@ -217,7 +232,7 @@ void CAkaza::TakeDamage(_float fDamage)
 	if (pBar)
 	{
 		CUIProgressBar* pRightBar = static_cast<CUIProgressBar*>(pBar);
-		pRightBar->ApplyDamage(fDamage);
+		pRightBar->ApplyDamage(fDamage / m_fMaxHP * 100.f);
 	}
 }
 

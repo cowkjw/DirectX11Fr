@@ -29,7 +29,7 @@ private:
 	void FBXLodaer();
 	void DrawAnimEventEditor();
 	void SpawnMouse(void* pArg = nullptr);
-	void CreateNavMesh();
+	void ShowCells();
 
 	CGameObject* ClonePrototype(const string& prototypeName, const wstring& instanceName,void* pArg = nullptr);
 

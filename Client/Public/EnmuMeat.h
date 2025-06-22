@@ -63,6 +63,7 @@ public:
 	_float Hit(_float fDamage);
 	void OnAttackHit(CGameObject* pTarget);
 	EnmuState GetState() const { return m_eState; }
+	void SetGameStarted(_bool bStarted) { m_bGameStarted = bStarted; }
 
 
 private:
@@ -78,8 +79,9 @@ private:
 	class BossState* m_pBossState{ nullptr };
 	class CBaseCharacter* m_pTarget{ nullptr }; // 타겟 캐릭터
 	vector<class CEnmuTentacle*> m_vecTentacles; // 팔에 붙은 촉수들
+	_bool m_bGameStarted{ false }; // 게임 시작 여부
 
-private:
+	// 쿨타임 변수들
 	_float m_CD_Punch;
 	_float m_CD_Swing;
 	_float m_CD_Hand;

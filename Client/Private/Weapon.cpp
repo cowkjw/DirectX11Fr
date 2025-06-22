@@ -275,6 +275,19 @@ void CWeapon::OnCollisionEnter(CCollider* other)
 			}
 		}
 	}
+	else if (auto pBossParts = dynamic_cast<CEnmuParts*>(other->GetOwner()->GetParent()))
+	{
+		if (m_DamagedTargets.find(pBossParts) != m_DamagedTargets.end())
+			return; // 이미 데미지를 입힌 대상이면 무시
+		m_DamagedTargets.insert(pBossParts); // 데미지를 입힌 대상에 추가
+		if (auto pBoss = static_cast<CEnmuMeat*>(pBossParts->GetParent()))
+		{
+			if (auto pChar = dynamic_cast<CBaseCharacter*>(m_pParent))
+			{
+				pChar->OnAttackHit(pBoss);
+			}
+		}
+	}
 }
 
 void CWeapon::OnCollisionStay(CCollider* other, float fTimeDelta)

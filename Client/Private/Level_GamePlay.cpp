@@ -4,6 +4,7 @@
 #include "ThirdPersonCamera.h"
 #include "BaseCharacter.h"
 #include "UIProgressBar.h"
+#include "UIImage.h"
 #include "Level_Loading.h"
 #include <Weapon.h>
 
@@ -62,10 +63,18 @@ HRESULT CLevel_GamePlay::Initialize()
 		if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::STATIC), TEXT("Prototype_GameObject_ThirdPersonCamera"),
 			ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_Camera"),&CameraDesc))
 			return E_FAIL;
-
 	}
 
 
+	auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StartImage"));
+	if (pUiImage)
+	{
+		pUiImage->SetActive(true);
+		m_bStartGame = true;
+	}
+
+	m_pKyojuro = static_cast<CBaseCharacter*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("Kyojuro")));
+	m_pAkaza = static_cast<CBaseCharacter*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("Akaza")));
 	return S_OK;
 }
 
@@ -77,6 +86,8 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::BATTLE))))
 			return;
 	}
+	UpdateGameFlow(fTimeDelta);
+
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -137,6 +148,94 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CLevel_GamePlay::UpdateGameFlow(_float fTimeDelta)
+{
+	
+	if (m_bStartGame)
+	{
+		m_fStartImageElapsedTime += fTimeDelta;
+		if (m_fStartImageElapsedTime >= m_fStartImageTime)
+		{
+			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StartImage"));
+			if (pUiImage)
+			{
+				pUiImage->SetActive(false);
+			}
+			m_bStartGame = false;
+			if (m_pKyojuro)
+			{
+				m_pKyojuro->SetGameStarted(true);
+			}
+			if (m_pAkaza)
+			{
+				m_pAkaza->SetGameStarted(true);
+			}
+		}
+	}
+
+	if (m_pKyojuro)
+	{
+		if (m_pKyojuro->GetState() == CBaseCharacter::CSTATE::DIE)
+		{
+			m_bEndGame = true;
+			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StopImage"));
+			if (pUiImage)
+			{
+				pUiImage->SetActive(true);
+			}
+
+		}
+	}
+	else if (m_pAkaza)
+	{
+		if (m_pAkaza->GetState() == CBaseCharacter::CSTATE::DIE)
+		{
+			m_bEndGame = true;
+			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StopImage"));
+			if (pUiImage)
+			{
+				pUiImage->SetActive(true);
+			}
+		}
+	}
+
+	if (m_bEndGame)
+	{
+		m_fStopImageElapsedTime += fTimeDelta;
+		if (m_fStopImageElapsedTime >= m_fStopImageTime)
+		{
+			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StopImage"));
+			if (pUiImage)
+			{
+				pUiImage->SetActive(false);
+				auto pFinImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("FinImage"));
+				if (pFinImage)
+				{
+					pFinImage->SetActive(true);
+				}
+			}
+			m_bIsGameOver = true;
+		}
+	}
+
+	if (m_bIsGameOver)
+	{
+		m_fFinalImageElapsedTime += fTimeDelta;
+		if (m_fFinalImageElapsedTime >= m_fFinalImageTime)
+		{
+			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("FinImage"));
+			if (pUiImage)
+			{
+				pUiImage->SetActive(false);
+			}
+			m_bIsGameOver = false;
+			if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
+				CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::BATTLE))))
+				return;
+		}
+	}
 }
 
 CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -303,6 +303,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
                 }
             ]
         },
@@ -316,7 +320,7 @@
                 },
                 {
                     "name": "DeactiveHitbox",
-                    "time": 30.0
+                    "time": 15.0
                 }
             ]
         },
@@ -346,7 +350,7 @@
             "events": [
                 {
                     "name": "EndAttack",
-                    "time": 80.0
+                    "time": 76.94000244140625
                 }
             ]
         },
@@ -467,15 +471,12 @@
         {
             "clipName": "A_P0012_V00_C00_AtkUniqueAct01_1",
             "duration": 10.0,
-            "events": [
-       
-            ]
+            "events": []
         },
         {
             "clipName": "A_P0012_V00_C00_AtkUniqueAct01_2",
             "duration": 27.0,
             "events": [
-          
                 {
                     "name": "EndAttack",
                     "time": 20.0017032623291
@@ -576,6 +577,10 @@
             "clipName": "A_P0012_V00_C00_BaseNut01_1",
             "duration": 80.0,
             "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
                 {
                     "name": "DeactiveHitbox",
                     "time": 0.0

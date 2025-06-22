@@ -46,6 +46,8 @@ public:
 			return nullptr;
 		return m_Cells[iIndex];
 	}
+	void DeleteCell(_int iIndex);
+
 #ifdef _DEBUG
 public:
 	HRESULT Render();

@@ -1,1142 +1,1341 @@
 [
-    {
-        "CreateLevel": 4,
-        "ID": 17,
+  {
+    "CreateLevel": 4,
+    "ID": 17,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 1,
+    "UI": true,
+    "UIType": 3,
+    "components": {
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
         "Position": [
-            0.0,
-            0.0
+          0.0,
+          0.0,
+          0.0
         ],
-        "ProtoLevel": 0,
-        "ProtoTypeTag": "",
-        "Size": [
-            1.0,
-            1.0
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
         ],
-        "SortingOrder": 1,
-        "UI": true,
-        "UIType": 3,
-        "components": {
-            "Com_Transform": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true,
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Com_VIBuffer": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            }
-        },
-        "isActive": true,
-        "name": "GameplayCanvas",
-        "parentId": 0,
-        "tag": ""
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
     },
-    {
-        "CreateLevel": 4,
-        "ID": 32,
-        "NumTextures": 1,
+    "isActive": true,
+    "name": "GameplayCanvas",
+    "parentId": 0,
+    "tag": ""
+  },
+  {
+    "CreateLevel": 4,
+    "ID": 32,
+    "NumTextures": 1,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "ShaderKey": "Shader_VtxPosTex",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 0,
+    "TextureIndex": 0,
+    "TextureKey": "BarTanjiro",
+    "UI": true,
+    "UIType": 0,
+    "components": {
+      "Com_Shader": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Texture": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
         "Position": [
-            0.0,
-            0.0
+          -554.0,
+          279.0,
+          0.20
         ],
-        "ProtoLevel": 0,
-        "ProtoTypeTag": "",
-        "ShaderKey": "Shader_VtxPosTex",
-        "Size": [
-            1.0,
-            1.0
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
         ],
-        "SortingOrder": 0,
-        "TextureIndex": 0,
-        "TextureKey": "BarTanjiro",
-        "UI": true,
-        "UIType": 0,
-        "components": {
-            "Com_Shader": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Texture": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Transform": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true,
-                "Position": [
-                    -554.0,
-                    279.0,
-                    0.20
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    94.69,
-                    96.19,
-                    1.0
-                ]
-            },
-            "Com_VIBuffer": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            }
-        },
-        "isActive": true,
-        "name": "PlayerImage",
-        "parentId": 17,
-        "tag": ""
+        "Scale": [
+          94.69,
+          96.19,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
     },
-    {
-        "CreateLevel": 4,
-        "ID": 29,
-        "NumTextures": 1,
+    "isActive": true,
+    "name": "PlayerImage",
+    "parentId": 17,
+    "tag": ""
+  },
+  {
+    "CreateLevel": 4,
+    "ID": 29,
+    "NumTextures": 1,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "ShaderKey": "Shader_VtxPosTex",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 0,
+    "TextureIndex": 0,
+    "TextureKey": "BarEnmu",
+    "UI": true,
+    "UIType": 0,
+    "components": {
+      "Com_Shader": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Texture": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
         "Position": [
-            0.0,
-            0.0
+          563.97,
+          279.0,
+          0.0
         ],
-        "ProtoLevel": 0,
-        "ProtoTypeTag": "",
-        "ShaderKey": "Shader_VtxPosTex",
-        "Size": [
-            1.0,
-            1.0
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
         ],
-        "SortingOrder": 0,
-        "TextureIndex": 0,
-        "TextureKey": "BarEnmu",
-        "UI": true,
-        "UIType": 0,
-        "components": {
-            "Com_Shader": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Texture": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Transform": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true,
-                "Position": [
-                    563.97,
-                    279.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    95.0,
-                    96.19,
-                    1.0
-                ]
-            },
-            "Com_VIBuffer": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            }
-        },
-        "isActive": true,
-        "name": "EnemyImage",
-        "parentId": 17,
-        "tag": ""
+        "Scale": [
+          95.0,
+          96.19,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
     },
-    {
-        "CreateLevel": 4,
-        "ID": 31,
-        "NumTextures": 1,
+    "isActive": true,
+    "name": "EnemyImage",
+    "parentId": 17,
+    "tag": ""
+  },
+  {
+    "CreateLevel": 4,
+    "ID": 31,
+    "NumTextures": 1,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "ShaderKey": "Shader_VtxPosTex",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 0,
+    "TextureIndex": 0,
+    "TextureKey": "Boss_Gauge_Deco",
+    "UI": true,
+    "UIType": 0,
+    "components": {
+      "Com_Shader": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Texture": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
         "Position": [
-            0.0,
-            0.0
+          355.0,
+          240.0,
+          0.20
         ],
-        "ProtoLevel": 0,
-        "ProtoTypeTag": "",
-        "ShaderKey": "Shader_VtxPosTex",
-        "Size": [
-            1.0,
-            1.0
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
         ],
-        "SortingOrder": 0,
-        "TextureIndex": 0,
-        "TextureKey": "Boss_Gauge_Deco",
-        "UI": true,
-        "UIType": 0,
-        "components": {
-            "Com_Shader": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Texture": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Transform": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true,
-                "Position": [
-                    355.0,
-                    240.0,
-                    0.20
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    571.69,
-                    55.59,
-                    1.0
-                ]
-            },
-            "Com_VIBuffer": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            }
-        },
-        "isActive": true,
-        "name": "EnemyLifeDeco",
-        "parentId": 17,
-        "tag": ""
+        "Scale": [
+          571.69,
+          55.59,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
     },
-    {
-        "BGImage": {
-            "CreateLevel": 4,
-            "ID": 26,
-            "NumTextures": 1,
-            "Position": [
-                0.0,
-                0.0
-            ],
-            "ProtoLevel": 0,
-            "ProtoTypeTag": "",
-            "ShaderKey": "Shader_VtxPosTex",
-            "Size": [
-                1.0,
-                1.0
-            ],
-            "SortingOrder": 0,
-            "TextureIndex": 0,
-            "TextureKey": "Gauge_Life_Bg",
-            "UI": true,
-            "UIType": 0,
-            "components": {
-                "Com_Shader": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                },
-                "Com_Texture": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                },
-                "Com_Transform": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true,
-                    "Position": [
-                        319.0,
-                        244.0,
-                        0.0
-                    ],
-                    "Rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "Scale": [
-                        500.0,
-                        40.0,
-                        1.0
-                    ]
-                },
-                "Com_VIBuffer": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                }
-            },
-            "isActive": true,
-            "name": "RightLifeBg",
-            "parentId": 25,
-            "tag": ""
+    "isActive": true,
+    "name": "EnemyLifeDeco",
+    "parentId": 17,
+    "tag": ""
+  },
+  {
+    "BGImage": {
+      "CreateLevel": 4,
+      "ID": 26,
+      "NumTextures": 1,
+      "Position": [
+        0.0,
+        0.0
+      ],
+      "ProtoLevel": 0,
+      "ProtoTypeTag": "",
+      "ShaderKey": "Shader_VtxPosTex",
+      "Size": [
+        1.0,
+        1.0
+      ],
+      "SortingOrder": 0,
+      "TextureIndex": 0,
+      "TextureKey": "Gauge_Life_Bg",
+      "UI": true,
+      "UIType": 0,
+      "components": {
+        "Com_Shader": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
         },
-        "CreateLevel": 4,
-        "DamageImage": {
-            "CreateLevel": 4,
-            "ID": 28,
-            "NumTextures": 1,
-            "Position": [
-                0.0,
-                0.0
-            ],
-            "ProtoLevel": 0,
-            "ProtoTypeTag": "",
-            "ShaderKey": "Shader_UICompose",
-            "Size": [
-                1.0,
-                1.0
-            ],
-            "SortingOrder": 0,
-            "TextureIndex": 0,
-            "TextureKey": "BarLifeGreen",
-            "UI": true,
-            "UIType": 0,
-            "components": {
-                "Com_Shader": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                },
-                "Com_Texture": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                },
-                "Com_Transform": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true,
-                    "Position": [
-                        320.0,
-                        244.0,
-                        0.0
-                    ],
-                    "Rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "Scale": [
-                        455.89,
-                        14.30,
-                        1.0
-                    ]
-                },
-                "Com_VIBuffer": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                }
-            },
-            "isActive": true,
-            "name": "RightDamage",
-            "parentId": 25,
-            "tag": ""
+        "Com_Texture": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
         },
-        "FillImage": {
-            "CreateLevel": 4,
-            "ID": 27,
-            "NumTextures": 1,
-            "Position": [
-                0.0,
-                0.0
-            ],
-            "ProtoLevel": 0,
-            "ProtoTypeTag": "",
-            "ShaderKey": "Shader_UICompose",
-            "Size": [
-                1.0,
-                1.0
-            ],
-            "SortingOrder": 0,
-            "TextureIndex": 0,
-            "TextureKey": "BarLifeRed",
-            "UI": true,
-            "UIType": 0,
-            "components": {
-                "Com_Shader": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                },
-                "Com_Texture": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                },
-                "Com_Transform": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true,
-                    "Position": [
-                        319.98,
-                        244.0,
-                        0.0
-                    ],
-                    "Rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "Scale": [
-                        455.89,
-                        14.30,
-                        1.0
-                    ]
-                },
-                "Com_VIBuffer": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                }
-            },
-            "isActive": true,
-            "name": "RightFill",
-            "parentId": 25,
-            "tag": ""
-        },
-        "ID": 25,
-        "Position": [
+        "Com_Transform": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true,
+          "Position": [
+            319.0,
+            244.0,
+            0.0
+          ],
+          "Rotation": [
+            0.0,
             0.0,
             0.0
-        ],
-        "ProtoLevel": 0,
-        "ProtoTypeTag": "",
-        "Size": [
-            1.0,
+          ],
+          "Scale": [
+            500.0,
+            40.0,
             1.0
-        ],
-        "SortingOrder": 0,
-        "UI": true,
-        "UIType": 2,
-        "components": {
-            "Com_Transform": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true,
-                "Position": [
-                    241.0,
-                    244.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Com_VIBuffer": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            }
+          ]
         },
-        "isActive": true,
-        "name": "RightLifeBar",
-        "parentId": 17,
-        "tag": ""
+        "Com_VIBuffer": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
+        }
+      },
+      "isActive": true,
+      "name": "RightLifeBg",
+      "parentId": 25,
+      "tag": ""
     },
-    {
-        "CreateLevel": 4,
-        "ID": 26,
-        "NumTextures": 1,
-        "Position": [
+    "CreateLevel": 4,
+    "DamageImage": {
+      "CreateLevel": 4,
+      "ID": 28,
+      "NumTextures": 1,
+      "Position": [
+        0.0,
+        0.0
+      ],
+      "ProtoLevel": 0,
+      "ProtoTypeTag": "",
+      "ShaderKey": "Shader_UICompose",
+      "Size": [
+        1.0,
+        1.0
+      ],
+      "SortingOrder": 0,
+      "TextureIndex": 0,
+      "TextureKey": "BarLifeGreen",
+      "UI": true,
+      "UIType": 0,
+      "components": {
+        "Com_Shader": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
+        },
+        "Com_Texture": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
+        },
+        "Com_Transform": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true,
+          "Position": [
+            320.0,
+            244.0,
+            0.0
+          ],
+          "Rotation": [
+            0.0,
             0.0,
             0.0
-        ],
-        "ProtoLevel": 0,
-        "ProtoTypeTag": "",
-        "ShaderKey": "Shader_VtxPosTex",
-        "Size": [
-            1.0,
+          ],
+          "Scale": [
+            455.89,
+            14.30,
             1.0
-        ],
-        "SortingOrder": 0,
-        "TextureIndex": 0,
-        "TextureKey": "Gauge_Base",
-        "UI": true,
-        "UIType": 0,
-        "components": {
-            "Com_Shader": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Texture": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Transform": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true,
-                "Position": [
-                    -338.98,
-                    241.0,
-                    0.20
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    585.59,
-                    55.59,
-                    1.0
-                ]
-            },
-            "Com_VIBuffer": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            }
+          ]
         },
-        "isActive": true,
-        "name": "LifeDeco",
-        "parentId": 17,
-        "tag": ""
+        "Com_VIBuffer": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
+        }
+      },
+      "isActive": true,
+      "name": "RightDamage",
+      "parentId": 25,
+      "tag": ""
     },
-    {
-        "BGImage": {
-            "CreateLevel": 4,
-            "ID": 19,
-            "NumTextures": 1,
-            "Position": [
-                0.0,
-                0.0
-            ],
-            "ProtoLevel": 0,
-            "ProtoTypeTag": "",
-            "ShaderKey": "Shader_VtxPosTex",
-            "Size": [
-                1.0,
-                1.0
-            ],
-            "SortingOrder": 0,
-            "TextureIndex": 0,
-            "TextureKey": "Gauge_Life_Bg",
-            "UI": true,
-            "UIType": 0,
-            "components": {
-                "Com_Shader": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                },
-                "Com_Texture": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                },
-                "Com_Transform": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true,
-                    "Position": [
-                        -286.98,
-                        244.0,
-                        0.20
-                    ],
-                    "Rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "Scale": [
-                        500.0,
-                        40.0,
-                        1.0
-                    ]
-                },
-                "Com_VIBuffer": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                }
-            },
-            "isActive": true,
-            "name": "LifeBg",
-            "parentId": 18,
-            "tag": ""
+    "FillImage": {
+      "CreateLevel": 4,
+      "ID": 27,
+      "NumTextures": 1,
+      "Position": [
+        0.0,
+        0.0
+      ],
+      "ProtoLevel": 0,
+      "ProtoTypeTag": "",
+      "ShaderKey": "Shader_UICompose",
+      "Size": [
+        1.0,
+        1.0
+      ],
+      "SortingOrder": 0,
+      "TextureIndex": 0,
+      "TextureKey": "BarLifeRed",
+      "UI": true,
+      "UIType": 0,
+      "components": {
+        "Com_Shader": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
         },
-        "CreateLevel": 4,
-        "DamageImage": {
-            "CreateLevel": 4,
-            "ID": 21,
-            "NumTextures": 1,
-            "Position": [
-                0.0,
-                0.0
-            ],
-            "ProtoLevel": 0,
-            "ProtoTypeTag": "",
-            "ShaderKey": "Shader_UICompose",
-            "Size": [
-                1.0,
-                1.0
-            ],
-            "SortingOrder": 0,
-            "TextureIndex": 0,
-            "TextureKey": "BarLifeGreen",
-            "UI": true,
-            "UIType": 0,
-            "components": {
-                "Com_Shader": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                },
-                "Com_Texture": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                },
-                "Com_Transform": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true,
-                    "Position": [
-                        -284.98,
-                        244.0,
-                        0.20
-                    ],
-                    "Rotation": [
-                        0.0,
-                        0.0,
-                        180.0
-                    ],
-                    "Scale": [
-                        455.89,
-                        14.30,
-                        1.0
-                    ]
-                },
-                "Com_VIBuffer": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                }
-            },
-            "isActive": true,
-            "name": "Damage",
-            "parentId": 18,
-            "tag": ""
+        "Com_Texture": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
         },
-        "FillImage": {
-            "CreateLevel": 4,
-            "ID": 20,
-            "NumTextures": 1,
-            "Position": [
-                0.0,
-                0.0
-            ],
-            "ProtoLevel": 0,
-            "ProtoTypeTag": "",
-            "ShaderKey": "Shader_UICompose",
-            "Size": [
-                1.0,
-                1.0
-            ],
-            "SortingOrder": 0,
-            "TextureIndex": 0,
-            "TextureKey": "BarLifeRed",
-            "UI": true,
-            "UIType": 0,
-            "components": {
-                "Com_Shader": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                },
-                "Com_Texture": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                },
-                "Com_Transform": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true,
-                    "Position": [
-                        -284.98,
-                        244.0,
-                        0.20
-                    ],
-                    "Rotation": [
-                        0.0,
-                        0.0,
-                        180.0
-                    ],
-                    "Scale": [
-                        455.89,
-                        14.30,
-                        1.0
-                    ]
-                },
-                "Com_VIBuffer": {
-                    "ComponentCreateLevel": 0,
-                    "ComponentLevel": 0,
-                    "ComponentTag": "",
-                    "IsActive": true
-                }
-            },
-            "isActive": true,
-            "name": "Fill",
-            "parentId": 18,
-            "tag": ""
-        },
-        "ID": 18,
-        "Position": [
+        "Com_Transform": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true,
+          "Position": [
+            319.98,
+            244.0,
+            0.0
+          ],
+          "Rotation": [
+            0.0,
             0.0,
             0.0
-        ],
-        "ProtoLevel": 0,
-        "ProtoTypeTag": "",
-        "Size": [
-            1.0,
+          ],
+          "Scale": [
+            455.89,
+            14.30,
             1.0
-        ],
-        "SortingOrder": 0,
-        "UI": true,
-        "UIType": 2,
-        "components": {
-            "Com_Transform": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true,
-                "Position": [
-                    -307.98,
-                    244.0,
-                    0.20
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Com_VIBuffer": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            }
+          ]
         },
-        "isActive": true,
-        "name": "LeftLifeBar",
-        "parentId": 17,
-        "tag": ""
+        "Com_VIBuffer": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
+        }
+      },
+      "isActive": true,
+      "name": "RightFill",
+      "parentId": 25,
+      "tag": ""
     },
-    {
-        "CreateLevel": 4,
-        "ID": 30,
-        "NumTextures": 1,
+    "ID": 25,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 0,
+    "UI": true,
+    "UIType": 2,
+    "components": {
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
         "Position": [
-            0.0,
-            0.0
+          241.0,
+          244.0,
+          0.0
         ],
-        "ProtoLevel": 0,
-        "ProtoTypeTag": "",
-        "ShaderKey": "Shader_VtxPosTex",
-        "Size": [
-            1.0,
-            1.0
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
         ],
-        "SortingOrder": 0,
-        "TextureIndex": 0,
-        "TextureKey": "Gauge_Life",
-        "UI": true,
-        "UIType": 0,
-        "components": {
-            "Com_Shader": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Texture": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Transform": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true,
-                "Position": [
-                    319.98,
-                    244.0,
-                    0.20
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    460.60,
-                    18.87,
-                    1.0
-                ]
-            },
-            "Com_VIBuffer": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            }
-        },
-        "isActive": true,
-        "name": "RightLifeFrame",
-        "parentId": 17,
-        "tag": ""
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
     },
-    {
-        "CreateLevel": 4,
-        "ID": 27,
-        "NumTextures": 1,
+    "isActive": true,
+    "name": "RightLifeBar",
+    "parentId": 17,
+    "tag": ""
+  },
+  {
+    "CreateLevel": 4,
+    "ID": 26,
+    "NumTextures": 1,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "ShaderKey": "Shader_VtxPosTex",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 0,
+    "TextureIndex": 0,
+    "TextureKey": "Gauge_Base",
+    "UI": true,
+    "UIType": 0,
+    "components": {
+      "Com_Shader": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Texture": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
         "Position": [
-            0.0,
-            0.0
+          -338.98,
+          241.0,
+          0.20
         ],
-        "ProtoLevel": 0,
-        "ProtoTypeTag": "",
-        "ShaderKey": "Shader_VtxPosTex",
-        "Size": [
-            1.0,
-            1.0
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
         ],
-        "SortingOrder": 0,
-        "TextureIndex": 0,
-        "TextureKey": "Gauge_Life",
-        "UI": true,
-        "UIType": 0,
-        "components": {
-            "Com_Shader": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Texture": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Transform": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true,
-                "Position": [
-                    -284.98,
-                    244.0,
-                    0.20
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    460.60,
-                    18.87,
-                    1.0
-                ]
-            },
-            "Com_VIBuffer": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            }
-        },
-        "isActive": true,
-        "name": "LifeFrame",
-        "parentId": 17,
-        "tag": ""
+        "Scale": [
+          585.59,
+          55.59,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
     },
-    {
-        "CreateLevel": 4,
-        "ID": 34,
-        "NumTextures": 1,
-        "Position": [
+    "isActive": true,
+    "name": "LifeDeco",
+    "parentId": 17,
+    "tag": ""
+  },
+  {
+    "BGImage": {
+      "CreateLevel": 4,
+      "ID": 19,
+      "NumTextures": 1,
+      "Position": [
+        0.0,
+        0.0
+      ],
+      "ProtoLevel": 0,
+      "ProtoTypeTag": "",
+      "ShaderKey": "Shader_VtxPosTex",
+      "Size": [
+        1.0,
+        1.0
+      ],
+      "SortingOrder": 0,
+      "TextureIndex": 0,
+      "TextureKey": "Gauge_Life_Bg",
+      "UI": true,
+      "UIType": 0,
+      "components": {
+        "Com_Shader": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
+        },
+        "Com_Texture": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
+        },
+        "Com_Transform": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true,
+          "Position": [
+            -286.98,
+            244.0,
+            0.20
+          ],
+          "Rotation": [
+            0.0,
             0.0,
             0.0
-        ],
-        "ProtoLevel": 0,
-        "ProtoTypeTag": "",
-        "ShaderKey": "Shader_VtxPosTex",
-        "Size": [
-            1.0,
+          ],
+          "Scale": [
+            500.0,
+            40.0,
             1.0
-        ],
-        "SortingOrder": 0,
-        "TextureIndex": 0,
-        "TextureKey": "NameEn",
-        "UI": true,
-        "UIType": 0,
-        "components": {
-            "Com_Shader": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Texture": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Transform": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true,
-                "Position": [
-                    486.98,
-                    281.98,
-                    0.20
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    72.19,
-                    45.0,
-                    1.0
-                ]
-            },
-            "Com_VIBuffer": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            }
+          ]
         },
-        "isActive": true,
-        "name": "EnemyName",
-        "parentId": 17,
-        "tag": ""
+        "Com_VIBuffer": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
+        }
+      },
+      "isActive": true,
+      "name": "LifeBg",
+      "parentId": 18,
+      "tag": ""
     },
-    {
-        "CreateLevel": 4,
-        "ID": 35,
-        "NumTextures": 1,
-        "Position": [
-            0.0,
-            0.0
-        ],
-        "ProtoLevel": 0,
-        "ProtoTypeTag": "",
-        "ShaderKey": "Shader_VtxPosTex",
-        "Size": [
-            1.0,
-            1.0
-        ],
-        "SortingOrder": 0,
-        "TextureIndex": 0,
-        "TextureKey": "NameTan",
-        "UI": true,
-        "UIType": 0,
-        "components": {
-            "Com_Shader": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Texture": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Transform": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true,
-                "Position": [
-                    -430.0,
-                    279.0,
-                    0.20
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    125.0,
-                    40.0,
-                    1.0
-                ]
-            },
-            "Com_VIBuffer": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            }
+    "CreateLevel": 4,
+    "DamageImage": {
+      "CreateLevel": 4,
+      "ID": 21,
+      "NumTextures": 1,
+      "Position": [
+        0.0,
+        0.0
+      ],
+      "ProtoLevel": 0,
+      "ProtoTypeTag": "",
+      "ShaderKey": "Shader_UICompose",
+      "Size": [
+        1.0,
+        1.0
+      ],
+      "SortingOrder": 0,
+      "TextureIndex": 0,
+      "TextureKey": "BarLifeGreen",
+      "UI": true,
+      "UIType": 0,
+      "components": {
+        "Com_Shader": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
         },
-        "isActive": true,
-        "name": "PlayerName",
-        "parentId": 17,
-        "tag": ""
+        "Com_Texture": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
+        },
+        "Com_Transform": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true,
+          "Position": [
+            -284.98,
+            244.0,
+            0.20
+          ],
+          "Rotation": [
+            0.0,
+            0.0,
+            180.0
+          ],
+          "Scale": [
+            455.89,
+            14.30,
+            1.0
+          ]
+        },
+        "Com_VIBuffer": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
+        }
+      },
+      "isActive": true,
+      "name": "Damage",
+      "parentId": 18,
+      "tag": ""
     },
-    {
-        "CreateLevel": 4,
-        "ID": 36,
-        "NumTextures": 1,
-        "Position": [
-            0.0,
-            0.0
-        ],
-        "ProtoLevel": 0,
-        "ProtoTypeTag": "",
-        "ShaderKey": "Shader_VtxPosTex",
-        "Size": [
-            1.0,
-            1.0
-        ],
-        "SortingOrder": 0,
-        "TextureIndex": 0,
-        "TextureKey": "InfinityTime",
-        "UI": true,
-        "UIType": 0,
-        "components": {
-            "Com_Shader": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Texture": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            },
-            "Com_Transform": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true,
-                "Position": [
-                    12.00,
-                    247.0,
-                    0.20
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    70.0,
-                    70.0,
-                    1.0
-                ]
-            },
-            "Com_VIBuffer": {
-                "ComponentCreateLevel": 0,
-                "ComponentLevel": 0,
-                "ComponentTag": "",
-                "IsActive": true
-            }
+    "FillImage": {
+      "CreateLevel": 4,
+      "ID": 20,
+      "NumTextures": 1,
+      "Position": [
+        0.0,
+        0.0
+      ],
+      "ProtoLevel": 0,
+      "ProtoTypeTag": "",
+      "ShaderKey": "Shader_UICompose",
+      "Size": [
+        1.0,
+        1.0
+      ],
+      "SortingOrder": 0,
+      "TextureIndex": 0,
+      "TextureKey": "BarLifeRed",
+      "UI": true,
+      "UIType": 0,
+      "components": {
+        "Com_Shader": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
         },
-        "isActive": true,
-        "name": "Timer",
-        "parentId": 17,
-        "tag": ""
-    }
+        "Com_Texture": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
+        },
+        "Com_Transform": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true,
+          "Position": [
+            -284.98,
+            244.0,
+            0.20
+          ],
+          "Rotation": [
+            0.0,
+            0.0,
+            180.0
+          ],
+          "Scale": [
+            455.89,
+            14.30,
+            1.0
+          ]
+        },
+        "Com_VIBuffer": {
+          "ComponentCreateLevel": 0,
+          "ComponentLevel": 0,
+          "ComponentTag": "",
+          "IsActive": true
+        }
+      },
+      "isActive": true,
+      "name": "Fill",
+      "parentId": 18,
+      "tag": ""
+    },
+    "ID": 18,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 0,
+    "UI": true,
+    "UIType": 2,
+    "components": {
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
+        "Position": [
+          -307.98,
+          244.0,
+          0.20
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
+    },
+    "isActive": true,
+    "name": "LeftLifeBar",
+    "parentId": 17,
+    "tag": ""
+  },
+  {
+    "CreateLevel": 4,
+    "ID": 30,
+    "NumTextures": 1,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "ShaderKey": "Shader_VtxPosTex",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 0,
+    "TextureIndex": 0,
+    "TextureKey": "Gauge_Life",
+    "UI": true,
+    "UIType": 0,
+    "components": {
+      "Com_Shader": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Texture": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
+        "Position": [
+          319.98,
+          244.0,
+          0.20
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          460.60,
+          18.87,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
+    },
+    "isActive": true,
+    "name": "RightLifeFrame",
+    "parentId": 17,
+    "tag": ""
+  },
+  {
+    "CreateLevel": 4,
+    "ID": 27,
+    "NumTextures": 1,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "ShaderKey": "Shader_VtxPosTex",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 0,
+    "TextureIndex": 0,
+    "TextureKey": "Gauge_Life",
+    "UI": true,
+    "UIType": 0,
+    "components": {
+      "Com_Shader": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Texture": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
+        "Position": [
+          -284.98,
+          244.0,
+          0.20
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          460.60,
+          18.87,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
+    },
+    "isActive": true,
+    "name": "LifeFrame",
+    "parentId": 17,
+    "tag": ""
+  },
+  {
+    "CreateLevel": 4,
+    "ID": 34,
+    "NumTextures": 1,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "ShaderKey": "Shader_VtxPosTex",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 0,
+    "TextureIndex": 0,
+    "TextureKey": "NameEn",
+    "UI": true,
+    "UIType": 0,
+    "components": {
+      "Com_Shader": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Texture": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
+        "Position": [
+          486.98,
+          281.98,
+          0.20
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          72.19,
+          45.0,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
+    },
+    "isActive": true,
+    "name": "EnemyName",
+    "parentId": 17,
+    "tag": ""
+  },
+  {
+    "CreateLevel": 4,
+    "ID": 35,
+    "NumTextures": 1,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "ShaderKey": "Shader_VtxPosTex",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 0,
+    "TextureIndex": 0,
+    "TextureKey": "NameTan",
+    "UI": true,
+    "UIType": 0,
+    "components": {
+      "Com_Shader": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Texture": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
+        "Position": [
+          -430.0,
+          279.0,
+          0.20
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          125.0,
+          40.0,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
+    },
+    "isActive": true,
+    "name": "PlayerName",
+    "parentId": 17,
+    "tag": ""
+  },
+  {
+    "CreateLevel": 4,
+    "ID": 36,
+    "NumTextures": 1,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "ShaderKey": "Shader_VtxPosTex",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 0,
+    "TextureIndex": 0,
+    "TextureKey": "InfinityTime",
+    "UI": true,
+    "UIType": 0,
+    "components": {
+      "Com_Shader": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Texture": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
+        "Position": [
+          12.00,
+          247.0,
+          0.20
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          70.0,
+          70.0,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
+    },
+    "isActive": true,
+    "name": "Timer",
+    "parentId": 17,
+    "tag": ""
+  },
+
+  {
+    "CreateLevel": 3,
+    "ID": 50,
+    "NumTextures": 1,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "ShaderKey": "Shader_VtxPosTex",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 0,
+    "TextureIndex": 0,
+    "TextureKey": "Lang_Round_Start",
+    "UI": true,
+    "UIType": 0,
+    "components": {
+      "Com_Shader": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Texture": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
+        "Position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          270.0,
+          170.0,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
+    },
+    "isActive": false,
+    "name": "StartImage",
+    "parentId": 17,
+    "tag": ""
+  },
+  {
+    "CreateLevel": 3,
+    "ID": 51,
+    "NumTextures": 1,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "ShaderKey": "Shader_VtxPosTex",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 1,
+    "TextureIndex": 0,
+    "TextureKey": "Lang_Round_Stop",
+    "UI": true,
+    "UIType": 0,
+    "components": {
+      "Com_Shader": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Texture": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
+        "Position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          450.0,
+          200.0,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
+    },
+    "isActive": false,
+    "name": "StopImage",
+    "parentId": 17,
+    "tag": ""
+  },
+  {
+    "CreateLevel": 3,
+    "ID": 52,
+    "NumTextures": 1,
+    "Position": [
+      0.0,
+      0.0
+    ],
+    "ProtoLevel": 0,
+    "ProtoTypeTag": "",
+    "ShaderKey": "Shader_VtxPosTex",
+    "Size": [
+      1.0,
+      1.0
+    ],
+    "SortingOrder": 2,
+    "TextureIndex": 0,
+    "TextureKey": "Lang_Round_Fin",
+    "UI": true,
+    "UIType": 0,
+    "components": {
+      "Com_Shader": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Texture": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      },
+      "Com_Transform": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true,
+        "Position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          450.0,
+          200.0,
+          1.0
+        ]
+      },
+      "Com_VIBuffer": {
+        "ComponentCreateLevel": 0,
+        "ComponentLevel": 0,
+        "ComponentTag": "",
+        "IsActive": true
+      }
+    },
+    "isActive": false,
+    "name": "FinImage",
+    "parentId": 17,
+    "tag": ""
+  }
 ]

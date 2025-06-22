@@ -216,6 +216,7 @@
     <ClInclude Include="..\public\StateAttackDown.h" />
     <ClInclude Include="..\public\StateAttackUp.h" />
     <ClInclude Include="..\public\StateBoundHurt.h" />
+    <ClInclude Include="..\public\StateDeath.h" />
     <ClInclude Include="..\public\StateGuard.h" />
     <ClInclude Include="..\public\StateHurtAir.h" />
     <ClInclude Include="..\public\StateHurt.h" />
@@ -309,6 +310,7 @@
     <ClCompile Include="..\private\StateAttackDown.cpp" />
     <ClCompile Include="..\private\StateAttackUp.cpp" />
     <ClCompile Include="..\private\StateBoundHurt.cpp" />
+    <ClCompile Include="..\private\StateDeath.cpp" />
     <ClCompile Include="..\private\StateGuard.cpp" />
     <ClCompile Include="..\private\StateHurtAir.cpp" />
     <ClCompile Include="..\private\StateHurt.cpp" />

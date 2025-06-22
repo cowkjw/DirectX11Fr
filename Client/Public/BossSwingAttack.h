@@ -14,7 +14,9 @@ public:
 	void Exit(CEnmuMeat* pChar) override;
 private:
 	_float m_fTimeElapsed = 0.f; // 경과 시간
+	_float m_fActiveWarningTime = 1.f; // 경고 표시 시간
 	_bool m_bAttacked = false;
+	_bool m_bDected = false; // 차징 여부
 	const _float CHARGING_TIME = 4.5f; // 차징하는 시간
 	const _float ATTACK_END_TIME = 6.f;
 	CGameObject* pWarning = nullptr;
