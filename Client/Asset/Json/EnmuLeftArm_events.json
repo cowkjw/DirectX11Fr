@@ -101,12 +101,16 @@
         {
             "clipName": "A_P1011_V19_C00_AtkSkl03_2",
             "duration": 20.0,
-            "events": [
-                {
-                    "name": "ActiveHitbox",
-                    "time": 10.000991821289063
-                }
-            ]
+          "events": [
+            {
+              "name": "ActiveHitbox",
+              "time": 10.000991821289063
+            },
+            {
+              "name": "CameraShake",
+              "time": 18.0
+            }
+          ]
         },
         {
             "clipName": "A_P1011_V19_C00_AtkSkl03_3",
@@ -136,12 +140,16 @@
         {
             "clipName": "A_P1011_V19_C00_AtkSkl04_2",
             "duration": 28.0,
-            "events": [
-              {
-                "name": "ActiveHitbox",
-                "time": 1.0
-              }
-            ]
+          "events": [
+            {
+              "name": "ActiveHitbox",
+              "time": 1.0
+            },
+            {
+              "name": "CameraShake",
+              "time": 16.001934051513672
+            }
+          ]
         },
         {
             "clipName": "A_P1011_V19_C00_AtkSkl04_3",
@@ -279,6 +287,10 @@
             {
               "name": "ResetRadius",
               "time": 57.01068115234375
+            },
+            {
+              "name": "CameraShake",
+              "time": 24.002960205078125
             }
 
           ]

@@ -305,7 +305,50 @@
       "path": "../Asset/Resources/Textures/Effect/Warning%d.dds",
       "numTextures": 3,
       "static": true
+    },
+    {
+      "key": "SelectBattleAkaza",
+      "path": "../Asset/Resources/Textures/StoryBoard/BustUp_Akaza00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "SelectBattleEnmu",
+      "path": "../Asset/Resources/Textures/StoryBoard/BustUp_Enmu00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "SelectBattleBackGround",
+      "path": "../Asset/Resources/Textures/StoryBoard/Lang_StoryBG08.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "SelectBattleNameBase",
+      "path": "../Asset/Resources/Textures/StoryBoard/Story_Base00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Info_Name_Akaza00",
+      "path": "../Asset/Resources/Textures/StoryBoard/Info_Name_Akaza00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Info_Name_Enmu00",
+      "path": "../Asset/Resources/Textures/StoryBoard/Info_Name_Enmu00.png",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "Lang_Title08",
+      "path": "../Asset/Resources/Textures/StoryBoard/Lang_Title08.png",
+      "numTextures": 1,
+      "static": true
     }
+
 
   ]
 }

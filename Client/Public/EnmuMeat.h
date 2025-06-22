@@ -59,6 +59,7 @@ public:
 
 	_float GetDistanceToTarget() const;
 	_float GetHp() { return m_fHp; }
+	_float GetMaxHp() { return m_fMaxHp; }
 	_float Hit(_float fDamage);
 	void OnAttackHit(CGameObject* pTarget);
 	EnmuState GetState() const { return m_eState; }
@@ -70,8 +71,8 @@ private:
 
 
 private:
-	_float m_fHp = 100.f;
-	_float m_fMaxHp = 100.f;
+	_float m_fHp = 500.f;
+	_float m_fMaxHp = 500.f;
 	_bool m_bAttacking = false; // 공격 중인지 여부
 	EnmuState m_eState = EnmuState::IDLE; // 현재 상태
 	class BossState* m_pBossState{ nullptr };

@@ -75,6 +75,9 @@ void CThirdPersonCamera::Late_Update(_float fTimeDelta)
 
     if (!m_pTargetTransform )
         return;
+
+
+
     XMVECTOR currentCamPos = m_pTransformCom->Get_State(STATE::POSITION);
     if (m_pLockOnTarget && m_pLockOnTarget != m_pTarget)
     {
@@ -85,18 +88,18 @@ void CThirdPersonCamera::Late_Update(_float fTimeDelta)
         XMVECTOR midPoint = XMVectorLerp(playerPos, enemyPos, 0.5f);
         float distance = XMVectorGetX(XMVector3Length(enemyPos - playerPos));
 
-        // 2. 고정된 카메라 높이와 기본 거리 설정
+        // 고정된 카메라 높이와 기본 거리 설정
         //float fixedCameraHeight = 15.0f;  // 고정된 Y 위치
         float baseCameraDistance = max(m_fMinCameraDistance, distance * m_fDistanceMultiplier); // 거리에 따른 기본 카메라 거리
 
-        // 3. 현재 카메라 위치
+        // 현재 카메라 위치
         XMVECTOR currentCamPos = m_pTransformCom->Get_State(STATE::POSITION);
 
-        // 4. 데드존 설정 (화면상의 영역)
+        //데드존 설정 (화면상의 영역)
         float deadZoneWidth = 80.f;   // 좌우 데드존
         float deadZoneHeight = 10.0f;  // 상하 데드존
 
-        // 5. 두 캐릭터를 모두 포함하는 바운딩 박스 계산
+        // 두 캐릭터를 모두 포함하는 바운딩 박스 계산
         XMVECTOR boundsMin = XMVectorMin(playerPos, enemyPos);
         XMVECTOR boundsMax = XMVectorMax(playerPos, enemyPos);
         XMVECTOR boundsCenter = (boundsMin + boundsMax) * 0.5f;
@@ -104,10 +107,10 @@ void CThirdPersonCamera::Late_Update(_float fTimeDelta)
         // Y는 고정
         boundsCenter = XMVectorSetY(boundsCenter, XMVectorGetY(midPoint));
 
-        // 6. 바운딩 박스 크기에 따른 카메라 거리 조정
-        float boundsWidth = XMVectorGetX(boundsMax) - XMVectorGetX(boundsMin);
-        float boundsDepth = XMVectorGetZ(boundsMax) - XMVectorGetZ(boundsMin);
-        float requiredDistance = max(boundsWidth, boundsDepth) * 0.6f + baseCameraDistance;
+        // 바운딩 박스 크기에 따른 카메라 거리 조정
+        _float boundsWidth = XMVectorGetX(boundsMax) - XMVectorGetX(boundsMin);
+        _float boundsDepth = XMVectorGetZ(boundsMax) - XMVectorGetZ(boundsMin);
+        _float requiredDistance = max(boundsWidth, boundsDepth) * 0.3f + baseCameraDistance;
 
         // 7. 원하는 카메라 위치 계산 (바운딩 박스 중심에서 뒤쪽으로)
         XMVECTOR forwardDir = XMVector3Normalize(boundsCenter - currentCamPos);
@@ -118,8 +121,8 @@ void CThirdPersonCamera::Late_Update(_float fTimeDelta)
 
         // 8. 데드존 체크 - 현재 카메라에서 바운딩 박스가 화면 밖으로 나가는지 확인
         XMVECTOR camToBounds = boundsCenter - currentCamPos;
-        float camToBoundsX = XMVectorGetX(camToBounds);
-        float camToBoundsZ = XMVectorGetZ(camToBounds);
+        _float camToBoundsX = XMVectorGetX(camToBounds);
+        _float camToBoundsZ = XMVectorGetZ(camToBounds);
 
         // 데드존을 벗어났을 때만 카메라 이동
         XMVECTOR moveOffset = XMVectorZero();
@@ -152,8 +155,7 @@ void CThirdPersonCamera::Late_Update(_float fTimeDelta)
             desiredCamPos = XMVectorSetY(desiredCamPos, m_fFixedHeight);
         }
 
-        // 11. 스무스 보간
-        float t = min(m_cameraSmooth * fTimeDelta, 1.0f);
+        _float t = min(m_cameraSmooth * fTimeDelta, 1.0f);
         XMVECTOR lerpPos = XMVectorLerp(currentCamPos, desiredCamPos, t);
 
         m_pTransformCom->Set_State(STATE::POSITION, lerpPos);
@@ -185,6 +187,28 @@ void CThirdPersonCamera::Late_Update(_float fTimeDelta)
 		XMVECTOR currentCameraPos = m_pTransformCom->Get_State(STATE::POSITION);
 		_float t = min(1.f, m_cameraSmooth * fTimeDelta);
 		idealCamPos = XMVectorLerp(currentCameraPos, idealCamPos, t);
+
+        if (m_bShaking)
+        {
+            float t = m_fShakeTimeLeft / m_fShakeDuration;
+
+            // 진폭을 시간이 지날수록 점점 줄이기
+            float currentAmp = m_fShakeAmplitude * t;
+
+            // 랜덤 단위 벡터에 진폭 곱하기
+            _float offX = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
+            _float offY = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
+            _float offZ = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
+
+            idealCamPos = XMVectorAdd(idealCamPos,
+                XMVectorSet(offX, offY, offZ, 0.f));
+
+            // 타이머 감소
+            m_fShakeTimeLeft -= fTimeDelta;
+            if (m_fShakeTimeLeft <= 0.f)
+                m_bShaking = false;
+        }
+
 		m_pTransformCom->Set_State(STATE::POSITION, idealCamPos);
     }
 }

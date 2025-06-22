@@ -16,7 +16,7 @@ public:
 private:
 	_float m_fOpenTime{ 0.f }; // 오픈 시간
 	_bool m_bIsOpen{ false }; // 오픈 여부
-	_float m_fOpenDuration{ 10.f }; // 오픈 지속 시간
+	_float m_fOpenDuration{ 6.f }; // 오픈 지속 시간
 };
 END_NAMESPACE
 

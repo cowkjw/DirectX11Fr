@@ -14,6 +14,10 @@ public:
 	void Exit(CEnmuMeat* pChar) override;
 private:
 	_float m_fTimeElapsed = 0.f;
+	_float m_fLeftDetectTime{ 3.65f };
+	_float m_fRightDetectTime{ 2.65f };
+	_bool m_bCheckedLeft = false; // ¿ÞÆÈ °ø°Ý Ã¼Å© ¿©ºÎ
+	_bool m_bCheckedRight = false; // ¿À¸¥ÆÈ °ø°Ý Ã¼Å© ¿©ºÎ
 	_bool m_bAttackedLeft = false; // ¿ÞÆÈ °ø°Ý ¿©ºÎ
 	_bool m_bAttackedRight = false; // ¿À¸¥ÆÈ °ø°Ý ¿©ºÎ
 	const _float LEFTARM_START_TIME = 3.5f; // ¿ÞÆÈ °ø°Ý ½ÃÀÛ ½Ã°£

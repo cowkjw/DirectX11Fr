@@ -3,8 +3,9 @@
 #include "JsonLoader.h"
 #include "ThirdPersonCamera.h"
 #include "BaseCharacter.h"
-#include <Weapon.h>
 #include "UIProgressBar.h"
+#include "Level_Loading.h"
+#include <Weapon.h>
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -70,7 +71,12 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-
+	if (m_pGameInstance->IsKeyPressed(VK_TAB))
+	{
+		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
+			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::BATTLE))))
+			return;
+	}
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -108,6 +114,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_TestCharacter(const _wstring strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
+
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;

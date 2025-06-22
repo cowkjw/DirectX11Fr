@@ -150,6 +150,8 @@ void CKyojuro::Late_Update(_float fTimeDelta)
 
 HRESULT CKyojuro::Render()
 {
+	if (m_pNavigationCom)
+		m_pNavigationCom->Render();
 	__super::Render();
 	return S_OK;
 }
@@ -184,7 +186,7 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::ATTACK:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
-				pCharacter->TakeDamage(10.f);
+				pCharacter->TakeDamage(3.f);
 				auto pState = pCharacter->GetState();
 				if (pCharacter->IsAirborne())
 				{
@@ -196,7 +198,7 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::ATTACK2:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
-				pCharacter->TakeDamage(15.f);
+				pCharacter->TakeDamage(3.5f);
 				if (pCharacter->IsAirborne())
 				{
 					pCharacter->LaunchAirborne(40.f);
@@ -207,7 +209,7 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::ATTACK3:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
-				pCharacter->TakeDamage(20.f);
+				pCharacter->TakeDamage(3.f);
 				if (pCharacter->IsAirborne())
 				{
 					pCharacter->LaunchAirborne(40.f);
@@ -218,7 +220,7 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::ATTACK4:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
-				pCharacter->TakeDamage(25.f);
+				pCharacter->TakeDamage(2.5f);
 				if (pCharacter->IsAirborne())
 				{
 					pCharacter->LaunchAirborne(40.f);
@@ -229,20 +231,20 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::ATTACK_DOWN:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
-				pCharacter->TakeDamage(30.f);
+				pCharacter->TakeDamage(5.f);
 			}
 			break;
 		case CSTATE::ATTACK_UP:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
-				pCharacter->TakeDamage(7.f);
+				pCharacter->TakeDamage(6.f);
 				m_bCanBlowAttack = true;
 			}
 			break;
 		case CSTATE::SKILL:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
-				pCharacter->TakeDamage(15.f);
+				pCharacter->TakeDamage(10.f);
 				pCharacter->LaunchAirborne(40.f);
 			}
 			break;
@@ -253,7 +255,7 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 				if (pCharacter->GetState() != CBaseCharacter::CSTATE::BOUND)
 				{
 					pCharacter->LaunchAirborne(60.f,true);
-					pCharacter->TakeDamage(15.f);
+					pCharacter->TakeDamage(10.f);
 				}
 			}
 			break;

@@ -3,16 +3,17 @@
 
 #include "Level_EnmuBoss.h"
 #include "Level_GamePlay.h"
+#include "Level_BattleSelect.h"
 #include "Level_Editor.h"
 #include "Level_Logo.h"
 #include "Level_Mode.h"
 #include "GameObject.h"
 #include "JsonLoader.h"
 #include "Loader.h"
-
 #include "GameInstance.h"
 #include "UIImage.h"
 
+_float4 CLevel_Loading::m_vInitShojiOrigin[2]{};
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
 {
@@ -21,6 +22,22 @@ CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 {
+	static _bool bIsLoading = true;
+	if (bIsLoading)
+	{
+		bIsLoading = false;
+		CJsonLoader jsonLoader;
+		jsonLoader.Load_Objects("../Asset/Json/LodingCanvas.json", [&]() {
+			// 이곳에 로드 후 처리할 작업을 추가합니다.
+			});
+		jsonLoader.Free();
+		auto pLoadAnim = m_pGameInstance->Get_UI(TEXT("LodingCanvas"), TEXT("LodingAnim"));
+		if (pLoadAnim)
+		{
+			CUIImage* pLoadingAnim = static_cast<CUIImage*>(pLoadAnim);
+			pLoadingAnim->EnableUVAnim(2, 3, 0.065f);
+		}
+	}
 	m_eNextLevelID = eNextLevelID;
 
 	/* 로딩레벨 자체에 필요한 객체를 생성한다. */
@@ -39,8 +56,8 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 		firstLoad = false;
 	}
 
-		SetUpUI();
-
+	SetUpUI();
+	m_fShojiTime = 0.f;
 	return S_OK;
 }
 
@@ -48,11 +65,11 @@ void CLevel_Loading::Update(_float fTimeDelta)
 {
 	static _bool bIsFirst = true;
 	m_pGameInstance->ClearUI();
-	
+
 	if (true == m_pLoader->isFinished())
 	{
 		CLevel* pLevel = { nullptr };
-
+		m_pGameInstance->ClearLights();
 		switch (m_eNextLevelID)
 		{
 		case LEVEL::LOGO:
@@ -69,6 +86,9 @@ void CLevel_Loading::Update(_float fTimeDelta)
 			break;
 		case LEVEL::MODE:
 			pLevel = CLevel_Mode::Create(m_pDevice, m_pContext);
+			break;
+		case LEVEL::BATTLE:
+			pLevel = CLevel_BattleSelect::Create(m_pDevice, m_pContext);
 			break;
 		}
 
@@ -96,14 +116,6 @@ void CLevel_Loading::Update(_float fTimeDelta)
 			if (pLoadingCavnas)
 			{
 				pLoadingCavnas->SetActive(true);
-			}
-			if (m_eNextLevelID != LEVEL::MODE)
-			{
-				auto pInkAnim = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("InkMask"));
-				if (pInkAnim)
-				{
-					pInkAnim->SetActive(false);
-				}
 			}
 			bIsFirst = false;
 		}
@@ -166,15 +178,52 @@ void CLevel_Loading::SetUpUI()
 	auto R = static_cast<CUIImage*>(m_pGameInstance->Get_UI(L"LodingCanvas", L"ShojiRight"));
 
 	// 좌우 반원 마스크 적용
-	if (L) { L->EnableMask(L"Mask_Shoji_L"); L->SetMaskParams(0.5f, { 0,0 }, { 1,1 }); }
-	if (R) { R->EnableMask(L"Mask_Shoji_R"); R->SetMaskParams(0.5f, { 0,0 }, { 1,1 }); }
+	// 열리는 시간, 오프셋, 스케일 설정
+	if (L) 
+	{ 
+		L->EnableMask(L"Mask_Shoji_L");
+		L->SetMaskParams(0.5f, { 0,0 }, { 1.f,1.f });
+	}
+	if (R)
+	{ 
+		R->EnableMask(L"Mask_Shoji_R");
+		R->SetMaskParams(0.5f, { 0,0 }, { 1.f,1.f });
+	}
 
-	// 문 패널 원위치 기억
-	if (L) m_vShojiOrigin[0] = L->GetTransform()->Get_State(STATE::POSITION);
-	if (R) m_vShojiOrigin[1] = R->GetTransform()->Get_State(STATE::POSITION);
+	static _bool bIsFirst = true;
+	if (bIsFirst)
+	{
+		if (L)
+		{
+			XMStoreFloat4(&m_vInitShojiOrigin[0], L->GetTransform()->Get_State(STATE::POSITION));
+		}
+		if (R)
+		{
+			XMStoreFloat4(&m_vInitShojiOrigin[1], R->GetTransform()->Get_State(STATE::POSITION));
+		}
+		bIsFirst = false;
+	}
+	else
+	{
+		if (L)
+		{
+			L->GetTransform()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vInitShojiOrigin[0]));
+		}
+		if (R)
+		{
+			R->GetTransform()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vInitShojiOrigin[1]));
+		}
+	}
 
+	if (L)
+	{
+		m_vShojiOrigin[0] = L->GetTransform()->Get_State(STATE::POSITION);
 
-
+	}
+	if (R)
+	{
+		m_vShojiOrigin[1] = R->GetTransform()->Get_State(STATE::POSITION);
+	}
 }
 
 void CLevel_Loading::UpdateShojiOpen(_float fTimeDelta)

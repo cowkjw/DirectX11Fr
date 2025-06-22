@@ -66,7 +66,6 @@ HRESULT CGameObject::Add_Component(const _wstring& strComponentTag, CComponent* 
 {
 	if (nullptr == pComponent)
 		return E_FAIL;
-
 	m_Components.emplace(strComponentTag, pComponent);
 
 	*ppOut = pComponent;

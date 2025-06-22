@@ -34,7 +34,7 @@ private:
 	CShader*			m_pShaderCom = { nullptr };
 	CTexture*			m_pTextureCom = { nullptr };
 	CVIBuffer_Terrain*	m_pVIBufferCom = { nullptr };
-
+	CNavigation* m_pNavigationCom = { nullptr };
 	_float3			m_vPickedPosition = { 0.f, 0.f, 0.f }; // 마우스 클릭으로 선택된 위치
 
 private:

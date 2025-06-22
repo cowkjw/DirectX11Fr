@@ -36,15 +36,29 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
 {
     static _bool testOpen = false;
     static _bool testAngry = false;
-    if (pChar->GetHp() <= 60.f)
-    {
-        if (!testOpen)
-        {
-            testOpen = true;
-            pChar->ChangeState(new BossOpen(TEXT("BossOpen")));
-            return;
+    static _int lastHpThreshold = -1; // 마지막으로 체크한 HP 임계값
 
-        }
+    _float fHp = pChar->GetHp();
+    _float fMaxHp = pChar->GetMaxHp();
+    _float fHpRatio = fHp / fMaxHp;
+
+    cout << "[BossIdle] Current HP: " << pChar->GetHp() << endl;
+
+    // 현재 HP가 속한 50단위 구간 계산
+    _int currentHpThreshold = static_cast<_int>(fHp) / 50;
+
+    // HP가 감소하여 새로운 50단위 구간에 진입했을 때
+    if (lastHpThreshold == -1)
+    {
+        // 첫 번째 업데이트에서 초기값 설정
+        lastHpThreshold = currentHpThreshold;
+    }
+    else if (currentHpThreshold < lastHpThreshold && fHp > 0)
+    {
+        // HP가 50씩 감소했을 때 BossOpen 상태로 변경
+        pChar->ChangeState(new BossOpen(TEXT("BossOpen")));
+        lastHpThreshold = currentHpThreshold;
+        return;
     }
 
     auto DecayCD = [&](_float& cd)
@@ -157,8 +171,8 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
         return;
     }
 
-    // 테스트용
-    chosenIdx = 3;
+    //// 테스트용
+    chosenIdx = 4;
   
     // 7) chosenIdx에 따라 상태 전이 및 쿨타임 재설정
     switch (chosenIdx)

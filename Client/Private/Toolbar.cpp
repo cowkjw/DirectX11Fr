@@ -47,10 +47,8 @@ HRESULT CToolbar::Render()
 	DrawToolbar();
 	FBXLodaer();
 	DrawAnimEventEditor();
-#ifdef DEBUG
-	if (m_pNavigationCom)
-		m_pNavigationCom->Render();
-#endif // DEBUG
+	if (m_pNavigation)
+		m_pNavigation->Render();
 	return S_OK;
 }
 
@@ -453,6 +451,7 @@ void CToolbar::SetLevelEnumToString()
 	m_LevelStringMap["EnmuBoss"] = 4;
 	m_LevelStringMap["ModeSelect"] = 6;
 	m_LevelStringMap["Loading"] = 1;
+	m_LevelStringMap["Battle"] = 7;
 }
 
 void CToolbar::UpdatePrototypeList()

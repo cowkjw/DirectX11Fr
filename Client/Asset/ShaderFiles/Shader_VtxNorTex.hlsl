@@ -65,7 +65,7 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
 
-    vector      vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord * 50.f);
+    vector      vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord * 15.f);
 
     float4 vShade = max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f) +
         (g_vLightAmbient * g_vMtrlAmibient);
@@ -78,7 +78,7 @@ PS_OUT PS_MAIN(PS_IN In)
     float4 vSpecular = pow(max(dot(normalize(vLook) * -1.f, vReflect), 0.f), 50.f);
 
 
-    Out.vColor = g_vLightDiffuse * vMtrlDiffuse * vShade + (g_vLightSpecular * g_vMtrlSpecular) * vSpecular;
+    Out.vColor = g_vLightDiffuse * vMtrlDiffuse * vShade;// +(g_vLightSpecular * g_vMtrlSpecular) * vSpecular;
 
     return Out;
 }

@@ -157,7 +157,7 @@ void CGameInstance::Clear(_uint iLevelIndex)
 	m_pPrototype_Manager->Clear(iLevelIndex);
 
 	m_pResourceMag->Clear();
-	//ClearLights();
+
 }
 
 void CGameInstance::ClearObejcts(_uint iLevelIndex)

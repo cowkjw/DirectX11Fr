@@ -11,6 +11,8 @@ CEnvironment::CEnvironment(const CEnvironment& Prototype)
 	: CGameObject(Prototype)
 	, m_pShaderCom{ Prototype.m_pShaderCom }
 	, m_pModelCom{ Prototype.m_pModelCom }
+	, m_iShaderPass{ Prototype.m_iShaderPass }
+	, m_strModelTag{ Prototype.m_strModelTag }
 {
 }
 
@@ -49,27 +51,17 @@ HRESULT CEnvironment::Initialize(void* pArg)
 	//	return E_FAIL;
 	m_pTransformCom->Scaling(_float3(0.2f, 0.2f, 0.2f));
 
-
+	if (m_strModelTag.find(L"Sky") != _wstring::npos)
+		m_iShaderPass = 0;
+	else
+		m_iShaderPass = 1;
 
 	return S_OK;
 }
 
 void CEnvironment::Update(_float fTimeDelta)
 {
-	static _bool bIsFirst = true;
-	if (bIsFirst)
-	{
-		m_iShaderPass = m_strModelTag.find(L"Sky") != _wstring::npos ? 0 : 1; // Sky는 0번 패스, 나머지는 1번 패스
-		if (m_iShaderPass == 0)
-		{
-			bIsFirst = false;
-		}
-	/*	if (m_pGameInstance->Get_CurrentLevelIndex() == 4)
-		{
-			m_iShaderPass = 0;
-			bIsFirst = false;
-		}*/
-	}
+
 }
 
 void CEnvironment::Late_Update(_float fTimeDelta)
@@ -140,7 +132,8 @@ HRESULT CEnvironment::Bind_Shaders()
 		return E_FAIL;
 
 	const LIGHT_DESC* pLightDesc = m_pGameInstance->Get_Light(1);
-
+	if (!pLightDesc)
+		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))

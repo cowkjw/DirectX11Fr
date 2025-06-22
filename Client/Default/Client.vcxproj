@@ -195,7 +195,7 @@
     <ClInclude Include="..\public\JsonLoader.h" />
     <ClInclude Include="..\Public\Kyojuro.h" />
     <ClInclude Include="..\Public\Level_Editor.h" />
-    <ClInclude Include="..\Public\Level_Enmu.h" />
+    <ClInclude Include="..\Public\Level_BattleSelect.h" />
     <ClInclude Include="..\Public\Level_EnmuBoss.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
@@ -290,7 +290,7 @@
     <ClCompile Include="..\private\JsonLoader.cpp" />
     <ClCompile Include="..\Private\Kyojuro.cpp" />
     <ClCompile Include="..\Private\Level_Editor.cpp" />
-    <ClCompile Include="..\Private\Level_Enmu.cpp" />
+    <ClCompile Include="..\Private\Level_BattleSelect.cpp" />
     <ClCompile Include="..\Private\Level_EnmuBoss.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />

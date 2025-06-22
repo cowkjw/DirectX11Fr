@@ -126,6 +126,9 @@ HRESULT CAkaza::Initialize(void* pArg)
 		m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
 	}
 
+	//m_fMaxHP = 400.f;
+	//m_fCurrentHP = m_fMaxHP;
+
 	return S_OK;
 }
 

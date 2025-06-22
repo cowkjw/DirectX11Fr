@@ -3,7 +3,7 @@
 
 namespace Client
 {
-	enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, ENMU_BOSS,EDITOR,MODE,ENMU, END };
+	enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, ENMU_BOSS,EDITOR,MODE,BATTLE, END };
 	enum class EDirection
 	{
 		Forward,

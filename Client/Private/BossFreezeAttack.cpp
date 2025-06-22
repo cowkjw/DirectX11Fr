@@ -111,4 +111,9 @@ void BossFreezeAttack::Exit(CEnmuMeat* pChar)
 
 	leftArm->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // 기본 방향으로 회전
 	rightArm->GetTransform()->Rotate_EulerAngles(_float3(0.f, 180.f, 0.f)); // 기본 방향으로 회전
+
+	if (m_pWarningZone)
+	{
+		m_pWarningZone->SetActive(false); // 경고존 비활성화
+	}
 }

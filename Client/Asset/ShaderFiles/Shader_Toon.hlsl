@@ -21,7 +21,7 @@ float4 g_vShadowColor = float4(0.4f, 0.4f, 0.4f, 1.0f);
 
 
 float g_fShadowThreshold = 0.65f;      // 그림자 임계값
-float g_fSaturationBoost = 1.4f;      // 채도 부스트
+float g_fSaturationBoost = 1.6f;      // 채도 부스트
 float g_fAmbientStrength = 0.6f;      // 앰비언트 강도
 
 struct VS_IN
@@ -118,7 +118,7 @@ PS_OUT PS_MAIN_TOON(PS_IN In)
 	float4 toonColor = lerp(shadowColor, litColor, isLit);
 
 	// 최소한의 앰비언트만 추가
-	float4 ambientColor = g_vLightAmbient * g_vMtrlAmibient * vMtrlDiffuse * g_fAmbientStrength;
+	float4 ambientColor = g_vMtrlAmibient * vMtrlDiffuse * g_vLightAmbient;// g_fAmbientStrength* g_vLightSpecular;
 
 	// 최종 색상
 	float4 finalColor = toonColor + ambientColor;

@@ -3,6 +3,7 @@
 #include "EnmuBody.h"
 #include "EnmuHead.h"
 #include "BossIdle.h"
+#include "BossOpen.h"
 #include "GameInstance.h"
 #include "EnmuTentacle.h"
 #include "BaseCharacter.h"
@@ -10,8 +11,8 @@
 
 CEnmuMeat::CEnmuMeat(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
-	, m_fHp(100.f)
-	, m_fMaxHp(100.f)
+	, m_fHp(300.f)
+	, m_fMaxHp(300.f)
 	, m_CD_Punch(0.f)
 	, m_CD_Swing(0.f)
 	, m_CD_Hand(0.f)
@@ -115,6 +116,8 @@ void CEnmuMeat::Update(_float fTimeDelta)
 			child->Update(fTimeDelta);
 		}
 	}
+
+
 }
 
 void CEnmuMeat::Late_Update(_float fTimeDelta)
@@ -170,7 +173,20 @@ void CEnmuMeat::SpawnTentacle(_int iIndex, _vector vPos, _vector vDir)
 	auto pTentacle = m_vecTentacles[iIndex];
 	if (!pTentacle)
 		return;
-	pTentacle->GetTransform()->LookAtXZ(vPos);
+	if (m_pTarget)
+	{
+		_vector vTargetPos = m_pTransformCom->Get_State(STATE::POSITION);
+		vTargetPos.m128_f32[1] = -18.f; // 타겟의 Y 위치를 고정
+		vTargetPos.m128_f32[2] = m_pTarget->GetTransform()->Get_State(STATE::POSITION).m128_f32[2];
+		vDir = XMVectorSubtract(vTargetPos, vPos);
+		vDir = XMVector3Normalize(vDir);
+	}
+	else
+	{
+		vDir = XMVectorSet(0.f, 0.f, 1.f, 0.f); // 기본 방향 설정
+	}
+//	pTentacle->GetTransform()->LookAtXZ(vPos);
+	vDir = XMVectorSetY(vDir, 0.f); // Y 성분 무시하고 XZ 평면에서 방향 설정
 	pTentacle->GetTransform()->RotateToDirection(vDir);
 
 	vPos.m128_f32[1] = -18.f;
@@ -268,8 +284,8 @@ void CEnmuMeat::OnAttackHit(CGameObject* pTarget)
 			pChar->TakeDamage(15.f);
 			break;
 		case EnmuState::HANDATTACK:
-			pChar->HurtDown();
-			pChar->TakeDamage(15.f);
+			//pChar->HurtDown();
+			//pChar->TakeDamage(15.f);
 			break;
 		case EnmuState::TENTACLEATTACK:
 			break;

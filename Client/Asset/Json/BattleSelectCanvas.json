@@ -1,0 +1,680 @@
+[
+    {
+        "CreateLevel": 7,
+        "ID": 32,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 1,
+        "UI": true,
+        "UIType": 3,
+        "components": {
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "BattleSelectCanvas",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 7,
+        "ID": 33,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "SelectBattleBackGround",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1280.0,
+                    720.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "Background",
+        "parentId": 32,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 7,
+        "ID": 34,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "SelectBattleAkaza",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -366.0,
+                    -35.96,
+                    0.20
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    650.0,
+                    650.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "Akaza",
+        "parentId": 32,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 7,
+        "ID": 35,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "SelectBattleEnmu",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    290.20,
+                    -62.99,
+                    0.20
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    700.0,
+                    700.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "Enmu",
+        "parentId": 32,
+        "tag": ""
+    },
+    {
+        "ButtonImage": {
+            "CreateLevel": 7,
+            "ID": 38,
+            "NumTextures": 1,
+            "Position": [
+                0.0,
+                0.0
+            ],
+            "ProtoLevel": 0,
+            "ProtoTypeTag": "",
+            "ShaderKey": "Shader_VtxPosTex",
+            "Size": [
+                1.0,
+                1.0
+            ],
+            "SortingOrder": 0,
+            "TextureIndex": 0,
+            "TextureKey": "Info_Name_Akaza00",
+            "UI": true,
+            "UIType": 0,
+            "components": {
+                "Com_Shader": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Texture": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Transform": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true,
+                    "Position": [
+                        -242.0,
+                        -176.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        300.0,
+                        300.0,
+                        1.0
+                    ]
+                },
+                "Com_VIBuffer": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                }
+            },
+            "isActive": true,
+            "name": "AkazaDfault",
+            "parentId": 37,
+            "tag": ""
+        },
+        "CreateLevel": 7,
+        "HoverImage": {
+            "CreateLevel": 0,
+            "ID": 39,
+            "NumTextures": 1,
+            "Position": [
+                0.0,
+                0.0
+            ],
+            "ProtoLevel": 0,
+            "ProtoTypeTag": "",
+            "ShaderKey": "Shader_VtxPosTex",
+            "Size": [
+                1.0,
+                1.0
+            ],
+            "SortingOrder": 0,
+            "TextureIndex": 0,
+            "TextureKey": "Info_Name_Akaza00",
+            "UI": true,
+            "UIType": 0,
+            "components": {
+                "Com_Shader": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Texture": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Transform": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true,
+                    "Position": [
+                        -239.0,
+                        -176.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        350.0,
+                        350.0,
+                        1.0
+                    ]
+                },
+                "Com_VIBuffer": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                }
+            },
+            "isActive": true,
+            "name": "AkazaHover",
+            "parentId": 37,
+            "tag": ""
+        },
+        "ID": 37,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "UI": true,
+        "UIType": 1,
+        "components": {
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -242.0,
+                    -176.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    300.0,
+                    300.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "AkazaButton",
+        "parentId": 32,
+        "tag": ""
+    },
+    {
+        "ButtonImage": {
+            "CreateLevel": 7,
+            "ID": 41,
+            "NumTextures": 1,
+            "Position": [
+                0.0,
+                0.0
+            ],
+            "ProtoLevel": 0,
+            "ProtoTypeTag": "",
+            "ShaderKey": "Shader_VtxPosTex",
+            "Size": [
+                1.0,
+                1.0
+            ],
+            "SortingOrder": 0,
+            "TextureIndex": 0,
+            "TextureKey": "Info_Name_Enmu00",
+            "UI": true,
+            "UIType": 0,
+            "components": {
+                "Com_Shader": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Texture": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Transform": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true,
+                    "Position": [
+                        348.98,
+                        -208.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        300.0,
+                        300.0,
+                        1.0
+                    ]
+                },
+                "Com_VIBuffer": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                }
+            },
+            "isActive": true,
+            "name": "EnmuDefault",
+            "parentId": 40,
+            "tag": ""
+        },
+        "CreateLevel": 7,
+        "HoverImage": {
+            "CreateLevel": 0,
+            "ID": 42,
+            "NumTextures": 1,
+            "Position": [
+                0.0,
+                0.0
+            ],
+            "ProtoLevel": 0,
+            "ProtoTypeTag": "",
+            "ShaderKey": "Shader_VtxPosTex",
+            "Size": [
+                1.0,
+                1.0
+            ],
+            "SortingOrder": 0,
+            "TextureIndex": 0,
+            "TextureKey": "Info_Name_Enmu00",
+            "UI": true,
+            "UIType": 0,
+            "components": {
+                "Com_Shader": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Texture": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                },
+                "Com_Transform": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true,
+                    "Position": [
+                        362.98,
+                        -208.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        350.0,
+                        350.0,
+                        1.0
+                    ]
+                },
+                "Com_VIBuffer": {
+                    "ComponentCreateLevel": 0,
+                    "ComponentLevel": 0,
+                    "ComponentTag": "",
+                    "IsActive": true
+                }
+            },
+            "isActive": true,
+            "name": "EnmuHover",
+            "parentId": 40,
+            "tag": ""
+        },
+        "ID": 40,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "UI": true,
+        "UIType": 1,
+        "components": {
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    348.98,
+                    -208.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    300.0,
+                    300.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "EnmuButton",
+        "parentId": 32,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 7,
+        "ID": 42,
+        "NumTextures": 1,
+        "Position": [
+            0.0,
+            0.0
+        ],
+        "ProtoLevel": 0,
+        "ProtoTypeTag": "",
+        "ShaderKey": "Shader_VtxPosTex",
+        "Size": [
+            1.0,
+            1.0
+        ],
+        "SortingOrder": 0,
+        "TextureIndex": 0,
+        "TextureKey": "Lang_Title08",
+        "UI": true,
+        "UIType": 0,
+        "components": {
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Texture": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -445.00,
+                    259.00,
+                    0.20
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    300.0,
+                    150.0,
+                    1.0
+                ]
+            },
+            "Com_VIBuffer": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            }
+        },
+        "isActive": true,
+        "name": "Title",
+        "parentId": 32,
+        "tag": ""
+    }
+]

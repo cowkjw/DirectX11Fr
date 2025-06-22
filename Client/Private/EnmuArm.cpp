@@ -5,6 +5,7 @@
 #include "Model.h"
 #include <JsonLoader.h>
 #include <BaseCharacter.h>
+#include <ThirdPersonCamera.h>
 
 
 
@@ -51,13 +52,13 @@ HRESULT CEnmuArm::Initialize(void* pArg)
 	if (m_bIsLeftArm)
 	{	// -21,0.0,0.0
 	//	_float4 vPos = { -20.f,0.f,0.f,1.f };
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(70.f, -10.f, 30.f, 1.f));
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(70.f, -10.f, 15.f, 1.f));
 
 	}
 	else
 	{
 		// 21.68,0.0,0.0
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-70.f, -10.f, 30.f, 1.f));
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-70.f, -10.f, 15.f, 1.f));
 	}
 
 
@@ -150,6 +151,14 @@ HRESULT CEnmuArm::Ready_Components()
 
 	m_pAnimatorCom->RegisterEventListener("ResetRadius", [&](const string&) {
 		SetCollisionRadius(m_fDefaultRadius);
+		});
+
+
+	m_pAnimatorCom->RegisterEventListener("CameraShake", [&](const string& eventName) {
+		if (auto pCamera = dynamic_cast<CThirdPersonCamera*>(CGameInstance::Get_Instance()->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("ThirdPersonCamera"))))
+		{
+			pCamera->TriggerShake(0.6f, 1.5f);
+		}
 		});
 
 

@@ -53,7 +53,7 @@ void CLevel_EnmuBoss::Update(_float fTimeDelta)
 	if (m_pGameInstance->IsKeyPressed(VK_TAB))
 	{
 		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
-			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY))))
+			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::BATTLE))))
 			return;
 	}
 }
@@ -79,7 +79,6 @@ HRESULT CLevel_EnmuBoss::Ready_Layer_Characters()
 	if (!pEnmu)
 		return E_FAIL;
 
-	// Prototype_GameObject_Kyojuro
 	CBaseCharacter* pTanjiro = static_cast<CBaseCharacter*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_Tanjiro"),
 		ToIndex(LEVEL::ENMU_BOSS), TEXT("Tanjiro")));
 
@@ -96,9 +95,10 @@ HRESULT CLevel_EnmuBoss::Ready_Layer_Characters()
 	CameraDesc.fFov = XMConvertToRadians(60.0f);
 	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 1200.f;
+	CameraDesc.strName = TEXT("ThirdPersonCamera");
 
-	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_ThirdPersonCamera"),
-		ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_Camera"), &CameraDesc))
+	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_ThirdPersonCamera"),
+		ToIndex(LEVEL::ENMU_BOSS), TEXT("ThirdPersonCamera"), &CameraDesc))
 		return E_FAIL;
 
 	return S_OK;
@@ -106,6 +106,7 @@ HRESULT CLevel_EnmuBoss::Ready_Layer_Characters()
 
 HRESULT CLevel_EnmuBoss::Ready_Lights()
 {
+//	m_pGameInstance->ClearLights();
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
@@ -147,5 +148,6 @@ CLevel_EnmuBoss* CLevel_EnmuBoss::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 void CLevel_EnmuBoss::Free()
 {
 	__super::Free();
+
 
 }

@@ -11,7 +11,7 @@ END_NAMESPACE
 
 
 BEGIN_NAMESPACE(Client)
-class CEnmuTentacle :public CGameObject
+class CEnmuTentacle :public CGameObject,public ICollisionListener
 {
 private:
 	CEnmuTentacle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -49,6 +49,11 @@ public:
 	static CEnmuTentacle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free()override;
+
+	// ICollisionListener을(를) 통해 상속됨
+	void OnCollisionEnter(CCollider* other) override;
+	void OnCollisionStay(CCollider* other, float fTimeDelta) override;
+	void OnCollisionExit(CCollider* other) override;
 };
 END_NAMESPACE
 

@@ -105,6 +105,10 @@
                 {
                     "name": "ActiveHitbox",
                     "time": 10.000991821289063
+                },
+                {
+                    "name": "CameraShake",
+                    "time": 18.0
                 }
             ]
         },
@@ -140,6 +144,10 @@
                 {
                     "name": "ActiveHitbox",
                     "time": 1.0
+                },
+                {
+                    "name": "CameraShake",
+                    "time": 16.001934051513672
                 }
             ]
         },
@@ -277,6 +285,10 @@
                 {
                     "name": "ResetRadius",
                     "time": 57.01068115234375
+                },
+                {
+                    "name": "CameraShake",
+                    "time": 24.002960205078125
                 }
             ]
         },

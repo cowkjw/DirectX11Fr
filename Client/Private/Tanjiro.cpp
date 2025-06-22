@@ -164,6 +164,12 @@ void CTanjiro::TakeDamage(_float fDamage)
 	if (m_eState == CSTATE::DOWN)
 	{
 		__super::TakeDamage(fDamage);
+		auto pBar = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("LeftLifeBar"));
+		if (pBar)
+		{
+			CUIProgressBar* pRightBar = static_cast<CUIProgressBar*>(pBar);
+			pRightBar->ApplyDamage(fDamage);
+		}
 		return;
 	}
 	if (m_eState == CSTATE::GUARD)
@@ -232,13 +238,9 @@ HRESULT CTanjiro::Ready_Components()
 
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(ToIndex(LEVEL::ENMU), TEXT("Prototype_Component_Model_Tanjiro"),
-		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-	{
-		if (FAILED(__super::Add_Component(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_Tanjiro"),
+	if (FAILED(__super::Add_Component(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_Tanjiro"),
 			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 			return E_FAIL;
-	}
 
 
 	/* For.Com_Navigation */
@@ -847,7 +849,7 @@ void CTanjiro::Ready_Animation()
 	ctrl->AddTransition(stepFrontIdx, fall2Idx, cHurtDown, 0.1f);
 	ctrl->AddTransition(stepLeftIdx, fall2Idx, cHurtDown, 0.1f);
 	ctrl->AddTransition(stepRightIdx, fall2Idx, cHurtDown, 0.1f);
-	ctrl->AddTransition(fall2Idx, fall2Idx, cHurtDown, 0.4f);
+	ctrl->AddTransition(fall2Idx, fall2Idx, cHurtDown, 0.2f);
 
 
 }

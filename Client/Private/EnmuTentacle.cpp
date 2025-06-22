@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 #include "Model.h"
 #include "BodyColliderParts.h"
+#include <BaseCharacter.h>
 
 CEnmuTentacle::CEnmuTentacle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -42,26 +43,27 @@ HRESULT CEnmuTentacle::Initialize(void* pArg)
 
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
-	m_pTransformCom->Scaling(_float3(0.05f, 0.05f, 0.05f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -18.f,0.f, 1.f));
+	m_pTransformCom->Scaling(_float3(0.07f, 0.07f, 0.07f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -19.f, 0.f, 1.f));
 	return S_OK;
 }
 
 void CEnmuTentacle::Update(_float fTimeDelta)
 {
 
+	_float y = m_pTransformCom->Get_State(STATE::POSITION).m128_f32[1];
 
 	m_pAnimatorCom->GetAnimController()->Update(fTimeDelta);
 	m_pModelCom->Play_Animation(fTimeDelta);
 
 	for (auto& child : m_vecChildren)
-	{	
+	{
 		if (!child->IsActive())
 			continue;
 		child->Update(fTimeDelta);
 	}
 }
- 
+
 void CEnmuTentacle::Late_Update(_float fTimeDelta)
 {
 	CGameObject::Late_Update(fTimeDelta);
@@ -144,6 +146,11 @@ HRESULT CEnmuTentacle::Ready_Components()
 	m_pBodyCollider->Set_BoneSocket(m_pModelCom->Get_Bone("C_entaclesArmA_End"));
 	this->AddChild(m_pBodyCollider);
 	m_pBodyCollider->Initialize(&desc);
+	if (auto Collider = dynamic_cast<CCollider*>(m_pBodyCollider->Get_Component(TEXT("Com_Collider0"))))
+	{
+		Collider->SetListener(this);
+	}
+
 
 	return S_OK;
 }
@@ -214,4 +221,21 @@ void CEnmuTentacle::Free()
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pAnimatorCom);
 	Safe_Release(m_pBodyCollider);
+}
+
+void CEnmuTentacle::OnCollisionEnter(CCollider* other)
+{
+	if (auto pTarget = dynamic_cast<CBaseCharacter*>(other->GetOwner()))
+	{
+		pTarget->TakeDamage(5.f);
+		m_pBodyCollider->SetActive(false); // 공격 후 콜라이더 비활성화
+	}
+}
+
+void CEnmuTentacle::OnCollisionStay(CCollider* other, float fTimeDelta)
+{
+}
+
+void CEnmuTentacle::OnCollisionExit(CCollider* other)
+{
 }

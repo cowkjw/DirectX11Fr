@@ -1,6 +1,7 @@
 #include "BossHandAttack.h"
 #include "BossIdle.h"
 #include <EnmuArm.h>
+#include "ThirdPersonCamera.h"
 
 void BossHandAttack::Enter(CEnmuMeat* pChar)
 {
@@ -23,13 +24,13 @@ void BossHandAttack::Enter(CEnmuMeat* pChar)
 		{
 			if (i == 0)
 			{
-				pWarning->GetTransform()->Set_State(STATE::POSITION, XMVectorSet(15.f, -17.772f, -90.248f, 1.f));
+				pWarning->GetTransform()->Set_State(STATE::POSITION, XMVectorSet(15.f, -17.772f, -85.248f, 1.f));
 			}
 			else if (i == 1)
 			{
-				pWarning->GetTransform()->Set_State(STATE::POSITION, XMVectorSet(-2.230f, -17.772f, -90.248f, 1.f));
+				pWarning->GetTransform()->Set_State(STATE::POSITION, XMVectorSet(-2.230f, -17.772f, -85.248f, 1.f));
 			}
-			pWarning->GetTransform()->Scaling(_float3(65.f, 65.f, 65.f));
+			pWarning->GetTransform()->Scaling(_float3(80.f, 80.f, 80.f));
 			m_pWarnings[i] = pWarning;
 		}
 	
@@ -45,18 +46,49 @@ void BossHandAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
 	auto pAnimatorLeft = leftArm->Get_Animator();
 	auto pAnimatorRight = rightArm->Get_Animator();
 
-
+	
 	m_fTimeElapsed += fTimeDelta;
 
+	
 	if (m_fTimeElapsed >= LEFTARM_START_TIME && !m_bAttackedLeft)
 	{
 		if (m_pWarnings[0] && m_pWarnings[1])
 		{
-			m_pWarnings[0]->SetActive(false);
+			if (m_pWarnings[0])
+			{
+				m_pWarnings[0]->SetActive(false); // 경고존 비활성화
+			}
 			m_pWarnings[1]->SetActive(true);
 		}
 		m_bAttackedLeft = true;
 		pAnimatorLeft->SetTrigger("HandAttack");
+
+	}
+
+
+	if (m_bAttackedLeft && m_fTimeElapsed >= m_fLeftDetectTime&&!m_bCheckedLeft)
+	{
+		if(m_pWarnings[0])
+		{
+			if (pChar->GetTarget())
+			{
+				// 원 안에 있었는지 
+				_vector vTargetPos = pChar->GetTarget()->GetTransform()->Get_State(STATE::POSITION);
+				_vector vMyPos = m_pWarnings[0]->GetTransform()->Get_State(STATE::POSITION);
+				_vector vDelta = vTargetPos - vMyPos;
+
+				// 거리 제곱 계산
+				_float fDistSq = XMVectorGetX(XMVector3LengthSq(vDelta));
+				_float radiusSq = 40.f * 40.f;
+
+				if (fDistSq <= radiusSq)
+				{
+					pChar->GetTarget()->HurtDown();
+					pChar->GetTarget()->TakeDamage(7.f);
+				}
+			}
+		}
+		m_bCheckedLeft = true; // 왼팔 공격 후 체크 완료
 	}
 
 	if (m_fTimeElapsed >= RIGHTARM_START_TIME && !m_bAttackedRight)
@@ -64,20 +96,39 @@ void BossHandAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
 		if (m_pWarnings[1])
 		{
 			m_pWarnings[1]->SetActive(false);
+			if (m_pWarnings[1])
+			{
+				m_pWarnings[1]->SetActive(false); // 경고존 비활성화
+			}
 		}
 		m_bAttackedRight = true;
 		pAnimatorRight->SetTrigger("HandAttack");
 	}
-
-	if (m_fTimeElapsed >= ATTACK_END_TIME)
+	if (m_bAttackedRight && m_fTimeElapsed >= m_fRightDetectTime&&!m_bCheckedRight)
 	{
-		for (_int i = 0; i < m_pWarnings.size(); i++)
+		if (m_pWarnings[1])
 		{
-			if (m_pWarnings[i])
+			if (pChar->GetTarget())
 			{
-				m_pWarnings[i]->SetActive(false);
+				// 원 안에 있었는지 
+				_vector vTargetPos = pChar->GetTarget()->GetTransform()->Get_State(STATE::POSITION);
+				_vector vMyPos = m_pWarnings[1]->GetTransform()->Get_State(STATE::POSITION);
+				_vector vDelta = vTargetPos - vMyPos;
+				// 거리 제곱 계산
+				_float fDistSq = XMVectorGetX(XMVector3LengthSq(vDelta));
+				_float radiusSq = 40.f * 40.f;
+				if (fDistSq <= radiusSq)
+				{
+					pChar->GetTarget()->HurtDown();
+					pChar->GetTarget()->TakeDamage(7.f);
+				}
 			}
 		}
+		m_bCheckedRight = true; // 오른팔 공격 후 체크 완료
+	}
+	if (m_fTimeElapsed >= ATTACK_END_TIME)
+	{
+		
 		pChar->ChangeState(new BossIdle(TEXT("Idle")));
 	}
 }
@@ -93,5 +144,13 @@ void BossHandAttack::Exit(CEnmuMeat* pChar)
 	if (rightArm)
 	{
 		rightArm->StartRotateY(0.5f, 180.f);
+	}
+
+	for (_int i = 0; i < m_pWarnings.size(); i++)
+	{
+		if (m_pWarnings[i])
+		{
+			m_pWarnings[i]->SetActive(false);
+		}
 	}
 }

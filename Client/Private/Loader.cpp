@@ -86,6 +86,9 @@ HRESULT CLoader::Loading()
 	case LEVEL::MODE:
 		hr = Loading_For_Mode();
 		break;
+	case LEVEL::BATTLE:
+		hr = Loading_For_Battle();
+		break;
 	}
 	LeaveCriticalSection(&m_CriticalSection);
 
@@ -93,23 +96,22 @@ HRESULT CLoader::Loading()
 
 	if (FAILED(hr))
 		return E_FAIL;
-	static _bool bIsLoading = true;
-	if (bIsLoading)
-	{
-		bIsLoading = false;
-		CJsonLoader jsonLoader;
-		jsonLoader.Load_Objects("../Asset/Json/LodingCanvas.json", [&]() {
-			// 이곳에 로드 후 처리할 작업을 추가합니다.
-			});
-		jsonLoader.Free();
-		auto pLoadAnim = m_pGameInstance->Get_UI(TEXT("LodingCanvas"), TEXT("LodingAnim"));
-		if (pLoadAnim)
-		{
-			CUIImage* pLoadingAnim = static_cast<CUIImage*>(pLoadAnim);
-			pLoadingAnim->EnableUVAnim(2, 3, 0.08f);
-		}
-		
-	}
+	//static _bool bIsLoading = true;
+	//if (bIsLoading)
+	//{
+	//	bIsLoading = false;
+	//	CJsonLoader jsonLoader;
+	//	jsonLoader.Load_Objects("../Asset/Json/LodingCanvas.json", [&]() {
+	//		// 이곳에 로드 후 처리할 작업을 추가합니다.
+	//		});
+	//	jsonLoader.Free();
+	//	auto pLoadAnim = m_pGameInstance->Get_UI(TEXT("LodingCanvas"), TEXT("LodingAnim"));
+	//	if (pLoadAnim)
+	//	{
+	//		CUIImage* pLoadingAnim = static_cast<CUIImage*>(pLoadAnim);
+	//		pLoadingAnim->EnableUVAnim(2, 3, 0.08f);
+	//	}
+	//}
 	//if (m_eNextLevelID == LEVEL::MODE)
 	//{
 	//	CJsonLoader jsonLoader;
@@ -188,7 +190,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		});
 	jsonLoader.Free();
 
-	m_pGameInstance->LoadTexture(TEXT("Terrain"), TEXT("../Asset/Resources/Textures/Terrain/Tile%d.dds"), true,2);
+	m_pGameInstance->LoadTexture(TEXT("Terrain"), TEXT("../Asset/Resources/Textures/Terrain/Tile%d.dds"), true,3);
 
 
 	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
@@ -543,7 +545,7 @@ HRESULT CLoader::Loading_For_EnmuBoss()
 	//	return E_FAIL;
 
 		/* For.Prototype_GameObject_ThirdPersonCamera */
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_ThirdPersonCamera"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_ThirdPersonCamera"),
 		CThirdPersonCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
@@ -604,68 +606,18 @@ HRESULT CLoader::Loading_For_EnmuBoss()
 	return S_OK;
 }
 
-HRESULT CLoader::Loading_For_Enmu()
+HRESULT CLoader::Loading_For_Battle()
 {
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐을(를) 로딩중입니다."));
 
-	CJsonLoader jsonLoader;
-
-	jsonLoader.Load_Models("../Asset/Json/Models.json", [&]() {
-		// 이곳에 로드 후 처리할 작업을 추가합니다.
-		});
-	jsonLoader.Free();
-
-
-	_matrix		PreTransformMatrix = XMMatrixIdentity();
-	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
-
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU), TEXT("Prototype_Component_Model_Kyoujuro"),
-		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.bin", PreTransformMatrix))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU), TEXT("Prototype_Component_Model_Sky"),
-		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Map/Sky.bin", PreTransformMatrix))))
-		return E_FAIL;
-
-	//PreTransformMatrix = XMMatrixRotationX(XMConvertToRadians(70.f)) * XMMatrixRotationZ(XMConvertToRadians(30.f)) * XMMatrixTranslation(0.5f, 2.7f, 0.f);
-
-
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
-	///* For.Prototype_Component_VIBuffer_Terrain */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Terrain"),
-	//	CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Asset/Resources/Textures/Terrain/Height.bmp")))))
-	//	return E_FAIL;
 
 
 
 	lstrcpy(m_szLoadingText, TEXT("사운드을(를) 로딩중입니다."));
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체을(를) 로딩중입니다."));
-	///* For.Prototype_GameObject_Terrain */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Terrain"),
-	//	CTerrain::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-
-	///* For.Prototype_GameObject_Camera_Free */
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU), TEXT("Prototype_GameObject_Camera_Free"),
-		CFreeCamera::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU), TEXT("Prototype_GameObject_Envirnoment"),
-		CEnvironment::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	///* For.Prototype_GameObject_Kyojuro */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_Kyojuro"),
-	//	CKyojuro::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-
-	///* For.Prototype_GameObject_KoujuroWeapon */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_KoujuroWeapon"),
-	//	CWeapon::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
 
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));

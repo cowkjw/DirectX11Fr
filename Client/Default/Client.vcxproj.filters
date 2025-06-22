@@ -450,7 +450,7 @@
     <ClInclude Include="..\public\UIAnimImage.h">
       <Filter>01.GameObject\UI\Ink</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_Enmu.h">
+    <ClInclude Include="..\Public\Level_BattleSelect.h">
       <Filter>00.Levels\Enmu</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StateBoundHurt.h">
@@ -726,7 +726,7 @@
     <ClCompile Include="..\private\UIAnimImage.cpp">
       <Filter>01.GameObject\UI\Ink</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Level_Enmu.cpp">
+    <ClCompile Include="..\Private\Level_BattleSelect.cpp">
       <Filter>00.Levels\Enmu</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StateBoundHurt.cpp">

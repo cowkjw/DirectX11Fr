@@ -81,4 +81,8 @@ void BossSwingAttack::Exit(CEnmuMeat* pChar)
 {
 	auto leftArm = pChar->GetPart(CEnmuMeat::Parts::LEFTARM);
 	auto rightArm = pChar->GetPart(CEnmuMeat::Parts::RIGHTARM);
+	if (pWarning)
+	{
+		pWarning->SetActive(false); // 경고존 비활성화
+	}
 }

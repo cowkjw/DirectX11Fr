@@ -1,6 +1,7 @@
 #include "Terrain.h"
 
 #include "GameInstance.h"
+#include "Navigation.h"
 
 CTerrain::CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject { pDevice, pContext }
@@ -78,6 +79,8 @@ HRESULT CTerrain::Render()
 	if (FAILED(m_pVIBufferCom->Render()))
 		return E_FAIL;
 
+	if (m_pNavigationCom)
+		m_pNavigationCom->Render();
 
 	return S_OK;
 }
@@ -104,6 +107,12 @@ HRESULT CTerrain::Ready_Components()
 
 	if (FAILED(CGameObject::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxNorTex"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
+	//CNavigation::NAVIGATION_DESC		NaviDesc{};
+	//NaviDesc.iIndex = 4;
+
+	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
+	//	TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -121,7 +130,7 @@ HRESULT CTerrain::Bind_Shaders()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::PROJECTION))))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", 0)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", 2)))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
@@ -175,4 +184,5 @@ void CTerrain::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pNavigationCom);
 }

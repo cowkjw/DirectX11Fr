@@ -12,8 +12,8 @@ float4 g_vLightSpecular;
 
 float4 g_vCamPosition;
 
-float4 g_vMtrlAmibient = float4(0.4f, 0.4f, 0.4f, 1.f);
-float4 g_vMtrlSpecular = float4(1.f, 1.f, 1.f, 1.f);
+const float4 g_vMtrlAmibient = float4(0.4f, 0.4f, 0.4f, 1.f);
+const float4 g_vMtrlSpecular = float4(1.f, 1.f, 1.f, 1.f);
 
 
 // 툰 쉐이딩 전용 파라미터들

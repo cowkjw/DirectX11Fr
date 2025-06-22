@@ -76,13 +76,7 @@ void BossPunch::Update(CEnmuMeat* pChar, _float fTimeDelta)
 
 	if (m_fTimeElapsed >= ATTACK_END_TIME)
 	{
-		for (_int i = 0; i < m_pWarnings.size(); i++)
-		{
-			if (m_pWarnings[i])
-			{
-				m_pWarnings[i]->SetActive(false);
-			}
-		}
+		
 		pChar->ChangeState(new BossIdle(TEXT("Idle")));
 	}
 }
@@ -99,7 +93,12 @@ void BossPunch::Exit(CEnmuMeat* pChar)
 	{
 		rightArm->StartRotateY(0.5f, 180.f);
 	}
-	//leftArm->GetTransform()->Rotate_EulerAngles(_float3(0.f,  180.f, 0.f));
-	//rightArm->GetTransform()->Rotate_EulerAngles(_float3(0.f,180.f, 0.f));
 
+	for (_int i = 0; i < m_pWarnings.size(); i++)
+	{
+		if (m_pWarnings[i])
+		{
+			m_pWarnings[i]->SetActive(false);
+		}
+	}
 }

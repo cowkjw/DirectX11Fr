@@ -28,6 +28,7 @@ private:
 	_vector  m_vCloudOrigin[4];
 
 	_vector  m_vShojiOrigin[2];
+	static _float4  m_vInitShojiOrigin[2];
 	_float   m_fShojiTime = 0.f;
 	_float   m_fShojiDuration = 1.5f;
 

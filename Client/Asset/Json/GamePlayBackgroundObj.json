@@ -70,7 +70,7 @@
                 "IsActive": true,
                 "Position": [
                     0.0,
-                    0.0,
+                    -14.35,
                     4.67
                 ],
                 "Rotation": [
@@ -116,7 +116,7 @@
                 "IsActive": true,
                 "Position": [
                     0.0,
-                    0.0,
+                    -9.5,
                     0.0
                 ],
                 "Rotation": [
@@ -253,9 +253,9 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    -101.04,
+                    -61.84,
                     0.0,
-                    -36.5
+                    -75.01
                 ],
                 "Rotation": [
                     0.0,
@@ -263,9 +263,9 @@
                     0.0
                 ],
                 "Scale": [
-                    10.0,
-                    10.0,
-                    10.0
+                    16.0,
+                    16.0,
+                    16.0
                 ]
             }
         },
@@ -393,7 +393,7 @@
                 "Position": [
                     -187.10,
                     -2.91,
-                    -93.92
+                    -93.91
                 ],
                 "Rotation": [
                     0.0,
@@ -540,7 +540,7 @@
                 ],
                 "Scale": [
                     4.96,
-                    4.86,
+                    4.81,
                     4.96
                 ]
             }
@@ -851,9 +851,9 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    -178.32,
+                    -188.47,
                     0.0,
-                    44.72
+                    22.29
                 ],
                 "Rotation": [
                     -0.0,
@@ -861,9 +861,9 @@
                     0.0
                 ],
                 "Scale": [
-                    4.93,
+                    4.92,
                     5.0,
-                    4.93
+                    7.96
                 ]
             }
         },
@@ -907,9 +907,9 @@
                     0.0
                 ],
                 "Scale": [
-                    5.0,
-                    5.0,
-                    5.0
+                    8.0,
+                    8.0,
+                    8.0
                 ]
             }
         },
@@ -953,9 +953,9 @@
                     0.0
                 ],
                 "Scale": [
-                    5.0,
-                    5.0,
-                    5.0
+                    8.0,
+                    8.0,
+                    8.0
                 ]
             }
         },
@@ -989,7 +989,7 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    -84.90,
+                    -88.51,
                     0.0,
                     325.35
                 ],
@@ -1001,7 +1001,7 @@
                 "Scale": [
                     5.0,
                     5.0,
-                    5.0
+                    7.98
                 ]
             }
         },
@@ -1081,8 +1081,8 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    218.83,
-                    9.0,
+                    287.5,
+                    -6.55,
                     12.14
                 ],
                 "Rotation": [
@@ -1091,9 +1091,9 @@
                     0.0
                 ],
                 "Scale": [
-                    5.0,
-                    5.0,
-                    5.0
+                    8.68,
+                    7.30,
+                    6.80
                 ]
             }
         },
@@ -1127,9 +1127,9 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    58.72,
+                    114.26,
                     0.0,
-                    -236.05
+                    -253.88
                 ],
                 "Rotation": [
                     0.0,
@@ -1137,9 +1137,9 @@
                     -0.0
                 ],
                 "Scale": [
-                    4.98,
-                    5.0,
-                    4.98
+                    7.00,
+                    7.0,
+                    6.99
                 ]
             }
         },
@@ -1173,19 +1173,19 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    -176.91,
-                    2.47,
-                    -144.53
+                    -264.35,
+                    -3.06,
+                    -34.34
                 ],
                 "Rotation": [
                     0.0,
-                    162.48,
+                    162.47,
                     0.0
                 ],
                 "Scale": [
-                    7.99,
+                    7.98,
                     8.0,
-                    7.99
+                    7.98
                 ]
             }
         },
@@ -1219,7 +1219,7 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    215.22,
+                    252.44,
                     0.0,
                     -122.30
                 ],
@@ -1311,19 +1311,19 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    -100.41,
+                    -117.30,
                     0.0,
-                    -16.18
+                    -61.22
                 ],
                 "Rotation": [
                     -0.0,
-                    -73.87,
+                    -89.55,
                     0.0
                 ],
                 "Scale": [
-                    10.0,
-                    32.5,
-                    10.0
+                    15.49,
+                    36.70,
+                    15.78
                 ]
             }
         },
@@ -2187,7 +2187,7 @@
                 "Position": [
                     54.86,
                     0.0,
-                    227.08
+                    249.30
                 ],
                 "Rotation": [
                     0.0,
@@ -2195,9 +2195,9 @@
                     -0.0
                 ],
                 "Scale": [
-                    4.0,
-                    4.0,
-                    4.0
+                    12.0,
+                    12.0,
+                    12.0
                 ]
             }
         },
@@ -2231,9 +2231,9 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    225.58,
-                    0.0,
-                    69.12
+                    250.13,
+                    -1.18e-07,
+                    62.31
                 ],
                 "Rotation": [
                     0.0,
@@ -2241,9 +2241,9 @@
                     0.0
                 ],
                 "Scale": [
-                    4.0,
-                    4.0,
-                    4.0
+                    7.0,
+                    7.0,
+                    7.0
                 ]
             }
         },
@@ -2287,9 +2287,9 @@
                     0.0
                 ],
                 "Scale": [
-                    4.0,
-                    4.0,
-                    4.0
+                    6.0,
+                    6.0,
+                    6.0
                 ]
             }
         },
@@ -2324,8 +2324,8 @@
                 "IsActive": true,
                 "Position": [
                     -39.45,
-                    -1.18e-07,
-                    189.30
+                    8.47,
+                    217.80
                 ],
                 "Rotation": [
                     0.0,
@@ -2369,9 +2369,9 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    189.36,
-                    7.45e-09,
-                    163.38
+                    185.91,
+                    0.0,
+                    202.85
                 ],
                 "Rotation": [
                     0.0,
@@ -2379,9 +2379,9 @@
                     0.0
                 ],
                 "Scale": [
-                    5.0,
-                    5.0,
-                    5.0
+                    13.0,
+                    13.0,
+                    13.0
                 ]
             }
         },
@@ -2415,9 +2415,9 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    63.13,
-                    -2.98e-08,
-                    -198.49
+                    48.74,
+                    -3.34,
+                    -176.22
                 ],
                 "Rotation": [
                     0.0,
@@ -2425,9 +2425,9 @@
                     0.0
                 ],
                 "Scale": [
-                    6.0,
-                    6.0,
-                    6.0
+                    10.0,
+                    10.0,
+                    10.0
                 ]
             }
         },
@@ -2462,7 +2462,7 @@
                 "IsActive": true,
                 "Position": [
                     -165.77,
-                    0.0,
+                    -1.70,
                     -126.76
                 ],
                 "Rotation": [
@@ -2471,9 +2471,9 @@
                     0.0
                 ],
                 "Scale": [
-                    6.0,
-                    6.0,
-                    6.0
+                    8.0,
+                    8.0,
+                    8.0
                 ]
             }
         },
@@ -2525,6 +2525,604 @@
         },
         "isActive": true,
         "modelTag": "MiddleTree",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 87,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -37.31,
+                    0.0,
+                    167.36
+                ],
+                "Rotation": [
+                    -0.0,
+                    -44.77,
+                    0.0
+                ],
+                "Scale": [
+                    14.18,
+                    39.5,
+                    11.60
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallCliff",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 88,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -72.25,
+                    -6.38,
+                    -262.04
+                ],
+                "Rotation": [
+                    0.0,
+                    -158.96,
+                    0.0
+                ],
+                "Scale": [
+                    5.0,
+                    5.0,
+                    5.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuFar2",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 89,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -214.38,
+                    0.0,
+                    -72.05
+                ],
+                "Rotation": [
+                    -0.0,
+                    -73.94,
+                    0.0
+                ],
+                "Scale": [
+                    7.98,
+                    8.0,
+                    7.98
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Rail",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 92,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    218.60,
+                    0.0,
+                    18.68
+                ],
+                "Rotation": [
+                    0.0,
+                    83.69,
+                    0.0
+                ],
+                "Scale": [
+                    12.27,
+                    39.40,
+                    8.37
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallCliff",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 93,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    218.77,
+                    0.0,
+                    -82.26
+                ],
+                "Rotation": [
+                    0.0,
+                    112.51,
+                    0.0
+                ],
+                "Scale": [
+                    16.19,
+                    36.09,
+                    17.29
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallCliff",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 94,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -37.54,
+                    0.0,
+                    -144.91
+                ],
+                "Rotation": [
+                    -0.0,
+                    -19.45,
+                    0.0
+                ],
+                "Scale": [
+                    40.0,
+                    40.0,
+                    40.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallStone",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 95,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    196.16,
+                    -3.19,
+                    -156.75
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "MiddleTree",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 96,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    4.48,
+                    -3.75,
+                    -169.77
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    12.0,
+                    12.0,
+                    10.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "MiddleTree",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 97,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    113.72,
+                    0.0,
+                    -166.91
+                ],
+                "Rotation": [
+                    0.0,
+                    156.82,
+                    0.0
+                ],
+                "Scale": [
+                    15.59,
+                    54.40,
+                    16.69
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallCliff",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 98,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    100.25,
+                    0.0,
+                    203.13
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    18.60,
+                    39.09,
+                    14.89
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallCliff",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 99,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    201.82,
+                    0.0,
+                    129.74
+                ],
+                "Rotation": [
+                    0.0,
+                    77.94,
+                    -0.0
+                ],
+                "Scale": [
+                    15.89,
+                    36.20,
+                    15.17
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallCliff",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 100,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -83.44,
+                    0.0,
+                    -130.41
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    30.0,
+                    30.0,
+                    30.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallStone",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 3,
+        "ID": 101,
+        "ProtoLevel": 3,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -18.32,
+                    -7.15,
+                    -193.66
+                ],
+                "Rotation": [
+                    -0.0,
+                    -154.47,
+                    0.0
+                ],
+                "Scale": [
+                    29.99,
+                    73.40,
+                    30.19
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SmallCliff",
         "name": "Prototype_GameObject_Envirnoment",
         "parentId": 0,
         "tag": ""
