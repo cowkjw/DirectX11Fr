@@ -10,6 +10,7 @@
 #include "BossTentacle.h"
 #include "BossSwingAttack.h"
 
+_bool BossIdle::m_bPatternUsed[6] = { false, false, false, false, false, false }; // 패턴 사용 여부 초기화
 
 void BossIdle::Enter(CEnmuMeat* pChar)
 {
@@ -113,114 +114,246 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
             << pos.x << ", " << pos.y << ", " << pos.z << ")" << endl;
     }
 	
-    // 4) 순환 검사용 인덱스 시작점
-    //    (마지막에 실행했던 인덱스 + 1) % 7부터 검사
+ //   // 4) 순환 검사용 인덱스 시작점
+ //   //    (마지막에 실행했던 인덱스 + 1) % 7부터 검사
     int startIdx = (pChar->m_LastPatternIdx + 1) % 6;
     int chosenIdx = -1;
 
-    // 6개 패턴을 순차로 검사 (거리 구간별로 분리)
-    //    0: BossPunch,      1: BossHandAttack,  2: BossFreeze,
-    //    3: BossSwingAttack, 4: BossFollowPunch, 5: BossTentacle
-    for (int offset = 0; offset < 6; ++offset)
+ //   // 6개 패턴을 순차로 검사 (거리 구간별로 분리)
+ //   //    0: BossPunch,      1: BossHandAttack,  2: BossFreeze,
+ //   //    3: BossSwingAttack, 4: BossFollowPunch, 5: BossTentacle
+ //   for (int offset = 0; offset < 6; ++offset)
+ //   {
+ //       int idx = (startIdx + offset) % 6;
+ //       if (m_bPatternUsed[idx])
+ //           continue;
+
+ //       switch (idx)
+ //       {
+ //       case 0: // BossPunch      (50 ~ 100)
+ //           if (pChar->m_CD_Punch == 0.f && fDist >= 40.f && fDist <= 90.f)
+ //               chosenIdx = 0;
+ //           break;
+
+ //       case 1: // BossHandAttack (101 ~ 130)
+ //           if (pChar->m_CD_Hand == 0.f && fDist > 90.f && fDist <= 120.f)
+ //               chosenIdx = 1;
+ //           break;
+
+ //       case 2: // BossFreezeAttack (131 ~ 160)
+ //           if (pChar->m_CD_Freeze == 0.f && fDist > 120.f && fDist <= 150.f)
+ //               chosenIdx = 2;
+ //           break;
+
+ //       case 3: // BossSwingAttack  (161 ~ 190)
+ //           if (pChar->m_CD_Swing == 0.f && fDist > 150.f && fDist <= 180.f)
+ //               chosenIdx = 3;
+ //           break;
+
+ //       case 4: // BossFollowPunch  (191 ~ 220)
+ //           if (pChar->m_CD_FollowPunch == 0.f && fDist > 180.f && fDist <= 220.f)
+ //               chosenIdx = 4;
+ //           break;
+
+ //       case 5: // BossTentacle     (221+)
+ //           if (pChar->m_CD_Tentacle == 0.f && fDist > 220.f)
+ //               chosenIdx = 5;
+ //           break;
+ //       }
+
+ //       if (chosenIdx >= 0)
+ //           break; // 첫 번째 조건 만족 패턴 선택
+ //   }
+
+ //   // 6) 실행할 패턴이 하나도 없다면, Idle 시간만 초기화하고 종료
+ //   if (chosenIdx < 0)
+ //   {
+ //       m_fTimeElapsed = 0.f;
+ //       return;
+ //   }
+
+ //   ////// 테스트용
+ //   //chosenIdx = 6;
+ // 
+ //   // 7) chosenIdx에 따라 상태 전이 및 쿨타임 재설정
+ //   switch (chosenIdx)
+ //   {
+ //   case 0: // BossPunch
+ //       pChar->ChangeState(new BossPunch(TEXT("BossPunchAttack")));
+ //       pChar->m_CD_Punch = 5.f;   // 원하는 쿨타임 설정
+ //       break;
+
+ //   case 1: // BossHandAttack
+ //       pChar->ChangeState(new BossHandAttack(TEXT("BossHandAttack")));
+ //       pChar->m_CD_Hand = 4.f;
+ //       break;
+
+ //   case 2: // BossFreezeAttack
+ //       pChar->ChangeState(new BossFreezeAttack(TEXT("BossFreezeAttack")));
+ //       pChar->m_CD_Freeze = 9.f;
+ //       break;
+
+ //   case 3: // BossSwingAttack
+ //       pChar->ChangeState(new BossSwingAttack(TEXT("BossSwingAttack")));
+ //       pChar->m_CD_Swing = 12.f;
+ //       break;
+
+ //   case 4: // BossFollowPunch
+ //       pChar->ChangeState(new BossFollowPunch(TEXT("BossFollowPunchAttack")));
+ //       pChar->m_CD_FollowPunch = 6.f;
+ //       break;
+
+ //   case 5: // BossTentacle
+ //       pChar->ChangeState(new BossTentacle(TEXT("BossTentacleAttack")));
+ //       pChar->m_CD_Tentacle = 9.f;
+ //       break;
+	////case 6: // BossOpen
+	////	pChar->ChangeState(new BossOpen(TEXT("BossOpen")));
+	//////	pChar->m_CD_Open = 10.f;
+	////	break;
+ //   }
+
+ //   m_bPatternUsed[chosenIdx] = true;
+ //   pChar->m_LastPatternIdx = chosenIdx;
+
+ //   std::cout << "[BossIdle] Chosen Pattern Index: " << chosenIdx << std::endl;
+
+ //   // 9) Idle 누적 시간 리셋
+ //   m_fTimeElapsed = 0.f;
+
+vector<int> availablePatterns;
+for (int offset = 0; offset < 6; ++offset)
+{
+    int idx = (startIdx + offset) % 6;
+    if (m_bPatternUsed[idx])
+        continue;
+
+    bool canUse = false;
+    switch (idx)
     {
-        int idx = (startIdx + offset) % 6;
-        if (m_bPatternUsed[idx])
-            continue;
-
-        switch (idx)
-        {
-        case 0: // BossPunch      (50 ~ 100)
-            if (pChar->m_CD_Punch == 0.f && fDist >= 50.f && fDist <= 100.f)
-                chosenIdx = 0;
-            break;
-
-        case 1: // BossHandAttack (101 ~ 130)
-            if (pChar->m_CD_Hand == 0.f && fDist > 100.f && fDist <= 130.f)
-                chosenIdx = 1;
-            break;
-
-        case 2: // BossFreezeAttack (131 ~ 160)
-            if (pChar->m_CD_Freeze == 0.f && fDist > 130.f && fDist <= 160.f)
-                chosenIdx = 2;
-            break;
-
-        case 3: // BossSwingAttack  (161 ~ 190)
-            if (pChar->m_CD_Swing == 0.f && fDist > 160.f && fDist <= 190.f)
-                chosenIdx = 3;
-            break;
-
-        case 4: // BossFollowPunch  (191 ~ 220)
-            if (pChar->m_CD_FollowPunch == 0.f && fDist > 160.f && fDist <= 180.f)
-                chosenIdx = 4;
-            break;
-
-        case 5: // BossTentacle     (221+)
-            if (pChar->m_CD_Tentacle == 0.f && fDist > 220.f)
-                chosenIdx = 5;
-            break;
-        }
-
-        if (chosenIdx >= 0)
-            break; // 첫 번째 조건 만족 패턴 선택
+    case 0: // BossPunch      (50 ~ 100)
+        if (fDist >= 50.f && fDist <= 100.f)
+            canUse = true;
+        break;
+    case 1: // BossHandAttack (101 ~ 130)
+        if (fDist > 100.f && fDist <= 130.f)
+            canUse = true;
+        break;
+    case 2: // BossFreezeAttack (131 ~ 160)
+        if (fDist > 130.f && fDist <= 160.f)
+            canUse = true;
+        break;
+    case 3: // BossSwingAttack  (161 ~ 190)
+        if (fDist > 160.f && fDist <= 190.f)
+            canUse = true;
+        break;
+    case 4: // BossFollowPunch  (191 ~ 220) // 거리 구간 수정
+        if (fDist > 190.f && fDist <= 220.f)
+            canUse = true;
+        break;
+    case 5: // BossTentacle     (221+)
+        if (fDist > 220.f)
+            canUse = true;
+        break;
     }
 
-    // 6) 실행할 패턴이 하나도 없다면, Idle 시간만 초기화하고 종료
-    if (chosenIdx < 0)
-    {
-        m_fTimeElapsed = 0.f;
-        return;
+    if (canUse) {
+        availablePatterns.push_back(idx);
     }
+}
 
-    ////// 테스트용
-    //chosenIdx = 6;
-  
-    // 7) chosenIdx에 따라 상태 전이 및 쿨타임 재설정
-    switch (chosenIdx)
-    {
-    case 0: // BossPunch
-        pChar->ChangeState(new BossPunch(TEXT("BossPunchAttack")));
-        pChar->m_CD_Punch = 5.f;   // 원하는 쿨타임 설정
-        break;
-
-    case 1: // BossHandAttack
-        pChar->ChangeState(new BossHandAttack(TEXT("BossHandAttack")));
-        pChar->m_CD_Hand = 4.f;
-        break;
-
-    case 2: // BossFreezeAttack
-        pChar->ChangeState(new BossFreezeAttack(TEXT("BossFreezeAttack")));
-        pChar->m_CD_Freeze = 9.f;
-        break;
-
-    case 3: // BossSwingAttack
-        pChar->ChangeState(new BossSwingAttack(TEXT("BossSwingAttack")));
-        pChar->m_CD_Swing = 12.f;
-        break;
-
-    case 4: // BossFollowPunch
-        pChar->ChangeState(new BossFollowPunch(TEXT("BossFollowPunchAttack")));
-        pChar->m_CD_FollowPunch = 6.f;
-        break;
-
-    case 5: // BossTentacle
-        pChar->ChangeState(new BossTentacle(TEXT("BossTentacleAttack")));
-        pChar->m_CD_Tentacle = 9.f;
-        break;
-	//case 6: // BossOpen
-	//	pChar->ChangeState(new BossOpen(TEXT("BossOpen")));
-	////	pChar->m_CD_Open = 10.f;
-	//	break;
-    }
-
-    m_bPatternUsed[chosenIdx] = true;
-    pChar->m_LastPatternIdx = chosenIdx;
-
-    std::cout << "[BossIdle] Chosen Pattern Index: " << chosenIdx << std::endl;
-
-    // 9) Idle 누적 시간 리셋
+// 사용 가능한 패턴이 없으면 Idle 상태 유지
+if (availablePatterns.empty()) {
     m_fTimeElapsed = 0.f;
+    return;
+}
 
+// 쿨타임이 완료된 패턴들을 우선적으로 필터링
+std::vector<int> readyPatterns; // 쿨타임이 완료된 패턴들
+for (int idx : availablePatterns) {
+    bool isReady = false;
+    switch (idx) {
+    case 0: // BossPunch
+        if (pChar->m_CD_Punch == 0.f) isReady = true;
+        break;
+    case 1: // BossHandAttack
+        if (pChar->m_CD_Hand == 0.f) isReady = true;
+        break;
+    case 2: // BossFreezeAttack
+        if (pChar->m_CD_Freeze == 0.f) isReady = true;
+        break;
+    case 3: // BossSwingAttack
+        if (pChar->m_CD_Swing == 0.f) isReady = true;
+        break;
+    case 4: // BossFollowPunch
+        if (pChar->m_CD_FollowPunch == 0.f) isReady = true;
+        break;
+    case 5: // BossTentacle
+        if (pChar->m_CD_Tentacle == 0.f) isReady = true;
+        break;
+    }
 
+    if (isReady) {
+        readyPatterns.push_back(idx);
+    }
+}
+
+// 쿨타임이 완료된 패턴이 있으면 그 중에서 선택, 없으면 사용 가능한 패턴 중에서 선택
+if (!readyPatterns.empty()) {
+    chosenIdx = readyPatterns[0]; // 첫 번째로 찾은 쿨타임 완료 패턴 선택
+}
+else {
+    chosenIdx = availablePatterns[0]; // 쿨타임 상관없이 첫 번째 사용 가능한 패턴 선택
+}
+
+// 실행할 패턴이 없다면 Idle 시간만 초기화하고 종료
+if (chosenIdx < 0) {
+    m_fTimeElapsed = 0.f;
+    return;
+}
+
+////// 테스트용
+//chosenIdx = 6;
+
+// chosenIdx에 따라 상태 전이 및 쿨타임 재설정
+switch (chosenIdx)
+{
+case 0: // BossPunch
+    pChar->ChangeState(new BossPunch(TEXT("BossPunchAttack")));
+    pChar->m_CD_Punch = 5.f;   // 원하는 쿨타임 설정
+    break;
+case 1: // BossHandAttack
+    pChar->ChangeState(new BossHandAttack(TEXT("BossHandAttack")));
+    pChar->m_CD_Hand = 4.f;
+    break;
+case 2: // BossFreezeAttack
+    pChar->ChangeState(new BossFreezeAttack(TEXT("BossFreezeAttack")));
+    pChar->m_CD_Freeze = 9.f;
+    break;
+case 3: // BossSwingAttack
+    pChar->ChangeState(new BossSwingAttack(TEXT("BossSwingAttack")));
+    pChar->m_CD_Swing = 12.f;
+    break;
+case 4: // BossFollowPunch
+    pChar->ChangeState(new BossFollowPunch(TEXT("BossFollowPunchAttack")));
+    pChar->m_CD_FollowPunch = 6.f;
+    break;
+case 5: // BossTentacle
+    pChar->ChangeState(new BossTentacle(TEXT("BossTentacleAttack")));
+    pChar->m_CD_Tentacle = 9.f;
+    break;
+    //case 6: // BossOpen
+    //	pChar->ChangeState(new BossOpen(TEXT("BossOpen")));
+    ////	pChar->m_CD_Open = 10.f;
+    //	break;
+}
+
+m_bPatternUsed[chosenIdx] = true;
+pChar->m_LastPatternIdx = chosenIdx;
+std::cout << "[BossIdle] Chosen Pattern Index: " << chosenIdx << std::endl;
+
+// Idle 누적 시간 리셋
+m_fTimeElapsed = 0.f;
 }
 
 void BossIdle::Exit(CEnmuMeat* pChar)

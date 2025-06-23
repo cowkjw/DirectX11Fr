@@ -53,6 +53,12 @@
       "path": "../Asset/ShaderFiles/Shader_DecalMask.hlsl",
       "layout": "VTXPOSTEX",
       "static": true
+    },
+    {
+      "key": "Shader_VtxRectInstance",
+      "path": "../Asset/ShaderFiles/Shader_VtxRectInstance.hlsl",
+      "layout": "VTXRECT_PARTICLE_INSTANCE",
+      "static": true
     }
   ]
 }

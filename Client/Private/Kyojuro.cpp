@@ -107,6 +107,9 @@ HRESULT CKyojuro::Initialize(void* pArg)
 	{
 		m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
 	}
+	// 테스트용
+	m_fMaxHP = 200.f;
+	m_fCurrentHP = m_fMaxHP;
 	return S_OK;
 }
 
@@ -560,6 +563,7 @@ void CKyojuro::Ready_Animation()
 	m_pAnimatorCom->AddBool("Move");
 	m_pAnimatorCom->AddBool("Jump");
 	m_pAnimatorCom->AddBool("Guard");
+	m_pAnimatorCom->AddBool("Death");
 	m_pAnimatorCom->AddBool("Attacking");
 	m_pAnimatorCom->AddTrigger("JumpAttack");
 	m_pAnimatorCom->AddTrigger("Attack");

@@ -82,6 +82,12 @@ HRESULT CBaseCharacter::Initialize(void* pArg)
 			m_pAnimatorCom->SetBool("Attacking", false);
 		}
 		});
+	m_pAnimatorCom->RegisterEventListener("Death", [&](const string& eventName) {
+		if (m_pAnimatorCom)
+		{
+			m_pAnimatorCom->SetBool("Death", true);
+		}
+		});
 	return S_OK;
 }
 

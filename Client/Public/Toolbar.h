@@ -5,6 +5,9 @@ BEGIN_NAMESPACE(Engine)
 class CGameObject;
 class CAnimation;
 class CNavigation;
+class CParticleSystem;
+class CShader;
+class CTexture;
 END_NAMESPACE
 
 BEGIN_NAMESPACE(Client)
@@ -30,6 +33,7 @@ private:
 	void DrawAnimEventEditor();
 	void SpawnMouse(void* pArg = nullptr);
 	void ShowCells();
+	void DrawParticleEditor();
 
 	CGameObject* ClonePrototype(const string& prototypeName, const wstring& instanceName,void* pArg = nullptr);
 
@@ -73,9 +77,14 @@ private:
 
 	vector<_wstring> m_FbxFilePaths;
 
+	// 파티클 시스템 관련
+	CParticleSystem* m_pParticleSystem = nullptr; // 파티클 시스템
+	CShader* m_pPreviewShader = nullptr;
+	CTexture* m_pPreviewTexture = nullptr;
 
 	// 네비 매쉬용
 	CNavigation* m_pNavigation = nullptr;
+	
 	vector<_float3> m_NavMeshPoints; // 네비메쉬 포인트들
 	_bool m_bIsNavMeshCreating = false; // 네비메쉬 생성 중인지 여부
 public:

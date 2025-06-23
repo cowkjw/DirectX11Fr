@@ -3,7 +3,12 @@
         {
             "clipName": "A_P0000_V00_C00_Death",
             "duration": 76.0,
-            "events": []
+          "events": [
+            {
+              "name": "Death",
+              "time": 75.8
+            }
+          ]
         },
         {
             "clipName": "A_P0000_V00_C00_Dmg01A_B",

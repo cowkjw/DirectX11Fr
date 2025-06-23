@@ -15,6 +15,7 @@
 #include "ThirdPersonCamera.h"	
 #include "Environment.h"
 #include "EnmuMeat.h"
+#include "Snow.h"
 #include "Navigation.h"
 #include "EnmuTentacle.h"
 #include "WarningZoneDecal.h"
@@ -383,7 +384,10 @@ HRESULT CLoader::Loading_For_Editor()
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_TanjiroWeapon"),
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Weapon/TanjiroWeapon.bin", PreTransformMatrix))))
 		return E_FAIL;
-
+	/* For.Prototype_GameObject_Snow */
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
+		CSnow::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 
 	/* For.Prototype_GameObject_Akaza */

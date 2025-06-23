@@ -23,5 +23,6 @@ namespace Engine
 		RANGE,
 		NONE
 	};
+	enum class PARTICLE_TYPE{POINT, RECT};
 	
 }

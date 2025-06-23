@@ -208,6 +208,7 @@
     <ClInclude Include="..\public\ObserverManager.h" />
     <ClInclude Include="..\public\Pannel.h" />
     <ClInclude Include="..\public\Sky.h" />
+    <ClInclude Include="..\Public\Snow.h" />
     <ClInclude Include="..\public\State.h" />
     <ClInclude Include="..\public\StateAttack1.h" />
     <ClInclude Include="..\public\StateAttack2.h" />
@@ -302,6 +303,7 @@
     <ClCompile Include="..\private\ObserverManager.cpp" />
     <ClCompile Include="..\private\Pannel.cpp" />
     <ClCompile Include="..\private\Sky.cpp" />
+    <ClCompile Include="..\Private\Snow.cpp" />
     <ClCompile Include="..\private\State.cpp" />
     <ClCompile Include="..\private\StateAttack1.cpp" />
     <ClCompile Include="..\private\StateAttack2.cpp" />
@@ -352,6 +354,7 @@
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTex.hlsl" />
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTexNonAlpha.hlsl" />
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxRectInstance.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Asset\Json\GamePlayBackgroundObj.json" />

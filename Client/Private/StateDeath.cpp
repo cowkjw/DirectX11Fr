@@ -12,8 +12,8 @@ void StateDeath::Enter(CBaseCharacter* pChar)
 void StateDeath::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)
 {
 	auto pAnim = pChar->Get_Animator();
-
-	if (pAnim->GetCurrentAnimProgress() >= 1.f)
+	const string& currentAnim = pAnim->GetCurrentAnimName();
+	if (pAnim->CheckBool("Death"))
 	{
 		pAnim->StopAnimation();
 	}

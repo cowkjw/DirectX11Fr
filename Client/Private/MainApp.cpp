@@ -107,6 +107,23 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CThirdPersonCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	CParticleSystem::PARTICLE_DESC ParticleDesc{};
+	ParticleDesc.iNumInstance = 5000;
+	ParticleDesc.vCenter = _float3(64.f, 30.f, 64.0f);
+	ParticleDesc.vRange = _float3(128.f, 3.0f, 128.f);
+	ParticleDesc.vSize = _float2(0.1f, 0.4f);
+	ParticleDesc.vLifeTime = _float2(5.f, 8.f);
+	ParticleDesc.vSpeed = _float2(3.f, 5.f);
+	ParticleDesc.isLoop = true;
+	ParticleDesc.vVelocity = _float3(1.f, 1.f, 1.f);
+	ParticleDesc.fSpreadAngle = 180.f;
+	ParticleDesc.fGravity = 0.f;
+	ParticleDesc.vStartColor = _float3(1.f, 1.f, 1.f);
+	ParticleDesc.vEndColor = _float3(0.5f, 1.f, 0.5f);
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Particle"),
+		CParticleSystem::Create(m_pDevice, m_pContext, ParticleDesc))))
+		return E_FAIL;
 	return S_OK;
 }
 

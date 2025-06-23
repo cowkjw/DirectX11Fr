@@ -482,6 +482,7 @@ void CTanjiro::Ready_Animation()
 	m_pAnimatorCom->AddBool("Jump");
 	m_pAnimatorCom->AddBool("Guard");
 	m_pAnimatorCom->AddBool("Attacking");
+	m_pAnimatorCom->AddBool("Death");
 	m_pAnimatorCom->AddTrigger("JumpAttack");
 	m_pAnimatorCom->AddTrigger("Attack");
 	m_pAnimatorCom->AddTrigger("AttackDown");

@@ -600,6 +600,7 @@ void CAkaza::Ready_Animation()
 	m_pAnimatorCom->AddBool("Move");
 	m_pAnimatorCom->AddBool("Jump");
 	m_pAnimatorCom->AddBool("Guard");
+	m_pAnimatorCom->AddBool("Death");
 	m_pAnimatorCom->AddBool("Attacking");
 	m_pAnimatorCom->AddTrigger("JumpAttack");
 	m_pAnimatorCom->AddTrigger("Attack");

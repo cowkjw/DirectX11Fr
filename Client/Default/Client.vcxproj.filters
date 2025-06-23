@@ -208,6 +208,12 @@
     <Filter Include="94. Pattern\State\DefaultState\Death">
       <UniqueIdentifier>{adab60d5-0183-4841-b304-ede3efbcac80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.GameObject\Effect">
+      <UniqueIdentifier>{b1b078e7-d12f-498d-9028-9c630ca8504a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Effect\Particle">
+      <UniqueIdentifier>{07e8c344-c8f8-4094-8ef5-06107150b61a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -473,6 +479,9 @@
     </ClInclude>
     <ClInclude Include="..\public\StateDeath.h">
       <Filter>94. Pattern\State\DefaultState\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Snow.h">
+      <Filter>01.GameObject\Effect\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -753,6 +762,9 @@
     <ClCompile Include="..\private\StateDeath.cpp">
       <Filter>94. Pattern\State\DefaultState\Death</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Snow.cpp">
+      <Filter>01.GameObject\Effect\Particle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTex.hlsl">
@@ -780,6 +792,9 @@
       <Filter>100.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Asset\ShaderFiles\Shader_DecalMask.hlsl">
+      <Filter>100.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxRectInstance.hlsl">
       <Filter>100.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

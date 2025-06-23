@@ -95,10 +95,11 @@ HRESULT CJsonLoader::Load_Shaders(const string& filePath, function<void()> onEnt
 				pElems = VTXANIMMESH::Elements;
 				iNum = VTXANIMMESH::iNumElements;
 			}
-			//else if (layout == "VTXCOLLIDER") {
-			//	pElems = VTXCOLLIDER::Elements;
-			//	iNum = VTXCOLLIDER::iNumElements;
-			//}
+			else if (layout == "VTXRECT_PARTICLE_INSTANCE") 
+			{
+				pElems = VTXRECT_PARTICLE_INSTANCE::Elements;
+				iNum = VTXRECT_PARTICLE_INSTANCE::iNumElements;
+			}
 			else
 			{
 				continue; // 지원하지 않는 레이아웃인 경우

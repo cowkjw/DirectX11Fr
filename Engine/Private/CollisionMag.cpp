@@ -34,12 +34,23 @@ void CCollisionMag::Update(_float fTimeDelta)
             if (!A->IsActive() || !B->IsActive())
                 continue;
 
-            // (b) 같은 게임 오브젝트 (또는 부모-자식 관계)면 무시
             CGameObject* ownerA = A->GetOwner();
             CGameObject* ownerB = B->GetOwner();
+
+            if (!ownerA || !ownerB)
+                continue;
+
+            CGameObject* parentA = ownerA->GetParent();
+            CGameObject* parentB = ownerB->GetParent();
+
+            CGameObject* grandParentA = parentA ? parentA->GetParent() : nullptr;
+            CGameObject* grandParentB = parentB ? parentB->GetParent() : nullptr;
+
             if (ownerA == ownerB
-                || ownerA->GetParent() == ownerB
-                || ownerB->GetParent() == ownerA)
+                || parentA == ownerB
+                || parentB == ownerA
+                || grandParentA == ownerB
+                || grandParentB == ownerA)
                 continue;
 
             // 5) 실제 충돌 여부 체크

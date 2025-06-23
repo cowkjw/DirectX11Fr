@@ -13,7 +13,9 @@
 #include <Environment.h>
 #include "Cell.h"
 #include "Navigation.h"
-
+#include "ParticleSystem.h"
+#include "Texture.h"
+#include "Shader.h"
 
 CToolbar::CToolbar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPannel(pDevice, pContext)
@@ -35,11 +37,19 @@ HRESULT CToolbar::Initialize()
 	m_pNavigation = CNavigation::Create(m_pDevice, m_pContext,nullptr);
 	if (nullptr == m_pNavigation)
 		return E_FAIL;
+
+	m_pPreviewShader = m_pGameInstance->GetShader(TEXT("Shader_VtxRectInstance"), true);
+	m_pPreviewTexture = m_pGameInstance->GetTexture(TEXT("TitleLogo"), true);
 	return S_OK;
 }
 
 void CToolbar::Update(_float fTimeDelta)
 {
+	if (m_pParticleSystem)
+	{
+		if (FAILED(m_pParticleSystem->UpdateVertexInstances(fTimeDelta)))
+			return;
+	}
 }
 
 HRESULT CToolbar::Render()
@@ -47,8 +57,39 @@ HRESULT CToolbar::Render()
 	DrawToolbar();
 	FBXLodaer();
 	DrawAnimEventEditor();
+	DrawParticleEditor();
 	if (m_pNavigation)
 		m_pNavigation->Render();
+
+	if (m_pPreviewShader && m_pPreviewTexture)
+	{
+		_float4x4 worldMatrix = { 1.f, 0.f, 0.f, 0.f,
+			0.f, 1.f, 0.f, 0.f,
+			0.f, 0.f, 1.f, 0.f,
+			0.f, 0.f, 0.f, 1.f
+		};
+	if (FAILED(m_pPreviewShader->Bind_Matrix("g_WorldMatrix", &worldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pPreviewShader->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pPreviewShader->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::PROJECTION))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pPreviewTexture->Bind_ShaderResource(m_pPreviewShader, "g_Texture", 0)))
+		return E_FAIL;
+
+	if (FAILED(m_pPreviewShader->Begin(0)))
+		return E_FAIL;
+	}
+	if (m_pParticleSystem)
+	{
+		if (FAILED(m_pParticleSystem->Bind_Buffers()))
+			return E_FAIL;
+
+		if (FAILED(m_pParticleSystem->Render()))
+			return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -807,6 +848,43 @@ void CToolbar::ShowCells()
 	ImGui::End();
 }
 
+void CToolbar::DrawParticleEditor()
+{
+	if (!ImGui::Begin("Particle Editor"))
+		return;
+
+	static CParticleSystem::PARTICLE_DESC desc{};
+
+	int iInstance = static_cast<_int>(desc.iNumInstance);
+	if (ImGui::InputInt("Num Instances", &iInstance))
+		desc.iNumInstance = static_cast<_uint>(max(iInstance, 0)); // 음수 방지
+	ImGui::DragFloat3("Center", &desc.vCenter.x, 0.1f);
+	ImGui::DragFloat3("Range", &desc.vRange.x, 0.1f);
+	ImGui::DragFloat2("Size", &desc.vSize.x, 0.01f);
+	ImGui::DragFloat2("Lifetime", &desc.vLifeTime.x, 0.1f);
+	ImGui::DragFloat2("Speed", &desc.vSpeed.x, 0.1f);
+	ImGui::Checkbox("Loop", &desc.isLoop);
+	ImGui::DragFloat3("Velocity", &desc.vVelocity.x, 0.1f);
+	ImGui::DragFloat("Spread Angle", &desc.fSpreadAngle, 1.0f);
+	ImGui::DragFloat("Gravity", &desc.fGravity, 0.01f);
+	ImGui::ColorEdit3("Start Color", &desc.vStartColor.x);
+	ImGui::ColorEdit3("End Color", &desc.vEndColor.x);
+	ImGui::DragFloat("AlphaVariation", &desc.fAlphaVariation, 0.01f, 0.f, 1.f);
+
+	if (ImGui::Button("Create Particle"))
+	{
+		Safe_Release(m_pParticleSystem);
+		m_pParticleSystem = CParticleSystem::Create(
+			m_pDevice, m_pContext, desc);
+		if (m_pParticleSystem)
+		{
+			m_pParticleSystem->Initialize(nullptr);
+		}
+	}
+
+	ImGui::End();
+}
+
 CGameObject* CToolbar::ClonePrototype(const string& prototypeName, const wstring& instanceName, void* pArg)
 {
 	auto& protoMap = m_pPrototypes[m_iCurrentSelectedLevel];
@@ -907,4 +985,7 @@ void CToolbar::Free()
 	m_CurrentPrototype = "";
 	Safe_Release(m_JsonLoader);
 	Safe_Release(m_pNavigation);
+	Safe_Release(m_pPreviewShader);
+	Safe_Release(m_pPreviewTexture);
+	Safe_Release(m_pParticleSystem);
 }

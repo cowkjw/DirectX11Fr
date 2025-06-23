@@ -259,6 +259,28 @@ void CBodyColliderParts::OnCollisionEnter(CCollider* other)
 
 void CBodyColliderParts::OnCollisionStay(CCollider* other, float fTimeDelta)
 {
+	if (auto pTarget = dynamic_cast<CBaseCharacter*>(other->GetOwner()))
+	{
+		if (m_DamagedTargets.find(pTarget) != m_DamagedTargets.end())
+			return; // 이미 데미지를 입힌 대상이면 무시
+		m_DamagedTargets.insert(pTarget); // 데미지를 입힌 대상에 추가
+
+		if (auto pChar = dynamic_cast<CBaseCharacter*>(m_pParent))
+		{
+			if (pTarget->GetState() != CBaseCharacter::CSTATE::DIE)
+			{
+				pChar->OnAttackHit(pTarget);
+			}
+		}
+		else if (auto pBossParts = dynamic_cast<CEnmuParts*>(m_pParent))
+		{
+			auto pBoss = static_cast<CEnmuMeat*>(pBossParts->GetParent());
+			if (pBoss)
+			{
+				pBoss->OnAttackHit(pTarget);
+			}
+		}
+	}
 }
 
 void CBodyColliderParts::OnCollisionExit(CCollider* other)
