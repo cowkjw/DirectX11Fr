@@ -79,7 +79,7 @@ HRESULT CMesh::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CMesh::Initialize_FromData(void* pVertexData, UINT vertexCount, UINT vertexStride,  void* pIndexData, UINT indexCount, UINT indexStride, _bool isAnim, const vector<class CBone*>& bones, const _fmatrix& PreTransformMatrix)
+HRESULT CMesh::Initialize_FromData(void* pVertexData, UINT vertexCount, UINT vertexStride, void* pIndexData, UINT indexCount, UINT indexStride, _bool isAnim, const vector<class CBone*>& bones, const _fmatrix& PreTransformMatrix)
 {
 	m_iNumVertices = vertexCount;
 	m_iVertexStride = vertexStride;
@@ -179,9 +179,9 @@ HRESULT CMesh::Ready_NonAnim_Mesh(const aiMesh* pAIMesh, _fmatrix PreTransformMa
 		return E_FAIL;
 
 
-		size_t vbBytes = m_iNumVertices * m_iVertexStride;
-		m_RawVB.resize(vbBytes);
-		memcpy(m_RawVB.data(), pVertices, vbBytes);
+	size_t vbBytes = m_iNumVertices * m_iVertexStride;
+	m_RawVB.resize(vbBytes);
+	memcpy(m_RawVB.data(), pVertices, vbBytes);
 
 	Safe_Delete_Array(pVertices);
 
@@ -242,19 +242,19 @@ HRESULT CMesh::Ready_Anim_Mesh(const aiMesh* pAIMesh, const vector<class CBone*>
 		// 이름으로 비교해서 전체 뼈중에 현재 메시의 뼈가 몇번째 뼈인지 찾는다.
 		auto	iter = find_if(Bones.begin(), Bones.end(), [&](CBone* pBone)->_bool
 			{
-				if(true == pBone->Compare_Name(pAIBone->mName.data))
-					return true;				
+				if (true == pBone->Compare_Name(pAIBone->mName.data))
+					return true;
 
 				++iBoneIndex;
 
 				return false;
 			});
 
-		m_BoneIndices.push_back(iBoneIndex);	
+		m_BoneIndices.push_back(iBoneIndex);
 
 		/* i번째 뼈가 몇개 정점에게 영향을 주는데?*/
 		_uint		iNumWeights = pAIBone->mNumWeights;
-		
+
 		for (_uint j = 0; j < iNumWeights; j++)
 		{
 			/* i번째 뼈가 영향ㅇ르 주는 j번째 정점의 정보 */
@@ -338,11 +338,11 @@ HRESULT CMesh::Bind_Bone_Matrices(CShader* pShader, const _char* pConstantName, 
 	for (size_t i = 0; i < m_iNumBones; i++)
 	{
 		XMStoreFloat4x4(&m_BoneMatrices[i],
-			XMLoadFloat4x4(&m_OffsetMatrices[i]) * 
+			XMLoadFloat4x4(&m_OffsetMatrices[i]) *
 			XMLoadFloat4x4(Bones[m_BoneIndices[i]]->Get_CombinedTransformationMatrix()));
 	}
 
-	return pShader->Bind_Matrices(pConstantName, m_BoneMatrices, m_iNumBones);	
+	return pShader->Bind_Matrices(pConstantName, m_BoneMatrices, m_iNumBones);
 }
 
 HRESULT CMesh::ExportBinary(ofstream& ofs)
@@ -359,8 +359,10 @@ HRESULT CMesh::ExportBinary(ofstream& ofs)
 	WriteUInt(ofs, m_iMaterialIndex);
 	WriteUInt(ofs, (_uint)m_iNumBones);
 	WriteUInt(ofs, (_uint)m_BoneIndices.size());
-	for (auto& idx : m_BoneIndices) WriteUInt(ofs, idx);
-	for (auto& mat : m_OffsetMatrices) {
+	for (auto& idx : m_BoneIndices) 
+		WriteUInt(ofs, idx);
+	for (auto& mat : m_OffsetMatrices) 
+	{
 		ofs.write(reinterpret_cast<const char*>(&mat), sizeof(XMFLOAT4X4));
 	}
 	ofs.write(reinterpret_cast<const char*>(m_RawVB.data()), m_RawVB.size());
@@ -470,7 +472,6 @@ CMesh* CMesh::CreateByBinary(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 	for (uint32_t i = 0; i < boneIdxCount; ++i)
 		ifs.read(reinterpret_cast<char*>(&boneIndices[i]), sizeof(boneIndices[i]));
 
-	// ★ 누락된 부분: 오프셋 매트릭스 읽기
 	vector<XMFLOAT4X4> offsetMatrices(boneIdxCount);
 	for (uint32_t i = 0; i < boneIdxCount; ++i) {
 		ifs.read(reinterpret_cast<char*>(&offsetMatrices[i]), sizeof(XMFLOAT4X4));

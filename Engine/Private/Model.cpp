@@ -62,6 +62,8 @@ HRESULT CModel::Bind_Bone_Matrices(CShader* pShader, const _char* pConstantName,
 
 CBone* CModel::Get_Bone(const _char* pBoneName)
 {
+	if (m_Bones.size() == 1)
+		return m_Bones[0];
 	auto it = find_if(m_Bones.begin(), m_Bones.end(),
 		[&](CBone* pBone) { return pBone->Compare_Name(pBoneName); });
 

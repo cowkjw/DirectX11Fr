@@ -69,6 +69,8 @@ HRESULT CShader::Initialize(void* pArg)
 
 HRESULT CShader::Begin(_uint iPassIndex)
 {
+	if (iPassIndex >= m_InputLayouts.size())
+		return E_FAIL;
 	m_pContext->IASetInputLayout(m_InputLayouts[iPassIndex]);
 
 	ID3DX11EffectPass* pPass = m_pEffect->GetTechniqueByIndex(0)->GetPassByIndex(iPassIndex);

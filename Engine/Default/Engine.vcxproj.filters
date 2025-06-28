@@ -187,6 +187,12 @@
     <ClInclude Include="..\public\ParticleSystem.h">
       <Filter>01.Utility\03.Components\Buffer\Instance\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RenderTarget.h">
+      <Filter>01.Utility\05. Renderer\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Target_Manager.h">
+      <Filter>01.Utility\05. Renderer\RenderTarget\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -357,6 +363,12 @@
     <ClCompile Include="..\private\ParticleSystem.cpp">
       <Filter>01.Utility\03.Components\Buffer\Instance\Particle</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\RenderTarget.cpp">
+      <Filter>01.Utility\05. Renderer\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Target_Manager.cpp">
+      <Filter>01.Utility\05. Renderer\RenderTarget\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00.System">
@@ -520,6 +532,12 @@
     </Filter>
     <Filter Include="01.Utility\03.Components\Buffer\Instance\Particle">
       <UniqueIdentifier>{c83f441e-94cc-4644-af3a-6740a0064aad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05. Renderer\RenderTarget">
+      <UniqueIdentifier>{767cb849-b9a3-442c-8452-9c807a1a2462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05. Renderer\RenderTarget\Manager">
+      <UniqueIdentifier>{2660112f-51c9-4a50-b896-6883f627ba4c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,9 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 
 texture2D g_DiffuseTexture;
+texture2D g_SpecularTexture;
+texture2D g_NormalTexture;
+float2 g_fUVOffset;
 
 float4 g_vLightDir;
 float4 g_vLightDiffuse;
@@ -11,6 +14,7 @@ float4 g_vLightAmbient;
 float4 g_vLightSpecular;
 
 float4 g_vCamPosition;
+float4 g_vColor = float4(1.f, 1.f, 1.f, 1.f); // 기본 색상 (흰색)
 
 const float4 g_vMtrlAmibient = float4(0.4f, 0.4f, 0.4f, 1.f);
 const float4 g_vMtrlSpecular = float4(1.f, 1.f, 1.f, 1.f);
@@ -174,6 +178,61 @@ PS_OUT PS_MAIN_TOON(PS_IN In)
 }
 
 
+PS_OUT PS_MAIN_Effect_MASK_NORMAL_DIFF(PS_IN In)
+{
+    PS_OUT Out;
+
+
+    float2 uv = In.vTexcoord + g_fUVOffset;
+
+    // 디스토션 계산
+    float2 distortion = (g_SpecularTexture.Sample(DefaultSampler, uv).rg - 0.5f) * 0.064f;
+    float2 distortedUV = uv + distortion;
+
+    // 마스크 처리 (노말텍스쳐를 마스크로 사용 중)
+    float mask = g_NormalTexture.Sample(DefaultSampler, distortedUV).r;
+
+    if (mask < 0.1f)
+        discard;
+
+    // 디퓨즈와 스페큘러는 왜곡된 UV로 샘플링
+    float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, distortedUV);
+    float3 vSpecular = g_SpecularTexture.Sample(DefaultSampler, distortedUV).rgb;
+
+    vDiffuse.rgb *= mask;
+
+    Out.vColor.rgb = vDiffuse.rgb + vSpecular * 0.2f;
+    Out.vColor.a = vDiffuse.a * mask;
+
+
+    return Out;
+}
+
+PS_OUT PS_MAIN_Effect_MASK_NORMAL(PS_IN In)
+{
+    PS_OUT Out;
+
+    float2 uv = In.vTexcoord + g_fUVOffset;
+
+    // 디스토션 적용
+    // 왜곡이 0~1 기준으로 처리해서 없으면 텍스쳐가 0.5 아니면 왼쪽으로 -5 아니면 오른쪽으로 5
+    float2 distortion = (g_SpecularTexture.Sample(DefaultSampler, uv).rg - 0.5f) * 0.5f;
+    float2 distortedUV = uv + distortion;
+
+    // 기본 컬러
+    float4 vDiffuse = g_vColor;
+
+    // 마스크
+    float mask = g_NormalTexture.Sample(DefaultSampler, uv).r;
+    if (mask < 0.333f)
+        discard;
+
+    Out.vColor = vDiffuse;
+    Out.vColor.a *= mask;
+
+    return Out;
+}
+
 
 
 technique11 DefaultTechnique
@@ -197,5 +256,23 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN_TOON();
 	}
+
+    pass MaskNormalDiffEffect
+    {
+		SetRasterizerState(RS_Cull_None);
+		SetDepthStencilState(DSS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN();
+		PixelShader = compile ps_5_0 PS_MAIN_Effect_MASK_NORMAL_DIFF();
+    }
+
+     pass MaskNormalEffect
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_Effect_MASK_NORMAL();
+    }
 
 }

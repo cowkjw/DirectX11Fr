@@ -1,0 +1,45 @@
+{
+    "AlphaVariation": 1.0,
+    "Center": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "EndColor": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "Gravity": 0.0,
+    "IsLoop": true,
+    "LifeTime": [
+        0.0,
+        2.0
+    ],
+    "NumInstance": 200,
+    "ParticleType": 0,
+    "Range": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "Size": [
+        0.009999999776482582,
+        0.07999999821186066
+    ],
+    "Speed": [
+        0.0,
+        0.5
+    ],
+    "SpreadAngle": 360.0,
+    "StartColor": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "Velocity": [
+        1.0,
+        1.0,
+        1.0
+    ]
+}

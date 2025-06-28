@@ -50,6 +50,7 @@ HRESULT CVIBuffer_Instance::Bind_Buffers()
 	m_pContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
 	m_pContext->IASetPrimitiveTopology(m_ePrimitiveTopology);
 
+
 	return S_OK;
 }
 

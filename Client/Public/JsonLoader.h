@@ -6,6 +6,7 @@ class CGameInstance;
 class CGameObject;
 class CUIObject;
 class CAnimation;
+class CParticleSystem;
 END_NAMESPACE
 
 BEGIN_NAMESPACE(Client)
@@ -22,7 +23,10 @@ public:
 	HRESULT Load_Textures(const string& filePath, function<void()> onEntryLoaded);
 	HRESULT Load_Models(const string& filePath,function<void()> onEntryLoaded);
 	HRESULT Load_Objects(const string& filePath, function<void()> onEntryLoaded);
+	HRESULT Load_Particle(const string& filePath, CParticleSystem** ppParticle);
+
 	HRESULT Save_Objects(const string& filePath, function<void()> onEntryLoaded);
+	HRESULT Save_Particle(const string& filePath,CParticleSystem* pParticle);
 
 	HRESULT LoadAnimEvent(const string& filePath,vector<CAnimation*>& animations);
 

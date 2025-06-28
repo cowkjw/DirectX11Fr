@@ -2,11 +2,15 @@
 #include "GameInstance.h"
 CFreeCamera::CFreeCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera{ pDevice, pContext }
+	, m_fMouseSensor{ 0.1f } // 기본 마우스 센서 값
+	, m_bMainpulate{ true } // 카메라 조작 중인지 여부
 {
 }
 
 CFreeCamera::CFreeCamera(const CFreeCamera& Prototype)
 	: CCamera(Prototype)
+	, m_fMouseSensor{ Prototype.m_fMouseSensor }
+	, m_bMainpulate{ Prototype.m_bMainpulate }
 {
 }
 
@@ -26,7 +30,7 @@ HRESULT CFreeCamera::Initialize(void* pArg)
 	Desc.fFar = 1000.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fSpeedPerSec = 25.0f;
-	m_strName = TEXT("Camera");
+	Desc.strName = TEXT("FreeCamera");
 	m_fMouseSensor = 0.1f;
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
@@ -46,6 +50,9 @@ void CFreeCamera::Priority_Update(_float fTimeDelta)
 
 void CFreeCamera::Update(_float fTimeDelta)
 {
+	if (m_bMainpulate)
+	{
+
 	if (m_pGameInstance->IsKeyDown('W'))
 	{
 		m_pTransformCom->Go_Straight(fTimeDelta);
@@ -87,6 +94,7 @@ void CFreeCamera::Update(_float fTimeDelta)
 				fPitchAngle
 			);
 		}
+	}
 	}
 	__super::Update_Camera();
 }

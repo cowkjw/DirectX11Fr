@@ -15,10 +15,12 @@
 #include "ThirdPersonCamera.h"	
 #include "Environment.h"
 #include "EnmuMeat.h"
-#include "Snow.h"
+#include "ParticleEffect.h"
 #include "Navigation.h"
 #include "EnmuTentacle.h"
 #include "WarningZoneDecal.h"
+#include "FireSlashEffect.h"
+#include "SlashEffect.h"
 
 //#include "player.h"
 //#include "Effect.h"
@@ -193,11 +195,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	m_pGameInstance->LoadTexture(TEXT("Terrain"), TEXT("../Asset/Resources/Textures/Terrain/Tile%d.dds"), true,3);
 
-
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.fbx"))))
-	//	return E_FAIL;
-
 	_matrix		PreTransformMatrix = XMMatrixIdentity();
 
 	/* For.Prototype_Component_Model_KoujuroWeapon */
@@ -208,10 +205,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 
-	//PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationX(XMConvertToRadians(-90.f));
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Meat"),
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Map/EnmuMap/Meats/SM_e_202_DemonMeatParts_01b.fbx", PreTransformMatrix))))
-	//	return E_FAIL;
+
+
 
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Kyoujuro"),
@@ -223,42 +218,20 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 
-		//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
-		//CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Kyoujuro/Kyoujuro.bin"))))
-		//return E_FAIL;
-
-
-		//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Sky"),
-		//CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Map/Sky.fbx", PreTransformMatrix))))
-		//return E_FAIL;
-
 		if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Sky"),
 			CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Map/Sky.bin", PreTransformMatrix))))
 			return E_FAIL;
 
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
-	//	CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Tanjiro/A_P0001_V00_C00_AtkAwake01_Cut.bin"))))
-	//	return E_FAIL;
-
-
-
-	
-	///* For.Prototype_Component_Texture_Sky */
-	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
-	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBE, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
-	//	return E_FAIL;
-
-
-	///* For.Prototype_Component_Texture_Explosion */
-	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Explosion"),
-	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_2D, TEXT("../Bin/Resources/Textures/Explosion/Explosion%d.png"), 90))))
-	//	return E_FAIL;
+		PreTransformMatrix = XMMatrixScaling(100.f, 100.f, 100.f) * XMMatrixRotationY(XMConvertToRadians(180.f));// *XMMatrixRotationZ(XMConvertToRadians(180.f));
+		if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_FireSlash2"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/SM_e_Plc_P0012_Slash001.fbx", PreTransformMatrix))))
+			return E_FAIL;
+		PreTransformMatrix = XMMatrixScaling(100.f, 100.f, 100.f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f));
+		if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_DefaultSlash"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/DefaultSlash/SM_e_Plc_P0012_Slash001.fbx", PreTransformMatrix))))
+			return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
-	///* For.Prototype_Component_VIBuffer_Terrain */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Terrain"),
-	//	CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Asset/Resources/Textures/Terrain/Height.bmp")))))
-	//	return E_FAIL;
 
 	CVIBuffer_Terrain::TERRAIN_DESC desc{};
 	desc.fX = 512.f;
@@ -267,12 +240,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, desc))))
 		return E_FAIL;
-
-	///* For.Prototype_Component_VIBuffer_Cube */
-	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"),
-	//	CVIBuffer_Cube::Create(m_pGraphic_Device))))
-	//	return E_FAIL;
-
 
 	lstrcpy(m_szLoadingText, TEXT("사운드을(를) 로딩중입니다."));
 
@@ -285,12 +252,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CTerrain::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	///* For.Prototype_GameObject_Camera_Free */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
-	//	CFreeCamera::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_Slash"),
+		CSlashEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_FireSlash"),
+		CFireSlashEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_Kyojuro */
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Kyojuro"),
@@ -308,10 +277,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CWeapon::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	///* For.Prototype_GameObject_Sky */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sky"),
-	//	CSky::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
 
 		/* Prototype_Component_Navigation */
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
@@ -373,6 +338,14 @@ HRESULT CLoader::Loading_For_Editor()
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Akaza/Akaza.bin", PreTransformMatrix))))
 		return E_FAIL;
 
+	//Asset\Resources\Models\Effect\Kyo
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_FireSlash2"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/SM_e_Plc_P0012_Slash001.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_DefaultSlash"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/DefaultSlash/SM_e_Plc_P0012_Slash001.bin", PreTransformMatrix))))
+		return E_FAIL;
 
 	/*"Prototype_Component_Model_Tanjiro"*/
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_Tanjiro"),
@@ -386,7 +359,7 @@ HRESULT CLoader::Loading_For_Editor()
 		return E_FAIL;
 	/* For.Prototype_GameObject_Snow */
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
-		CSnow::Create(m_pDevice, m_pContext))))
+		CParticleEffect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -453,6 +426,15 @@ HRESULT CLoader::Loading_For_Editor()
 		CWeapon::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_FireSlash"),
+		CFireSlashEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_Slash"),
+		CSlashEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	///* Prototype_Component_Navigation */
 	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Navigation"),
@@ -635,14 +617,6 @@ HRESULT CLoader::Loading_For_Mode()
 {
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐을(를) 로딩중입니다."));
 
-
-
-	//CJsonLoader jsonLoader;
-	//jsonLoader.Load_Textures("../Asset/Json/Textures.json", [&]() {
-	//	// 이곳에 로드 후 처리할 작업을 추가합니다.
-	////	});
-
-	//jsonLoader.Free();
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
 

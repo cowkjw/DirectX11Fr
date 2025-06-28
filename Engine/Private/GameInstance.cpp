@@ -1,21 +1,22 @@
 #include "GameInstance.h"
 
-#include "Picking.h"
-#include "Renderer.h"
+#include "Prototype_Manager.h"
+#include "TransformPipeline.h"
+#include "Graphic_Device.h"
+#include "Target_Manager.h"
+#include "Object_Manager.h"
 #include "Level_Manager.h"
 #include "Light_Manager.h"
 #include "Timer_Manager.h"
-#include "Graphic_Device.h"
-#include "FrustumCull.h"
-#include "UIManager.h"
-#include "GameObject.h"
-#include "Object_Manager.h"
-#include "Input_Device.h"
-#include "TransformPipeline.h"
-#include "ResourceMag.h"
-#include "Prototype_Manager.h"
-#include "FontMag.h"
 #include "CollisionMag.h"
+#include "Input_Device.h"
+#include "ResourceMag.h"
+#include "FrustumCull.h"
+#include "GameObject.h"
+#include "UIManager.h"
+#include "Renderer.h"
+#include "Picking.h"
+#include "FontMag.h"
 
 IMPLEMENT_SINGLETON(CGameInstance);
 
@@ -39,6 +40,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 
 	m_pPrototype_Manager = CPrototype_Manager::Create(EngineDesc.iNumLevels);
 	if (nullptr == m_pPrototype_Manager)
+		return E_FAIL;
+
+	m_pTarget_Manager = CTarget_Manager::Create(*ppDeviceOut, *ppContextOut);
+	if (nullptr == m_pTarget_Manager)
 		return E_FAIL;
 
 	m_pObject_Manager = CObject_Manager::Create(EngineDesc.iNumLevels);
@@ -105,7 +110,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pTransformPipeline->Update();
 
 	if(m_bActivePicking)
-	m_pPicking->Update(*m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::VIEW), *m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::PROJECTION));
+		m_pPicking->Update(*m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::VIEW), *m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::PROJECTION));
 
 	m_pFrustumCull->Update(*m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::VIEW), *m_pTransformPipeline->Get_Transform_Float4x4(TRANSFORM::PROJECTION));
 	m_pObject_Manager->Update(fTimeDelta);	
@@ -272,11 +277,15 @@ void CGameInstance::Transform_Picking_ToLocalSpace(const _matrix& WorldMatrixInv
 
 _bool CGameInstance::Picking_InWorld(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC)
 {
+	if (!m_bActivePicking)
+		return false;
 	return m_pPicking->Picking_InWorld(vPickedPos, vPointA, vPointB, vPointC);
 }
 
 _bool CGameInstance::Picking_InLocal(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC)
 {
+	if (!m_bActivePicking)
+		return false;
 	return m_pPicking->Picking_InLocal(vPickedPos, vPointA, vPointB, vPointC);
 }
 
@@ -583,11 +592,46 @@ void CGameInstance::Draw_Font(const _wstring& strFontTag, const _tchar* pText, c
 {
 	m_pFont_Manager->Draw(strFontTag, pText, vPosition, vColor, fRotation, vOrigin, fScale);
 }
+
 #pragma endregion
 
+#pragma region TARGET_MANAGER
+HRESULT CGameInstance::Add_RenderTarget(const _wstring& strTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT ePixelFormat, const _float4& vClearColor)
+{
+	if (nullptr == m_pTarget_Manager)
+		return E_FAIL;
+	return m_pTarget_Manager->Add_RenderTarget(strTargetTag, iWidth, iHeight, ePixelFormat, vClearColor);
+}
+HRESULT CGameInstance::Add_MRT(const _wstring& strMRTTag, const _wstring& strTargetTag)
+{
+	if (nullptr == m_pTarget_Manager)
+		return E_FAIL;
+	return m_pTarget_Manager->Add_MRT(strMRTTag, strTargetTag);
+}
+ID3D11ShaderResourceView* CGameInstance::Get_RenderTargetSRV(const _wstring& strTargetTag)
+{
+	if (nullptr == m_pTarget_Manager)
+		return nullptr;
+	return m_pTarget_Manager->Get_RenderTargetSRV(strTargetTag);
+}
+HRESULT CGameInstance::Begin_MRT(const _wstring& strMRTTag)
+{
+	if (nullptr == m_pTarget_Manager)
+		return E_FAIL;
+	return m_pTarget_Manager->Begin_MRT(strMRTTag);
+}
+HRESULT CGameInstance::End_MRT()
+{
+	if (nullptr == m_pTarget_Manager)
+		return E_FAIL;
+	return m_pTarget_Manager->End_MRT();
+}
+#pragma endregion
 
 void CGameInstance::Release_Engine()
 {
+	Safe_Release(m_pTarget_Manager);
+
 	Safe_Release(m_pFont_Manager);
 
 	Safe_Release(m_pLight_Manager);

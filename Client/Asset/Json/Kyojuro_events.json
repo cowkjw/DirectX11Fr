@@ -3,12 +3,16 @@
         {
             "clipName": "A_P0000_V00_C00_Death",
             "duration": 76.0,
-          "events": [
-            {
-              "name": "Death",
-              "time": 75.8
-            }
-          ]
+            "events": [
+                {
+                    "name": "Death",
+                    "time": 75.80000305175781
+                },
+                {
+                    "name": "FireSlashEffectOff",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P0000_V00_C00_Dmg01A_B",
@@ -65,6 +69,10 @@
                 {
                     "name": "EndHurt",
                     "time": 16.5
+                },
+                {
+                    "name": "FireSlashEffectOff",
+                    "time": 1.0
                 }
             ]
         },
@@ -208,6 +216,14 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 10.979999542236328
+                },
+                {
+                    "name": "FireSlashEffectOn",
+                    "time": 2.509999990463257
+                },
+                {
+                    "name": "FireSlashEffectOff",
+                    "time": 21.002548217773438
                 }
             ]
         },
@@ -229,6 +245,22 @@
                 },
                 {
                     "name": "DeactiveHitbox",
+                    "time": 20.0
+                },
+                {
+                    "name": "FireSlashEffectOn",
+                    "time": 2.740000009536743
+                },
+                {
+                    "name": "FireSlashEffectOn",
+                    "time": 12.0
+                },
+                {
+                    "name": "FireSlashEffectOff",
+                    "time": 6.0
+                },
+                {
+                    "name": "FireSlashEffectOff",
                     "time": 20.0
                 }
             ]
@@ -252,6 +284,14 @@
                 {
                     "name": "ActiveHitbox",
                     "time": 26.0
+                },
+                {
+                    "name": "FireSlashEffectOn",
+                    "time": 26.0
+                },
+                {
+                    "name": "FireSlashEffectOff",
+                    "time": 40.0
                 }
             ]
         },
@@ -306,11 +346,11 @@
                     "time": 36.0
                 },
                 {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
+                    "name": "FireSlashEffectOn",
+                    "time": 27.0
                 },
                 {
-                    "name": "DeactiveHitbox",
+                    "name": "FireSlashEffectOff",
                     "time": 36.0
                 }
             ]
@@ -561,7 +601,20 @@
         {
             "clipName": "A_P0012_V00_C00_BaseJump01_0",
             "duration": 3.0,
-            "events": []
+            "events": [
+                {
+                    "name": "FireSlashEffectOff",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveRangebox",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P0012_V00_C00_BaseJump01_1",
@@ -587,7 +640,11 @@
                     "time": 0.0
                 },
                 {
-                    "name": "DeactiveHitbox",
+                    "name": "DeactiveRangebox",
+                    "time": 0.0
+                },
+                {
+                    "name": "FireSlashEffectOff",
                     "time": 0.0
                 }
             ]
@@ -629,6 +686,14 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 1.0
+                },
+                {
+                    "name": "FireSlashEffectOff",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveRangebox",
+                    "time": 1.0
                 }
             ]
         },
@@ -660,17 +725,56 @@
         {
             "clipName": "A_P0012_V00_C00_BaseStepB01",
             "duration": 17.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveRangebox",
+                    "time": 0.996999979019165
+                },
+                {
+                    "name": "FireSlashEffectOff",
+                    "time": 0.996999979019165
+                }
+            ]
         },
         {
             "clipName": "A_P0012_V00_C00_BaseStepF01",
             "duration": 17.0,
-            "events": []
+            "events": [
+                {
+                    "name": "FireSlashEffectOff",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveRangebox",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P0012_V00_C00_BaseStepL01",
             "duration": 22.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveRangebox",
+                    "time": 1.0
+                },
+                {
+                    "name": "FireSlashEffectOff",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P0012_V00_C00_BaseStepL02",
@@ -680,7 +784,20 @@
         {
             "clipName": "A_P0012_V00_C00_BaseStepR01",
             "duration": 22.0,
-            "events": []
+            "events": [
+                {
+                    "name": "FireSlashEffectOff",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveRangebox",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P0012_V00_C00_BaseStepR02",

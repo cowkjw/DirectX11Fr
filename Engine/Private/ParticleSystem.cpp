@@ -91,6 +91,8 @@ void CParticleSystem::Spread(_float fTimeDelta)
 
 HRESULT CParticleSystem::UpdateVertexInstances(_float fTimeDelta)
 {
+	if(!m_bStarted)
+		return S_OK; // Stop 누른경우
 	D3D11_MAPPED_SUBRESOURCE	SubResource{};
 
 	if (FAILED(m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource)))
@@ -99,13 +101,23 @@ HRESULT CParticleSystem::UpdateVertexInstances(_float fTimeDelta)
 	if (m_ParticleDesc.eParticleType == PARTICLE_TYPE::POINT)
 	{
 		VTXPOINT_PARTICLE_INSTANCE* pVertices = static_cast<VTXPOINT_PARTICLE_INSTANCE*>(SubResource.pData);
+		// 속도도 복사 해두기
 		for (size_t i = 0; i < m_iNumInstance; i++)
 		{
 			pVertices[i].vLifeTime.y += fTimeDelta;
-			pVertices[i].vTranslation.y += m_vecSpeeds[i] * fTimeDelta;
-			if (true == m_bIsLoop &&
+
+			if (m_ParticleDesc.fGravity != 0.f)
+			{
+				m_vecUseVelocities[i].y -= m_ParticleDesc.fGravity * fTimeDelta;
+			}
+			pVertices[i].vTranslation.x += m_vecUseVelocities[i].x * fTimeDelta;
+			pVertices[i].vTranslation.y += m_vecUseVelocities[i].y * fTimeDelta;
+			pVertices[i].vTranslation.z += m_vecUseVelocities[i].z * fTimeDelta;
+
+			if (true == m_ParticleDesc.isLoop &&
 				pVertices[i].vLifeTime.y >= pVertices[i].vLifeTime.x)
 			{
+				m_vecUseVelocities[i] = m_vecVelocities[i];
 				pVertices[i].vLifeTime.y = 0.f;
 				pVertices[i].vTranslation = static_cast<VTXPOINT_PARTICLE_INSTANCE*>(m_pVertexInstances)[i].vTranslation;
 			}
@@ -121,15 +133,16 @@ HRESULT CParticleSystem::UpdateVertexInstances(_float fTimeDelta)
 
 			if (m_ParticleDesc.fGravity != 0.f)
 			{
-				m_vecVelocities[i].y -= m_ParticleDesc.fGravity * fTimeDelta;
+				m_vecUseVelocities[i].y -= m_ParticleDesc.fGravity * fTimeDelta;
 			}
-			pVertices[i].vTranslation.x += m_vecVelocities[i].x * fTimeDelta;
-			pVertices[i].vTranslation.y += m_vecVelocities[i].y * fTimeDelta;
-			pVertices[i].vTranslation.z += m_vecVelocities[i].z * fTimeDelta;
+			pVertices[i].vTranslation.x += m_vecUseVelocities[i].x * fTimeDelta;
+			pVertices[i].vTranslation.y += m_vecUseVelocities[i].y * fTimeDelta;
+			pVertices[i].vTranslation.z += m_vecUseVelocities[i].z * fTimeDelta;
 
-			if (true == m_bIsLoop &&
+			if (true == m_ParticleDesc.isLoop &&
 				pVertices[i].vLifeTime.y >= pVertices[i].vLifeTime.x)
 			{
+				m_vecUseVelocities[i] = m_vecVelocities[i];
 				pVertices[i].vLifeTime.y = 0.f;
 				pVertices[i].vTranslation = static_cast<VTXRECT_PARTICLE_INSTANCE*>(m_pVertexInstances)[i].vTranslation;
 			}
@@ -157,7 +170,37 @@ json CParticleSystem::Serialize()
 	j["Gravity"] = m_ParticleDesc.fGravity;
 	j["SpreadAngle"] = m_ParticleDesc.fSpreadAngle;
 	j["AlphaVariation"] = m_ParticleDesc.fAlphaVariation;
-	return json();
+	j["PlayAwake"] = m_ParticleDesc.bPlayAwake;
+	return j;
+}
+
+void CParticleSystem::ResetParticle()
+{
+	D3D11_MAPPED_SUBRESOURCE SubResource{};
+	if (SUCCEEDED(m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource)))
+	{
+		if (m_ParticleDesc.eParticleType == PARTICLE_TYPE::POINT)
+		{
+			VTXPOINT_PARTICLE_INSTANCE* pVertices = static_cast<VTXPOINT_PARTICLE_INSTANCE*>(SubResource.pData);
+			for (size_t i = 0; i < m_iNumInstance; ++i)
+			{
+				pVertices[i].vLifeTime.y = 0.f;
+				pVertices[i].vTranslation = static_cast<VTXPOINT_PARTICLE_INSTANCE*>(m_pVertexInstances)[i].vTranslation;
+				m_vecUseVelocities[i] = m_vecVelocities[i];
+			}
+		}
+		else
+		{
+			VTXRECT_PARTICLE_INSTANCE* pVertices = static_cast<VTXRECT_PARTICLE_INSTANCE*>(SubResource.pData);
+			for (size_t i = 0; i < m_iNumInstance; ++i)
+			{
+				pVertices[i].vLifeTime.y = 0.f;
+				pVertices[i].vTranslation = static_cast<VTXRECT_PARTICLE_INSTANCE*>(m_pVertexInstances)[i].vTranslation;
+				m_vecUseVelocities[i] = m_vecVelocities[i]; 
+			}
+		}
+		m_pContext->Unmap(m_pVBInstance, 0);
+	}
 }
 
 void CParticleSystem::SetVertexInfo(const PARTICLE_DESC& desc)
@@ -230,17 +273,16 @@ HRESULT CParticleSystem::CreateVertexBuffer()
 	}
 	else if (m_ParticleDesc.eParticleType == PARTICLE_TYPE::POINT)
 	{
-		VTXPOINT* pVertices = new VTXPOINT[m_iNumVertices];
-		ZeroMemory(pVertices, sizeof(VTXPOINT) * m_iNumVertices);
+		VTXPOS* pVertices = new VTXPOS[m_iNumVertices];
+		ZeroMemory(pVertices, sizeof(VTXPOS) * m_iNumVertices);
 
 		m_pVertexPositions = new _float3[m_iNumVertices];
 		ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
 
-		pVertices[0].vPosition = _float3(-0.5f, 0.5f, 0.f);
+		pVertices[0].vPosition = _float3(0.f,0.f, 0.f);
 
 		_float	fSize = m_pGameInstance->Compute_Random(m_ParticleDesc.vSize.x, m_ParticleDesc.vSize.y);
 
-		pVertices[0].vPSize = _float2(fSize, fSize);
 
 		for (_uint i = 0; i < m_iNumVertices; ++i)
 			m_pVertexPositions[i] = pVertices[i].vPosition;
@@ -321,10 +363,9 @@ HRESULT CParticleSystem::CreateVertexInstances(const PARTICLE_DESC& desc)
 			_vector spreadDir = XMVector3TransformNormal(baseDir, rot);
 			spreadDir = XMVector3Normalize(spreadDir);
 
-			// 최종 속도 벡터 = 방향 * 속도
+			// 최종 속도 벡터  방향 x 속도
 			_vector finalVelocity = spreadDir * m_vecSpeeds[i];
 
-			// 저장
 			XMStoreFloat3(&m_vecVelocities[i], finalVelocity);
 
 			pBuffer[i].vRight = _float4(fSize, 0.f, 0.f, 0.f);
@@ -357,7 +398,22 @@ HRESULT CParticleSystem::CreateVertexInstances(const PARTICLE_DESC& desc)
 			m_vecSpeeds[i] = m_pGameInstance->Compute_Random(desc.vSpeed.x, desc.vSpeed.y);
 			_float	fSize = m_pGameInstance->Compute_Random(desc.vSize.x, desc.vSize.y);
 
+			_float angleX = XMConvertToRadians(m_pGameInstance->Compute_Random(-m_ParticleDesc.fSpreadAngle * 0.5f, m_ParticleDesc.fSpreadAngle * 0.5f));
+			_float angleY = XMConvertToRadians(m_pGameInstance->Compute_Random(-m_ParticleDesc.fSpreadAngle * 0.5f, m_ParticleDesc.fSpreadAngle * 0.5f));
+			_float angleZ = XMConvertToRadians(m_pGameInstance->Compute_Random(-m_ParticleDesc.fSpreadAngle * 0.5f, m_ParticleDesc.fSpreadAngle * 0.5f));
 
+			_vector baseDir = XMLoadFloat3(&m_ParticleDesc.vVelocity);
+			if (XMVector3Equal(baseDir, XMVectorZero()))
+				baseDir = XMVectorSet(0.f, 1.f, 0.f, 0.f); // 기본 위 방향
+
+			_matrix rot = XMMatrixRotationRollPitchYaw(angleX, angleY, angleZ);
+			_vector spreadDir = XMVector3TransformNormal(baseDir, rot);
+			spreadDir = XMVector3Normalize(spreadDir);
+
+			// 최종 속도 벡터  방향 x 속도
+			_vector finalVelocity = spreadDir * m_vecSpeeds[i];
+
+			XMStoreFloat3(&m_vecVelocities[i], finalVelocity);
 
 			pBuffer[i].vRight = _float4(fSize, 0.f, 0.f, 0.f);
 			pBuffer[i].vUp = _float4(0.f, fSize, 0.f, 0.f);
@@ -375,13 +431,24 @@ HRESULT CParticleSystem::CreateVertexInstances(const PARTICLE_DESC& desc)
 				m_pGameInstance->Compute_Random(desc.vLifeTime.x, desc.vLifeTime.y),
 				0.f
 			);
-
+			pBuffer[i].vStartColor = desc.vStartColor;
+			pBuffer[i].vEndColor = desc.vEndColor;
+			pBuffer[i].fAlphaVariation = desc.fAlphaVariation;
 		}
 		m_pVertexInstances = pBuffer;
 	}
+	m_vecUseVelocities = m_vecVelocities;
 	m_VBInstanceSubresourceData.pSysMem = m_pVertexInstances;
 
 	return S_OK;
+}
+
+void CParticleSystem::OnEnable()
+{
+	if (m_ParticleDesc.bPlayAwake)
+	{
+		ResetParticle();
+	}
 }
 
 CParticleSystem* CParticleSystem::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const PARTICLE_DESC& desc)
@@ -425,4 +492,6 @@ void CParticleSystem::Free()
 		m_pVertexInstances = nullptr;
 	}
 	m_vecSpeeds.clear();
+	m_vecVelocities.clear();
+	m_vecUseVelocities.clear();
 }

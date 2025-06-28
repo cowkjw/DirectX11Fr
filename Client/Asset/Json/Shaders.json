@@ -59,6 +59,12 @@
       "path": "../Asset/ShaderFiles/Shader_VtxRectInstance.hlsl",
       "layout": "VTXRECT_PARTICLE_INSTANCE",
       "static": true
+    },
+    {
+      "key": "Shader_VtxPointInstance",
+      "path": "../Asset/ShaderFiles/Shader_VtxPointInstance.hlsl",
+      "layout": "VTXPOINT_PARTICLE_INSTANCE",
+      "static": true
     }
   ]
 }

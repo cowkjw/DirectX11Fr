@@ -18,6 +18,8 @@ HRESULT CIMGUIMag::Initialize()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();               // ImGui 컨텍스트 생성
 	ImGui::StyleColorsDark();             // 다크 테마 설정
+	ImGuiStyle& style = ImGui::GetStyle();
+//	style.Colors[ImGuiCol_WindowBg].w = 0.5f;  // 전체 창 투명도 설정
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;  // ★ 도킹 활성화
 	//	| ImGuiConfigFlags_ViewportsEnable; // (선택) 여러 뷰포트

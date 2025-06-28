@@ -36,6 +36,10 @@ HRESULT CTerrain::Initialize(void* pArg)
 
 	m_pTransformCom->Scaling(_float3(2.f, 1.f, 2.f));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-250.f, 0.f, -270.f, 1.f));
+
+	// 터레인 생성이 될 때만
+	m_pGameInstance->SetActivePicking(true);
+
 	return S_OK;
 }
 

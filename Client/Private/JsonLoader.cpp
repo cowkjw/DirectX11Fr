@@ -6,6 +6,7 @@
 #include "Model.h"
 #include <regex>
 #include "Animation.h"
+#include "ParticleSystem.h"
 #include "UIProgressBar.h"
 
 CJsonLoader::CJsonLoader()
@@ -99,6 +100,11 @@ HRESULT CJsonLoader::Load_Shaders(const string& filePath, function<void()> onEnt
 			{
 				pElems = VTXRECT_PARTICLE_INSTANCE::Elements;
 				iNum = VTXRECT_PARTICLE_INSTANCE::iNumElements;
+			}
+			else if (layout == "VTXPOINT_PARTICLE_INSTANCE")
+			{
+				pElems = VTXPOINT_PARTICLE_INSTANCE::Elements;
+				iNum = VTXPOINT_PARTICLE_INSTANCE::iNumElements;
 			}
 			else
 			{
@@ -289,6 +295,78 @@ HRESULT CJsonLoader::Load_Objects(const string& filePath, function<void()> onEnt
 
 }
 
+HRESULT CJsonLoader::Load_Particle(const string& filePath, CParticleSystem** ppParticle)
+{
+	ifstream ifs(filePath);
+	if (!ifs.is_open())
+		return E_FAIL;
+
+	json j;
+	try {
+		ifs >> j;
+	}
+	catch (json::parse_error&) {
+		return E_FAIL;
+	}
+
+	CParticleSystem::PARTICLE_DESC particleDesc{};
+
+	if (j.contains("ParticleType"))
+		particleDesc.eParticleType = static_cast<PARTICLE_TYPE>(j["ParticleType"].get<int>());
+
+	if (j.contains("NumInstance"))
+		particleDesc.iNumInstance = j["NumInstance"].get<int>();
+
+	if (j.contains("Range") && j["Range"].is_array() && j["Range"].size() == 3)
+		particleDesc.vRange = { j["Range"][0], j["Range"][1], j["Range"][2] };
+
+	if (j.contains("Size") && j["Size"].is_array() && j["Size"].size() == 2)
+		particleDesc.vSize = { j["Size"][0], j["Size"][1] };
+
+	if (j.contains("Center") && j["Center"].is_array() && j["Center"].size() == 3)
+		particleDesc.vCenter = { j["Center"][0], j["Center"][1], j["Center"][2] };
+
+	if (j.contains("IsLoop"))
+		particleDesc.isLoop = j["IsLoop"].get<bool>();
+
+	if (j.contains("LifeTime") && j["LifeTime"].is_array() && j["LifeTime"].size() == 2)
+		particleDesc.vLifeTime = { j["LifeTime"][0], j["LifeTime"][1] };
+
+	if (j.contains("Speed") && j["Speed"].is_array() && j["Speed"].size() == 2)
+		particleDesc.vSpeed = { j["Speed"][0], j["Speed"][1] };
+
+	if (j.contains("StartColor") && j["StartColor"].is_array() && j["StartColor"].size() == 3)
+		particleDesc.vStartColor = { j["StartColor"][0], j["StartColor"][1], j["StartColor"][2] };
+
+	if (j.contains("EndColor") && j["EndColor"].is_array() && j["EndColor"].size() == 3)
+		particleDesc.vEndColor = { j["EndColor"][0], j["EndColor"][1], j["EndColor"][2] };
+
+	if (j.contains("Velocity") && j["Velocity"].is_array() && j["Velocity"].size() == 3)
+		particleDesc.vVelocity = { j["Velocity"][0], j["Velocity"][1], j["Velocity"][2] };
+
+	if (j.contains("Gravity"))
+		particleDesc.fGravity = j["Gravity"].get<float>();
+
+	if (j.contains("SpreadAngle"))
+		particleDesc.fSpreadAngle = j["SpreadAngle"].get<float>();
+
+	if (j.contains("AlphaVariation"))
+		particleDesc.fAlphaVariation = j["AlphaVariation"].get<float>();
+
+	if (j.contains("PlayAwake"))
+		particleDesc.bPlayAwake = j["PlayAwake"].get<bool>();
+
+	*ppParticle = CParticleSystem::Create(m_pDevice, m_pContext, particleDesc);
+
+	if (*ppParticle)
+	{
+		(*ppParticle)->Initialize(nullptr);
+		return S_OK;
+	}
+
+	return E_FAIL;
+}
+
 HRESULT CJsonLoader::Save_Objects(const string& filePath, function<void()> onEntryLoaded)
 {
 
@@ -321,10 +399,23 @@ HRESULT CJsonLoader::Save_Objects(const string& filePath, function<void()> onEnt
 
 	// 6) 파일에 쓰기
 	ofstream ofs(filePath);
+
 	if (!ofs.is_open())
 		return E_FAIL;
 	ofs << jsonStr;
 
+	return S_OK;
+}
+
+HRESULT CJsonLoader::Save_Particle(const string& filePath, CParticleSystem* pParticle)
+{
+	if (!pParticle)
+		return E_FAIL;
+	json j = pParticle->Serialize();
+	ofstream ofs(filePath);
+	if (!ofs.is_open())
+		return E_FAIL;
+	ofs << j.dump(4);
 	return S_OK;
 }
 

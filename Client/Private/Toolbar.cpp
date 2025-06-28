@@ -1,21 +1,24 @@
 #include "Toolbar.h"
-#include <UICanvas.h>
-#include <UIButton.h>
-#include <UIImage.h>
-#include <UIProgressBar.h>
-#include <GameInstance.h>
-#include <EditorManager.h>
-#include <BaseCharacter.h>
-#include "Model.h"
-#include "Animation.h"
-#include "Animator.h"  
 #include "AnimController.h"
-#include <Environment.h>
-#include "Cell.h"
-#include "Navigation.h"
+#include "CutSceneCamera.h"
 #include "ParticleSystem.h"
+#include "UIProgressBar.h"
+#include "BaseCharacter.h"
+#include "EditorManager.h"
+#include "GameInstance.h"
+#include "Environment.h"
+#include "FreeCamera.h"
+#include "Navigation.h"
+#include "Animation.h"
+#include "UIButton.h"
+#include "UICanvas.h"
+#include "Animator.h"
 #include "Texture.h"
+#include "UIImage.h"
 #include "Shader.h"
+#include "Model.h"
+#include "Cell.h"
+
 
 CToolbar::CToolbar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPannel(pDevice, pContext)
@@ -38,65 +41,90 @@ HRESULT CToolbar::Initialize()
 	if (nullptr == m_pNavigation)
 		return E_FAIL;
 
+
+	// 파티클용 임시 쉐이더와 텍스쳐 초기화
 	m_pPreviewShader = m_pGameInstance->GetShader(TEXT("Shader_VtxRectInstance"), true);
 	m_pPreviewTexture = m_pGameInstance->GetTexture(TEXT("TitleLogo"), true);
+	
+	_uint				iNumViewports = { 1 };
+	D3D11_VIEWPORT		ViewportDesc{};
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+
+	// 파티클용 렌더 타겟 초기화
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Particle"), static_cast<_uint>(ViewportDesc.Width), static_cast<_uint>(ViewportDesc.Height), DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.0f, 0.f, 255.f, 0.f))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Tools"), TEXT("Target_Particle"))))
+		return E_FAIL;
+	m_pEffectPreviewSRV = m_pGameInstance->Get_RenderTargetSRV(TEXT("Target_Particle"));
+
+
+
+	// 컷씬 카메라용 초기화
+	if (m_pCutSceneCamera == nullptr)
+	{
+		m_pCutSceneCamera = CCutSceneCamera::Create(m_pDevice, m_pContext);
+		if (m_pCutSceneCamera == nullptr)
+			return E_FAIL;
+		m_pCutSceneCamera->Initialize();
+	}
+
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_CutScene"), static_cast<_uint>(ViewportDesc.Width), static_cast<_uint>(ViewportDesc.Height), DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.0f, 0.f, 255.f, 0.f))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_CutScene"), TEXT("Target_CutScene"))))
+		return E_FAIL;
+	m_pCutSceneCameraSRV = m_pGameInstance->Get_RenderTargetSRV(TEXT("Target_CutScene"));
+
+	if (m_pFreeCamera == nullptr)
+	{
+		m_pFreeCamera = static_cast<CFreeCamera*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::STATIC), TEXT("FreeCamera")));
+	}
+
 	return S_OK;
 }
 
 void CToolbar::Update(_float fTimeDelta)
 {
-	if (m_pParticleSystem)
+	if (m_pParticleSystem&& m_pParticleSystem->IsActive())
 	{
 		if (FAILED(m_pParticleSystem->UpdateVertexInstances(fTimeDelta)))
 			return;
 	}
+
+	if (m_bIsCutSceneCameraActive)
+	{
+		if (m_pFreeCamera&&m_pFreeCamera->IsActive())
+			m_pFreeCamera->SetActive(false);
+		m_pCutSceneCamera->SetMainpulate(true);
+		EditCutSceneCamera();
+		RenderCutScene(fTimeDelta);
+		m_pCutSceneCamera->Late_Update(fTimeDelta);
+	}
+	else
+	{
+		if (m_pFreeCamera && !m_pFreeCamera->IsActive())
+			m_pFreeCamera->SetActive(true);
+		m_pCutSceneCamera->SetMainpulate(false);
+	}
 }
 
+// 렌더
 HRESULT CToolbar::Render()
 {
 	DrawToolbar();
-	FBXLodaer();
+	FBXLoader();
 	DrawAnimEventEditor();
 	DrawParticleEditor();
 	if (m_pNavigation)
 		m_pNavigation->Render();
-
-	if (m_pPreviewShader && m_pPreviewTexture)
-	{
-		_float4x4 worldMatrix = { 1.f, 0.f, 0.f, 0.f,
-			0.f, 1.f, 0.f, 0.f,
-			0.f, 0.f, 1.f, 0.f,
-			0.f, 0.f, 0.f, 1.f
-		};
-	if (FAILED(m_pPreviewShader->Bind_Matrix("g_WorldMatrix", &worldMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pPreviewShader->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pPreviewShader->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::PROJECTION))))
-		return E_FAIL;
-
-
-	if (FAILED(m_pPreviewTexture->Bind_ShaderResource(m_pPreviewShader, "g_Texture", 0)))
-		return E_FAIL;
-
-	if (FAILED(m_pPreviewShader->Begin(0)))
-		return E_FAIL;
-	}
-	if (m_pParticleSystem)
-	{
-		if (FAILED(m_pParticleSystem->Bind_Buffers()))
-			return E_FAIL;
-
-		if (FAILED(m_pParticleSystem->Render()))
-			return E_FAIL;
-	}
+	DrawParticlePreview();
 	return S_OK;
 }
 
 void CToolbar::DrawToolbar()
 {
 	ImGui::Begin("Toolbar");
-
+	ImGui::Checkbox("CutScene Camera", &m_bIsCutSceneCameraActive);
 	ImGui::Checkbox("Orthographic Gizmo", &CEditorManager::m_bOrthoGizmo);
 	// UI 여부 판단
 	_bool isUI = (m_CurrentPrototype == "Canvas" || m_CurrentPrototype == "Button" ||
@@ -156,26 +184,6 @@ void CToolbar::DrawToolbar()
 		_int order = uiDesc.iSortingOrder;
 		ImGui::InputInt("Sorting Order", &order);
 		uiDesc.iSortingOrder = order;
-
-		//if (ImGui::BeginCombo("LEVEL", curLevel.c_str()))
-		//{
-		//    for (auto& kv : m_LevelStringMap)
-		//    {
-		//        const string& key = kv.first;
-		//        _uint value = kv.second;
-		//        _bool selected = (uiDesc.iLevel == value);
-
-		//        if (ImGui::Selectable(key.c_str(), selected))
-		//        {
-		//            uiDesc.iLevel = value;
-		//            m_iCurrentSelectedLevel = value;
-		//            UpdatePrototypeList();
-		//        }
-		//        if (selected)
-		//            ImGui::SetItemDefaultFocus();
-		//    }
-		//    ImGui::EndCombo();
-		//}
 
 		if (m_CurrentPrototype == "Button")
 		{
@@ -316,8 +324,7 @@ void CToolbar::DrawToolbar()
 		}
 		ImGui::EndCombo();
 	}
-	static _bool spawnMouse = false;
-	ImGui::Checkbox("SpawnMouse", &spawnMouse);
+
 	// 생성 버튼
 	if (ImGui::Button("Create Object"))
 	{
@@ -342,11 +349,11 @@ void CToolbar::DrawToolbar()
 		}
 		else
 		{
-			wstring wname = m_NameBuf[0]
+			_wstring wName = m_NameBuf[0]
 				? StringToWString(m_NameBuf)
 				: StringToWString(m_CurrentPrototype);
 		
-			obj = ClonePrototype(m_CurrentPrototype, wname);
+			obj = ClonePrototype(m_CurrentPrototype, wName);
 			// 생성 후 입력란 초기화
 			m_NameBuf[0] = '\0';
 		}
@@ -358,11 +365,6 @@ void CToolbar::DrawToolbar()
 		}
 		
 	}
-	/*if (spawnMouse)
-	{
-		if(m_pGameInstance->IsMousePressed(0))
-		SpawnMouse();
-	}*/
 
 	ImGui::Separator();
 	ImGui::InputText("Scene Path", m_FilePathBuf, IM_ARRAYSIZE(m_FilePathBuf), ImGuiInputTextFlags_ReadOnly);
@@ -471,8 +473,6 @@ void CToolbar::DrawToolbar()
 		}
 	}
 
-
-
 	ImGui::End();
 }
 
@@ -530,7 +530,7 @@ void CToolbar::Get_PrototypeList()
 	}
 }
 
-void CToolbar::FBXLodaer()
+void CToolbar::FBXLoader()
 {
 	ImGui::Begin("Loader");
 
@@ -538,7 +538,8 @@ void CToolbar::FBXLodaer()
 
 	vector<wchar_t> buffer(8192);
 
-	if (ImGui::Button("Add FBX Files")) {
+	if (ImGui::Button("Add FBX Files")) 
+	{
 		OPENFILENAMEW ofn{};
 		ofn.lStructSize = sizeof(ofn);
 		ofn.hwndOwner = GetActiveWindow();
@@ -546,19 +547,23 @@ void CToolbar::FBXLodaer()
 		ofn.lpstrFile = buffer.data();
 		ofn.nMaxFile = static_cast<DWORD>(buffer.size());
 		ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
-		if (GetOpenFileNameW(&ofn)) {
+		if (GetOpenFileNameW(&ofn)) 
+		{
 			m_FbxFilePaths.clear();
 			wchar_t* ptr = buffer.data();
-			std::wstring dir = ptr;
+			_wstring dir = ptr;
 			ptr += dir.size() + 1;
-			if (*ptr == L'\0') {
+			if (*ptr == L'\0') 
+			{
 				// 단일 파일 선택
 				m_FbxFilePaths.push_back(dir);
 			}
-			else {
+			else
+			{
 				// 다중 파일 선택
-				while (*ptr) {
-					std::wstring file = ptr;
+				while (*ptr) 
+				{
+					_wstring file = ptr;
 					ptr += file.size() + 1;
 					m_FbxFilePaths.push_back(dir + L"\\" + file);
 				}
@@ -567,9 +572,10 @@ void CToolbar::FBXLodaer()
 	}
 
 	// 선택된 FBX 목록 표시
-	if (ImGui::CollapsingHeader("Selected FBX Files")) {
-		for (const auto& path : m_FbxFilePaths) {
-			// 간단히 UTF-16을 ANSI로 변환하여 출력
+	if (ImGui::CollapsingHeader("Selected FBX Files")) 
+	{
+		for (const auto& path : m_FbxFilePaths)
+		{
 			string utf8 = wstring_convert<codecvt_utf8<wchar_t>>().to_bytes(path);
 			ImGui::TextUnformatted(utf8.c_str());
 		}
@@ -597,8 +603,8 @@ void CToolbar::DrawAnimEventEditor()
 
 	static _bool  isPlaying = false;
 	static _int   selectedAnim = 0;
-	static _float playTime = 0.f;
 	static _int   selectedListenerIdx = 0;
+	static _float playTime = 0.f;
 
 	// 선택 오브젝트/모델/애니메이터 체크
 	if (!CEditorManager::m_pSelectedObject) return;
@@ -647,7 +653,7 @@ void CToolbar::DrawAnimEventEditor()
 
 	// 동기화된 재생 시간
 	CAnimation* anim = animations[selectedAnim];
-	float duration = anim->GetDuration();
+	_float duration = anim->GetDuration();
 	playTime = anim->GetCurrentTrackPosition();
 
 	ImGui::Text("Play Time: %.2f / %.2f", playTime, duration);
@@ -733,7 +739,7 @@ void CToolbar::DrawAnimEventEditor()
 		root["animations"] = move(animArray);
 
 		// 파일 경로: ../Asset/Json/ObjectName_events.json
-		string path = std::string("../Asset/Json/") + objName + "_events.json";
+		string path = string("../Asset/Json/") + objName + "_events.json";
 		ofstream ofs(path);
 		ofs << root.dump(4);
 	}
@@ -774,45 +780,16 @@ void CToolbar::DrawAnimEventEditor()
 	ImGui::End();
 }
 
-void CToolbar::SpawnMouse(void* pArg)
-{
-	ImVec2 winPos = ImGui::GetItemRectMin();
-	ImVec2 mpos = ImGui::GetMousePos();
-	float mx = mpos.x - winPos.x;
-	float my = mpos.y - winPos.y;
-	D3D11_VIEWPORT			ViewportDesc{};
-	_uint					iNumViewports = { 1 };
-
-	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
-	XMVECTOR worldPos = m_pGameInstance->UnprojectToGround(mx, my, ViewportDesc);
-
-	// 3) 일정 거리 이상 이동했을 때만 생성 (너무 빡빡하면 성능 저하)
-	static XMVECTOR lastPos = XMVectorSet(FLT_MAX, 0, 0, 0);
-	if (XMVectorGetX(XMVector3Length(worldPos - lastPos)) < 0.2f)
-		return;
-	lastPos = worldPos;
-
-	// 4) 프로토타입 복제 & 위치 설정
-	CGameObject* obj = ClonePrototype(m_CurrentPrototype, L"", pArg);
-	if (!obj) return;
-	// TransformComponent 가져와서 위치 직접 세팅
-	auto pTrans = obj->GetTransform();
-	if (pTrans)
-		pTrans->Set_State(STATE::POSITION,worldPos);
-	CEditorManager::m_vecSceneObjects.push_back(obj);
-}
-
-
 void CToolbar::ShowCells()
 {
 	if (m_pNavigation && m_bIsNavMeshCreating)
 	{
 		static const auto& cells = m_pNavigation->GetCells();  // 셀 리스트 (const ref)
-		static int selectedCellIndex = -1;
+		static _int selectedCellIndex = -1;
 
 		ImGui::Begin("Cell List");
 
-		for (int i = 0; i < static_cast<int>(cells.size()); ++i)
+		for (_int i = 0; i < static_cast<_int>(cells.size()); ++i)
 		{
 			char label[32];
 			sprintf_s(label, "Cell %d", i);
@@ -852,24 +829,130 @@ void CToolbar::DrawParticleEditor()
 {
 	if (!ImGui::Begin("Particle Editor"))
 		return;
+	static _bool bActive = true;
+	static _wstring shaderKey;
+	static _wstring textureKey;
+	_bool isShaderKeySet = false;
+	_bool isTextureKeySet = false;
+	_bool isChangeValue = false;
+	_bool bPlayAwakeChange = false;
+	_bool bChangeActive = false;
+	
+	string curShader = WStringToString(shaderKey);
+	if (isShaderKeySet = ImGui::BeginCombo("Shader Key", curShader.c_str()))
+	{
+		for (size_t i = 0; i < m_ShaderKeys.size(); ++i)
+		{
+			// 벡터에서 꺼낸 wstring을 string으로 변환
+			string key = WStringToString(m_ShaderKeys[i]);
+			_bool selected = (shaderKey == m_ShaderKeys[i]);
+			if (ImGui::Selectable(key.c_str(), selected))
+			{
+				shaderKey = m_ShaderKeys[i];  // 선택 시 wstring으로 저장
+			}
+			if (selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
+	}
+
+	string curTex = WStringToString(textureKey);
+	if (isTextureKeySet = ImGui::BeginCombo("Texture Key", curTex.c_str()))
+	{
+		for (size_t i = 0; i < m_TextureKeys.size(); ++i)
+		{
+			string key = WStringToString(m_TextureKeys[i]);
+			_bool selected = (textureKey == m_TextureKeys[i]);
+			if (ImGui::Selectable(key.c_str(), selected))
+			{
+				textureKey = m_TextureKeys[i];
+			}
+			if (selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
+	}
+
+	ImGui::InputInt("Texture Index", &m_iTextureIndex);
+	m_iTextureIndex = min(m_iTextureIndex, static_cast<_int>(m_iMaxTextureCount));
+	if (m_iTextureIndex < 0)
+	{
+		m_iTextureIndex = 0; // 음수 방지
+	}
+	ImGui::InputInt("Shader Pass", &m_iShaderPass);
+	if (m_iShaderPass < 0)
+	{
+		m_iShaderPass = 0; // 음수 방지
+	}
+
+	if (ImGui::Button("Play"))
+	{
+		if (m_pParticleSystem)
+		{
+			m_pParticleSystem->PlayParticle();
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Stop"))
+	{
+		if (m_pParticleSystem)
+		{
+			m_pParticleSystem->StopParticle();
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Reset"))
+	{
+		if (m_pParticleSystem)
+		{
+			m_pParticleSystem->ResetParticle();
+		}
+	}
+
 
 	static CParticleSystem::PARTICLE_DESC desc{};
 
-	int iInstance = static_cast<_int>(desc.iNumInstance);
-	if (ImGui::InputInt("Num Instances", &iInstance))
+	const char* particleTypes[] = { "POINT","RECT" };
+	_int iType = static_cast<_int>(desc.eParticleType);
+	if (isChangeValue |= ImGui::Combo("Particle Type", &iType, particleTypes, IM_ARRAYSIZE(particleTypes)))
+	{
+		desc.eParticleType = static_cast<PARTICLE_TYPE>(iType);
+		if (isChangeValue)
+		{
+			isShaderKeySet = true;  // 셰이더 변경
+		}
+		if (desc.eParticleType == PARTICLE_TYPE::POINT)
+		{
+			m_bIsPointInstance = true;  // 포인트 인스턴스 활성화
+			shaderKey = TEXT("Shader_VtxPointInstance");
+		}
+		else if (desc.eParticleType == PARTICLE_TYPE::RECT)
+		{
+			m_bIsPointInstance = false; // 포인트 인스턴스 비활성화
+			shaderKey = TEXT("Shader_VtxRectInstance");
+		}
+	}
+	bChangeActive = ImGui::Checkbox("Particle Active", &bActive);
+	if (m_pParticleSystem&&bChangeActive)
+	{
+		m_pParticleSystem->SetActive(bActive);
+	}
+	_int iInstance = static_cast<_int>(desc.iNumInstance);
+	if (isChangeValue |= ImGui::DragInt("Num Instances", &iInstance,1))
 		desc.iNumInstance = static_cast<_uint>(max(iInstance, 0)); // 음수 방지
-	ImGui::DragFloat3("Center", &desc.vCenter.x, 0.1f);
-	ImGui::DragFloat3("Range", &desc.vRange.x, 0.1f);
-	ImGui::DragFloat2("Size", &desc.vSize.x, 0.01f);
-	ImGui::DragFloat2("Lifetime", &desc.vLifeTime.x, 0.1f);
-	ImGui::DragFloat2("Speed", &desc.vSpeed.x, 0.1f);
-	ImGui::Checkbox("Loop", &desc.isLoop);
-	ImGui::DragFloat3("Velocity", &desc.vVelocity.x, 0.1f);
-	ImGui::DragFloat("Spread Angle", &desc.fSpreadAngle, 1.0f);
-	ImGui::DragFloat("Gravity", &desc.fGravity, 0.01f);
-	ImGui::ColorEdit3("Start Color", &desc.vStartColor.x);
-	ImGui::ColorEdit3("End Color", &desc.vEndColor.x);
-	ImGui::DragFloat("AlphaVariation", &desc.fAlphaVariation, 0.01f, 0.f, 1.f);
+	bPlayAwakeChange = ImGui::Checkbox("PlayAwake", &desc.bPlayAwake);
+	isChangeValue |= ImGui::Checkbox("Loop", &desc.isLoop);
+	isChangeValue |= ImGui::DragFloat3("Center", &desc.vCenter.x, 0.1f);
+	isChangeValue |= ImGui::DragFloat3("Range", &desc.vRange.x, 0.1f);
+	isChangeValue |= ImGui::DragFloat2("Size", &desc.vSize.x, 0.01f);
+	isChangeValue |= ImGui::DragFloat2("Lifetime", &desc.vLifeTime.x, 0.1f);
+	isChangeValue |= ImGui::DragFloat2("Speed", &desc.vSpeed.x, 0.1f);
+	isChangeValue |= ImGui::DragFloat3("Velocity", &desc.vVelocity.x, 0.1f);
+	isChangeValue |= ImGui::DragFloat("Spread Angle", &desc.fSpreadAngle, 1.0f);
+	isChangeValue |= ImGui::DragFloat("Gravity", &desc.fGravity, 0.01f);
+	isChangeValue |= ImGui::ColorEdit3("Start Color", &desc.vStartColor.x);
+	isChangeValue |= ImGui::ColorEdit3("End Color", &desc.vEndColor.x);
+	isChangeValue |= ImGui::DragFloat("AlphaVariation", &desc.fAlphaVariation, 0.01f, 0.f, 1.f);
 
 	if (ImGui::Button("Create Particle"))
 	{
@@ -882,7 +965,475 @@ void CToolbar::DrawParticleEditor()
 		}
 	}
 
+	
+	static string fileName;
+	char buf[64];
+	strncpy_s(buf, fileName.c_str(), sizeof(buf));
+	if (ImGui::InputText("Particle File Name", buf, sizeof(buf)))
+		fileName = buf;
+	if (ImGui::Button("Save Particle JSON"))
+	{
+		
+		if (m_pParticleSystem)
+		{
+		string path = string("../Asset/Json/Particle/") + fileName + "_Particle.json";
+
+		if (FAILED(m_JsonLoader->Save_Particle(path, m_pParticleSystem)))
+		{
+			ImGui::OpenPopup("Save Particle Error");
+		}
+		else
+		{
+			ImGui::OpenPopup("Save Particle Success");
+		}
+		}
+	}
+
+	ImGui::Separator();
+	ImGui::InputText("Particle Path", m_ParticleFilePathBuf, IM_ARRAYSIZE(m_ParticleFilePathBuf), ImGuiInputTextFlags_ReadOnly);
+	ImGui::Separator();
+	if (ImGui::Button("Load Particle"))  // 파일 다이얼로그 버튼
+	{
+		// OPENFILENAME 구조체 초기화
+		OPENFILENAMEA ofn{};
+		ofn.lStructSize = sizeof(ofn);
+		ofn.hwndOwner = GetActiveWindow();         
+		ofn.lpstrFilter = "JSON Files\0*.json\0All Files\0*.*\0";
+		ofn.lpstrFile = m_ParticleFilePathBuf;               // 선택된 파일 경로 버퍼
+		ofn.nMaxFile = sizeof(m_ParticleFilePathBuf);
+		ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
+
+		// 열기 대화상자 표시
+		if (GetOpenFileNameA(&ofn))
+		{
+			// m_ParticleFilePathBuf가 선택된 파일 경로로 업데이트
+		}
+	}
+
+	//if (ImGui::Button("Add Particle Files")) {
+	//	OPENFILENAMEA ofn{};
+	//	ofn.lStructSize = sizeof(ofn);
+	//	ofn.hwndOwner = GetActiveWindow();
+	//	ofn.lpstrFilter = "JSON Files\0*.json\0All Files\0*.*\0";
+	//	ofn.lpstrFile = m_ParticleFilePathBuf;
+	//	ofn.nMaxFile = sizeof(m_ParticleFilePathBuf);
+	//	ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
+	//	if (GetOpenFileNameA(&ofn)) {
+	//		m_ParticleFilePaths.clear();
+	//		char* ptr = m_ParticleFilePathBuf;
+	//		string dir = ptr;
+	//		ptr += dir.size() + 1;
+	//		if (*ptr == L'\0') {
+	//			// 단일 파일 선택
+	//			m_ParticleFilePaths.push_back(dir);
+	//		}
+	//		else {
+	//			// 다중 파일 선택
+	//			while (*ptr)
+	//			{
+	//				string file = ptr;
+	//				ptr += file.size() + 1;
+	//				m_ParticleFilePaths.push_back(dir + "\\" + file);
+	//			}
+	//		}
+	//	}
+	//}
+
+	//if (ImGui::CollapsingHeader("Selected Particle Files")) {
+	//	for (const auto& path : m_ParticleFilePaths) {
+	//		ImGui::TextUnformatted(path.c_str());
+	//	}
+	//}
+	ImGui::Separator();
+	if (ImGui::Button("Load Particle JSON"))
+	{
+		string path(m_ParticleFilePathBuf);
+		if (path.empty())
+		{
+			ImGui::OpenPopup("Load Particle Error");
+		}
+		else
+		{
+			Safe_Release(m_pParticleSystem);  // 기존 파티클 시스템 삭제
+			if (FAILED(m_JsonLoader->Load_Particle(path, &m_pParticleSystem)))
+			{
+				ImGui::OpenPopup("Load Particle Error");
+			}
+			else
+			{
+				switch (m_pParticleSystem->GetParticleType())
+				{
+				case PARTICLE_TYPE::POINT:
+				{
+					shaderKey = TEXT("Shader_VtxPointInstance");
+					m_bIsPointInstance = true;  // 포인트 인스턴스 활성화
+				}
+					break;
+				case PARTICLE_TYPE::RECT:
+				{
+					shaderKey = TEXT("Shader_VtxRectInstance");
+					m_bIsPointInstance = false; // 포인트 인스턴스 비활성화
+				}
+					break;
+				}
+					isShaderKeySet = true;  // 셰이더 변경
+				ImGui::OpenPopup("Load Particle Success");
+			}
+		}
+		if (ImGui::BeginPopup("Load Particle Error"))
+		{
+			ImGui::Text("파일을 불러올 수 없습니다.\n경로 또는 포맷을 확인하세요.");
+			ImGui::EndPopup();
+		}
+
+		if (ImGui::BeginPopup("Load Particle Success"))
+		{
+			ImGui::Text("파티클 로드 성공!");
+			ImGui::EndPopup();
+		}
+	}
+
+	if (isChangeValue && m_pParticleSystem)
+	{
+		Safe_Release(m_pParticleSystem);  // 기존 삭제
+		m_pParticleSystem = CParticleSystem::Create(m_pDevice, m_pContext, desc);
+
+		if (m_pParticleSystem)
+			m_pParticleSystem->Initialize(nullptr);  // GPU 버퍼 생성
+	}
+
+	if (bPlayAwakeChange)
+	{
+		if (m_pParticleSystem)
+		{
+			m_pParticleSystem->SetPlayAwake(desc.bPlayAwake);
+		}
+	}
+
+	if (isTextureKeySet)
+	{
+		Safe_Release(m_pPreviewTexture);
+		m_pPreviewTexture = m_pGameInstance->GetTexture(textureKey, true);
+		m_iMaxTextureCount = m_pPreviewTexture ? m_pPreviewTexture->Get_NumTextures() : 0;
+	}
+	if (isShaderKeySet)
+	{
+		Safe_Release(m_pPreviewShader);
+		m_pPreviewShader = m_pGameInstance->GetShader(shaderKey, true);
+	}
 	ImGui::End();
+}
+
+
+// 파티클 프리뷰 창
+HRESULT CToolbar::DrawParticlePreview()
+{
+
+	static _float4x4 viewMat, projMat;
+	static _float fYaw = 0.0f;
+	static _float fPitch = 0.0f;
+	static _float fDistance = 10.0f;
+
+	if (m_pPreviewShader && m_pPreviewTexture)
+	{
+		// 카메라 방향 계산
+		// 구면 좌표계로 사용해보기
+		_float3 vLook = { 0.f, 0.f, 0.f };
+		_float3 vEye;
+		vEye.x = vLook.x + fDistance * cosf(fPitch) * sinf(fYaw);
+		vEye.y = vLook.y + fDistance * sinf(fPitch);
+		vEye.z = vLook.z + fDistance * cosf(fPitch) * cosf(fYaw);
+
+		_matrix vView = XMMatrixLookAtLH(XMLoadFloat3(&vEye), XMLoadFloat3(&vLook), XMVectorSet(0.f, 1.f, 0.f, 0.f));
+		_matrix vProj = XMMatrixPerspectiveLH(XMConvertToRadians(60.f), 1.0f, 1.f, 300.f);
+
+		XMStoreFloat4x4(&viewMat, vView);
+		XMStoreFloat4x4(&projMat, vProj);
+
+		// 어차피 원점에서 프리뷰로 보기만할 거
+		static _float4x4 worldMatrix = {
+			1.f, 0.f, 0.f, 0.f,
+			0.f, 1.f, 0.f, 0.f,
+			0.f, 0.f, 1.f, 0.f,
+			0.f, 0.f, 0.f, 1.f
+		};
+
+		if (FAILED(m_pPreviewShader->Bind_Matrix("g_WorldMatrix", &worldMatrix)))
+			return E_FAIL;
+		if (FAILED(m_pPreviewShader->Bind_Matrix("g_ViewMatrix", &viewMat)))
+			return E_FAIL;
+		if (FAILED(m_pPreviewShader->Bind_Matrix("g_ProjMatrix", &projMat)))
+			return E_FAIL;
+
+		if (m_bIsPointInstance)
+		{
+			_float4 vCamPos = _float4(vEye.x, vEye.y, vEye.z, 1.f);
+			if (FAILED(m_pPreviewShader->Bind_RawValue("g_vCamPosition", &vCamPos, sizeof(_float4))))
+				return E_FAIL;
+		}
+
+		// 테스트용으로 디퓨즈만 
+		if (FAILED(m_pPreviewTexture->Bind_ShaderResource(m_pPreviewShader, "g_Texture", m_iTextureIndex)))
+			return E_FAIL;
+
+		if (FAILED(m_pPreviewShader->Begin(m_iShaderPass)))
+			return E_FAIL;
+	}
+
+	if (m_pParticleSystem && m_pParticleSystem->IsActive())
+	{
+		m_pGameInstance->Begin_MRT(TEXT("MRT_Tools"));
+		if (FAILED(m_pParticleSystem->Bind_Buffers()))
+			return E_FAIL;
+		if (FAILED(m_pParticleSystem->Render()))
+			return E_FAIL;
+		m_pGameInstance->End_MRT();
+
+		if (m_pEffectPreviewSRV)
+		{
+			// 투명도 설정
+			//ImGui::SetNextWindowBgAlpha(0.0f);
+			if (ImGui::Begin("Particle Preview"))
+			{
+				ImVec2 vAvail = ImGui::GetContentRegionAvail();
+				_float fSize = min(vAvail.x, vAvail.y);
+
+				// 정중앙 정렬
+				ImVec2 vCursorPos = ImGui::GetCursorPos();
+				ImGui::SetCursorPosX(vCursorPos.x + (vAvail.x - fSize) * 0.5f);
+				ImGui::SetCursorPosY(vCursorPos.y + (vAvail.y - fSize) * 0.5f);
+
+				ImVec2 vImagePos = ImGui::GetCursorScreenPos();
+				ImVec2 vImageSize(fSize, fSize);
+				ImVec2 vMousePos = ImGui::GetMousePos();
+
+				// 이미지 내부에서만 카메라 조작
+				_bool bIsInImage = vMousePos.x >= vImagePos.x && vMousePos.x <= vImagePos.x + vImageSize.x &&
+					vMousePos.y >= vImagePos.y && vMousePos.y <= vImagePos.y + vImageSize.y;
+
+				if (bIsInImage)
+				{
+					if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+					{
+						ImVec2 delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Left);
+						fYaw -= delta.x * 0.005f;
+						fPitch -= delta.y * 0.005f;
+						ImGui::ResetMouseDragDelta();
+					}
+
+					_float fWheel = ImGui::GetIO().MouseWheel;
+					if (fWheel != 0.0f)
+					{
+						fDistance -= fWheel * 1.0f;
+						if (fDistance < 1.0f) fDistance = 1.0f;
+						if (fDistance > 100.0f) fDistance = 100.0f;
+					}
+				}
+
+				if (fPitch < -XM_PIDIV2 + 0.01f) 
+					fPitch = -XM_PIDIV2 + 0.01f;
+				if (fPitch > XM_PIDIV2 - 0.01f) 
+					fPitch = XM_PIDIV2 - 0.01f;
+
+				ImGui::Image((ImTextureID)m_pEffectPreviewSRV, vImageSize);
+			}
+			ImGui::End();
+		}
+	}
+	return S_OK;
+}
+
+void CToolbar::EditCutSceneCamera()
+{
+	if (!ImGui::Begin("CutScene Camera Editor"))
+	{
+		ImGui::End();
+		return;
+	}
+
+	auto pCam = m_pCutSceneCamera;
+
+	if (!pCam)
+		return;
+	_bool bLoop = pCam->IsLoop();
+	if (ImGui::Checkbox("Loop", &bLoop))
+		pCam->SetLoop(bLoop);
+
+	ImGui::Separator();
+
+	// 플레이 버튼, 리셋 버튼
+	static _bool isPlaying = false;
+	if (ImGui::Button(isPlaying ? "Stop" : "Play"))
+	{
+		isPlaying = !isPlaying;
+		pCam->SetPlay(isPlaying);
+		if (isPlaying)
+			pCam->ResetCamera();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Reset"))
+	{
+		pCam->ResetCamera();
+		pCam->SetCurrentFrame(0);
+		isPlaying = false;
+	}
+
+	if (pCam->IsPlaying())
+	{
+		pCam->SetMainpulate(false); // 플레이 중에는 조작 비활성화
+	}
+	else
+	{
+		pCam->SetMainpulate(true); // 플레이 중이 아닐 때 조작 활성화
+	}
+
+	// 진행 시간 
+	_float fDuration = pCam->GetDuration();
+	if (ImGui::InputFloat("Total Duration", &fDuration, 0.1f, 1.0f, "%.2f"))
+	{
+		pCam->SetDuration(fDuration);
+	}
+
+	ImGui::Separator();
+
+	// 현재 씬 오브젝트들 
+		auto& sceneObjs = CEditorManager::m_vecSceneObjects;
+
+		// 현재 할당된 타깃 오브젝트 인덱스
+		static _int selectedIdx = -1;
+
+		static string stCurObjName = "None";
+		if (ImGui::BeginCombo("Target Object", stCurObjName.c_str()))
+		{
+			for (_uint i = 0; i < static_cast<_uint>(sceneObjs.size()); i++)
+			{
+				_bool sel = (i == selectedIdx);
+				string name = WStringToString(sceneObjs[i]->Get_Name());
+				if (ImGui::Selectable(name.c_str(), sel))
+				{
+					selectedIdx = i;
+					stCurObjName = name;
+					pCam->SetTargetObject(sceneObjs[i]);
+				}
+				if (sel)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
+
+	ImGui::Separator();
+
+	auto kfs = pCam->GetKeyFrames();
+	int frameCount = (int)kfs.size();
+	ImGui::Text("%d KeyFrames", frameCount);
+
+	// ── 타임라인 슬라이더 ──
+	if (frameCount > 0)
+	{
+		// 현재 선택된 프레임 인덱스
+		_int selFrame = pCam->GetCurrentFrame();
+		// 최초 진입 시 동기화
+		if (ImGui::IsWindowAppearing())
+			selFrame = pCam->GetCurrentFrame();
+
+		// 영역 확보
+		const float H = 24.f;
+		ImVec2 pos = ImGui::GetCursorScreenPos();
+		ImVec2 avail = ImGui::GetContentRegionAvail();
+		ImVec2 size = ImVec2(avail.x, H);
+		ImGui::InvisibleButton("##timeline", size);
+		ImDrawList* dl = ImGui::GetWindowDrawList();
+
+		// 배경
+		dl->AddRectFilled(pos, ImVec2(pos.x + size.x, pos.y + size.y),
+			IM_COL32(50, 50, 50, 255));
+		// 진행량
+		float tnorm = frameCount > 1 ? (float)selFrame / float(frameCount - 1) : 0.f;
+		dl->AddRectFilled(pos, ImVec2(pos.x + size.x * tnorm, pos.y + H),
+			IM_COL32(100, 200, 100, 200));
+		// 키프레임 마커
+		for (int i = 0; i < frameCount; ++i)
+		{
+			float x = pos.x + size.x * (frameCount > 1 ? (float)i / (frameCount - 1) : 0.f);
+			dl->AddLine(ImVec2(x, pos.y), ImVec2(x, pos.y + H),
+				IM_COL32(200, 100, 100, 180), 2.f);
+		}
+
+		// 드래그로 인덱스 선택
+		if (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+		{
+			float mx = ImGui::GetIO().MousePos.x;
+			float rel = (mx - pos.x) / size.x;
+			rel = ImClamp(rel, 0.f, 1.f);
+			int idx = int(rel * (frameCount - 1) + 0.5f);
+			if (idx != selFrame)
+			{
+				selFrame = idx;
+				pCam->SetCurrentFrame(selFrame);
+			}
+		}
+
+		// 현재 인덱스 표시
+		ImGui::SetCursorScreenPos(ImVec2(pos.x, pos.y + H + 4));
+		ImGui::Text("Frame: %d / %d", selFrame, frameCount - 1);
+
+		ImGui::Dummy(ImVec2(0, H + 20));
+	}
+
+
+	for (_uint i = 0; i <static_cast<_uint>(kfs.size()); i++)
+	{
+		ImGui::PushID(i);
+		ImGui::Text("KeyFrame %d", i);
+
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			kfs.erase(kfs.begin() + i);
+			pCam->SetKeyFrames(kfs, pCam->GetDuration());
+			ImGui::PopID();
+			break;
+		}
+		ImGui::Separator();
+		ImGui::PopID();
+	}
+	ImGui::Separator();
+
+	if (ImGui::Button("Capture Current"))
+	{
+		static CTransform* pCamTransform = pCam->GetTransform();
+
+		_vector vectorPos = pCamTransform->Get_State(STATE::POSITION);
+		_vector vectorLook = pCamTransform->Get_State(STATE::LOOK);
+		_vector vectorUp = pCamTransform->Get_State(STATE::UP);
+
+		CCutSceneCamera::CamKeyFrame vKf{};
+		XMStoreFloat3(&vKf.vPosition, vectorPos);
+		XMStoreFloat3(&vKf.vOffset, vectorLook);
+
+		auto& vecKeyFrames = pCam->GetKeyFrames();
+		vecKeyFrames.push_back(vKf);
+	}
+
+	ImGui::End();
+}
+
+void CToolbar::RenderCutScene(_float fTimeDelta)
+{
+	if (m_pCutSceneCamera && m_pCutSceneCameraSRV)
+	{
+		m_pCutSceneCamera->Update(fTimeDelta);
+	
+		m_pGameInstance->Begin_MRT(TEXT("MRT_CutScene"));
+		for (const auto& pObj : CEditorManager::m_vecSceneObjects)
+		{
+			if (pObj && pObj->IsActive())
+			{
+				pObj->Late_Update(fTimeDelta);
+			}
+		}
+		m_pGameInstance->End_MRT();
+	}
 }
 
 CGameObject* CToolbar::ClonePrototype(const string& prototypeName, const wstring& instanceName, void* pArg)
@@ -988,4 +1539,7 @@ void CToolbar::Free()
 	Safe_Release(m_pPreviewShader);
 	Safe_Release(m_pPreviewTexture);
 	Safe_Release(m_pParticleSystem);
+	Safe_Release(m_pCutSceneCamera);
+	Safe_Release(m_pEffectPreviewSRV);
+	Safe_Release(m_pCutSceneCameraSRV);
 }

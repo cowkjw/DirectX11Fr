@@ -9,6 +9,8 @@
 #include "StateIdle.h"
 #include "StateHurt.h"
 #include "Weapon.h"	
+#include "FireSlashEffect.h"
+#include "EffectManager.h"
 
 using AniCon = CAnimController::Condition;
 CKyojuro::CKyojuro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -56,6 +58,21 @@ HRESULT CKyojuro::Initialize(void* pArg)
 	if (m_pWeapon) // 자식벡터로 넣지는 않음
 	{
 		m_pWeapon->SetParent(this);
+		CFireSlashEffect* pSlashEffect = static_cast<CFireSlashEffect*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_Slash"),
+			ToIndex(LEVEL::GAMEPLAY), TEXT("Slash")));
+
+		CEffectManager::Get_Instance()->RegisterEffect(TEXT("Slash"), pSlashEffect);
+		if (pSlashEffect)
+		{
+			CBone* pBone = static_cast<CModel*>(m_pWeapon->Get_Component(TEXT("Com_Model")))->Get_Bone("C_Blade_2");// _end");
+
+			if (pBone)
+			{
+				pSlashEffect->SetParent(m_pWeapon);
+				pSlashEffect->Set_BoneSocket(pBone);
+				pSlashEffect->SetActive(false);
+			}
+		}
 	}
 
 	
@@ -302,9 +319,9 @@ HRESULT CKyojuro::Ready_Components()
 	CNavigation::NAVIGATION_DESC		NaviDesc{};
 	NaviDesc.iIndex = 4;
 
-	if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
-		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
-		return E_FAIL;
+	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
+	//	TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+	//	return E_FAIL;
 
 
 
@@ -356,7 +373,23 @@ void CKyojuro::ReadyAnimEvents()
 		}
 
 		});
+	m_pAnimatorCom->RegisterEventListener("FireSlashEffectOn", [&](const string& eventName) {
 
+		auto pFireSlashEffect = CEffectManager::Get_Instance()->GetEffect(TEXT("Slash"));
+		if (pFireSlashEffect)
+		{
+			pFireSlashEffect->SetActive(true);
+		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("FireSlashEffectOff", [&](const string& eventName) {
+
+		auto pFireSlashEffect = CEffectManager::Get_Instance()->GetEffect(TEXT("Slash"));
+		if (pFireSlashEffect)
+		{
+			pFireSlashEffect->SetActive(false);
+		}
+		});
 }
 
 void CKyojuro::Ready_Animation()

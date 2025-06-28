@@ -365,6 +365,12 @@
       "path": "../Asset/Resources/Textures/GamePlayUI/Lang_Round_Fin.png",
       "numTextures": 1,
       "static": true
+    },
+    {
+      "key": "ParticleMask",
+      "path": "../Asset/Resources/Textures/Effect/Particle/T_e_Cmn_Parts%d.dds",
+      "numTextures": 11,
+      "static": true
     }
 
 

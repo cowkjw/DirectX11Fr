@@ -1,5 +1,7 @@
 #include "Level_Editor.h"
 #include "GameInstance.h"
+#include "Level_Loading.h"
+#include "GameObject.h"
 
 CLevel_Editor::CLevel_Editor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		: CLevel { pDevice, pContext }
@@ -9,15 +11,17 @@ CLevel_Editor::CLevel_Editor(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 HRESULT CLevel_Editor::Initialize()
 {
+
+	CGameObject* pCamera = nullptr;
+	if ((pCamera = m_pGameInstance->Add_GameObject(ToIndex(LEVEL::STATIC), TEXT("Prototype_GameObject_Camera_Free"),
+		ToIndex(LEVEL::STATIC), TEXT("FreeCamera")))==nullptr)
+		return E_FAIL;
+
 	m_pIMGUIMag = CIMGUIMag::Create(m_pDevice, m_pContext);
 
 	if (nullptr == m_pIMGUIMag)
 		return E_FAIL;
 
-
-	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::STATIC), TEXT("Prototype_GameObject_Camera_Free"),
-		ToIndex(LEVEL::STATIC), TEXT("Layer_Camera")))
-		return E_FAIL;
 
 	LIGHT_DESC			LightDesc{};
 
@@ -40,7 +44,9 @@ HRESULT CLevel_Editor::Initialize()
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
 
-	m_pGameInstance->SetActivePicking(true);
+
+	if(pCamera)
+		pCamera->GetTransform()->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, -10.f, 1.f));
 
 	return S_OK;
 }
@@ -49,6 +55,14 @@ void CLevel_Editor::Update(_float fTimeDelta)
 {
 	if (nullptr == m_pIMGUIMag)
 		return;
+	if (m_pGameInstance->IsKeyPressed(VK_BACK))
+	{
+		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
+			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOGO))))
+			return;
+		Safe_Release(m_pIMGUIMag);
+		return;
+	}
 	m_pIMGUIMag->Update(fTimeDelta);
 }
 

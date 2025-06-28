@@ -18,7 +18,13 @@ public:
 
 public:
 	_bool IsActive() const { return m_bIsActive; }
-	void SetActive(_bool bActive) {	m_bIsActive = bActive;}
+	void SetActive(_bool bActive) {
+		if (m_bIsActive == bActive)
+			return;
+		m_bIsActive = bActive;
+		if (bActive) OnEnable();
+		else         OnDisable();
+	}
 	void SetOwner(class CGameObject* pOwner);
 
 	class CGameObject* GetOwner() const { return m_pOwner; }
@@ -31,6 +37,9 @@ public:
 
 	virtual json Serialize() override;
 	virtual void Deserialize(const json& j) override;
+	virtual void OnEnable() {};
+	virtual void OnDisable() {};
+
 
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };

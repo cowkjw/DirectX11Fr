@@ -33,6 +33,8 @@ public:
 	void SetActivePicking(_bool bActive) { m_bActivePicking = bActive; }
 	void SetChangeLevel(_bool bChange) { m_bChangedLevel = bChange; }
 
+	_bool IsActivePicking() const { return m_bActivePicking; }
+
 #pragma region LEVEL_MANAGER
 public:
 	HRESULT Change_Level(_uint iLevelIndex, class CLevel* pNewLevel);
@@ -139,6 +141,14 @@ public:
 	void Draw_Font(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f), _float fRotation = 0.f, const _float2& vOrigin = _float2(0.f, 0.f), _float fScale = 1.f);
 #pragma endregion
 
+#pragma region TARGET_MANAGER
+	HRESULT Add_RenderTarget(const _wstring& strTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
+	HRESULT Add_MRT(const _wstring& strMRTTag, const _wstring& strTargetTag);
+	ID3D11ShaderResourceView* Get_RenderTargetSRV(const _wstring& strTargetTag);
+	HRESULT Begin_MRT(const _wstring& strMRTTag);
+	HRESULT End_MRT();
+#pragma endregion
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CLevel_Manager*		m_pLevel_Manager = { nullptr };
@@ -155,6 +165,7 @@ private:
 	class CCollisionMag* m_pCollisionMag = { nullptr };
 	class CLight_Manager* m_pLight_Manager = { nullptr };
 	class CFontMag* m_pFont_Manager = { nullptr };
+	class CTarget_Manager* m_pTarget_Manager = { nullptr };
 
 
 	_bool m_bActivePicking = { false }; // 피킹 활성화 여부

@@ -100,7 +100,7 @@ void CLevel_Loading::Update(_float fTimeDelta)
 
 		if (m_eNextLevelID == LEVEL::EDITOR)
 		{
-			m_pGameInstance->RemoveCanvasUI(TEXT("LodingCanvas"));
+			m_pGameInstance->GetCanvasUI(TEXT("LodingCanvas"))->SetActive(false);
 		}
 		else
 		{
