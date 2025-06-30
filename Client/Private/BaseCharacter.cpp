@@ -1,9 +1,10 @@
 #include "BaseCharacter.h"
-#include "GameInstance.h"
 #include "StateBoundHurt.h"
 #include "StateHurtBlow.h"
+#include "EffectManager.h"
 #include "StateHurtDown.h"
 #include "StateHurtAir.h"
+#include "GameInstance.h"
 #include "InputBuffer.h"
 #include "Environment.h"
 #include "StateDeath.h"
@@ -119,7 +120,7 @@ void CBaseCharacter::Update(_float fTimeDelta)
 		if (m_fHitStopTime > 0.f)
 		{
 			m_fHitStopTime -= fTimeDelta;
-			fTimeDelta *= 0.1f; // HitStop 동안 시간 느리게 흐름
+			fTimeDelta *= 0.2f; // HitStop 동안 시간 느리게 흐름
 		}
 
 		if (!m_bAirborne && !m_bIsBound)
@@ -136,7 +137,7 @@ void CBaseCharacter::Update(_float fTimeDelta)
 		UpdateState(fTimeDelta);
 	else
 		UpdateAirborne(fTimeDelta);
-	// 3) 애니메이션 업데이트
+	// 애니메이션 업데이트
 	m_pAnimatorCom->GetAnimController()->Update(fTimeDelta);
 	m_pModelCom->Play_Animation(fTimeDelta);
 
@@ -251,6 +252,7 @@ void CBaseCharacter::FillInput(InputData& outInput)
 		if (CGameInstance::Get_Instance()->IsKeyDown(VK_UP))
 		{
 			outInput.doAttack3Up = true;
+
 		}
 		else if (CGameInstance::Get_Instance()->IsKeyDown(VK_DOWN))
 		{
@@ -354,6 +356,17 @@ void CBaseCharacter::OnCollisionEnter(CCollider* other)
 	m_bFirstCollision = true; // 첫 충돌 처리 완료
 }
 
+void CBaseCharacter::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
+{
+	if (other->GetType() == ColliderType::HITBOX)
+	{
+		//BodyHitParticle
+		if (m_pAnimatorCom->CheckBool("Hurted"))
+			return; // 이미 피격 중이면 무시
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
+	}
+}
+
 
 void CBaseCharacter::OnCollisionStay(CCollider* other, _float fTimeDelta)
 {
@@ -427,12 +440,12 @@ void CBaseCharacter::Blow(CGameObject* pAttacker, _float fBlowForce)
 void CBaseCharacter::UpdateAirborne(_float fTimeDelta)
 {
 
-	XMVECTOR vVel = XMLoadFloat3(&m_Velocity);
-	XMVECTOR gravity = m_bIsBound ? XMLoadFloat3(&GRAVITY) * fTimeDelta * 10.f : XMLoadFloat3(&GRAVITY) * fTimeDelta * 9.6f;
+	_vector vVel = XMLoadFloat3(&m_Velocity);
+	_vector gravity = m_bIsBound ? XMLoadFloat3(&GRAVITY) * fTimeDelta * 10.f : XMLoadFloat3(&GRAVITY) * fTimeDelta * 9.6f;
 	vVel += gravity;
 	XMStoreFloat3(&m_Velocity, vVel);
 
-	XMVECTOR pos = m_pTransformCom->Get_State(STATE::POSITION);
+	_vector pos = m_pTransformCom->Get_State(STATE::POSITION);
 	pos += vVel * fTimeDelta;
 	if (m_pNavigationCom)
 	{
@@ -466,7 +479,7 @@ void CBaseCharacter::UpdateAirborne(_float fTimeDelta)
 		}
 
 		// 바닥에 고정
-		XMVECTOR curPos = m_pTransformCom->Get_State(STATE::POSITION);
+		_vector curPos = m_pTransformCom->Get_State(STATE::POSITION);
 		curPos = XMVectorSetY(curPos, m_fGoroundHeight);
 		if (m_pNavigationCom)
 		{
@@ -559,30 +572,6 @@ void CBaseCharacter::Ready_Animation()
 
 HRESULT CBaseCharacter::Ready_Components()
 {
-
-	///* For.Com_Shader */
-	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxMesh"),
-	//	TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-	//	return E_FAIL;
-
-	//if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxMesh"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-	//	return E_FAIL;
-
-	//if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxAnimMesh"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-	//	return E_FAIL;
-
-
-	///* For.Com_Model */
-	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Kyoujuro"),
-	//	TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-	//	return E_FAIL;
-
-	///* For.Com_AnimController*/
-	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Animator"),
-	//	TEXT("Com_Animator"), reinterpret_cast<CComponent**>(&m_pAnimatorCom), m_pModelCom)))
-	//	return E_FAIL;
-
-
 	/* For.Com_AnimController*/
 	if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Animator"),
 		TEXT("Com_Animator"), reinterpret_cast<CComponent**>(&m_pAnimatorCom), m_pModelCom)))

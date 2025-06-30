@@ -39,11 +39,6 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void AddParticleSystem(const _wstring& particleName, CParticleSystem* pParticleSystem);
-	void RemoveParticleSystem(CParticleSystem* pParticleSystem);
-	void RemoveParticleSystem(const _wstring& particleName);
-	void ClearParticleSystems();
-
 	void Set_BoneSocket(CBone* pBoneSocket) {
 		m_pBoneSocket = pBoneSocket;
 	}
@@ -53,7 +48,7 @@ public:
 protected:
 	virtual HRESULT Bind_Shader();
 protected:
-	unordered_map<_wstring,CParticleSystem*> m_ParticleSystems;
+	_float4x4				m_CombinedWorldMatrix{};
 	array<CTexture*, TEX_MAX> m_Textures{};
 	CShader* m_pShaderCom = { nullptr };
 	_uint m_iShaderPass = { 0 };

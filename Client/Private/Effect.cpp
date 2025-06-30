@@ -8,18 +8,18 @@ CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext),
 	m_iShaderPass(0)
 {
-	m_ParticleSystems.clear();
 	m_Textures.fill(nullptr);
+	XMStoreFloat4x4(&m_CombinedWorldMatrix, XMMatrixIdentity());
 }
 
 CEffect::CEffect(const CEffect& Prototype)
 	: CGameObject(Prototype)
-	, m_ParticleSystems(Prototype.m_ParticleSystems)
 	, m_pShaderCom(Prototype.m_pShaderCom)
 	, m_iShaderPass(Prototype.m_iShaderPass)
 	, m_fDuration(Prototype.m_fDuration)
 	, m_fElapsed(Prototype.m_fElapsed)
 	, m_bLoop(Prototype.m_bLoop)
+	, m_CombinedWorldMatrix(Prototype.m_CombinedWorldMatrix)
 {
 	for (_uint i = 0; i < TEX_MAX; i++)
 	{
@@ -27,11 +27,8 @@ CEffect::CEffect(const CEffect& Prototype)
 		Safe_AddRef(m_Textures[i]);
 	}
 	Safe_AddRef(m_pShaderCom);
-	for (auto& pair : m_ParticleSystems)
-	{
-		Safe_AddRef(pair.second);
-	}
 }
+
 HRESULT CEffect::Initialize_Prototype()
 {
     return S_OK;
@@ -92,55 +89,6 @@ HRESULT CEffect::Render()
     return S_OK;
 }
 
-void CEffect::AddParticleSystem(const _wstring& particleName, CParticleSystem* pParticleSystem)
-{
-	if (nullptr == pParticleSystem)
-		return;
-	auto it = m_ParticleSystems.find(particleName);
-	if (it != m_ParticleSystems.end())
-	{
-		Safe_Release(it->second);
-	}
-	m_ParticleSystems[particleName] = pParticleSystem;
-	Safe_AddRef(pParticleSystem);
-}
-
-void CEffect::RemoveParticleSystem(CParticleSystem* pParticleSystem)
-{
-	if (nullptr == pParticleSystem)
-		return;
-	for (auto it = m_ParticleSystems.begin(); it != m_ParticleSystems.end();)
-	{
-		if (it->second == pParticleSystem)
-		{
-			Safe_Release(it->second);
-			it = m_ParticleSystems.erase(it);
-		}
-		else
-		{
-			++it;
-		}
-	}
-}
-
-void CEffect::RemoveParticleSystem(const _wstring& particleName)
-{
-	auto it = m_ParticleSystems.find(particleName);
-	if (it != m_ParticleSystems.end())
-	{
-		Safe_Release(it->second);
-		m_ParticleSystems.erase(it);
-	}
-}
-
-void CEffect::ClearParticleSystems()
-{
-	for (auto& pair : m_ParticleSystems)
-	{
-		Safe_Release(pair.second);
-	}
-	m_ParticleSystems.clear();
-}
 
 void CEffect::OnEnable()
 {
@@ -152,10 +100,10 @@ void CEffect::OnDisable()
 
 HRESULT CEffect::Bind_Shader()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+	/*if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+		return E_FAIL;*/
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
 		return E_FAIL;
-	//if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
-	//	return E_FAIL;
 
 
 	//m_pShaderCom->Bind_RawValue("g_fToonThreshold", &fToonThreshold, sizeof(float));
@@ -187,11 +135,7 @@ HRESULT CEffect::Bind_Shader()
 void CEffect::Free()
 {
 	__super::Free();
-	for (auto& pair : m_ParticleSystems)
-	{
-		Safe_Release(pair.second);
-	}
-	m_ParticleSystems.clear();
+
 	for (auto& texture : m_Textures)
 	{
 		Safe_Release(texture);

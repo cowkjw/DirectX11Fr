@@ -1,6 +1,8 @@
 #include "EnmuBody.h"
 #include "JsonLoader.h"	
 #include "GameInstance.h"
+#include "EffectManager.h"
+#include <BaseCharacter.h>
 
 
 using AniCon = CAnimController::Condition;
@@ -231,6 +233,28 @@ void CEnmuBody::OnCollisionEnter(CCollider* other)
 	//		}
 	//	}
 	//}
+	if (other->GetType() == ColliderType::RANGE)
+	{
+		if (auto pAttacker = dynamic_cast<CBaseCharacter*>(other->GetOwner()))
+		{
+			pAttacker->OnAttackHit(m_pParent);
+		}
+	}
+}
+
+void CEnmuBody::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
+{
+	if (other->GetType() == ColliderType::RANGE)
+	{
+		if (auto pAttacker = dynamic_cast<CBaseCharacter*>(other->GetOwner()))
+		{
+			CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("TanjiroHitParticle"), hitPos);
+		}
+	}
+	else if (other->GetType() == ColliderType::HITBOX)
+	{
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("TanjiroHitParticle"), hitPos);
+	}
 }
 
 void CEnmuBody::OnCollisionStay(CCollider* other, float fTimeDelta)

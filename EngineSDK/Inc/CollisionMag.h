@@ -26,6 +26,7 @@ public:
 	void Clear();
 
 private:
+	_float3 CalculateHitPosition(class CCollider* A, class CCollider* B);
 	void ResolvePenetrationXZ(class CCollider* A, class CCollider* B);
 
 private:

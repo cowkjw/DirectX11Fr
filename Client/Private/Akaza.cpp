@@ -245,6 +245,7 @@ void CAkaza::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::ATTACK:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
+				StartHitStop(0.2f);
 				pCharacter->TakeDamage(3.f);
 				auto pState = pCharacter->GetState();
 				if (pCharacter->IsAirborne())
@@ -257,6 +258,7 @@ void CAkaza::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::ATTACK2:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
+				StartHitStop(0.2f);
 				pCharacter->TakeDamage(5.f);
 				if (pCharacter->IsAirborne())
 				{
@@ -268,6 +270,7 @@ void CAkaza::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::ATTACK3:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
+				StartHitStop(0.2f);
 				pCharacter->TakeDamage(8.f);
 				if (pCharacter->IsAirborne())
 				{
@@ -279,6 +282,7 @@ void CAkaza::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::ATTACK4:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
+				StartHitStop(0.2f);
 				pCharacter->TakeDamage(5.f);
 				if (pCharacter->IsAirborne())
 				{
@@ -296,7 +300,9 @@ void CAkaza::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::ATTACK_UP:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
-				pCharacter->TakeDamage(30.f);
+				StartHitStop(0.2f);
+				pCharacter->TakeDamage(6.f);
+				m_bCanBlowAttack = true;
 			}
 			break;
 		case CSTATE::SKILL:
@@ -1009,11 +1015,12 @@ void CAkaza::FillInput(InputData& outInput)
 		  ECommand::LightAttack, ECommand::LightAttack },
 		1.f))
 	{
-		if (m_Distribution(m_RandGen) < 0.3f)
+		if (m_Distribution(m_RandGen) < 0.5f)
 		{
 			outInput.doAttack3Up = true;
+			m_bCanBlowAttack = true;
 		}
-		else if (m_Distribution(m_RandGen) < 0.5f)
+		else if (m_Distribution(m_RandGen) < 0.3f)
 		{
 			outInput.doAttack3Down = true;
 		}
@@ -1106,16 +1113,21 @@ void CAkaza::HandleInput()
 	if (!pTarget)
 		return;
 
-	float dt = CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+	_float dt = CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
 
-	// 0) 모든 쿨다운 타이머 감소
-	if (m_fFollowCooldown > 0.f) m_fFollowCooldown -= dt;
-	if (m_fAttackCooldown > 0.f) m_fAttackCooldown -= dt;
-	if (m_fGuardCooldown > 0.f) m_fGuardCooldown -= dt;
-	if (m_fStepCooldown > 0.f) m_fStepCooldown -= dt;
-	if (m_fJumpCooldown > 0.f) m_fJumpCooldown -= dt;
+	// 모든 쿨다운 타이머 감소
+	if (m_fFollowCooldown > 0.f)
+		m_fFollowCooldown -= dt;
+	if (m_fAttackCooldown > 0.f)
+		m_fAttackCooldown -= dt;
+	if (m_fGuardCooldown > 0.f)
+		m_fGuardCooldown -= dt;
+	if (m_fStepCooldown > 0.f)
+		m_fStepCooldown -= dt;
+	if (m_fJumpCooldown > 0.f)
+		m_fJumpCooldown -= dt;
 
-	// 1) 거리/방향 계산 (XZ 평면)
+	//거리/방향 계산 (XZ 평면)
 	XMVECTOR myPos = GetTransform()->Get_State(STATE::POSITION);
 	XMVECTOR tgtPos = pTarget->GetTransform()->Get_State(STATE::POSITION);
 	myPos = XMVectorSetY(myPos, 0.f);
@@ -1131,16 +1143,16 @@ void CAkaza::HandleInput()
 	{
 		int a = 0;
 	}
-	// 4-1) 플레이어 IDLE 상태
+	// 플레이어 IDLE 상태
 	if (playerState == CBaseCharacter::CSTATE::IDLE)
 	{
-		// (1) 공격 범위 이내 공격 시도
+		//  공격 범위 이내 공격 시도
 		if (dist <= 25.f)
 		{
 			if (m_fAttackCooldown <= 0.f)
 			{
 				m_pInputBuffer->AddCommand({ ECommand::LightAttack, m_fTotalTime });
-				m_fAttackCooldown = 0.1f; // 공격 쿨다운 예시
+				m_fAttackCooldown = 0.1f; // 공격 쿨다운
 			}
 			return;
 		}	
@@ -1153,10 +1165,10 @@ void CAkaza::HandleInput()
 
 		return;
 	}
-	// 4-2) 플레이어 MOVE 상태
+	// 플레이어 MOVE 상태
 	else if (playerState == CBaseCharacter::CSTATE::MOVE)
 	{
-		//// (1) 공격 범위 이내 → 공격
+		//// 공격 범위 이내 
 		if (dist <= 25.f)
 		{
 			if (m_fAttackCooldown <= 0.f)
@@ -1167,7 +1179,7 @@ void CAkaza::HandleInput()
 			return;
 		}
 
-		// (2) 매우 멀리 있으면 자동 추격 (거리 예: dist 20)
+		//멀리 있으면 자동 추격
 		if (dist >= 40.f&&dist<60.f)
 		{
 			m_pInputBuffer->AddCommand({ ECommand::Move, m_fTotalTime });
@@ -1184,29 +1196,27 @@ void CAkaza::HandleInput()
 
 		return;
 	}
-	// 4-3) 플레이어 JUMP 상태
-	else if (playerState == CBaseCharacter::CSTATE::JUMP)
-	{
-		m_pInputBuffer->AddCommand({ ECommand::Skill0, m_fTotalTime });
-		//if (m_fJumpCooldown <= 0.f)
-		//{
-		//	m_pInputBuffer->AddCommand({ ECommand::Jump, m_fTotalTime });
-		//	m_fJumpCooldown = 1.5f;
-		//}
-		return;
-	}
-	// 4-4) 플레이어 ATTACK 상태
+	//else if (playerState == CBaseCharacter::CSTATE::JUMP)
+	//{
+	//	m_pInputBuffer->AddCommand({ ECommand::Skill0, m_fTotalTime });
+	//	//if (m_fJumpCooldown <= 0.f)
+	//	//{
+	//	//	m_pInputBuffer->AddCommand({ ECommand::Jump, m_fTotalTime });
+	//	//	m_fJumpCooldown = 1.5f;
+	//	//}
+	//	return;
+	//}
 	else if (playerState == CBaseCharacter::CSTATE::ATTACK
 		|| playerState == CBaseCharacter::CSTATE::ATTACK2|| playerState == CBaseCharacter::CSTATE::ATTACK3
 		|| playerState == CBaseCharacter::CSTATE::ATTACK4)
 	{
-		// (1) 랜덤 확률로 가드하기
+		//  랜덤 확률로 가드하기
 		if (m_Distribution(m_RandGen) < 0.55f)
 		{
 			if (m_fGuardCooldown <= 0.f)
 			{
 				m_pInputBuffer->AddCommand({ ECommand::Guard, m_fTotalTime });
-				m_fGuardCooldown = 3.f; // 가드 쿨다운 예시
+				m_fGuardCooldown = 3.f;
 			}
 			if (dist >= 30.f)
 			{
@@ -1214,7 +1224,6 @@ void CAkaza::HandleInput()
 			}
 			return;
 		}
-		// (2) 아니면 뒤로 대시(Back-Dash)
 		else
 		{
 			if (m_fStepCooldown <= 0.f)
@@ -1225,7 +1234,7 @@ void CAkaza::HandleInput()
 			return;
 		}
 	}
-	// 4-5) 플레이어 GUARD 상태
+	//플레이어 GUARD 상태
 	else if (playerState == CBaseCharacter::CSTATE::GUARD)
 	{
 		auto r = m_Distribution(m_RandGen);
@@ -1280,7 +1289,7 @@ void CAkaza::HandleInput()
 
 		return;
 	}
-	// 4-6) 플레이어 SKILL 상태
+	// 플레이어 SKILL 상태
 	else if (playerState == CBaseCharacter::CSTATE::SKILL
 		|| playerState == CBaseCharacter::CSTATE::SKILL1
 		|| playerState == CBaseCharacter::CSTATE::SKILL2)

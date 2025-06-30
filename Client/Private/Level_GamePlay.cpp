@@ -1,12 +1,15 @@
 #include "Level_GamePlay.h"
-#include "GameInstance.h"
-#include "JsonLoader.h"
+
 #include "ThirdPersonCamera.h"
+#include "EffectManager.h"
+#include "Level_Loading.h"
 #include "BaseCharacter.h"
 #include "UIProgressBar.h"
+#include "GameInstance.h"
+#include "HitParticle.h"
+#include "JsonLoader.h"
 #include "UIImage.h"
-#include "Level_Loading.h"
-#include <Weapon.h>
+#include "Weapon.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -24,7 +27,6 @@ HRESULT CLevel_GamePlay::Initialize()
 		// 이곳에 로드 후 처리할 작업을 추가합니다.
 		});
 
-	jsonLoader.Free();
 	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Terrain"),
 		ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_BackGround")))
 		return E_FAIL;
@@ -75,6 +77,27 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	m_pKyojuro = static_cast<CBaseCharacter*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("Kyojuro")));
 	m_pAkaza = static_cast<CBaseCharacter*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("Akaza")));
+
+	CParticleSystem* pParticleSystem = nullptr;
+	CEffect* pEffect = CHitParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect->Initialize(nullptr);
+	jsonLoader.Load_Particle("../Asset/Json/Particle/KyojuroSlashHit_Particle.json", &pParticleSystem);
+	static_cast<CHitParticle*>(pEffect)->AddParticleSystem(L"Slash", pParticleSystem);
+	CEffectManager::Get_Instance()->RegisterEffect(TEXT("SlashHitParticle"), pEffect);
+
+
+	pEffect = CHitParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect->Initialize(nullptr);
+	jsonLoader.Load_Particle("../Asset/Json/Particle/AkazaHit_Particle.json", &pParticleSystem);
+
+	static_cast<CHitParticle*>(pEffect)->AddParticleSystem(L"BodyHit",pParticleSystem);
+	CEffectManager::Get_Instance()->RegisterEffect(TEXT("AkazaHitParticle"), pEffect);
+
+	jsonLoader.Free();
 	return S_OK;
 }
 
@@ -87,13 +110,13 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 			return;
 	}
 	UpdateGameFlow(fTimeDelta);
-
+	CEffectManager::Get_Instance()->Update_ActivedParticle(fTimeDelta);
 }
 
 HRESULT CLevel_GamePlay::Render()
 {
 	//SetWindowText(g_hWnd, TEXT("게임플레이 레벨입니다."));
-
+	CEffectManager::Get_Instance()->ClenUpPendingParticleEffects();
 	return S_OK;
 }
 
@@ -188,7 +211,7 @@ void CLevel_GamePlay::UpdateGameFlow(_float fTimeDelta)
 
 		}
 	}
-	else if (m_pAkaza)
+	 if (m_pAkaza)
 	{
 		if (m_pAkaza->GetState() == CBaseCharacter::CSTATE::DIE)
 		{

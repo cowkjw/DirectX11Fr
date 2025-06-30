@@ -12,8 +12,8 @@ public:
 		_bool   bPlayAwake = true;				// 시작 시 자동 재생 여부
 		_float2 vLifeTime = _float2(0.f, 5.f);					// 생명주기 고정 5초
 		_float2 vSpeed = _float2(0.f, 5.f);						// 속도 고정 5
-		_float3 vStartColor = _float3(1.f, 1.f, 1.f);			// 시작 색상: 흰색
-		_float3 vEndColor = _float3(1.f, 1.f, 1.f);				// 끝 색상: 흰색 (변화 없음)
+		_float3 vStartColor = _float3(1.f, 1.f, 1.f);			// 시작 색상
+		_float3 vEndColor = _float3(1.f, 1.f, 1.f);				// 끝날 때  색상
 		_float3 vVelocity = _float3(0.f, 0.f, 0.f);				// 방향성 없음
 		_float fGravity = 0.f;									// 중력 없음
 		_float fSpreadAngle = 25.f;								// 확산 각도 (fAngle과 동일하게 기본값 설정)
@@ -28,8 +28,6 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	HRESULT Initialize_Prototype(const PARTICLE_DESC& desc);
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void Drop(_float fTimeDelta) override;
-	virtual void Spread(_float fTimeDelta) override;
 
 	void SetIsLoop(_bool bIsLoop) { m_bIsLoop = bIsLoop; }
 	_bool IsLoop() const { return m_bIsLoop; }
@@ -56,6 +54,7 @@ public:
 	{
 		m_ParticleDesc.bPlayAwake = bPlayAwake;
 	}
+
 	PARTICLE_TYPE GetParticleType() const
 	{
 		return m_ParticleDesc.eParticleType;
@@ -64,6 +63,12 @@ public:
 	void ResetParticle();
 	void PlayParticle() { m_bStarted = true; }
 	void StopParticle() { m_bStarted = false; }
+
+	PARTICLE_DESC GetParticleDesc() const
+	{
+		return m_ParticleDesc;
+	}
+	_bool IsPlaying() const { return m_bStarted; }
 private:
 	void    SetVertexInfo(const PARTICLE_DESC& desc);
 	HRESULT CreateVertexBuffer();

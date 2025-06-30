@@ -39,7 +39,7 @@ private:
 	// 네비 매쉬
 	void ShowCells();
 	// 파티클
-	void DrawParticleEditor();
+	void ParticleEditor();
 	HRESULT DrawParticlePreview();
 	// 컷씬 카메라용 프리뷰
 	void EditCutSceneCamera();
@@ -81,7 +81,9 @@ private:
 	_char    m_FilePathBuf[260];   // 저장/로딩할 파일 경로
 	_char    m_NavFilePathBuf[260]; // 프로토타입 이름
 	_char     m_ParticleFilePathBuf[260];
+	_char     m_CutScenePathBuf[260];
 	vector<string> m_ParticleFilePaths;
+	vector<string> m_CutScenePropertyFilePaths;
 	vector<_wstring> m_FbxFilePaths;
 
 	// JSON 로더
@@ -109,7 +111,7 @@ private:
 	class CCutSceneCamera* m_pCutSceneCamera = nullptr;
 	class CFreeCamera* m_pFreeCamera = nullptr; // 기존 카메라
 	ID3D11ShaderResourceView* m_pCutSceneCameraSRV = nullptr; // 컷씬 카메라용 렌더 타겟 뷰
-
+	_int m_iSelectedCutSceneIndex = -1;
 public:
 	static CToolbar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

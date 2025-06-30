@@ -46,6 +46,7 @@ public:
 	_bool IsLoop() const { return m_bLoop; }
 	auto& GetKeyFrames() { return m_KeyFrames; }
 	virtual json Serialize() override;
+	virtual void Deserialize(const json& j) override;
 
 
 private:

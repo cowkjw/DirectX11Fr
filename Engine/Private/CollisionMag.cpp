@@ -11,18 +11,16 @@ void CCollisionMag::Update(_float fTimeDelta)
     if (m_vColliders.empty())
         return;
 
-    // 1) 모든 콜라이더 업데이트
     for (auto& collider : m_vColliders)
         collider->Update();
 
-    // 2) 이번 프레임에 충돌이 발생한 (소유자)쌍을 기록할 set
+    // 이번 프레임에 충돌이 발생한 오브젝트
     //    pair<CBaseCharacter*, CBaseCharacter*> 형태로 저장
     set<pair<CGameObject*, CGameObject*>> ownerCollided;
 
-    // 3) 현재 프레임의 콜라이더 간 충돌을 기록할 set
+    //  현재 프레임의 콜라이더 간 충돌을 기록할 set
     set<pair<CCollider*, CCollider*>> currColliders;
 
-    // 4) 모든 콜라이더 쌍에 대해 충돌 검사
     for (size_t i = 0; i < m_vColliders.size(); ++i)
     {
         auto A = m_vColliders[i];
@@ -57,6 +55,8 @@ void CCollisionMag::Update(_float fTimeDelta)
             if (!A->Intersects(B))
                 continue;
 
+            _float3 hitPosition = CalculateHitPosition(A, B);
+
             // 6) **소유자 단위로 중복 처리 방지**
             //    (ownerA, ownerB) 쌍 정렬 => (min, max) 형태로 key 생성
             pair<CGameObject*, CGameObject*> ownerPair =
@@ -64,16 +64,13 @@ void CCollisionMag::Update(_float fTimeDelta)
                 ? make_pair(ownerA, ownerB)
                 : make_pair(ownerB, ownerA);
 
-            // (a) 만약 이미 같은 ownerPair를 처리했다면, 이번 콜라이더 쌍은 넘긴다
+            // 만약 이미 같은 오너들이면 넘기기
             if (ownerCollided.count(ownerPair))
             {
-                // 이미 소유자 단위로 충돌 처리된 적이 있어서 여기서는 Skip
                 continue;
             }
 
-            // (b) 아직 처리되지 않은 소유자 쌍이라면,
-            //     이번 프레임 ownerPair를 처리 목록에 추가하고,
-            //     실제 콜라이더 단위 로직도 수행
+            // 아직 처리되지 않은 소유자 쌍이라면, 이번 프레임 ownerPair를 처리 목록에 추가
             ownerCollided.insert(ownerPair);
             currColliders.insert({ A, B });
 
@@ -82,10 +79,12 @@ void CCollisionMag::Update(_float fTimeDelta)
                 // 여기는 A,B가 이번 프레임 처음 충돌한 경우(Enter)
                 A->NotifyEnter(B);
                 B->NotifyEnter(A);
+				A->NotifyEnter(B, hitPosition);
+				B->NotifyEnter(A, hitPosition);
                 A->SetCollision(true);
                 B->SetCollision(true);
 
-                // 우선순위 비교하여 겹침 해소 (단, HITBOX이면 해소하지 않음)
+                // 우선순위 비교해서 밀어낼 애 정하기
                 CCollider* pusher = A;
                 CCollider* pushed = B;
                 if (A->GetPriority() > B->GetPriority())
@@ -106,11 +105,12 @@ void CCollisionMag::Update(_float fTimeDelta)
                     ResolvePenetrationXZ(pusher, pushed);
                 }
             }
-            else
+            else  // 충돌 중인 경우
             {
-                // 이미 충돌 중(STAY)
                 A->NotifyStay(B, fTimeDelta);
                 B->NotifyStay(A, fTimeDelta);
+				A->NotifyStay(B, fTimeDelta, hitPosition);
+				B->NotifyStay(A, fTimeDelta,hitPosition);
                 A->SetCollision(true);
                 B->SetCollision(true);
 
@@ -169,6 +169,108 @@ void CCollisionMag::Clear()
 	}
 	m_vColliders.clear();
 	m_vCollisions.clear();
+}
+
+_float3 CCollisionMag::CalculateHitPosition(CCollider* A, CCollider* B)
+{
+    _float3 hitPos = { 0.f, 0.f, 0.f };
+
+    // Capsule vs Capsule
+    if (auto capA = dynamic_cast<CCapsuleCollider*>(A))
+    {
+        if (auto capB = dynamic_cast<CCapsuleCollider*>(B))
+        {
+            _vector closestA, closestB;
+            ClosestPointsSegmentSegment(
+                capA->m_Capsule.A, capA->m_Capsule.B,
+                capB->m_Capsule.A, capB->m_Capsule.B,
+                closestA, closestB);
+
+            // 두 최단점의 중점을 충돌 위치로 사용
+            _vector hitPosition = (closestA + closestB) * 0.5f;
+            XMStoreFloat3(&hitPos, hitPosition);
+            return hitPos;
+        }
+    }
+
+    // Capsule vs Sphere
+    if (auto capA = dynamic_cast<CCapsuleCollider*>(A))
+    {
+        if (auto sphB = dynamic_cast<CSphereCollider*>(B))
+        {
+            _vector centerS = XMLoadFloat3(&sphB->Sphere.Center);
+            _vector closestPoint = ClosestPointOnSegment(centerS, capA->m_Capsule.A, capA->m_Capsule.B);
+
+            // 캡슐 표면과 구 표면의 접촉점
+            _vector direction = XMVector3Normalize(centerS - closestPoint);
+            _vector hitPosition = closestPoint + direction * capA->m_Capsule.Radius;
+            XMStoreFloat3(&hitPos, hitPosition);
+            return hitPos;
+        }
+    }
+
+    // Sphere vs Capsule (역방향)
+    if (auto sphA = dynamic_cast<CSphereCollider*>(A))
+    {
+        if (auto capB = dynamic_cast<CCapsuleCollider*>(B))
+        {
+            _vector centerS = XMLoadFloat3(&sphA->Sphere.Center);
+            _vector closestPoint = ClosestPointOnSegment(centerS, capB->m_Capsule.A, capB->m_Capsule.B);
+
+            _vector direction = XMVector3Normalize(centerS - closestPoint);
+            _vector hitPosition = centerS - direction * sphA->Sphere.Radius;
+            XMStoreFloat3(&hitPos, hitPosition);
+            return hitPos;
+        }
+    }
+
+    // Sphere vs Sphere
+    if (auto sphA = dynamic_cast<CSphereCollider*>(A))
+    {
+        if (auto sphB = dynamic_cast<CSphereCollider*>(B))
+        {
+            _vector centerA = XMLoadFloat3(&sphA->Sphere.Center);
+            _vector centerB = XMLoadFloat3(&sphB->Sphere.Center);
+            _vector direction = XMVector3Normalize(centerB - centerA);
+
+            // A 구체 표면의 접촉점
+            _vector hitPosition = centerA + direction * sphA->Sphere.Radius;
+            XMStoreFloat3(&hitPos, hitPosition);
+            return hitPos;
+        }
+    }
+
+    // Box 관련 충돌들은 간단히 중심점 기준으로 처리
+    if (auto boxA = dynamic_cast<CBoxCollider*>(A))
+    {
+        _vector centerA = XMLoadFloat3(&boxA->Box.Center);
+        _vector centerB{};
+
+        if (auto boxB = dynamic_cast<CBoxCollider*>(B))
+        {
+            centerB = XMLoadFloat3(&boxB->Box.Center);
+        }
+        else if (auto sphB = dynamic_cast<CSphereCollider*>(B))
+        {
+            centerB = XMLoadFloat3(&sphB->Sphere.Center);
+        }
+        else if (auto capB = dynamic_cast<CCapsuleCollider*>(B))
+        {
+            centerB = (capB->m_Capsule.A + capB->m_Capsule.B) * 0.5f;
+        }
+
+        // 두 중심점의 중점
+        _vector hitPosition = (centerA + centerB) * 0.5f;
+        XMStoreFloat3(&hitPos, hitPosition);
+        return hitPos;
+    }
+ 
+    _vector posA = A->GetOwner()->GetTransform()->Get_State(STATE::POSITION);
+    _vector posB = B->GetOwner()->GetTransform()->Get_State(STATE::POSITION);
+    _vector hitPosition = (posA + posB) * 0.5f;
+    XMStoreFloat3(&hitPos, hitPosition);
+
+    return hitPos;
 }
 
 void CCollisionMag::ResolvePenetrationXZ(CCollider* A, CCollider* B)

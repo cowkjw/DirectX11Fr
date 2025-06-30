@@ -1,6 +1,7 @@
 #include "Weapon.h"
 #include "GameInstance.h"
 #include <BaseCharacter.h>
+#include "EffectManager.h"	
 #include <EnmuParts.h>
 
 CWeapon::CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -8,7 +9,11 @@ CWeapon::CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	, m_pShaderCom{ nullptr }
 	, m_pModelCom{ nullptr }
 	, m_pColliderCom{ nullptr }
+	, m_pColliderCom1{ nullptr }
+	, m_pColliderCom2{ nullptr }
+
 {
+	XMStoreFloat4x4(&m_CombinedWorldMatrix, XMMatrixIdentity());
 }
 
 
@@ -17,6 +22,10 @@ CWeapon::CWeapon(const CWeapon& Prototype) :
 	, m_pShaderCom{ Prototype.m_pShaderCom }
 	, m_pModelCom{ Prototype.m_pModelCom }
 	, m_pColliderCom{ Prototype.m_pColliderCom }
+	, m_pColliderCom1{ Prototype.m_pColliderCom1 }
+	, m_pColliderCom2{ Prototype.m_pColliderCom2 }
+	, m_CombinedWorldMatrix(Prototype.m_CombinedWorldMatrix)
+
 {
 }
 
@@ -89,7 +98,7 @@ void CWeapon::Update(_float fTimeDelta)
 
 void CWeapon::Late_Update(_float fTimeDelta)
 {
-	//CGameObject::Late_Update(fTimeDelta);
+	CGameObject::Late_Update(fTimeDelta);
 	if (m_pBoneSocket)
 	{
 		_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
@@ -107,25 +116,19 @@ void CWeapon::Late_Update(_float fTimeDelta)
 
 	//if (m_pBoneSocket)
 	//{
-	//	// 캐릭터 루트(부모)의 월드 행렬
 	//	_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
-
-	//	// 손 본의 로컬 행렬 (애니메이션에서 나온 CombinedTransformation)
 	//	_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
+	//	_matrix matBoneLocal = XMLoadFloat4x4(&boneLocal);
+	//	for (size_t i = 0; i < 3; i++)
+	//		matBoneLocal.r[i] = XMVector3Normalize(matBoneLocal.r[i]);
 
-	//	// 무기의 로컬 오프셋 (초기 배치 조정용, 일반적으로 회전+위치)
-	//	//_matrix weaponLocal = m_pTransformCom->Get_LocalMatrix(); // ← 새로 만들어야 함
+	//	//	_matrix world = XMMatrixMultiply(XMLoadFloat4x4(&boneLocal), XMLoadFloat4x4(&parentWorld));
+	//	_matrix world = /*XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix())**/matBoneLocal * XMLoadFloat4x4(&parentWorld);
+	//	//world = XMMatrixMultiply(matScale, world); 
 
-	//	// 손 본의 월드 행렬 = 손 본 로컬 × 캐릭터 월드
-	//	_matrix handWorld = XMLoadFloat4x4(&boneLocal) * XMLoadFloat4x4(&parentWorld);
-
-	//	// 무기 월드 = 무기 로컬 × 손 본의 월드
-	////	_matrix weaponWorld = weaponLocal * handWorld;
-
-	//	// 적용
-	//	_float4x4 finalMat{};
-	//	XMStoreFloat4x4(&finalMat, weaponWorld);
-	//	m_pTransformCom->Set_WorldMatrix(finalMat);
+	//	_float4x4 WorldMatrix{};
+	//	XMStoreFloat4x4(&m_CombinedWorldMatrix, world);
+	//	//m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 	//}
 
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
@@ -188,6 +191,8 @@ HRESULT CWeapon::Bind_Shaders()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
+	/*if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
+		return E_FAIL;*/
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::VIEW))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(TRANSFORM::PROJECTION))))
@@ -258,6 +263,12 @@ void CWeapon::OnCollisionEnter(CCollider* other)
 			if (pTarget->GetState() != CBaseCharacter::CSTATE::DIE)
 			{
 				pChar->OnAttackHit(pTarget);
+				m_pColliderCom->SetActive(false);
+				m_pColliderCom1->SetActive(false);
+				m_pColliderCom2->SetActive(false);
+				m_pColliderCom->SetDrawDebug(false);
+				m_pColliderCom1->SetDrawDebug(false);
+				m_pColliderCom2->SetDrawDebug(false);
 			}
 		}
 	}
@@ -272,6 +283,12 @@ void CWeapon::OnCollisionEnter(CCollider* other)
 			if (auto pChar = dynamic_cast<CBaseCharacter*>(m_pParent))
 			{
 				pChar->OnAttackHit(pBoss);
+				m_pColliderCom->SetActive(false);
+				m_pColliderCom1->SetActive(false);
+				m_pColliderCom2->SetActive(false);
+				m_pColliderCom->SetDrawDebug(false);
+				m_pColliderCom1->SetDrawDebug(false);
+				m_pColliderCom2->SetDrawDebug(false);
 			}
 		}
 	}
@@ -285,10 +302,43 @@ void CWeapon::OnCollisionEnter(CCollider* other)
 			if (auto pChar = dynamic_cast<CBaseCharacter*>(m_pParent))
 			{
 				pChar->OnAttackHit(pBoss);
+				m_pColliderCom->SetActive(false);
+				m_pColliderCom1->SetActive(false);
+				m_pColliderCom2->SetActive(false);
+				m_pColliderCom->SetDrawDebug(false);
+				m_pColliderCom1->SetDrawDebug(false);
+				m_pColliderCom2->SetDrawDebug(false);
 			}
 		}
 	}
 }
+
+void CWeapon::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
+{
+	if (auto pTarget = dynamic_cast<CBaseCharacter*>(other->GetOwner()))
+	{
+		//if (m_DamagedTargets.find(pTarget) != m_DamagedTargets.end())
+		//	return; // 이미 데미지를 입힌 대상이면 무시
+		//m_DamagedTargets.insert(pTarget); // 데미지를 입힌 대상에 추가
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
+	}
+	// 때린게 엔무 파츠면
+	else if (auto pBossParts = dynamic_cast<CEnmuParts*>(other->GetOwner()))
+	{
+		//if (m_DamagedTargets.find(pBossParts) != m_DamagedTargets.end())
+		//	return; // 이미 데미지를 입힌 대상이면 무시
+		//m_DamagedTargets.insert(pBossParts); // 데미지를 입힌 대상에 추가
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
+	}
+	else if (auto pBossParts = dynamic_cast<CEnmuParts*>(other->GetOwner()->GetParent()))
+	{
+		//if (m_DamagedTargets.find(pBossParts) != m_DamagedTargets.end())
+		//	return; // 이미 데미지를 입힌 대상이면 무시
+		//m_DamagedTargets.insert(pBossParts); // 데미지를 입힌 대상에 추가
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
+	}
+}
+
 
 void CWeapon::OnCollisionStay(CCollider* other, float fTimeDelta)
 {

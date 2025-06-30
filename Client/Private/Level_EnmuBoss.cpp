@@ -1,13 +1,17 @@
-#include "Level_EnmuBoss.h"
-#include "GameInstance.h"
-#include "JsonLoader.h"
 #include "ThirdPersonCamera.h"
-#include "BaseCharacter.h"
-#include "EnmuMeat.h"
-#include "EnmuTentacle.h"
+#include "Level_EnmuBoss.h"
+#include "CutSceneCamera.h"
 #include "Level_Loading.h"
+#include "BaseCharacter.h"
+#include "EffectManager.h"
+#include "EnmuTentacle.h"
+#include "GameInstance.h"
+#include "HitParticle.h"
+#include "JsonLoader.h"
+#include "CameraMag.h"
+#include "EnmuMeat.h"
 #include "UIImage.h"
-#include <Weapon.h>
+#include "Weapon.h"
 
 CLevel_EnmuBoss::CLevel_EnmuBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -32,7 +36,6 @@ HRESULT CLevel_EnmuBoss::Initialize()
 	jsonLoader.Load_Objects("../Asset/Json/EnmuBossObj.json", [&]() {
 		// 이곳에 로드 후 처리할 작업을 추가합니다.
 		});
-	jsonLoader.Free();
 	
 	if(FAILED(Ready_Lights()))
 		return E_FAIL;
@@ -45,15 +48,21 @@ HRESULT CLevel_EnmuBoss::Initialize()
 	//	return E_FAIL;
 
 
-	auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StartImage"));
-	if (pUiImage)
-	{
-		pUiImage->SetActive(true);
-		m_bStartGame = true;
-	}
+
 
 	m_pTanjiro = static_cast<CBaseCharacter*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("Tanjiro")));
 	m_pEnmu = static_cast<CEnmuMeat*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("EnmuMeat")));
+
+	CParticleSystem* pParticleSystem = nullptr;
+	CEffect* pEffect = CHitParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect->Initialize(nullptr);
+	jsonLoader.Load_Particle("../Asset/Json/Particle/AkazaHit_Particle.json", &pParticleSystem);
+
+	static_cast<CHitParticle*>(pEffect)->AddParticleSystem(L"BodyHit", pParticleSystem);
+	CEffectManager::Get_Instance()->RegisterEffect(TEXT("TanjiroHitParticle"), pEffect);
+	jsonLoader.Free();
 	return S_OK;
 }
 
@@ -66,12 +75,13 @@ void CLevel_EnmuBoss::Update(_float fTimeDelta)
 			return;
 	}
 	UpdateGameFlow(fTimeDelta);
+	CEffectManager::Get_Instance()->Update_ActivedParticle(fTimeDelta);
 }
 
 HRESULT CLevel_EnmuBoss::Render()
 {
 	/*SetWindowText(g_hWnd, TEXT("엔무 보스 레벨"));*/
-
+	CEffectManager::Get_Instance()->ClenUpPendingParticleEffects();
 	return S_OK;
 }
 
@@ -94,23 +104,7 @@ HRESULT CLevel_EnmuBoss::Ready_Layer_Characters()
 
 	if (!pTanjiro)
 		return E_FAIL;
-
-	CThirdPersonCamera::THRIDCAMERA_DESC CameraDesc{};
-	CameraDesc.fSmoth = 0.1f;
-	CameraDesc.pTarget = pTanjiro;
-	CameraDesc.fSpeedPerSec = 50.f;
-	CameraDesc.fRotationPerSec = XMConvertToRadians(180.f);
-	CameraDesc.vEye = _float3(0.f, 20.f, -50.f);
-	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
-	CameraDesc.fFov = XMConvertToRadians(60.0f);
-	CameraDesc.fNear = 0.1f;
-	CameraDesc.fFar = 1200.f;
-	CameraDesc.strName = TEXT("ThirdPersonCamera");
-
-	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_ThirdPersonCamera"),
-		ToIndex(LEVEL::ENMU_BOSS), TEXT("ThirdPersonCamera"), &CameraDesc))
-		return E_FAIL;
-
+	Ready_Camera(pTanjiro);
 	return S_OK;
 }
 
@@ -141,8 +135,67 @@ HRESULT CLevel_EnmuBoss::Ready_Lights()
 	return S_OK;
 }
 
+HRESULT CLevel_EnmuBoss::Ready_Camera(CGameObject* pTarget)
+{
+	CThirdPersonCamera::THRIDCAMERA_DESC CameraDesc{};
+	CameraDesc.fSmoth = 0.1f;
+	CameraDesc.pTarget = pTarget;
+	CameraDesc.fSpeedPerSec = 50.f;
+	CameraDesc.fRotationPerSec = XMConvertToRadians(180.f);
+	CameraDesc.vEye = _float3(0.f, 20.f, -50.f);
+	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+	CameraDesc.fFov = XMConvertToRadians(60.0f);
+	CameraDesc.fNear = 0.1f;
+	CameraDesc.fFar = 1200.f;
+	CameraDesc.strName = TEXT("ThirdPersonCamera");
+
+	CGameObject* pMainCamera = nullptr;
+	if (!(pMainCamera = m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_ThirdPersonCamera"),
+		ToIndex(LEVEL::ENMU_BOSS), TEXT("ThirdPersonCamera"), &CameraDesc)))
+		return E_FAIL;
+
+	if (pMainCamera)
+	{
+		CCameraMag::Get_Instance()->RegisterCamera(TEXT("MainCamera"), static_cast<CCamera*>((pMainCamera)));
+		CCameraMag::Get_Instance()->ActiveCamera(TEXT("MainCamera"));
+	}
+	CGameObject* pCutSceneCamera = nullptr;
+	//Prototype_GameObject_CutSceneCam
+	if (!(pCutSceneCamera = m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_CutSceneCam"),
+		ToIndex(LEVEL::ENMU_BOSS), TEXT("CutSceneCamera"), &CameraDesc)))
+		return E_FAIL;
+	if (pCutSceneCamera)
+	{
+		CCameraMag::Get_Instance()->RegisterCamera(TEXT("CutSceneCamera"), static_cast<CCamera*>((pCutSceneCamera)));
+		CJsonLoader jsonLoader(m_pDevice, m_pContext);
+		json j = jsonLoader.Load_CutScene_PropertyAsJson("../Asset/Json/CutScene/EnmuMeat.json");
+		CCameraMag::Get_Instance()->RegisterCutSceneProperty(TEXT("EnmuMeatStart"), j);
+		j = jsonLoader.Load_CutScene_PropertyAsJson("../Asset/Json/CutScene/EnmuDead.json");
+		CCameraMag::Get_Instance()->RegisterCutSceneProperty(TEXT("EnmuMeatDeath"), j);
+		jsonLoader.Free();
+		CCameraMag::Get_Instance()->ActiveCamera(TEXT("CutSceneCamera"));
+		CCameraMag::Get_Instance()->SetCutSceneProperty(TEXT("EnmuMeatStart"));
+		auto pCutSceneCam = static_cast<CCutSceneCamera*>(CCameraMag::Get_Instance()->GetActiveCamera());
+		pCutSceneCam->SetPlay(true);
+	}
+	return S_OK;
+}
+
 void CLevel_EnmuBoss::UpdateGameFlow(_float fTimeDelta)
 {
+	auto pCutSceneCam = dynamic_cast<CCutSceneCamera*>(CCameraMag::Get_Instance()->GetActiveCamera());
+	if (!m_bEndStartCutScnen &&pCutSceneCam&&pCutSceneCam->IsPlaying() == false)
+	{
+
+		CCameraMag::Get_Instance()->ActiveCamera(TEXT("MainCamera")); // 메인 카메라로 전환
+		auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StartImage"));
+		if (pUiImage)
+		{
+			pUiImage->SetActive(true);
+			m_bStartGame = true;
+		}
+		m_bEndStartCutScnen = true;
+	}
 	
 	if (m_bStartGame)
 	{
@@ -179,7 +232,7 @@ void CLevel_EnmuBoss::UpdateGameFlow(_float fTimeDelta)
 
 		}
 	}
-	else if (m_pEnmu)
+	if (m_pEnmu)
 	{
 		if (m_pEnmu->GetState() == EnmuState::DIE)
 		{

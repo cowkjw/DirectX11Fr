@@ -161,6 +161,7 @@
     <ClInclude Include="..\public\BaseCharacter.h" />
     <ClInclude Include="..\Public\BehaviorTree.h" />
     <ClInclude Include="..\public\BossAngryFreeze.h" />
+    <ClInclude Include="..\public\BossDeath.h" />
     <ClInclude Include="..\public\BossFollowPunch.h" />
     <ClInclude Include="..\public\BossFreezeAttack.h" />
     <ClInclude Include="..\public\BossHandAttack.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="..\public\BossState.h" />
     <ClInclude Include="..\public\BossSwingAttack.h" />
     <ClInclude Include="..\public\BossTentacle.h" />
+    <ClInclude Include="..\public\CameraMag.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Function.h" />
@@ -215,6 +217,7 @@
     <ClInclude Include="..\public\Sky.h" />
     <ClInclude Include="..\Public\ParticleEffect.h" />
     <ClInclude Include="..\public\SlashEffect.h" />
+    <ClInclude Include="..\public\HitParticle.h" />
     <ClInclude Include="..\public\State.h" />
     <ClInclude Include="..\public\StateAttack1.h" />
     <ClInclude Include="..\public\StateAttack2.h" />
@@ -270,6 +273,7 @@
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseCharacter.cpp" />
     <ClCompile Include="..\private\BossAngryFreeze.cpp" />
+    <ClCompile Include="..\private\BossDeath.cpp" />
     <ClCompile Include="..\private\BossFollowPunch.cpp" />
     <ClCompile Include="..\private\BossFreezeAttack.cpp" />
     <ClCompile Include="..\private\BossHandAttack.cpp" />
@@ -280,6 +284,7 @@
     <ClCompile Include="..\private\BossState.cpp" />
     <ClCompile Include="..\private\BossSwingAttack.cpp" />
     <ClCompile Include="..\private\BossTentacle.cpp" />
+    <ClCompile Include="..\private\CameraMag.cpp" />
     <ClCompile Include="..\private\CutSceneCamera.cpp" />
     <ClCompile Include="..\private\Decal.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
@@ -316,6 +321,7 @@
     <ClCompile Include="..\private\Sky.cpp" />
     <ClCompile Include="..\Private\ParticleEffect.cpp" />
     <ClCompile Include="..\private\SlashEffect.cpp" />
+    <ClCompile Include="..\private\HitParticle.cpp" />
     <ClCompile Include="..\private\State.cpp" />
     <ClCompile Include="..\private\StateAttack1.cpp" />
     <ClCompile Include="..\private\StateAttack2.cpp" />

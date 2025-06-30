@@ -20,7 +20,7 @@ public:
 	virtual void TakeDamage(_float fDamage) override;
 	virtual void OnAttackHit(CGameObject* pTarget) override;
 	virtual void OnCollisionEnter(CCollider* other) override;
-
+	virtual void OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos) override;
 
 private:
 	virtual HRESULT Ready_Components() override;
@@ -28,9 +28,6 @@ private:
 	virtual void Ready_Animation() override;
 	void ActiveCollider();
 	void DeactiveCollider();
-
-
-private:
 
 public:
 	static CKyojuro* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

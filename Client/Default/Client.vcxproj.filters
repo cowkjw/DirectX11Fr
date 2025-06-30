@@ -223,6 +223,12 @@
     <Filter Include="01.GameObject\Effect\Manager">
       <UniqueIdentifier>{4e1f0b78-8e68-4ae8-9492-092e8eaebbaa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.GameObject\Camera\Manager">
+      <UniqueIdentifier>{ccf4a0b9-cc0c-403b-8abf-1f7f2587d589}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Effect\Particle\SlashHit">
+      <UniqueIdentifier>{0b1e7c91-3719-44ca-a111-ba60a5848092}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -509,6 +515,15 @@
     </ClInclude>
     <ClInclude Include="..\public\CutSceneCamera.h">
       <Filter>01.GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CameraMag.h">
+      <Filter>01.GameObject\Camera\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BossDeath.h">
+      <Filter>94. Pattern\State\Enmu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\HitParticle.h">
+      <Filter>01.GameObject\Effect\Particle\SlashHit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -809,6 +824,15 @@
     </ClCompile>
     <ClCompile Include="..\private\CutSceneCamera.cpp">
       <Filter>01.GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CameraMag.cpp">
+      <Filter>01.GameObject\Camera\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BossDeath.cpp">
+      <Filter>94. Pattern\State\Enmu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\HitParticle.cpp">
+      <Filter>01.GameObject\Effect\Particle\SlashHit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

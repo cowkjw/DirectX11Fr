@@ -127,12 +127,15 @@ _bool CSphereCollider::Intersects(CCollider* other)
 	other->Update();
 	auto otherSphere = dynamic_cast<CSphereCollider*>(other);
 	if (otherSphere)
+	{
 		return Sphere.Intersects(otherSphere->Sphere);
+	}
 
-	// 다른 타입(Box, Capsule)와도 비교할 수 있도록 확장
-	if (auto box = dynamic_cast<CBoxCollider*>(other)) {
+	if (auto box = dynamic_cast<CBoxCollider*>(other))
+	{
 		return Sphere.Intersects(box->GetBoundingBox());
 	}
+
 	if (auto capsule = dynamic_cast<CCapsuleCollider*>(other))
 	{
 		return capsule->Intersects(this); // 캡슐과의 충돌 검사

@@ -3,12 +3,12 @@
         {
             "clipName": "A_P0000_V00_C00_Death",
             "duration": 76.0,
-          "events": [
-            {
-              "name": "Death",
-              "time": 75.8
-            }
-          ]
+            "events": [
+                {
+                    "name": "Death",
+                    "time": 75.80000305175781
+                }
+            ]
         },
         {
             "clipName": "A_P0000_V00_C00_Dmg01A_B",
@@ -47,7 +47,12 @@
         {
             "clipName": "A_P0000_V00_C00_Dmg01_B",
             "duration": 18.0,
-            "events": []
+          "events": [
+            {
+              "name": "DeactiveHitbox",
+              "time": 1.0
+            }
+          ]
         },
         {
             "clipName": "A_P0000_V00_C00_Dmg01_F",
@@ -111,12 +116,12 @@
         {
             "clipName": "A_P0000_V00_C00_DmgFall01_0",
             "duration": 10.0,
-          "events": [
-            {
-              "name": "DeactiveHitbox",
-              "time": 1.0
-            }
-          ]
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P0000_V00_C00_DmgFall01_1",
@@ -382,6 +387,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 22.0
+                },
+                {
+                    "name": "HitedAir",
+                    "time": 17.0
                 }
             ]
         },

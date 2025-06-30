@@ -14,6 +14,7 @@ CParticleSystem::CParticleSystem(const CParticleSystem& Prototype)
 	, m_bIsLoop{ Prototype.m_bIsLoop }
 	, m_ParticleDesc{ Prototype.m_ParticleDesc }
 {
+
 }
 
 HRESULT CParticleSystem::Initialize_Prototype()
@@ -41,54 +42,6 @@ HRESULT CParticleSystem::Initialize(void* pArg)
     return S_OK;
 }
 
-void CParticleSystem::Drop(_float fTimeDelta)
-{
-	D3D11_MAPPED_SUBRESOURCE	SubResource{};
-
-	if (FAILED(m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource)))
-		return;
-
-	if (m_ParticleDesc.eParticleType == PARTICLE_TYPE::POINT)
-	{
-		VTXPOINT_PARTICLE_INSTANCE* pVertices = static_cast<VTXPOINT_PARTICLE_INSTANCE*>(SubResource.pData);
-		for (size_t i = 0; i < m_iNumInstance; i++)
-		{
-			pVertices[i].vLifeTime.y += fTimeDelta;
-			pVertices[i].vTranslation.y -= m_vecSpeeds[i] * fTimeDelta;
-			if (true == m_bIsLoop &&
-				pVertices[i].vLifeTime.y >= pVertices[i].vLifeTime.x)
-			{
-				pVertices[i].vLifeTime.y = 0.f;
-				pVertices[i].vTranslation = static_cast<VTXPOINT_PARTICLE_INSTANCE*>(m_pVertexInstances)[i].vTranslation;
-			}
-		}
-	}
-	else
-	{
-		VTXRECT_PARTICLE_INSTANCE* pVertices = static_cast<VTXRECT_PARTICLE_INSTANCE*>(SubResource.pData);
-
-		for (size_t i = 0; i < m_iNumInstance; i++)
-		{
-			pVertices[i].vLifeTime.y += fTimeDelta;
-
-			pVertices[i].vTranslation.y -= m_vecSpeeds[i] * fTimeDelta;
-
-			if (true == m_bIsLoop &&
-				pVertices[i].vLifeTime.y >= pVertices[i].vLifeTime.x)
-			{
-				pVertices[i].vLifeTime.y = 0.f;
-				pVertices[i].vTranslation = static_cast<VTXRECT_PARTICLE_INSTANCE*>(m_pVertexInstances)[i].vTranslation;
-			}
-		}
-	}
-	
-	m_pContext->Unmap(m_pVBInstance, 0);
-}
-
-void CParticleSystem::Spread(_float fTimeDelta)
-{
-}
-
 HRESULT CParticleSystem::UpdateVertexInstances(_float fTimeDelta)
 {
 	if(!m_bStarted)
@@ -98,6 +51,7 @@ HRESULT CParticleSystem::UpdateVertexInstances(_float fTimeDelta)
 	if (FAILED(m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource)))
 		return E_FAIL;
 
+	_uint iCountEnd = 0;
 	if (m_ParticleDesc.eParticleType == PARTICLE_TYPE::POINT)
 	{
 		VTXPOINT_PARTICLE_INSTANCE* pVertices = static_cast<VTXPOINT_PARTICLE_INSTANCE*>(SubResource.pData);
@@ -121,6 +75,11 @@ HRESULT CParticleSystem::UpdateVertexInstances(_float fTimeDelta)
 				pVertices[i].vLifeTime.y = 0.f;
 				pVertices[i].vTranslation = static_cast<VTXPOINT_PARTICLE_INSTANCE*>(m_pVertexInstances)[i].vTranslation;
 			}
+			else if (m_ParticleDesc.isLoop == false &&
+				pVertices[i].vLifeTime.y >= pVertices[i].vLifeTime.x)
+			{
+				iCountEnd++;
+			}
 		}
 	}
 	else
@@ -146,10 +105,19 @@ HRESULT CParticleSystem::UpdateVertexInstances(_float fTimeDelta)
 				pVertices[i].vLifeTime.y = 0.f;
 				pVertices[i].vTranslation = static_cast<VTXRECT_PARTICLE_INSTANCE*>(m_pVertexInstances)[i].vTranslation;
 			}
+			else if (m_ParticleDesc.isLoop == false &&
+				pVertices[i].vLifeTime.y >= pVertices[i].vLifeTime.x)
+			{
+				iCountEnd++;
+			}
+		
 		}
 	}
-
 	m_pContext->Unmap(m_pVBInstance, 0);
+	if (iCountEnd == m_iNumInstance&&m_ParticleDesc.isLoop == false)
+	{
+		StopParticle();
+	}
 	return S_OK;
 }
 
@@ -201,6 +169,7 @@ void CParticleSystem::ResetParticle()
 		}
 		m_pContext->Unmap(m_pVBInstance, 0);
 	}
+	PlayParticle();
 }
 
 void CParticleSystem::SetVertexInfo(const PARTICLE_DESC& desc)

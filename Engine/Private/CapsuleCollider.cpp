@@ -163,7 +163,6 @@ _bool CCapsuleCollider::Intersects(CCollider* other)
 
 	if (auto bc = dynamic_cast<CBoxCollider*>(other))
 	{
-		// 1) OBB บนป็
 		BoundingOrientedBox box = bc->GetBoundingBox();
 		return IntersectSegmentOBB(m_Capsule.A, m_Capsule.B, box);
 	}

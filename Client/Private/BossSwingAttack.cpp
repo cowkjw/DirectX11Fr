@@ -63,9 +63,11 @@ void BossSwingAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
 
 			if (fDistSq <= radiusSq)
 			{
-				pChar->GetTarget()->StartHitStop(0.5f);
 				pChar->GetTarget()->TakeDamage(20.f);
+				pChar->GetTarget()->StartHitStop(0.65f);
 				pChar->GetTarget()->Blow(pChar, 40.f);
+				pChar->StartHitStop(0.65f);
+
 			}
 		}
 		m_bDected = true; // 경고존 활성화 후 한 번만

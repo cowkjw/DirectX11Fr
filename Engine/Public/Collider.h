@@ -37,6 +37,13 @@ public:
 	void NotifyEnter(CCollider* other) {
 		if (m_listener) m_listener->OnCollisionEnter(other);
 	}
+	void NotifyEnter(CCollider* other,const _float3& hitPos) {
+		if (m_listener) m_listener->OnCollisionEnter(other,hitPos);
+	}
+
+	void NotifyStay(CCollider* other, _float fTimeDelta,const _float3& hitPos) {
+		if (m_listener) m_listener->OnCollisionStay(other, fTimeDelta,hitPos);
+	}
 	void NotifyStay(CCollider* other, _float fTimeDelta) {
 		if (m_listener) m_listener->OnCollisionStay(other, fTimeDelta);
 	}

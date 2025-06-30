@@ -3,12 +3,12 @@
         {
             "clipName": "A_P0000_V00_C00_Death",
             "duration": 76.0,
-          "events": [
-            {
-              "name": "Death",
-              "time": 75.8
-            }
-          ]
+            "events": [
+                {
+                    "name": "Death",
+                    "time": 75.80000305175781
+                }
+            ]
         },
         {
             "clipName": "A_P0000_V00_C00_Dmg01A_B",
@@ -274,6 +274,22 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 14.668058395385742
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
                 }
             ]
         },
@@ -373,6 +389,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 2.0299999713897705
+                },
+                {
+                    "name": "EndAttack",
+                    "time": 26.003013610839844
                 }
             ]
         },
@@ -384,22 +404,58 @@
         {
             "clipName": "A_P0001_V00_C00_AtkSkl03_0",
             "duration": 46.0,
-            "events": []
+            "events": [
+                {
+                    "name": "GuardSkill",
+                    "time": 2.1419999599456787
+                },
+                {
+                    "name": "ActiveRangebox",
+                    "time": 2.1419999599456787
+                },
+                {
+                    "name": "DeactiveRangebox",
+                    "time": 37.5047492980957
+                },
+                {
+                    "name": "GuardSkillAirborne",
+                    "time": 2.0
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_AtkSkl03_1",
             "duration": 10.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveRangebox",
+                    "time": 9.501117706298828
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_AtkSkl03_2",
             "duration": 34.0,
-            "events": []
+            "events": [
+                {
+                    "name": "EndAttack",
+                    "time": 24.503007888793945
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_AtkSkl04",
             "duration": 45.0,
-            "events": []
+            "events": [
+                {
+                    "name": "EndAttack",
+                    "time": 44.00532913208008
+                },
+                {
+                    "name": "RyusoSkill",
+                    "time": 3.5003368854522705
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_AtkSkl04A_0",
@@ -585,6 +641,22 @@
             "clipName": "A_P0001_V00_C00_BaseNut01_1",
             "duration": 69.0,
             "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
                 {
                     "name": "DeactiveHitbox",
                     "time": 0.0

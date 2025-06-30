@@ -367,6 +367,38 @@ HRESULT CJsonLoader::Load_Particle(const string& filePath, CParticleSystem** ppP
 	return E_FAIL;
 }
 
+HRESULT CJsonLoader::Load_CutSceneCamera(const string& filePath, CGameObject* pCamera)
+{
+	ifstream ifs(filePath);
+	if (!ifs.is_open())
+		return E_FAIL;
+	json j;
+	try {
+		ifs >> j;
+	}
+	catch (json::parse_error&) {
+		return E_FAIL;
+	}
+	pCamera->Deserialize(j);
+
+	return S_OK;
+}
+
+json CJsonLoader::Load_CutScene_PropertyAsJson(const string& filePath)
+{
+	ifstream ifs(filePath);
+	if (!ifs.is_open())
+		return E_FAIL;
+	json j;
+	try {
+		ifs >> j;
+	}
+	catch (json::parse_error&) {
+		return E_FAIL;
+	}
+	return j;
+}
+
 HRESULT CJsonLoader::Save_Objects(const string& filePath, function<void()> onEntryLoaded)
 {
 
@@ -412,6 +444,18 @@ HRESULT CJsonLoader::Save_Particle(const string& filePath, CParticleSystem* pPar
 	if (!pParticle)
 		return E_FAIL;
 	json j = pParticle->Serialize();
+	ofstream ofs(filePath);
+	if (!ofs.is_open())
+		return E_FAIL;
+	ofs << j.dump(4);
+	return S_OK;
+}
+
+HRESULT CJsonLoader::Save_CutSceneCamera(const string& filePath, CGameObject* pCamera)
+{
+	if (!pCamera)
+		return E_FAIL;
+	json j = pCamera->Serialize();
 	ofstream ofs(filePath);
 	if (!ofs.is_open())
 		return E_FAIL;

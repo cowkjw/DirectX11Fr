@@ -1,0 +1,104 @@
+#include "HitParticle.h"
+#include "GameInstance.h"
+#include "JsonLoader.h"
+
+CHitParticle::CHitParticle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CParticleEffect(pDevice, pContext)
+{
+	m_iShaderPass = 1; // ½¦ÀÌ´õ ÆÐ½º 
+}
+
+CHitParticle::CHitParticle(const CHitParticle& Prototype)
+	: CParticleEffect(Prototype)
+{
+}
+
+HRESULT CHitParticle::Initialize_Prototype()
+{
+    return S_OK;
+}
+
+HRESULT CHitParticle::Initialize(void* pArg)
+{
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+    return S_OK;
+}
+
+void CHitParticle::Priority_Update(_float fTimeDelta)
+{
+}
+
+void CHitParticle::Update(_float fTimeDelta)
+{
+	__super::Update(fTimeDelta);
+}
+
+void CHitParticle::Late_Update(_float fTimeDelta)
+{
+	__super::Late_Update(fTimeDelta);
+}
+
+HRESULT CHitParticle::Render()
+{
+	if (FAILED(m_Textures[TEX_MASK]->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+		return E_FAIL;
+	__super::Render();
+    return S_OK;
+}
+
+void CHitParticle::SetStartColor(const _float3& vColor)
+{ 
+	if (m_ParticleSystems.find(L"Slash") != m_ParticleSystems.end())
+	{
+		auto Desc = m_ParticleSystems[L"Slash"]->GetParticleDesc();
+		Desc.vStartColor = vColor;
+		m_ParticleSystems[L"Slash"]->SetParticleDesc(Desc);
+	}
+}
+
+HRESULT CHitParticle::Ready_Components()
+{	/* For.Com_Shader */
+	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxPointInstance"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		return E_FAIL;
+
+	/* For.Com_Particle */
+	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Particle"),
+	//	TEXT("Com_Particle"), reinterpret_cast<CComponent**>(&m_ParticleSystems[L"Slash"]))))
+	//	return E_FAIL;
+
+	/* For.Com_Texture */
+
+	if (FAILED(__super::Add_Component(TEXT("Com_Texture"), m_pGameInstance->GetTexture(TEXT("ParticleMask"), true), reinterpret_cast<CComponent**>(&m_Textures[TEX_MASK]))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+CHitParticle* CHitParticle::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CHitParticle* pInstance = new CHitParticle(pDevice, pContext);
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CHitParticle");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+CGameObject* CHitParticle::Clone(void* pArg)
+{
+	CHitParticle* pInstance = new CHitParticle(*this);
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Created : CHitParticle");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void CHitParticle::Free()
+{
+	__super::Free();
+}

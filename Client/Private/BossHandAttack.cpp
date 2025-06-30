@@ -9,12 +9,18 @@ void BossHandAttack::Enter(CEnmuMeat* pChar)
 	auto rightArm = pChar->GetPart(CEnmuMeat::Parts::RIGHTARM);
 	auto pAnimatorLeft = leftArm->Get_Animator();
 	auto pAnimatorRight = rightArm->Get_Animator();
-	leftArm->GetTransform()->Rotate_EulerAngles(_float3(0.f, 45.f+180.f, 0.f));
-	rightArm->GetTransform()->Rotate_EulerAngles(_float3(0.f, -45.f+180.f, 0.f));
+	leftArm->GetTransform()->Rotate_EulerAngles(_float3(0.f, 225.f, 0.f));  
+	rightArm->GetTransform()->Rotate_EulerAngles(_float3(0.f, 135.f, 0.f));
 	pAnimatorLeft->SetTrigger("HandAttackStart");
 	pAnimatorRight->SetTrigger("HandAttackStart");
 
 	pChar->SetState(EnmuState::HANDATTACK);
+
+	m_bAttackedLeft = false;
+	m_bCheckedLeft = false;
+	m_bAttackedRight = false;
+	m_bCheckedRight = false;
+	m_fTimeElapsed = 0.f;
 
 	for (_int i = 0; i < m_pWarnings.size(); i++)
 	{
@@ -37,6 +43,7 @@ void BossHandAttack::Enter(CEnmuMeat* pChar)
 	}
 	if(m_pWarnings[1])
 		m_pWarnings[1]->SetActive(false);
+	m_fTimeElapsed = 0.f;
 }
 
 void BossHandAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
@@ -85,6 +92,9 @@ void BossHandAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
 				{
 					pChar->GetTarget()->HurtDown();
 					pChar->GetTarget()->TakeDamage(7.f);
+					pChar->GetTarget()->StartHitStop(0.3f); // 히트스톱 시작
+					pChar->StartHitStop(0.3f); // 캐릭터도 히트스톱 시작
+
 				}
 			}
 		}
@@ -130,6 +140,7 @@ void BossHandAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
 	{
 		
 		pChar->ChangeState(new BossIdle(TEXT("Idle")));
+		return;
 	}
 }
 

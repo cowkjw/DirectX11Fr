@@ -59,3 +59,21 @@ inline XMVECTOR QuaternionFromAxisAngle(const XMVECTOR& axis, float angle) {
 inline XMVECTOR QuaternionFromYawPitchRoll(float yaw, float pitch, float roll) {
     return XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
 }
+
+inline string MakeRelativePath(const string& absPath)
+{
+    CHAR cwd[MAX_PATH];
+    if (!GetCurrentDirectoryA(MAX_PATH, cwd))
+        return absPath;  // 못 구했으면 절대경로 반환
+
+    string baseDir = cwd;
+    // 뒤에 '\\' 붙여서 "C:\proj\" 식으로
+    if (baseDir.back() != '\\')
+        baseDir += '\\';
+
+    // absPath이 baseDir로 시작하면 잘라내고, 아니면 그대로
+    if (absPath.compare(0, baseDir.size(), baseDir) == 0)
+        return absPath.substr(baseDir.size());
+    else
+        return absPath;
+}

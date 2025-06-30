@@ -4,6 +4,7 @@
 #include "EnmuHead.h"
 #include "BossIdle.h"
 #include "BossOpen.h"
+#include "BossDeath.h"
 #include "GameInstance.h"
 #include "EnmuTentacle.h"
 #include "BaseCharacter.h"
@@ -59,7 +60,9 @@ HRESULT CEnmuMeat::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	ChangeState(new BossIdle(TEXT("Idle")));
+	//ChangeState(new BossIdle(TEXT("Idle")));
+	ChangeState(new BossOpen(TEXT("Open")));
+
 
 	m_vecTentacles.reserve(10);
 	for (_int i = 0; i < 10; i++)
@@ -81,6 +84,11 @@ HRESULT CEnmuMeat::Initialize(void* pArg)
 
 void CEnmuMeat::Priority_Update(_float fTimeDelta)
 {
+	if (m_fHp <= 0.f)
+	{
+		ChangeState(new BossDeath);
+		return;
+	}
 	if (!m_pTarget)
 	{
 		m_pTarget = static_cast<CBaseCharacter*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("Tanjiro")));
@@ -104,6 +112,11 @@ void CEnmuMeat::Priority_Update(_float fTimeDelta)
 
 void CEnmuMeat::Update(_float fTimeDelta)
 {
+	if (m_fHitStopTime > 0.f)
+	{
+		m_fHitStopTime -= fTimeDelta;
+		fTimeDelta *= 0.1f; // HitStop 동안 시간 느리게 흐름
+	}
 	if (m_pBossState)
 	{
 		m_pBossState->Update(this, fTimeDelta);
@@ -116,8 +129,6 @@ void CEnmuMeat::Update(_float fTimeDelta)
 			child->Update(fTimeDelta);
 		}
 	}
-
-
 }
 
 void CEnmuMeat::Late_Update(_float fTimeDelta)
@@ -246,6 +257,7 @@ _float CEnmuMeat::GetDistanceToTarget() const
 
 _float CEnmuMeat::Hit(_float fDamage)
 {
+	StartHitStop(0.25f);
 	m_fHp -= fDamage;
 	if (m_fHp <= 0.f)
 	{
@@ -302,6 +314,11 @@ void CEnmuMeat::OnAttackHit(CGameObject* pTarget)
 			break;
 		}
 	}
+}
+
+void CEnmuMeat::StartHitStop(_float duration)
+{
+	m_fHitStopTime = duration;
 }
 
 HRESULT CEnmuMeat::Ready_Parts()

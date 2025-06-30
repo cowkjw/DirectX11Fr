@@ -244,6 +244,14 @@ void CBodyColliderParts::OnCollisionEnter(CCollider* other)
 			if (pTarget->GetState() != CBaseCharacter::CSTATE::DIE)
 			{
 				pChar->OnAttackHit(pTarget);
+				for (auto& pCollider : m_pColliderComs)
+				{
+					if (pCollider->GetType() == ColliderType::HITBOX)
+					{
+						pCollider->SetActive(false);
+						pCollider->SetDrawDebug(false);
+					}
+				}
 			}
 		}
 		else if (auto pBossParts = dynamic_cast<CEnmuParts*>(m_pParent))
@@ -270,6 +278,14 @@ void CBodyColliderParts::OnCollisionStay(CCollider* other, float fTimeDelta)
 			if (pTarget->GetState() != CBaseCharacter::CSTATE::DIE)
 			{
 				pChar->OnAttackHit(pTarget);
+				for (auto& pCollider : m_pColliderComs)
+				{
+					if (pCollider->GetType() == ColliderType::HITBOX)
+					{
+						pCollider->SetActive(false);
+						pCollider->SetDrawDebug(false);
+					}
+				}
 			}
 		}
 		else if (auto pBossParts = dynamic_cast<CEnmuParts*>(m_pParent))

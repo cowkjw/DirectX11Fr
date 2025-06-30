@@ -1,0 +1,46 @@
+{
+    "AlphaVariation": 1.0,
+    "Center": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "EndColor": [
+        1.0,
+        0.0,
+        0.0
+    ],
+    "Gravity": 5.130000114440918,
+    "IsLoop": false,
+    "LifeTime": [
+        0.0,
+        1.5
+    ],
+    "NumInstance": 100,
+    "ParticleType": 0,
+    "PlayAwake": true,
+    "Range": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "Size": [
+        0.3,
+        0.6
+    ],
+    "Speed": [
+        25.5999999046325684,
+        30.600000381469727
+    ],
+    "SpreadAngle": 360.0,
+    "StartColor": [
+        1.0,
+        0.3529411554336548,
+        0.0
+    ],
+    "Velocity": [
+        1.0,
+        1.0,
+        1.0
+    ]
+}

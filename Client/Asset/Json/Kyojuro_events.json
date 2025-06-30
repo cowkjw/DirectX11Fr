@@ -119,7 +119,12 @@
         {
             "clipName": "A_P0000_V00_C00_DmgFall01_0",
             "duration": 10.0,
-            "events": []
+          "events": [
+            {
+              "name": "DeactiveHitbox",
+              "time": 1.0
+            }
+          ]
         },
         {
             "clipName": "A_P0000_V00_C00_DmgFall01_1",
@@ -129,7 +134,12 @@
         {
             "clipName": "A_P0000_V00_C00_DmgFall01_2",
             "duration": 50.0,
-            "events": []
+          "events": [
+            {
+              "name": "EndHurt",
+              "time": 49.5
+            }
+          ]
         },
         {
             "clipName": "A_P0000_V00_C00_DmgGuardBrk01",

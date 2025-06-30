@@ -55,14 +55,14 @@ void CLevel_Editor::Update(_float fTimeDelta)
 {
 	if (nullptr == m_pIMGUIMag)
 		return;
-	if (m_pGameInstance->IsKeyPressed(VK_BACK))
-	{
-		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
-			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOGO))))
-			return;
-		Safe_Release(m_pIMGUIMag);
-		return;
-	}
+	//if (m_pGameInstance->IsKeyPressed(VK_BACK))
+	//{
+	//	if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
+	//		CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOGO))))
+	//		return;
+	//	Safe_Release(m_pIMGUIMag);
+	//	return;
+	//}
 	m_pIMGUIMag->Update(fTimeDelta);
 }
 

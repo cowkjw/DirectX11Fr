@@ -4,6 +4,7 @@
 void BossOpen::Enter(CEnmuMeat* pChar)
 {
 	auto body = pChar->GetPart(CEnmuMeat::Parts::BODY);
+	body->DeactiveCollider();
 	auto pAnimator = body->Get_Animator();
 	pAnimator->SetTrigger("OpenStart");
 	if (!m_bIsOpen)
@@ -18,6 +19,7 @@ void BossOpen::Enter(CEnmuMeat* pChar)
 
 void BossOpen::Update(CEnmuMeat* pChar, _float fTimeDelta)
 {
+
 	auto body = pChar->GetPart(CEnmuMeat::Parts::BODY);
 
 	auto pAnimator = body->Get_Animator();
@@ -42,4 +44,7 @@ void BossOpen::Exit(CEnmuMeat* pChar)
 	auto body = pChar->GetPart(CEnmuMeat::Parts::BODY);
 	auto pAnimator = body->Get_Animator();
 	pChar->SetState(EnmuState::CLOSING);
+	body->ActiveCollider();
+	auto head = pChar->GetPart(CEnmuMeat::Parts::HEAD);
+	head->DeactiveCollider();
 }

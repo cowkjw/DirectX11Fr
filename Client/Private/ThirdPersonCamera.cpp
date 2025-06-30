@@ -38,6 +38,7 @@ HRESULT CThirdPersonCamera::Initialize(void* pArg)
 	THRIDCAMERA_DESC* pDesc = reinterpret_cast<THRIDCAMERA_DESC*>(pArg);
 	m_fSmooth = pDesc->fSmoth;
 	m_pTarget = pDesc->pTarget;
+    Safe_AddRef(m_pTarget);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;

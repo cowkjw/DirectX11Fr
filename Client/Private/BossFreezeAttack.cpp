@@ -87,8 +87,8 @@ void BossFreezeAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
 
 				if (fDistSq <= radiusSq)
 				{
-					pChar->GetTarget()->StartHitStop(0.5f);
-					pChar->GetTarget()->TakeDamage(100.f);
+					pChar->GetTarget()->StartHitStop(2.f);
+					pChar->GetTarget()->TakeDamage(10.f);
 				}
 
 			}

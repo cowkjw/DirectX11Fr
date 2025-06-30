@@ -114,7 +114,7 @@ HRESULT CToolbar::Render()
 	DrawToolbar();
 	FBXLoader();
 	DrawAnimEventEditor();
-	DrawParticleEditor();
+	ParticleEditor();
 	if (m_pNavigation)
 		m_pNavigation->Render();
 	DrawParticlePreview();
@@ -825,7 +825,7 @@ void CToolbar::ShowCells()
 	ImGui::End();
 }
 
-void CToolbar::DrawParticleEditor()
+void CToolbar::ParticleEditor()
 {
 	if (!ImGui::Begin("Particle Editor"))
 		return;
@@ -992,7 +992,7 @@ void CToolbar::DrawParticleEditor()
 	ImGui::Separator();
 	ImGui::InputText("Particle Path", m_ParticleFilePathBuf, IM_ARRAYSIZE(m_ParticleFilePathBuf), ImGuiInputTextFlags_ReadOnly);
 	ImGui::Separator();
-	if (ImGui::Button("Load Particle"))  // 파일 다이얼로그 버튼
+	if (ImGui::Button("Load Particle Path"))  // 파일 다이얼로그 버튼
 	{
 		// OPENFILENAME 구조체 초기화
 		OPENFILENAMEA ofn{};
@@ -1076,7 +1076,8 @@ void CToolbar::DrawParticleEditor()
 				}
 					break;
 				}
-					isShaderKeySet = true;  // 셰이더 변경
+				isShaderKeySet = true;  // 셰이더 변경
+				desc = m_pParticleSystem->GetParticleDesc();
 				ImGui::OpenPopup("Load Particle Success");
 			}
 		}
@@ -1381,23 +1382,40 @@ void CToolbar::EditCutSceneCamera()
 	}
 
 
-	for (_uint i = 0; i <static_cast<_uint>(kfs.size()); i++)
-	{
-		ImGui::PushID(i);
-		ImGui::Text("KeyFrame %d", i);
-
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
+		for (_uint i = 0; i < static_cast<_uint>(kfs.size()); i++)
 		{
-			kfs.erase(kfs.begin() + i);
-			pCam->SetKeyFrames(kfs, pCam->GetDuration());
+			auto key = kfs[i];
+			ImGui::PushID(i);
+			ImGui::Text("KeyFrame %d", i);
+
+			bool changed = false;
+			changed |= ImGui::DragFloat3("Position", &key.vPosition.x, 0.1f);
+			changed |= ImGui::DragFloat3("OffSet", &key.vOffset.x, 0.1f);
+
+			if (changed)
+			{
+				kfs[i] = key;
+				pCam->SetKeyFrames(kfs, pCam->GetDuration());
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Button("Delete"))
+			{
+				kfs.erase(kfs.begin() + i);
+				pCam->SetKeyFrames(kfs, pCam->GetDuration());
+				ImGui::PopID();
+				break;
+			}
+			ImGui::Separator();
 			ImGui::PopID();
-			break;
 		}
-		ImGui::Separator();
-		ImGui::PopID();
-	}
 	ImGui::Separator();
+
+
+	if (ImGui::Button("Clear KeyFrames"))
+	{
+		pCam->ClearKeyFrames();
+	}
 
 	if (ImGui::Button("Capture Current"))
 	{
@@ -1414,7 +1432,98 @@ void CToolbar::EditCutSceneCamera()
 		auto& vecKeyFrames = pCam->GetKeyFrames();
 		vecKeyFrames.push_back(vKf);
 	}
+	static string fileName;
+	char buf[64];
+	strncpy_s(buf, fileName.c_str(), sizeof(buf));
+	if (ImGui::InputText("CutScene File Name", buf, sizeof(buf)))
+		fileName = buf;
+	if (ImGui::Button("Save CutScene Camera"))
+	{
+		if (m_pCutSceneCamera)
+		{
+			string path = string("../Asset/Json/CutScene/") + fileName +".json";
+			if (FAILED(m_JsonLoader->Save_CutSceneCamera(path, m_pCutSceneCamera)))
+			{
+				ImGui::OpenPopup("Save CutScene Error");
+			}
+			else
+			{
+				ImGui::OpenPopup("Save CutScene Success");
+			}
+		}
+	}
 
+	ImGui::Separator();
+	ImGui::InputText("Current CutScene Path", m_CutScenePathBuf, IM_ARRAYSIZE(m_CutScenePathBuf), ImGuiInputTextFlags_ReadOnly);
+	ImGui::Separator();
+
+	if (ImGui::Button("Add CutScene Property"))
+	{
+		OPENFILENAMEA ofn{};
+		ofn.lStructSize = sizeof(ofn);
+		ofn.hwndOwner = GetActiveWindow();
+		ofn.lpstrFilter = "JSON Files\0*.json\0All Files\0*.*\0";
+		ofn.lpstrFile = m_CutScenePathBuf;
+		ofn.nMaxFile = sizeof(m_CutScenePathBuf);
+		ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
+		if (GetOpenFileNameA(&ofn))
+		{
+			m_CutScenePropertyFilePaths.clear();
+			char* ptr = m_CutScenePathBuf;
+			string dir = ptr;
+			ptr += dir.size() + 1;
+			if (*ptr == '\0') 
+			{
+				string rel = MakeRelativePath(dir);
+				m_CutScenePropertyFilePaths.push_back(rel);
+			}
+			else 
+			{
+				string path = dir;
+				while (*ptr)
+				{
+					string file = ptr;
+					ptr += file.size() + 1;
+					string abs = path + "\\" + file;
+					string rel = MakeRelativePath(abs);
+					m_CutScenePropertyFilePaths.push_back(rel);
+				}
+			}
+		}
+	}
+	if (!m_CutScenePropertyFilePaths.empty())
+	{
+		ImGui::Separator();
+		ImGui::Text("Available CutScene Properties:");
+
+		vector<const char*> items;
+		items.reserve(m_CutScenePropertyFilePaths.size());
+		for (auto& path : m_CutScenePropertyFilePaths)
+			items.push_back(path.c_str());
+
+		// 콤보박스
+		ImGui::Combo("##CutSceneCombo", &m_iSelectedCutSceneIndex,
+			items.data(), (int)items.size());
+
+		// 유효할 때 
+		if (m_iSelectedCutSceneIndex >= 0 &&
+			m_iSelectedCutSceneIndex < (_int)m_CutScenePropertyFilePaths.size())
+		{
+			if (ImGui::Button("Load CutScene Property"))
+			{
+				const string& relPath =
+					m_CutScenePropertyFilePaths[m_iSelectedCutSceneIndex];
+				m_JsonLoader->Load_CutSceneCamera(relPath, pCam);  // 상대경로 넘겨서 로드
+			}
+		}
+		else
+		{
+			ImGui::BeginDisabled();
+			ImGui::Button("Load CutScene Property");
+			ImGui::EndDisabled();
+		}
+
+	}
 	ImGui::End();
 }
 

@@ -54,6 +54,8 @@ namespace Engine
     {
         virtual void OnCollisionEnter(class CCollider* other) = 0;
         virtual void OnCollisionStay(class CCollider* other, float fTimeDelta) = 0;
+        virtual void OnCollisionEnter(class CCollider* other, const XMFLOAT3& hitPos) {};
+        virtual void OnCollisionStay(class CCollider* other, float fTimeDelta, const XMFLOAT3& hitPos) {};
         virtual void OnCollisionExit(class CCollider* other) = 0;
     };
 

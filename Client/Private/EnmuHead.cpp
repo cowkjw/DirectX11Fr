@@ -1,7 +1,8 @@
 #include "EnmuHead.h"
 #include "GameInstance.h"
-#include "BodyColliderParts.h"
+#include "EffectManager.h"
 #include <BaseCharacter.h>
+#include "BodyColliderParts.h"
 
 using AniCon = CAnimController::Condition;
 CEnmuHead::CEnmuHead(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -100,6 +101,7 @@ void CEnmuHead::Ready_Animation()
 
 	// 상태 등록
 	m_pAnimatorCom->AddTrigger("Hurt");
+	m_pAnimatorCom->AddTrigger("Death");
 
 	// 기본으로 끝나고 애니메이션 처리
 	AniCon cFinished{ "", CAnimController::EOp::Finished, 0.f };
@@ -112,6 +114,11 @@ void CEnmuHead::Ready_Animation()
 	ctrl->AddTransition(hurtIdx2, idleIdx, cFinished, 0.1f); // 다 끝나고 돌아오기
 	ctrl->AddTransition(hurtIdx1, hurtIdx, cHurt, 0.1f);
 	ctrl->AddTransition(hurtIdx2, hurtIdx, cHurt, 0.1f);
+
+	AniCon CDeath{ "Death", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(idleIdx, hurtIdx, CDeath, 0.1f); // 죽으면 바로 다가감
+	ctrl->AddTransition(hurtIdx, hurtIdx1, cFinished, 0.1f);
+	ctrl->AddTransition(hurtIdx1, hurtIdx2, cFinished, 0.1f);
 
 }
 
@@ -180,6 +187,15 @@ void CEnmuHead::Free()
 	CEnmuParts::Free();
 }
 
+void CEnmuHead::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
+{
+	if (other->GetType() == ColliderType::HITBOX)
+	{
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("TanjiroHitParticle"), hitPos);
+	}
+
+}
+
 void CEnmuHead::OnCollisionEnter(CCollider* other)
 {
 	if (other->GetType() == ColliderType::HITBOX)
@@ -187,6 +203,13 @@ void CEnmuHead::OnCollisionEnter(CCollider* other)
 		if (auto pChar = dynamic_cast<CBaseCharacter*>(other->GetOwner()))
 		{
 			pChar->OnAttackHit(this);
+		}
+	}
+	else if (other->GetType() == ColliderType::RANGE)
+	{
+		if (auto pAttacker = dynamic_cast<CBaseCharacter*>(other->GetOwner()))
+		{
+			pAttacker->OnAttackHit(m_pParent);
 		}
 	}
 }

@@ -27,10 +27,6 @@ public:
 	virtual HRESULT Bind_Buffers() override;
 	virtual HRESULT Render() override;
 
-	virtual void Drop(_float fTimeDelta);
-	virtual void Spread(_float fTimeDelta);
-
-
 protected:
 	ID3D11Buffer*			m_pVBInstance = { nullptr };
 	D3D11_BUFFER_DESC		m_VBInstanceDesc = {};

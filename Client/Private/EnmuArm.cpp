@@ -157,7 +157,7 @@ HRESULT CEnmuArm::Ready_Components()
 	m_pAnimatorCom->RegisterEventListener("CameraShake", [&](const string& eventName) {
 		if (auto pCamera = dynamic_cast<CThirdPersonCamera*>(CGameInstance::Get_Instance()->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("ThirdPersonCamera"))))
 		{
-			pCamera->TriggerShake(0.6f, 1.5f);
+			pCamera->TriggerShake(0.6f, 2.5f);
 		}
 		});
 

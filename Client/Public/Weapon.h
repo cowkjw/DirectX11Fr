@@ -40,7 +40,7 @@ private:
 	CSphereCollider* m_pColliderCom1 = { nullptr };
 	CSphereCollider* m_pColliderCom2 = { nullptr };
 	CBone* m_pBoneSocket = { nullptr };
-	_float4x4 m_OffsetMatrix{};
+	_float4x4 m_CombinedWorldMatrix{};
 	_bool m_bFirstCollision = true; // 첫 충돌 여부
 
 private:
@@ -57,11 +57,11 @@ public:
 
 
 	// ICollisionListener을(를) 통해 상속됨
-	void OnCollisionEnter(CCollider* other) override;
+	virtual void OnCollisionEnter(CCollider* other) override;
+	virtual void OnCollisionEnter(class CCollider* other, const XMFLOAT3& hitPos);
 
-	void OnCollisionStay(CCollider* other, float fTimeDelta) override;
-
-	void OnCollisionExit(CCollider* other) override;
+	virtual void OnCollisionStay(CCollider* other, float fTimeDelta) override;
+	virtual void OnCollisionExit(CCollider* other) override;
 
 };
 END_NAMESPACE

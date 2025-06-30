@@ -1,3 +1,4 @@
+#include "ParticleEffect.h"
 #include "GameInstance.h"
 #include "MeshEffect.h"
 #include "Model.h"
@@ -75,6 +76,20 @@ void CMeshEffect::SetBone(CBone* pBone)
 {
 }
 
+void CMeshEffect::SetRenderMesh(_bool bRenderMesh)
+{
+	m_bRenderMesh = bRenderMesh;
+	if (m_bRenderMesh)
+	{
+		m_fUVOffset = _float2(0.5f, 0.f); // UV 오프셋 초기화
+		m_bUseOffset = true; // UV 애니메이션 활성화
+		for (const auto& particles : m_ParticleEffects)
+		{
+			particles.second->SpwanParticle();
+		}
+	}
+}
+
 HRESULT CMeshEffect::Ready_Components()
 {
     return S_OK;
@@ -105,5 +120,10 @@ CGameObject* CMeshEffect::Clone(void* pArg)
 void CMeshEffect::Free()
 {
 	__super::Free();
+	for (auto& particles : m_ParticleEffects)
+	{
+		Safe_Release(particles.second);
+	}
+	m_ParticleEffects.clear();
 	Safe_Release(m_pModelCom);
 }

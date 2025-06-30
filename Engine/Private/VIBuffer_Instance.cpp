@@ -47,7 +47,10 @@ HRESULT CVIBuffer_Instance::Bind_Buffers()
 	};
 
 	m_pContext->IASetVertexBuffers(0, m_iNumVertexBuffers, pVertexBuffers, iVertexStrides, iOffsets);
-	m_pContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
+	if (m_pIB)
+	{
+		m_pContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
+	}
 	m_pContext->IASetPrimitiveTopology(m_ePrimitiveTopology);
 
 
@@ -60,16 +63,6 @@ HRESULT CVIBuffer_Instance::Render()
 	m_pContext->DrawIndexedInstanced(m_iNumIndexPerInstance, m_iNumInstance, 0, 0, 0);
 
 	return S_OK;
-}
-
-void CVIBuffer_Instance::Drop(_float fTimeDelta)
-{
-	
-
-}
-
-void CVIBuffer_Instance::Spread(_float fTimeDelta)
-{
 }
 
 void CVIBuffer_Instance::Free()

@@ -10,27 +10,21 @@ class CEffectManager :public CBase
 	DECLARE_SINGLETON(CEffectManager)
 private:
 	CEffectManager() {};
-	~CEffectManager() = default;
+	virtual ~CEffectManager() = default;
 
 public:
-	void RegisterEffect(const _wstring& effectName, CEffect* pEffect)
-	{
-		if (m_EffectMap.find(effectName) != m_EffectMap.end())
-		{
-			return;
-		}
-		m_EffectMap[effectName] = pEffect;
-	}
 
-	void RemoveEffect(const _wstring& effectName)
-	{
-		auto it = m_EffectMap.find(effectName);
-		if (it != m_EffectMap.end())
-		{
-			Safe_Release(it->second);
-			m_EffectMap.erase(it);
-		}
-	}
+	void Update_ActivedParticle(_float fTimeDelta);
+
+	void SpawnParticleEffect(const _wstring& effectName, const _float3& position, const _float3& scale = _float3(1.f, 1.f, 1.f));
+
+	void RegisterEffect(const _wstring& effectName, CEffect* pEffect);
+
+	void ClenUpPendingParticleEffects();
+
+	void RemoveEffect(const _wstring& effectName);
+	
+
 
 	CEffect* GetEffect(const _wstring& effectName)
 	{
@@ -42,9 +36,10 @@ public:
 		return nullptr;
 	}
 private:
-	unordered_map<_wstring, class CEffect*> m_EffectMap;
-
-private:
+	unordered_map<_wstring, CEffect*> m_EffectMap;
+	list<CParticleEffect*> m_ActiveParticleList;
+	list<CParticleEffect*> m_PendingParticleList;
+public:
 	virtual void Free() override;
 };
 END_NAMESPACE

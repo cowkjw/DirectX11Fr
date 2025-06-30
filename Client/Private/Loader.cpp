@@ -1,26 +1,28 @@
 #include "Loader.h"
 
-#include "GameInstance.h"
-
-#include "FreeCamera.h"
-#include "BackGround.h"
-#include "UICanvas.h"
-#include "Terrain.h"
-#include "JsonLoader.h"
-#include "Weapon.h"
-#include "Sky.h"
-#include "Tanjiro.h"
-#include "Kyojuro.h"
-#include "Akaza.h"
 #include "ThirdPersonCamera.h"	
-#include "Environment.h"
-#include "EnmuMeat.h"
-#include "ParticleEffect.h"
-#include "Navigation.h"
-#include "EnmuTentacle.h"
 #include "WarningZoneDecal.h"
 #include "FireSlashEffect.h"
+#include "CutSceneCamera.h"
+#include "ParticleEffect.h"
+#include "GameInstance.h"
+#include "EnmuTentacle.h"
+#include "Environment.h"
+#include "HitParticle.h"
 #include "SlashEffect.h"
+#include "FreeCamera.h"
+#include "BackGround.h"
+#include "Navigation.h"
+#include "JsonLoader.h"
+#include "UICanvas.h"
+#include "EnmuMeat.h"
+#include "Tanjiro.h"
+#include "Kyojuro.h"
+#include "Terrain.h"
+#include "Weapon.h"
+#include "Akaza.h"
+#include "Sky.h"
+
 
 //#include "player.h"
 //#include "Effect.h"
@@ -359,7 +361,7 @@ HRESULT CLoader::Loading_For_Editor()
 		return E_FAIL;
 	/* For.Prototype_GameObject_Snow */
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
-		CParticleEffect::Create(m_pDevice, m_pContext))))
+		CHitParticle::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -510,25 +512,16 @@ HRESULT CLoader::Loading_For_EnmuBoss()
 		return E_FAIL;
 
 
-	///* For.Prototype_Component_VIBuffer_Terrain */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Terrain"),
-	//	CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Asset/Resources/Textures/Terrain/Height.bmp")))))
-	//	return E_FAIL;
-
 
 
 	lstrcpy(m_szLoadingText, TEXT("사운드을(를) 로딩중입니다."));
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체을(를) 로딩중입니다."));
-	///* For.Prototype_GameObject_Terrain */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Terrain"),
-	//	CTerrain::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
 
-	/////* For.Prototype_GameObject_Camera_Free */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_Camera_Free"),
-	//	CFreeCamera::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	///* For.Prototype_GameObject_Camera_Free */
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_CutSceneCam"),
+		CCutSceneCamera::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 		/* For.Prototype_GameObject_ThirdPersonCamera */
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_ThirdPersonCamera"),

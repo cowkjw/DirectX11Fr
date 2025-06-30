@@ -11,6 +11,7 @@
 #include "Weapon.h"	
 #include "FireSlashEffect.h"
 #include "EffectManager.h"
+#include <SlashEffect.h>
 
 using AniCon = CAnimController::Condition;
 CKyojuro::CKyojuro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -58,7 +59,7 @@ HRESULT CKyojuro::Initialize(void* pArg)
 	if (m_pWeapon) // 자식벡터로 넣지는 않음
 	{
 		m_pWeapon->SetParent(this);
-		CFireSlashEffect* pSlashEffect = static_cast<CFireSlashEffect*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_Slash"),
+		CSlashEffect* pSlashEffect = dynamic_cast<CSlashEffect*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_Slash"),
 			ToIndex(LEVEL::GAMEPLAY), TEXT("Slash")));
 
 		CEffectManager::Get_Instance()->RegisterEffect(TEXT("Slash"), pSlashEffect);
@@ -210,6 +211,7 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 				auto pState = pCharacter->GetState();
 				if (pCharacter->IsAirborne())
 				{
+					StartHitStop(0.2f);
 					pCharacter->LaunchAirborne(40.f);
 					pCharacter->PushBack(this);
 				}
@@ -221,6 +223,7 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 				pCharacter->TakeDamage(3.5f);
 				if (pCharacter->IsAirborne())
 				{
+					StartHitStop(0.2f);
 					pCharacter->LaunchAirborne(40.f);
 					pCharacter->PushBack(this);
 				}
@@ -232,6 +235,7 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 				pCharacter->TakeDamage(3.f);
 				if (pCharacter->IsAirborne())
 				{
+					StartHitStop(0.2f);
 					pCharacter->LaunchAirborne(40.f);
 					pCharacter->PushBack(this);
 				}
@@ -243,6 +247,7 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 				pCharacter->TakeDamage(2.5f);
 				if (pCharacter->IsAirborne())
 				{
+					StartHitStop(0.2f);
 					pCharacter->LaunchAirborne(40.f);
 					pCharacter->PushBack(this);
 				}
@@ -258,6 +263,7 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
 				pCharacter->TakeDamage(6.f);
+				StartHitStop(0.2f);
 				m_bCanBlowAttack = true;
 			}
 			break;
@@ -274,6 +280,7 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 				// 바운드가 아닐 때 히트 판정을 낼 수 있음
 				if (pCharacter->GetState() != CBaseCharacter::CSTATE::BOUND)
 				{
+					StartHitStop(0.25f);
 					pCharacter->LaunchAirborne(60.f,true);
 					pCharacter->TakeDamage(10.f);
 				}
@@ -282,7 +289,8 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::SKILL2:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
-			
+				StartHitStop(0.25f);
+				pCharacter->StartHitStop(0.25f);
 				m_bCanRangeAttack = true; // 스킬 사용 후 다음 공격 가능
 			}
 			break;
@@ -293,6 +301,14 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 void CKyojuro::OnCollisionEnter(CCollider* other)
 {
 	CBaseCharacter::OnCollisionEnter(other);
+}
+
+void CKyojuro::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
+{
+	if (other->GetType() == ColliderType::HITBOX)
+	{
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("AkazaHitParticle"), hitPos);
+	}
 }
 
 
@@ -309,19 +325,14 @@ HRESULT CKyojuro::Ready_Components()
 	{
 			return E_FAIL;
 	}
-	if (m_pGameInstance->Get_CurrentLevelIndex() == 3)
-	{
-
-		
-	}
 
 	/* For.Com_Navigation */
 	CNavigation::NAVIGATION_DESC		NaviDesc{};
 	NaviDesc.iIndex = 4;
 
-	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
-	//	TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
-	//	return E_FAIL;
+	if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
 
 
 
@@ -340,6 +351,8 @@ void CKyojuro::ReadyAnimEvents()
 
 	m_pAnimatorCom->RegisterEventListener("GuardSkill", [&](const string&) {
 		m_Velocity.y = 50.f;
+		m_Velocity.x = 0.f;
+		m_Velocity.z = 0.f;
 		m_bAirborne = true;
 		});
 
@@ -378,6 +391,7 @@ void CKyojuro::ReadyAnimEvents()
 		auto pFireSlashEffect = CEffectManager::Get_Instance()->GetEffect(TEXT("Slash"));
 		if (pFireSlashEffect)
 		{
+			static_cast<CMeshEffect*>(pFireSlashEffect)->SetRenderMesh(true);
 			pFireSlashEffect->SetActive(true);
 		}
 		});
@@ -387,7 +401,8 @@ void CKyojuro::ReadyAnimEvents()
 		auto pFireSlashEffect = CEffectManager::Get_Instance()->GetEffect(TEXT("Slash"));
 		if (pFireSlashEffect)
 		{
-			pFireSlashEffect->SetActive(false);
+			static_cast<CMeshEffect*>(pFireSlashEffect)->SetRenderMesh(false);
+		//	pFireSlashEffect->SetActive(false);
 		}
 		});
 }
@@ -491,6 +506,34 @@ void CKyojuro::Ready_Animation()
 	auto animHurtFront = m_pModelCom->GetAnimationClipByName("A_P0000_V00_C00_Dmg01_F");
 	animHurtFront->SetLoop(false);
 	size_t hurtFIdx = ctrl->AddState("Hurt_F", animHurtFront, 12);
+
+
+	auto animHurtAirborne = m_pModelCom->GetAnimationClipByName("A_P0000_V00_C00_Dmg01A_F"); // 공중 상태에서 
+	animHurtAirborne->SetLoop(false);
+	size_t hurtAirborneIdx = ctrl->AddState("Hurt_Airborne", animHurtAirborne, m_pModelCom->GetAnimationMap()[animHurtAirborne->Get_Name()]);
+
+
+	// A_P0000_V00_C00_DmgFall01_0
+	vector<CAnimation*> fallClips;
+	for (_int i = 0; i < 3; i++)
+	{
+		auto name = "A_P0000_V00_C00_DmgFall01_" + to_string(i);
+		auto anim = m_pModelCom->GetAnimationClipByName(name.c_str());
+		anim->SetLoop(false);
+		fallClips.push_back(anim);
+	}
+
+	size_t fall0Idx = ctrl->AddState("Hurt_Fall0", fallClips[0], m_pModelCom->GetAnimationMap()[fallClips[0]->Get_Name()]);
+	size_t fall1Idx = ctrl->AddState("Hurt_Fall1", fallClips[1], m_pModelCom->GetAnimationMap()[fallClips[1]->Get_Name()]);
+	size_t fall2Idx = ctrl->AddState("Hurt_Fall2", fallClips[2], m_pModelCom->GetAnimationMap()[fallClips[2]->Get_Name()]);
+
+
+	// 바운드 애니메이션 A_P0000_V00_C00_DmgBound01_0
+	CAnimation* animBound = m_pModelCom->GetAnimationClipByName("A_P0000_V00_C00_DmgBound01_0");
+	animBound->SetLoop(false);
+	size_t boundIdx = ctrl->AddState("Hurt_Bound", animBound, m_pModelCom->GetAnimationMap()[animBound->Get_Name()]);
+
+
 
 	// A_P0012_V00_C00_BaseGuard01_0
 
@@ -619,7 +662,9 @@ void CKyojuro::Ready_Animation()
 	m_pAnimatorCom->AddTrigger("Hurt");
 	m_pAnimatorCom->AddBool("Stepping"); // 스텝 중인지 여부
 	m_pAnimatorCom->AddBool("Hurted");
-
+	m_pAnimatorCom->AddTrigger("HurtAir");
+	m_pAnimatorCom->AddTrigger("HurtBound");
+	m_pAnimatorCom->AddTrigger("HurtBlow");
 
 	// 추적 대시 A_P0012_V00_C00_AtkSkl01
 	auto dashAttackAnim = m_pModelCom->GetAnimationClipByName("A_P0012_V00_C00_AtkSkl01");
@@ -875,6 +920,7 @@ void CKyojuro::Ready_Animation()
 	ctrl->AddTransition(runIdx, hurtFIdx, cHurt, 0.1f);
 	ctrl->AddTransition(runEndIdx, hurtFIdx, cHurt, 0.1f);
 	ctrl->AddTransition(idleIdx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(hurtFIdx, hurtFIdx, cHurt, 0.3f);
 
 	ctrl->AddTransition(attack0Idx, hurtFIdx, cHurt, 0.1f);
 	ctrl->AddTransition(attack1Idx, hurtFIdx, cHurt, 0.1f);
@@ -889,6 +935,70 @@ void CKyojuro::Ready_Animation()
 
 	ctrl->AddTransition(hurtFIdx, idleIdx, cFin);
 	ctrl->AddTransition(hurtFIdx, runIdx, cSpeedUp, 0.1f);
+
+	CAnimController::Condition cHurtAir{ "HurtAir", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(runIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(runEndIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(idleIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(hurtAirborneIdx, hurtAirborneIdx, cHurtAir, 0.5f);
+
+
+	ctrl->AddTransition(attack0Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack1Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack2Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack3Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack4Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(attack5Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(hurtAirborneIdx, idleIdx, cFin);
+	ctrl->AddTransition(hurtAirborneIdx, runIdx, cSpeedUp, 0.1f);
+
+	AniCon cHurtBound{ "HurtBound", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(runIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(runEndIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(idleIdx, boundIdx, cHurtBound, 0.1f);
+
+	ctrl->AddTransition(attack0Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack1Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack2Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack3Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack4Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(attack5Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(stepBackIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(stepFrontIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(stepLeftIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(stepRightIdx, boundIdx, cHurtBound, 0.1f);
+
+	// 공중에서 혹시나 공격받으면 공중 히트 애니메이션으로 전이
+	ctrl->AddTransition(boundIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(fall0Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(fall1Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(fall2Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+
+	ctrl->AddTransition(boundIdx, fall0Idx, cFin, 0.1f);
+	ctrl->AddTransition(fall0Idx, fall1Idx, cFin, 0.1f);
+	ctrl->AddTransition(fall1Idx, fall2Idx, cFin, 0.1f);
+
+	ctrl->AddTransition(fall2Idx, idleIdx, cFin);
+	ctrl->AddTransition(fall2Idx, runIdx, cSpeedUp, 0.1f);
+
+	// Blow 는 Fall 애니메이션
+
+	CAnimController::Condition cHurtBlow{ "HurtBlow", CAnimController::EOp::Trigger, 0.f };
+	ctrl->AddTransition(runIdx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(runEndIdx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(idleIdx, boundIdx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(hurtFIdx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(skill1Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(skill1EndIdx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(skillDefaultIdx, fall0Idx, cHurtBlow, 0.1f);
+
+	ctrl->AddTransition(attack0Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack1Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack2Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack3Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack4Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(attack5Idx, fall0Idx, cHurtBlow, 0.1f);
+
 
 }
 
@@ -988,4 +1098,5 @@ CGameObject* CKyojuro::Clone(void* pArg)
 void CKyojuro::Free()
 {
 	__super::Free();
+	CEffectManager::Get_Instance()->RemoveEffect(TEXT("Slash"));
 }

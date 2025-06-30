@@ -28,8 +28,6 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	HRESULT Initialize_Prototype(const PARTICLE_DESC& desc);
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void Drop(_float fTimeDelta) override;
-	virtual void Spread(_float fTimeDelta) override;
 
 	void SetIsLoop(_bool bIsLoop) { m_bIsLoop = bIsLoop; }
 	_bool IsLoop() const { return m_bIsLoop; }
@@ -56,6 +54,7 @@ public:
 	{
 		m_ParticleDesc.bPlayAwake = bPlayAwake;
 	}
+
 	PARTICLE_TYPE GetParticleType() const
 	{
 		return m_ParticleDesc.eParticleType;
@@ -64,6 +63,12 @@ public:
 	void ResetParticle();
 	void PlayParticle() { m_bStarted = true; }
 	void StopParticle() { m_bStarted = false; }
+
+	PARTICLE_DESC GetParticleDesc() const
+	{
+		return m_ParticleDesc;
+	}
+	_bool IsPlaying() const { return m_bStarted; }
 private:
 	void    SetVertexInfo(const PARTICLE_DESC& desc);
 	HRESULT CreateVertexBuffer();

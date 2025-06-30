@@ -49,15 +49,7 @@ HRESULT CTanjiro::Initialize(void* pArg)
 	m_pTransformCom->Scaling(_float3(0.1f, 0.1f, 0.1f));
 
 
-	m_pAnimatorCom->RegisterEventListener("ActiveHitbox", [&](const string&) {
-		ActiveCollider();
-		});
-
-	m_pAnimatorCom->RegisterEventListener("DeactiveHitbox", [&](const string&) {
-		DeactiveCollider();
-		});
-
-
+	ReadyAnimEvents();
 	Ready_Animation();
 
 	Add_Component(TEXT("Com_CapsuleCollider"), CCapsuleCollider::Create(m_pDevice, m_pContext, 3.5f, 77.f), reinterpret_cast<CComponent**>(&m_pColliderCom));
@@ -68,13 +60,11 @@ HRESULT CTanjiro::Initialize(void* pArg)
 
 	CGameObject* pWeapon = m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("Weapon"));
 
-		//Set_Weapon("R_Hand_1", dynamic_cast<CWeapon*>(pWeapon));
 	Set_Weapon("R_Hand_1_Lct", dynamic_cast<CWeapon*>(pWeapon));
 
 	if (m_pWeapon) // 자식벡터로 넣지는 않음
 	{
 		m_pWeapon->SetParent(this);
-	//	m_pWeapon->GetTransform()->Scaling(_float3(10.f,10.f,10.f));
 	}
 
 	m_pColliderCom->SetListener(this);
@@ -85,10 +75,19 @@ HRESULT CTanjiro::Initialize(void* pArg)
 
 	if (m_pNavigationCom)
 	{
-	m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
+		m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
 	}
 
 	m_fGoroundHeight = -18.f; // 초기 지면 높이 설정
+
+	// 트랜스폼이 있어야함
+	Add_Component(TEXT("Com_RangeCollider"), CSphereCollider::Create(m_pDevice, m_pContext, 15.f), reinterpret_cast<CComponent**>(&m_pRangeColliderCom));
+
+	m_pRangeColliderCom->Initialize(nullptr);
+	m_pRangeColliderCom->SetOffset(_float3(0.f, 16.f, 0.f));
+	m_pRangeColliderCom->SetListener(this);
+	m_pRangeColliderCom->SetColliderType(ColliderType::RANGE);
+	m_pRangeColliderCom->SetActive(false); // 초기에는 비활성화
 
     return S_OK;
 }
@@ -150,10 +149,8 @@ void CTanjiro::Late_Update(_float fTimeDelta)
 
 HRESULT CTanjiro::Render()
 {
-#ifdef DEBUG
 	if (m_pNavigationCom)
 		m_pNavigationCom->Render();
-#endif // DEBUG
 
 	
 	return __super::Render();
@@ -202,12 +199,14 @@ void CTanjiro::OnAttackHit(CGameObject* pTarget)
 			bIsOpen ? pBoss->Hit(3.f) : pBoss->Hit(4.5f);
 			break;
 		case CSTATE::ATTACK2:
+			StartHitStop(0.2f); // 히트스톱 시작
 			bIsOpen ? pBoss->Hit(4.f) : pBoss->Hit(5.f);
 			break;
 		case CSTATE::ATTACK3:
 			bIsOpen ? pBoss->Hit(3.f) : pBoss->Hit(4.5f);
 			break;
 		case CSTATE::ATTACK4:
+			StartHitStop(0.2f);
 			pBoss->Hit(5.f);
 			break;
 		case CSTATE::ATTACK_DOWN:
@@ -217,13 +216,17 @@ void CTanjiro::OnAttackHit(CGameObject* pTarget)
 			pBoss->Hit(5.f);
 			break;
 		case CSTATE::SKILL:
+			StartHitStop(0.2f);
 			pBoss->Hit(10.f);
 			break;
 		case CSTATE::SKILL1:
+			StartHitStop(0.25f);
 			pBoss->Hit(20.f);
 			break;
 		case CSTATE::SKILL2:
-			pBoss->Hit(30.f);
+			StartHitStop(0.5f);
+			m_bCanRangeAttack = true; // 스킬 사용 후 다음 공격 가능
+			//pBoss->Hit(30.f);
 			break;
 		default:
 			break;
@@ -251,8 +254,7 @@ HRESULT CTanjiro::Ready_Components()
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
 
-	//
-	//
+
 	return S_OK;
 }
 
@@ -267,7 +269,7 @@ void CTanjiro::Ready_Animation()
 
 
 	auto ctrl = m_pAnimatorCom->GetAnimController();
-	// 2) 상태(State) 등록
+
 	   // Idle
 	auto idleAnim = m_pModelCom->GetAnimationClipByName("A_P0001_V00_C00_BaseNut01_1");
 	idleAnim->SetLoop(true);
@@ -279,7 +281,7 @@ void CTanjiro::Ready_Animation()
 	runAnim->SetLoop(true);
 	size_t runIdx = ctrl->AddState("Run", runAnim, m_pModelCom->GetAnimationMap()[runAnim->Get_Name()]);
 
-	// RunEnd (달리다 멈추는)  논루프
+	// RunEnd (달리다 멈추는)
 	auto runEndAnim = m_pModelCom->GetAnimationClipByName("A_P0001_V00_C00_BaseRun01_2");
 	runEndAnim->SetLoop(false);
 	size_t runEndIdx = ctrl->AddState("RunEnd", runEndAnim, m_pModelCom->GetAnimationMap()[runEndAnim->Get_Name()]);
@@ -477,7 +479,6 @@ void CTanjiro::Ready_Animation()
 	size_t skill0Idx = ctrl->AddState("skill0", skill0, m_pModelCom->GetAnimationMap()[skill0->Get_Name()]);
 
 
-	// 3) 파라미터(Parameter) 등록
 	m_pAnimatorCom->AddBool("Move");
 	m_pAnimatorCom->AddBool("Jump");
 	m_pAnimatorCom->AddBool("Guard");
@@ -508,8 +509,6 @@ void CTanjiro::Ready_Animation()
 	m_pAnimatorCom->AddTrigger("Hurt");
 	m_pAnimatorCom->AddBool("Stepping"); // 스텝 중인지 여부
 	m_pAnimatorCom->AddBool("Hurted");
-
-
 
 
 
@@ -852,6 +851,67 @@ void CTanjiro::Ready_Animation()
 	ctrl->AddTransition(stepRightIdx, fall2Idx, cHurtDown, 0.1f);
 	ctrl->AddTransition(fall2Idx, fall2Idx, cHurtDown, 0.2f);
 
+
+}
+
+void CTanjiro::ReadyAnimEvents()
+{
+	m_pAnimatorCom->RegisterEventListener("ActiveHitbox", [&](const string&) {
+		ActiveCollider();
+		});
+
+	m_pAnimatorCom->RegisterEventListener("DeactiveHitbox", [&](const string&) {
+		DeactiveCollider();
+		});
+	m_pAnimatorCom->RegisterEventListener("GuardSkill", [&](const string&) {
+		m_Velocity.y = 90.f;
+		m_Velocity.x = 0.f;
+		m_Velocity.z = 0.f;
+		m_bAirborne = true;
+		});
+
+	m_pAnimatorCom->RegisterEventListener("RyusoSkill", [&](const string&) {
+
+		if (m_pTarget)
+		{
+			_vector vDir = m_pTarget->GetTransform()->Get_State(STATE::POSITION) - m_pTransformCom->Get_State(STATE::POSITION);
+			XMVectorSetY(vDir, 0.f);
+			_float fLength = XMVectorGetX(XMVector3Length(vDir));
+			vDir = XMVector3Normalize(vDir);
+			m_Velocity.z = vDir.m128_f32[2] * 10.f;
+			m_Velocity.x = vDir.m128_f32[0] *10.f;
+		}
+	
+		m_Velocity.y = 50.f;
+		m_bAirborne = true;
+		});
+
+
+	m_pAnimatorCom->RegisterEventListener("GuardSkillAirborne", [&](const string& eventName) {
+		if(m_bCanRangeAttack)
+		{
+			static_cast<CEnmuMeat*>(m_pTarget->GetParent())->Hit(20.f);
+			m_bCanRangeAttack = false;
+		}
+
+
+		});
+
+
+	m_pAnimatorCom->RegisterEventListener("ActiveRangebox", [&](const string&) {
+		if (m_pRangeColliderCom)
+		{
+			m_pRangeColliderCom->SetActive(true);
+			m_pRangeColliderCom->SetDrawDebug(true);
+		}
+		});
+	m_pAnimatorCom->RegisterEventListener("DeactiveRangebox", [&](const string&) {
+		if (m_pRangeColliderCom)
+		{
+			m_pRangeColliderCom->SetActive(false);
+			m_pRangeColliderCom->SetDrawDebug(false);
+		}
+		});
 
 }
 

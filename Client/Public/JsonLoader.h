@@ -24,9 +24,13 @@ public:
 	HRESULT Load_Models(const string& filePath,function<void()> onEntryLoaded);
 	HRESULT Load_Objects(const string& filePath, function<void()> onEntryLoaded);
 	HRESULT Load_Particle(const string& filePath, CParticleSystem** ppParticle);
+	HRESULT Load_CutSceneCamera(const string& filePath, CGameObject* pCamera);
+	json	Load_CutScene_PropertyAsJson(const string& filePath);
 
 	HRESULT Save_Objects(const string& filePath, function<void()> onEntryLoaded);
 	HRESULT Save_Particle(const string& filePath,CParticleSystem* pParticle);
+	HRESULT Save_CutSceneCamera(const string& filePath, CGameObject* pCamera);
+
 
 	HRESULT LoadAnimEvent(const string& filePath,vector<CAnimation*>& animations);
 

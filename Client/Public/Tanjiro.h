@@ -23,6 +23,7 @@ public:
 private:
 	virtual HRESULT Ready_Components() override;
 	virtual void Ready_Animation() override;
+	void ReadyAnimEvents();
 	void ActiveCollider();
 	void DeactiveCollider();
 

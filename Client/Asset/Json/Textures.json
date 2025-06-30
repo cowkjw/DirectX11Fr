@@ -371,8 +371,18 @@
       "path": "../Asset/Resources/Textures/Effect/Particle/T_e_Cmn_Parts%d.dds",
       "numTextures": 11,
       "static": true
+    },
+    {
+      "key": "CrossMask",
+      "path": "../Asset/Resources/Textures/Effect/Cross/T_e_cmn_Cross%d.dds",
+      "numTextures": 4,
+      "static": true
+    },
+    {
+      "key": "SlashHitEffectMask",
+      "path": "../Asset/Resources/Textures/Effect/Hit/T_e_cmn_SlashHit001.dds",
+      "numTextures": 1,
+      "static": true
     }
-
-
   ]
 }

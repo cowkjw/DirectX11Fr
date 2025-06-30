@@ -73,7 +73,7 @@ public:
 	virtual void ActiveCollider() {};
 	virtual void DeactiveCollider() {};
 	virtual void TakeDamage(_float fDamage) {
-		StartHitStop(0.1f); // 히트 스탑 시작
+		StartHitStop(0.25f); // 히트 스탑 시작
 		m_fCurrentHP -= fDamage;
 		if (m_fCurrentHP <= 0.f)
 		{
@@ -147,6 +147,7 @@ public:
 
 	// ICollisionListener을(를) 통해 상속됨
 	void OnCollisionEnter(CCollider* other) override;
+	void OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos) override;
 
 	void OnCollisionStay(CCollider* other, _float fTimeDelta) override;
 

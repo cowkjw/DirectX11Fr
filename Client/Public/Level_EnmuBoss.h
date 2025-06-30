@@ -3,8 +3,11 @@
 #include "Client_Defines.h"
 #include "Level.h"
 
-BEGIN_NAMESPACE(Client)
+BEGIN_NAMESPACE(Engine)
+class CGameObject;
+END_NAMESPACE
 
+BEGIN_NAMESPACE(Client)
 class CLevel_EnmuBoss final : public CLevel
 {
 private:
@@ -16,22 +19,23 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-	HRESULT Ready_Layer_Background();
 	HRESULT Ready_Layer_Characters();
 	HRESULT Ready_Lights();
+	HRESULT Ready_Camera(CGameObject* pTarget);
 private:
 	void UpdateGameFlow(_float fTimeDelta);
 
 private:
 	_bool m_bStartGame = false;
-	_float m_fStartImageElapsedTime = 0.f;
-	const _float m_fStartImageTime = 2.5f;
 	_bool m_bEndGame = false;
 	_bool m_bIsGameOver = false;
-	_float m_fStopImageElapsedTime = 0.f;
+	_bool m_bEndStartCutScnen = false;
+	const _float m_fStartImageTime = 2.5f;
 	const _float m_fStopImageTime = 2.f;
-	_float m_fFinalImageElapsedTime = 0.f;
 	const _float m_fFinalImageTime = 2.5f;
+	_float m_fStartImageElapsedTime = 0.f;
+	_float m_fStopImageElapsedTime = 0.f;
+	_float m_fFinalImageElapsedTime = 0.f;
 
 	class CBaseCharacter* m_pTanjiro = nullptr;
 	class CEnmuMeat* m_pEnmu = nullptr; // ƒÏ¡÷∑Œ

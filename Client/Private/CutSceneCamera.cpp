@@ -3,7 +3,7 @@
 
 CCutSceneCamera::CCutSceneCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera{ pDevice, pContext }
-	, m_fDuration{ 0.f }
+	, m_fDuration{ 1.f }
 	, m_fElapsedTime{ 0.f }
 	, m_iCurrentFrame{ 0 }
 	, m_bLoop{ false }
@@ -156,7 +156,9 @@ void CCutSceneCamera::SetCurrentFrame(_uint iFrameIndex)
 	{
 		m_iCurrentFrame = iFrameIndex;
 		const CamKeyFrame& keyFrame = m_KeyFrames[m_iCurrentFrame];
-		m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat3(&keyFrame.vPosition));
+		_vector vOffset = XMLoadFloat3(&keyFrame.vOffset);
+		_vector vCurrentPosition = XMLoadFloat3(&keyFrame.vPosition) + vOffset;
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(vCurrentPosition,1.f));
 	}
 }
 
@@ -177,7 +179,7 @@ json CCutSceneCamera::Serialize()
 
 	if (m_pTargetObject)
 	{
-		j["TargetObjectName"] = m_pTargetObject->Get_Name();
+		j["TargetObjectName"] = WStringToString(m_pTargetObject->Get_Name());
 	}
 	else
 	{
@@ -186,13 +188,75 @@ json CCutSceneCamera::Serialize()
 	return j;
 }
 
+void CCutSceneCamera::Deserialize(const json& j)
+{
+	ClearKeyFrames();
+	if (j.contains("KeyFrames"))
+	{
+		for (const auto& frameJson : j["KeyFrames"])
+		{
+			CamKeyFrame keyFrame;
+			keyFrame.vPosition = _float3(
+				frameJson["Position"][0].get<float>(),
+				frameJson["Position"][1].get<float>(),
+				frameJson["Position"][2].get<float>()
+			);
+			keyFrame.vOffset = _float3(
+				frameJson["OffSet"][0].get<float>(),
+				frameJson["OffSet"][1].get<float>(),
+				frameJson["OffSet"][2].get<float>()
+			);
+			m_KeyFrames.push_back(keyFrame);
+		}
+	}
+
+	if (j.contains("Duration"))
+	{
+		m_fDuration = j["Duration"].get<float>();
+	}
+	else
+	{
+		m_fDuration = 1.f; // 기본값 설정
+	}
+	if (j.contains("IsLoop"))
+	{
+		m_bLoop = j["IsLoop"].get<bool>();
+	}
+	else
+	{
+		m_bLoop = false; // 기본값 설정
+	}
+	if (j.contains("TargetObjectName"))
+	{
+		// 타겟 오브젝트 설정
+		_wstring targetName = StringToWString(j["TargetObjectName"].get<string>());
+		if (m_pTargetObject)
+		{
+			Safe_Release(m_pTargetObject);
+		}
+		for (_uint i = 0; i < ToIndex(LEVEL::END); i++)
+		{
+			m_pTargetObject =(m_pGameInstance->Find_GameObjectByName(i, targetName));
+			if (m_pTargetObject)
+			{
+				Safe_AddRef(m_pTargetObject);
+				break; 
+			}
+		}
+	}
+	else
+	{
+		m_pTargetObject = nullptr; // 타겟 오브젝트가 없을 경우
+	}
+}
+
 void CCutSceneCamera::UpdateCameraTransform(_float fTimeDelta)
 {
 	if (m_KeyFrames.size() < 2 || m_fDuration <= 0.f)
 		return;
 
 	// 전체 진행률 계산
-	float totalProgress = m_fElapsedTime / m_fDuration;
+	_float totalProgress = m_fElapsedTime / m_fDuration;
 
 	// 현재 키프레임 구간 찾기
 	_float segmentTime = m_fDuration / (m_KeyFrames.size() - 1);
@@ -202,7 +266,7 @@ void CCutSceneCamera::UpdateCameraTransform(_float fTimeDelta)
 	// 현재 구간에서의 진행률 계산
 	_float segmentProgress = (totalProgress * (m_KeyFrames.size() - 1)) - currentIndex;
 	segmentProgress = max(0.f, min(1.f, segmentProgress));
-
+	m_iCurrentFrame = static_cast<_uint>(currentIndex);
 	const CamKeyFrame& currentFrame = m_KeyFrames[currentIndex];
 	const CamKeyFrame& nextFrame = m_KeyFrames[currentIndex + 1];
 
@@ -231,6 +295,7 @@ void CCutSceneCamera::UpdateCameraTransform(_float fTimeDelta)
 	{
 		if (m_bLoop)
 		{
+			m_iCurrentFrame = static_cast<_uint>(m_KeyFrames.size() - 1);
 			m_fElapsedTime = 0.f;
 		}
 		else

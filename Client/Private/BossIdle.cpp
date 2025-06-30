@@ -1,14 +1,15 @@
 #include "BossIdle.h"
-#include "BossAngryFreeze.h"	
-#include "GameInstance.h"
-#include "BossPunch.h"
 #include "BossFreezeAttack.h"
-#include "BossHurt.h"
-#include "BossOpen.h"
+#include "BossSwingAttack.h"
+#include "BossAngryFreeze.h"	
 #include "BossFollowPunch.h"
 #include "BossHandAttack.h"
+#include "GameInstance.h"
 #include "BossTentacle.h"
-#include "BossSwingAttack.h"
+#include "BossPunch.h"
+#include "BossDeath.h"
+#include "BossHurt.h"
+#include "BossOpen.h"
 
 _bool BossIdle::m_bPatternUsed[6] = { false, false, false, false, false, false }; // 패턴 사용 여부 초기화
 
@@ -20,41 +21,35 @@ void BossIdle::Enter(CEnmuMeat* pChar)
     static bool s_consoleCreated = false;
     if (!s_consoleCreated)
     {
-        AllocConsole();  // 새로운 콘솔 창 생성
-        // stdout/stderr를 콘솔로 리디렉션
+        AllocConsole();
         FILE* fpOut = nullptr;
         freopen_s(&fpOut, "CONOUT$", "w", stdout);
-        // stdin도 리디렉션하면 콘솔에서 입력도 받을 수 있음
         FILE* fpIn = nullptr;
         freopen_s(&fpIn, "CONIN$", "r", stdin);
-        std::cout << "=== Debug Console Opened ===" << std::endl;
+        cout << "=== Debug Console Opened ===" << std::endl;
         s_consoleCreated = true;
     }
-
-
 }
 void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
 {
-    static _bool testOpen = false;
-    static _bool testAngry = false;
     static _int lastHpThreshold = -1; // 마지막으로 체크한 HP 임계값
-
     _float fHp = pChar->GetHp();
     _float fMaxHp = pChar->GetMaxHp();
     _float fHpRatio = fHp / fMaxHp;
 
+
     cout << "[BossIdle] Current HP: " << pChar->GetHp() << endl;
 
-    // 현재 HP가 속한 50단위 구간 계산
-    _int currentHpThreshold = static_cast<_int>(fHp) / 50;
+    // 현재 HP가 속한 100단위 구간 계산
+    _int currentHpThreshold = static_cast<_int>(fHp) / 100;
 
-    // HP가 감소하여 새로운 50단위 구간에 진입했을 때
+    // HP가 감소하여 새로운 100단위 구간에 진입했을 때
     if (lastHpThreshold == -1)
     {
         // 첫 번째 업데이트에서 초기값 설정
         lastHpThreshold = currentHpThreshold;
     }
-    else if (currentHpThreshold < lastHpThreshold && fHp > 0)
+    else if (currentHpThreshold < lastHpThreshold && fHp > 0&&fHp<=400.f)
     {
         // HP가 50씩 감소했을 때 BossOpen 상태로 변경
         pChar->ChangeState(new BossOpen(TEXT("BossOpen")));
@@ -80,9 +75,9 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
     DecayCD(pChar->m_CD_Open);
     DecayCD(pChar->m_CD_Tentacle);
 
-    //  Idle 누적 시간 증가
+    ////  Idle 누적 시간 증가
     m_fTimeElapsed += fTimeDelta;
-    if (m_fTimeElapsed < 3.f)
+    if (m_fTimeElapsed < 2.f)
         return;
 
     _bool allUsed = true;
@@ -231,8 +226,8 @@ for (int offset = 0; offset < 6; ++offset)
     bool canUse = false;
     switch (idx)
     {
-    case 0: // BossPunch      (50 ~ 100)
-        if (fDist >= 50.f && fDist <= 100.f)
+    case 0: // BossPunch      (0 ~ 100)
+        if (fDist >= 0.f && fDist <= 100.f)
             canUse = true;
         break;
     case 1: // BossHandAttack (101 ~ 130)
@@ -257,22 +252,26 @@ for (int offset = 0; offset < 6; ++offset)
         break;
     }
 
-    if (canUse) {
+    if (canUse)
+    {
         availablePatterns.push_back(idx);
     }
 }
 
 // 사용 가능한 패턴이 없으면 Idle 상태 유지
-if (availablePatterns.empty()) {
+if (availablePatterns.empty()) 
+{
     m_fTimeElapsed = 0.f;
     return;
 }
 
-// 쿨타임이 완료된 패턴들을 우선적으로 필터링
-std::vector<int> readyPatterns; // 쿨타임이 완료된 패턴들
-for (int idx : availablePatterns) {
-    bool isReady = false;
-    switch (idx) {
+
+vector<_int> readyPatterns; // 쿨타임이 완료된 패턴들
+for (_int idx : availablePatterns) 
+{
+    _bool isReady = false;
+    switch (idx) 
+    {
     case 0: // BossPunch
         if (pChar->m_CD_Punch == 0.f) isReady = true;
         break;
@@ -293,46 +292,50 @@ for (int idx : availablePatterns) {
         break;
     }
 
-    if (isReady) {
+    if (isReady) 
+    {
         readyPatterns.push_back(idx);
     }
 }
 
 // 쿨타임이 완료된 패턴이 있으면 그 중에서 선택, 없으면 사용 가능한 패턴 중에서 선택
-if (!readyPatterns.empty()) {
+if (!readyPatterns.empty())
+{
     chosenIdx = readyPatterns[0]; // 첫 번째로 찾은 쿨타임 완료 패턴 선택
 }
-else {
+else 
+{
     chosenIdx = availablePatterns[0]; // 쿨타임 상관없이 첫 번째 사용 가능한 패턴 선택
 }
 
 // 실행할 패턴이 없다면 Idle 시간만 초기화하고 종료
-if (chosenIdx < 0) {
+if (chosenIdx < 0)
+{
     m_fTimeElapsed = 0.f;
     return;
 }
 
-////// 테스트용
-//chosenIdx = 6;
+////// 테스트용///////
+//chosenIdx = 3;
 
 // chosenIdx에 따라 상태 전이 및 쿨타임 재설정
 switch (chosenIdx)
 {
 case 0: // BossPunch
     pChar->ChangeState(new BossPunch(TEXT("BossPunchAttack")));
-    pChar->m_CD_Punch = 5.f;   // 원하는 쿨타임 설정
+    pChar->m_CD_Punch = 4.f;   // 원하는 쿨타임 설정
     break;
 case 1: // BossHandAttack
     pChar->ChangeState(new BossHandAttack(TEXT("BossHandAttack")));
-    pChar->m_CD_Hand = 4.f;
+    pChar->m_CD_Hand = 8.f;
     break;
 case 2: // BossFreezeAttack
     pChar->ChangeState(new BossFreezeAttack(TEXT("BossFreezeAttack")));
-    pChar->m_CD_Freeze = 9.f;
+    pChar->m_CD_Freeze = 5.f;
     break;
 case 3: // BossSwingAttack
     pChar->ChangeState(new BossSwingAttack(TEXT("BossSwingAttack")));
-    pChar->m_CD_Swing = 12.f;
+    pChar->m_CD_Swing = 9.f;
     break;
 case 4: // BossFollowPunch
     pChar->ChangeState(new BossFollowPunch(TEXT("BossFollowPunchAttack")));
@@ -340,20 +343,16 @@ case 4: // BossFollowPunch
     break;
 case 5: // BossTentacle
     pChar->ChangeState(new BossTentacle(TEXT("BossTentacleAttack")));
-    pChar->m_CD_Tentacle = 9.f;
+    pChar->m_CD_Tentacle = 7.f;
     break;
-    //case 6: // BossOpen
-    //	pChar->ChangeState(new BossOpen(TEXT("BossOpen")));
-    ////	pChar->m_CD_Open = 10.f;
-    //	break;
 }
 
 m_bPatternUsed[chosenIdx] = true;
 pChar->m_LastPatternIdx = chosenIdx;
-std::cout << "[BossIdle] Chosen Pattern Index: " << chosenIdx << std::endl;
+cout << "[BossIdle] Chosen Pattern Index: " << chosenIdx << endl;
 
-// Idle 누적 시간 리셋
-m_fTimeElapsed = 0.f;
+    // Idle 누적 시간 리셋
+    m_fTimeElapsed = 0.f;
 }
 
 void BossIdle::Exit(CEnmuMeat* pChar)

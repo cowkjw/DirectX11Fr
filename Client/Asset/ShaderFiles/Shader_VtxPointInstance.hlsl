@@ -197,6 +197,34 @@ PS_OUT PS_MAIN_MASK(PS_IN In)
 }
 
 
+PS_OUT PS_MAIN_MASK2(PS_IN In)
+{
+	PS_OUT Out;
+    float4 tex = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    if (tex.r < 0.3f)
+        discard;
+
+    // 비율 (0center, 1outer)
+	// 알파를 거리 비율로 사용
+    float dist = distance(In.vTexcoord, float2(0.5f,0.5f)) / In.fAlphaVar;
+    dist = saturate(dist);
+
+    // 중심은 StartColor, 외곽은 EndColor
+    float3 radialColor = lerp(In.vStartColor, In.vEndColor, dist);
+
+ //   float lifeT = saturate(In.vLifeTime.y / In.vLifeTime.x);
+ //   float3 lifeColor = lerp(radialColor, In.vEndColor, lifeT);
+ //   float3 finalRGB = tex.a * lifeColor;
+ //   float  finalA = tex.a;
+    float3 finalRGB = tex.a * radialColor;
+    float  finalA = tex.a;
+    Out.vColor = float4(finalRGB, finalA);
+    //Out.vColor = float4(finalRGB, finalA);
+
+	return Out;
+}
+
+
 
 technique11 DefaultTechnique
 {
@@ -221,6 +249,15 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = compile gs_5_0 GS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN_MASK();
-}
+    }
+	pass Mask2
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_MASK2();
+    }
 
 }

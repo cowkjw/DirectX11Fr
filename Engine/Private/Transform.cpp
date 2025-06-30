@@ -489,6 +489,8 @@ void CTransform::UpdateEulerAngles()
 
 HRESULT CTransform::Bind_ShaderResource(CShader* pShader, const _char* pConstantName)
 {
+	if (!pShader || !pConstantName)
+		return E_FAIL;
 	return pShader->Bind_Matrix(pConstantName, &m_WorldMatrix);
 }
 
