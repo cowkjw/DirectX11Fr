@@ -14,12 +14,7 @@ float   g_NoiseAlphaStrength = 0.5;  // 노이즈 기반 알파 변조 강도
 Texture2D g_Texture : register(t0); // 메인 스프라이트
 Texture2D g_MaskTexture : register(t1); // 마스크용 그레이맵(RG 채널 사용)
 Texture2D g_NoiseTexture : register(t2); // 노이즈 텍스처 
-float4 g_vLightDir;
-float4 g_vLightDiffuse;
-float4 g_vLightAmbient;
-float4 g_vLightSpecular;
 
-float4 g_vCamPosition;
 float g_Time;
 
 static const float g_PulseSpeed = 6.0;  // 알파 펄스 속도 (라디안/sec)

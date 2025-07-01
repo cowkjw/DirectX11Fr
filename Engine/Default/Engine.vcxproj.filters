@@ -549,5 +549,8 @@
     <FxCompile Include="..\Asset\ShaderFiles\Shader_Cell.hlsl">
       <Filter>ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Asset\ShaderFiles\Shader_Deferred.hlsl">
+      <Filter>ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -81,7 +81,7 @@ void CEffect::Late_Update(_float fTimeDelta)
 	//	XMStoreFloat4x4(&WorldMatrix, world);
 	//	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 	//}
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONLIGHT, this);
 }
 
 HRESULT CEffect::Render()
@@ -117,15 +117,15 @@ HRESULT CEffect::Bind_Shader()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
 
-	const LIGHT_DESC* pLightDesc = m_pGameInstance->Get_Light(0);
+	//const LIGHT_DESC* pLightDesc = m_pGameInstance->Get_Light(0);
 
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
-		return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
+	//	return E_FAIL;
 	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
 	//	return E_FAIL;
 

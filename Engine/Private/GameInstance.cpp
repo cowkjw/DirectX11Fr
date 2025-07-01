@@ -180,8 +180,15 @@ _float CGameInstance::Compute_Random(_float fMin, _float fMax)
 {
 	return fMin + (fMax - fMin) * Compute_Random_Normal();	
 }
+ID3D11ShaderResourceView* CGameInstance::GetSceneViewSRV() const
+{
+	if (m_pGraphic_Device == nullptr)
+		return nullptr;
+	return m_pGraphic_Device->GetSceneViewSRV();
+}
 
 #pragma region LEVEL_MANAGER
+
 
 HRESULT CGameInstance::Change_Level(_uint iLevelIndex, CLevel* pNewLevel)
 {
@@ -575,6 +582,12 @@ HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
 {
 	return m_pLight_Manager->Add_Light(LightDesc);
 }
+HRESULT CGameInstance::Render_Lights(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+	return m_pLight_Manager->Render_Lights(pShader, pVIBuffer);
+}
 void CGameInstance::ClearLights()
 {
 	if (nullptr == m_pLight_Manager)
@@ -625,6 +638,24 @@ HRESULT CGameInstance::End_MRT()
 	if (nullptr == m_pTarget_Manager)
 		return E_FAIL;
 	return m_pTarget_Manager->End_MRT();
+}
+HRESULT CGameInstance::Bind_RT_ShaderResource(const _wstring& strTargetTag, CShader* pShader, const _char* pContantName)
+{
+	if (nullptr == m_pTarget_Manager)
+		return E_FAIL;
+	return m_pTarget_Manager->Bind_ShaderResource(strTargetTag, pShader, pContantName);
+}
+HRESULT CGameInstance::Ready_RT_Debug(const _wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
+{
+	if (nullptr == m_pTarget_Manager)
+		return E_FAIL;
+	return m_pTarget_Manager->Ready_Debug(strTargetTag, fX, fY, fSizeX, fSizeY);
+}
+HRESULT CGameInstance::Render_MRT_Debug(const _wstring& strMRTTag, CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	if (nullptr == m_pTarget_Manager)
+		return E_FAIL;
+	return m_pTarget_Manager->Render_Debug(strMRTTag, pShader, pVIBuffer);
 }
 #pragma endregion
 

@@ -115,22 +115,22 @@ HRESULT CLevel_EnmuBoss::Ready_Lights()
 
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vDiffuse = _float4(0.8f, 1.f, 0.8f, 1.f);
+	LightDesc.fAmbient = 0.4f;
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
 
 
-	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection = _float4(1.f, 1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(0.4f, 0.4f, 0.4f, 1.f);
-	LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
-	LightDesc.vSpecular = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	//LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+	//LightDesc.vDirection = _float4(1.f, 1.f, 1.f, 0.f);
+	//LightDesc.vDiffuse = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	//LightDesc.fAmbient = 0.4;
+	//LightDesc.vSpecular = _float4(0.4f, 0.4f, 0.4f, 1.f);
 
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+	//	return E_FAIL;
 
 	return S_OK;
 }

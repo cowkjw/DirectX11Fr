@@ -35,6 +35,8 @@ public:
 
 	_bool IsActivePicking() const { return m_bActivePicking; }
 
+	ID3D11ShaderResourceView* GetSceneViewSRV() const;
+
 #pragma region LEVEL_MANAGER
 public:
 	HRESULT Change_Level(_uint iLevelIndex, class CLevel* pNewLevel);
@@ -133,6 +135,7 @@ public:
 #pragma region LIGHT_MANAGER
 	const LIGHT_DESC* Get_Light(_uint iIndex);
 	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
+	HRESULT Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 	void ClearLights();
 #pragma endregion
 
@@ -147,6 +150,12 @@ public:
 	ID3D11ShaderResourceView* Get_RenderTargetSRV(const _wstring& strTargetTag);
 	HRESULT Begin_MRT(const _wstring& strMRTTag);
 	HRESULT End_MRT();
+	HRESULT Bind_RT_ShaderResource(const _wstring& strTargetTag, class CShader* pShader, const _char* pContantName);
+
+#ifdef _DEBUG
+	HRESULT Ready_RT_Debug(const _wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
+	HRESULT Render_MRT_Debug(const _wstring& strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+#endif
 #pragma endregion
 
 private:

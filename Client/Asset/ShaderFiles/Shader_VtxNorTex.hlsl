@@ -58,27 +58,72 @@ struct PS_IN
 
 struct PS_OUT
 {
-    vector vColor : SV_TARGET0;
+    vector vDiffuse : SV_TARGET0;
+    vector vNormal : SV_TARGET1;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
 {
+    //PS_OUT Out;
+
+    //vector      vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord * 15.f);
+
+    //float4 vShade = max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f) +
+    //    (g_vLightAmbient * g_vMtrlAmibient);
+
+    //float4 vLook = In.vWorldPos - g_vCamPosition;
+
+    //float4 vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
+
+
+    //float4 vSpecular = pow(max(dot(normalize(vLook) * -1.f, vReflect), 0.f), 50.f);
+
+
+    //Out.vColor = g_vLightDiffuse * vMtrlDiffuse * vShade;// +(g_vLightSpecular * g_vMtrlSpecular) * vSpecular;
+
     PS_OUT Out;
+    // 디퓨즈 텍스처 샘플링
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord*15.f);
 
-    vector      vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord * 15.f);
+    //// 노말과 라이트 방향
+    //float3 normal = normalize(In.vNormal.xyz);
+    //float3 lightDir = normalize(-g_vLightDir.xyz);
 
-    float4 vShade = max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f) +
-        (g_vLightAmbient * g_vMtrlAmibient);
+    //float NdotL = max(0.0f, dot(normal, lightDir));
 
-    float4 vLook = In.vWorldPos - g_vCamPosition;
+    //float isLit = step(g_fShadowThreshold, NdotL);
 
-    float4 vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
+    //// 기본 색상
+    //float4 baseColor = vMtrlDiffuse;
 
+    //// 2단계 색상 정의
+    //float4 litColor = baseColor * g_vLightDiffuse;      // 밝은 부분
+    //float4 shadowColor = baseColor * g_vShadowColor;  // 그림자 부분
 
-    float4 vSpecular = pow(max(dot(normalize(vLook) * -1.f, vReflect), 0.f), 50.f);
+    //// 하드 컷 적용
+    //float4 toonColor = lerp(shadowColor, litColor, isLit);
 
+    //// 최소한의 앰비언트만 추가
+    //float4 ambientColor = g_vLightAmbient * g_vMtrlAmibient * vMtrlDiffuse * g_fAmbientStrength;
 
-    Out.vColor = g_vLightDiffuse * vMtrlDiffuse * vShade;// +(g_vLightSpecular * g_vMtrlSpecular) * vSpecular;
+    //// 최종 색상
+    //float4 finalColor = toonColor + ambientColor;
+
+    //// 채도 부스트
+    //finalColor = AdjustSaturation(finalColor, g_fSaturationBoost);
+
+    //Out.vColor = saturate(finalColor);
+    //Out.vColor.a = vMtrlDiffuse.a;
+    //if (vMtrlDiffuse.a < 0.3f)
+    //	discard;
+   
+	if (vMtrlDiffuse.a < 0.3f)
+		discard;
+
+    Out.vDiffuse = vMtrlDiffuse;
+
+    /* -1.f -> 0.f, 1.f -> 1.f */
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
 
     return Out;
 }

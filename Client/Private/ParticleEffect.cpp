@@ -141,10 +141,18 @@ HRESULT CParticleEffect::Render()
 	{
 		if (particle.second && particle.second->IsActive())
 		{
-			if (FAILED(m_pShaderCom->Begin(m_ParticleShaderPasses[particle.first])))
-				return E_FAIL;
-			if (FAILED(m_ParticleTextures[particle.first]->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_ParticleTextureIndices[particle.first])))
-				return E_FAIL;
+			if (m_ParticleSystems.size() == 1)
+			{
+				if (FAILED(m_pShaderCom->Begin(m_iShaderPass)))
+					return E_FAIL;
+			}
+			else
+			{
+				if (FAILED(m_pShaderCom->Begin(m_ParticleShaderPasses[particle.first])))
+					return E_FAIL;
+				if (FAILED(m_ParticleTextures[particle.first]->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_ParticleTextureIndices[particle.first])))
+					return E_FAIL;
+			}
 			if (FAILED(particle.second->Bind_Buffers()))
 				return E_FAIL;
 			if (FAILED(particle.second->Render()))

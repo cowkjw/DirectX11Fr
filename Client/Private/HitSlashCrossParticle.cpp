@@ -61,10 +61,10 @@ HRESULT CHitSlashCrossParticle::Ready_Components()
 
 
 	////// 테스트용 
-	CJsonLoader jsonLoader(m_pDevice,m_pContext);
+	//CJsonLoader jsonLoader(m_pDevice,m_pContext);
 
-	jsonLoader.Load_Particle("../Asset/Json/Particle/HitCross_Particle.json", &m_ParticleSystems[L"TEST"]);
-	jsonLoader.Free();
+	//jsonLoader.Load_Particle("../Asset/Json/Particle/HitCross_Particle.json", &m_ParticleSystems[L"TEST"]);
+	//jsonLoader.Free();
 
 	/* For.Com_Texture */
 

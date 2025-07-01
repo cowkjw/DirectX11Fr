@@ -73,7 +73,8 @@ struct PS_IN
 
 struct PS_OUT
 {
-    vector vColor : SV_TARGET0;
+    vector vDiffuse : SV_TARGET0;
+    vector vNormal : SV_TARGET1;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -81,20 +82,13 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out;
 
     vector  vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-   /* if (vMtrlDiffuse.a < 0.1f)
-        discard;*/
+    if (vMtrlDiffuse.a < 0.1f)
+        discard;
 
-    float4 vShade = max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f) +
-        (g_vLightAmbient * g_vMtrlAmibient);
-    float4 vLook = In.vWorldPos - g_vCamPosition;
+    Out.vDiffuse = vMtrlDiffuse;
 
-    float4 vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-
-
-    float4 vSpecular = pow(max(dot(normalize(vLook) * -1.f, vReflect), 0.f), 50.f);
-
-
-    Out.vColor = g_vLightDiffuse * vMtrlDiffuse * vShade + (g_vLightSpecular * g_vMtrlSpecular) * vSpecular;
+    /* -1.f -> 0.f, 1.f -> 1.f */
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
     return Out;
 }
@@ -104,20 +98,13 @@ PS_OUT PS_MAIN_CLAMP(PS_IN In)
     PS_OUT Out;
 
     vector  vMtrlDiffuse = g_DiffuseTexture.Sample(LinearClampSampler, In.vTexcoord);
-    /*if (vMtrlDiffuse.a < 0.1f)
-        discard;*/
+    if (vMtrlDiffuse.a < 0.1f)
+        discard;
 
-    float4 vShade = max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f) +
-        (g_vLightAmbient * g_vMtrlAmibient);
-    float4 vLook = In.vWorldPos - g_vCamPosition;
+    Out.vDiffuse = vMtrlDiffuse;
 
-    float4 vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-
-
-    float4 vSpecular = pow(max(dot(normalize(vLook) * -1.f, vReflect), 0.f), 50.f);
-
-
-    Out.vColor = g_vLightDiffuse * vMtrlDiffuse * vShade + (g_vLightSpecular * g_vMtrlSpecular) * vSpecular;
+    /* -1.f -> 0.f, 1.f -> 1.f */
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
     return Out;
 }

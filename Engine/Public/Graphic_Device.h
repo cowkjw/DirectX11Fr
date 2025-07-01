@@ -52,6 +52,11 @@ public:
 		m_pDeviceContext->OMSetRenderTargets(1, &m_pSceneViewRTV, m_pDepthStencilView);
 	}
 
+	ID3D11ShaderResourceView* GetSceneViewSRV() const
+	{
+		return m_pSceneViewSRV;
+	}
+
 private:	
 	// IDirect3DDevice9* == LPDIRECT3DDEVICE9 == ID3D11Device + ID3D11DeviceContext 	
 
