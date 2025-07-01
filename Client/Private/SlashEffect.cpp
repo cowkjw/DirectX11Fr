@@ -2,7 +2,7 @@
 #include "GameInstance.h"
 #include <JsonLoader.h>
 #include "ParticleSystem.h"
-#include "SlashHitParticle.h"
+#include "HitParticle.h"
 
 CSlashEffect::CSlashEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMeshEffect(pDevice, pContext)

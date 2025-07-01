@@ -1,5 +1,6 @@
 #include "Level_GamePlay.h"
 
+#include "HitSlashCrossParticle.h"
 #include "ThirdPersonCamera.h"
 #include "EffectManager.h"
 #include "Level_Loading.h"
@@ -96,6 +97,16 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	static_cast<CHitParticle*>(pEffect)->AddParticleSystem(L"BodyHit",pParticleSystem);
 	CEffectManager::Get_Instance()->RegisterEffect(TEXT("AkazaHitParticle"), pEffect);
+	///////////
+
+	// 슬래시용
+	pEffect = CHitSlashCrossParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect->Initialize(nullptr);
+	jsonLoader.Load_Particle("../Asset/Json/Particle/HitCross_Particle.json", &pParticleSystem);
+	static_cast<CHitSlashCrossParticle*>(pEffect)->AddParticleSystem(L"HitCross", pParticleSystem);
+	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitCrossParticle"), pEffect);
 
 	jsonLoader.Free();
 	return S_OK;

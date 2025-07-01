@@ -1,5 +1,6 @@
 #include "Loader.h"
 
+#include "HitSlashCrossParticle.h"
 #include "ThirdPersonCamera.h"	
 #include "WarningZoneDecal.h"
 #include "FireSlashEffect.h"
@@ -360,8 +361,12 @@ HRESULT CLoader::Loading_For_Editor()
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Weapon/TanjiroWeapon.bin", PreTransformMatrix))))
 		return E_FAIL;
 	/* For.Prototype_GameObject_Snow */
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Particle_HitPoint"),
 		CHitParticle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Particle_SlashCross"),
+		CHitSlashCrossParticle::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

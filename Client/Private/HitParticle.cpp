@@ -68,6 +68,13 @@ HRESULT CHitParticle::Ready_Components()
 	//	TEXT("Com_Particle"), reinterpret_cast<CComponent**>(&m_ParticleSystems[L"Slash"]))))
 	//	return E_FAIL;
 
+
+	// 테스트용 
+	//CJsonLoader jsonLoader(m_pDevice,m_pContext);
+
+	//jsonLoader.Load_Particle("../Asset/Json/Particle/HitCross_Particle.json", &m_ParticleSystems[L"TEST"]);
+	//jsonLoader.Free();
+
 	/* For.Com_Texture */
 
 	if (FAILED(__super::Add_Component(TEXT("Com_Texture"), m_pGameInstance->GetTexture(TEXT("ParticleMask"), true), reinterpret_cast<CComponent**>(&m_Textures[TEX_MASK]))))

@@ -2,6 +2,7 @@
 #include "AnimController.h"
 #include "CutSceneCamera.h"
 #include "ParticleSystem.h"
+#include "ParticleEffect.h"
 #include "UIProgressBar.h"
 #include "BaseCharacter.h"
 #include "EditorManager.h"
@@ -91,6 +92,10 @@ void CToolbar::Update(_float fTimeDelta)
 			return;
 	}
 
+	if (m_pParticleEffect)
+	{
+		m_pParticleEffect->Update(fTimeDelta);
+	}
 	if (m_bIsCutSceneCameraActive)
 	{
 		if (m_pFreeCamera&&m_pFreeCamera->IsActive())
@@ -118,6 +123,12 @@ HRESULT CToolbar::Render()
 	if (m_pNavigation)
 		m_pNavigation->Render();
 	DrawParticlePreview();
+
+	if (m_pParticleEffect)
+	{
+		if (FAILED(m_pParticleEffect->Render()))
+			return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -942,9 +953,17 @@ void CToolbar::ParticleEditor()
 		desc.iNumInstance = static_cast<_uint>(max(iInstance, 0)); // 음수 방지
 	bPlayAwakeChange = ImGui::Checkbox("PlayAwake", &desc.bPlayAwake);
 	isChangeValue |= ImGui::Checkbox("Loop", &desc.isLoop);
+	isChangeValue |= ImGui::Checkbox("Use 3D Size", &desc.b3DSize);
 	isChangeValue |= ImGui::DragFloat3("Center", &desc.vCenter.x, 0.1f);
 	isChangeValue |= ImGui::DragFloat3("Range", &desc.vRange.x, 0.1f);
-	isChangeValue |= ImGui::DragFloat2("Size", &desc.vSize.x, 0.01f);
+	if (desc.b3DSize)
+	{
+		isChangeValue |= ImGui::DragFloat3("3D Size", &desc.v3DSize.x, 0.01f);
+	}
+	else
+	{
+		isChangeValue |= ImGui::DragFloat2("Size", &desc.vSize.x, 0.01f);
+	}
 	isChangeValue |= ImGui::DragFloat2("Lifetime", &desc.vLifeTime.x, 0.1f);
 	isChangeValue |= ImGui::DragFloat2("Speed", &desc.vSpeed.x, 0.1f);
 	isChangeValue |= ImGui::DragFloat3("Velocity", &desc.vVelocity.x, 0.1f);
@@ -1096,9 +1115,9 @@ void CToolbar::ParticleEditor()
 
 	if (isChangeValue && m_pParticleSystem)
 	{
-		Safe_Release(m_pParticleSystem);  // 기존 삭제
-		m_pParticleSystem = CParticleSystem::Create(m_pDevice, m_pContext, desc);
-
+		//Safe_Release(m_pParticleSystem);  // 기존 삭제
+	//	m_pParticleSystem = CParticleSystem::Create(m_pDevice, m_pContext, desc);
+		m_pParticleSystem->ResetDesc(desc);  // 기존 파티클 시스템의 설정을 변경
 		if (m_pParticleSystem)
 			m_pParticleSystem->Initialize(nullptr);  // GPU 버퍼 생성
 	}
@@ -1121,6 +1140,14 @@ void CToolbar::ParticleEditor()
 	{
 		Safe_Release(m_pPreviewShader);
 		m_pPreviewShader = m_pGameInstance->GetShader(shaderKey, true);
+	}
+
+	static _bool bCreateParticleEffect = false;
+	ImGui::Checkbox("Particle Effect Edtior On/Off", &bCreateParticleEffect);
+
+	if (bCreateParticleEffect)
+	{
+		ParticleEffectEditor();
 	}
 	ImGui::End();
 }
@@ -1242,6 +1269,79 @@ HRESULT CToolbar::DrawParticlePreview()
 		}
 	}
 	return S_OK;
+}
+
+void CToolbar::ParticleEffectEditor()
+{
+	if (!ImGui::Begin("Particle Effect Editor"))
+	{
+		ImGui::End();
+		return;
+	}
+	static char particleName[64] = "NewParticleEffect";
+	static PARTICLE_UV vUV;
+	static _uint iTextureIndex = 0;
+	static _uint iShaderPass = 0;
+	ImGui::InputText("Particle Effect Name", particleName, IM_ARRAYSIZE(particleName));
+	ImGui::InputInt("Column Count", &vUV.iCols);
+	ImGui::InputInt("Row Count", &vUV.iRows);
+	ImGui::InputInt("Texture Index", reinterpret_cast<_int*>(&iTextureIndex));
+	ImGui::InputInt("Shader Pass", reinterpret_cast<_int*>(&iShaderPass));
+	if (ImGui::Button("Create Particle Effect"))
+	{
+		string particleNameStr = particleName;
+		CreateParticleEffect(StringToWString(particleNameStr), vUV, iTextureIndex, iShaderPass);
+	}
+
+	// 현재 파티클 이펙트의 파티클 시스템 표시해서 대입
+
+	if (m_pParticleEffect)
+	{
+		auto pCurParticleSystems = m_pParticleEffect->GetParticleSystems();
+		if (pCurParticleSystems.empty() == false)
+		{
+			if (!ImGui::BeginListBox("##ParticleList", ImVec2(-FLT_MIN, 200)))
+			{
+				ImGui::EndListBox();
+				ImGui::End();
+				return;
+			}
+			for (auto& pCurParticleSystem : pCurParticleSystems)
+			{
+				_wstring name = pCurParticleSystem.first;
+				string tmpName = WStringToString(name);
+				_bool isSelected = (pCurParticleSystem.second == m_pParticleSystem);
+				if (ImGui::Selectable(tmpName.c_str(), isSelected))
+				{
+					Safe_Release(m_pParticleSystem);
+					m_pParticleSystem = pCurParticleSystem.second;
+					Safe_AddRef(m_pParticleSystem);
+				}
+			}
+			ImGui::EndListBox();
+		}
+	}
+	else
+	{
+		ImGui::Text("No Particle Effect Created");
+	}
+
+	ImGui::End();
+}
+
+void CToolbar::CreateParticleEffect(const _wstring& particleName, PARTICLE_UV vUV, _uint iTextureIndex, _uint iShaderPass)
+{
+	if (m_pParticleEffect == nullptr)
+	{
+		m_pParticleEffect = CParticleEffect::Create(m_pDevice, m_pContext);
+		if (m_pParticleEffect == nullptr)
+			return;
+		m_pParticleEffect->Initialize(nullptr);
+	}
+
+	m_pParticleEffect->AddParticleSystem_ForEditor(
+		particleName, m_pParticleSystem, m_pPreviewTexture,vUV, iTextureIndex, iShaderPass);
+	CEditorManager::m_vecSceneObjects.push_back(m_pParticleEffect);
 }
 
 void CToolbar::EditCutSceneCamera()
@@ -1647,6 +1747,7 @@ void CToolbar::Free()
 	Safe_Release(m_pNavigation);
 	Safe_Release(m_pPreviewShader);
 	Safe_Release(m_pPreviewTexture);
+	Safe_Release(m_pParticleEffect);
 	Safe_Release(m_pParticleSystem);
 	Safe_Release(m_pCutSceneCamera);
 	Safe_Release(m_pEffectPreviewSRV);

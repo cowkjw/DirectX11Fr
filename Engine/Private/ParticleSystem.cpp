@@ -139,6 +139,16 @@ json CParticleSystem::Serialize()
 	j["SpreadAngle"] = m_ParticleDesc.fSpreadAngle;
 	j["AlphaVariation"] = m_ParticleDesc.fAlphaVariation;
 	j["PlayAwake"] = m_ParticleDesc.bPlayAwake;
+	j["Use3DSize"] = m_ParticleDesc.b3DSize;
+	if (m_ParticleDesc.b3DSize)
+	{
+		j["3DSize"] = { m_ParticleDesc.v3DSize.x, m_ParticleDesc.v3DSize.y, m_ParticleDesc.v3DSize.z };
+	}
+	j["Use3DRotation"] = m_ParticleDesc.b3DRotation;
+	if (m_ParticleDesc.b3DRotation)
+	{
+		j["3DRotation"] = { m_ParticleDesc.v3DRotation.x, m_ParticleDesc.v3DRotation.y, m_ParticleDesc.v3DRotation.z };
+	}
 	return j;
 }
 
@@ -324,6 +334,12 @@ HRESULT CParticleSystem::CreateVertexInstances(const PARTICLE_DESC& desc)
 			_float angleY = XMConvertToRadians(m_pGameInstance->Compute_Random(-m_ParticleDesc.fSpreadAngle * 0.5f, m_ParticleDesc.fSpreadAngle * 0.5f));
 			_float angleZ = XMConvertToRadians(m_pGameInstance->Compute_Random(-m_ParticleDesc.fSpreadAngle * 0.5f, m_ParticleDesc.fSpreadAngle * 0.5f));
 			
+			if (desc.b3DRotation)
+			{
+				angleX = XMConvertToRadians(desc.v3DRotation.x);
+				angleY = XMConvertToRadians(desc.v3DRotation.y);
+				angleZ = XMConvertToRadians(desc.v3DRotation.z);
+			}
 			_vector baseDir = XMLoadFloat3(&m_ParticleDesc.vVelocity);
 			if (XMVector3Equal(baseDir, XMVectorZero()))
 				baseDir = XMVectorSet(0.f, 1.f, 0.f, 0.f); // 기본 위 방향
@@ -337,10 +353,19 @@ HRESULT CParticleSystem::CreateVertexInstances(const PARTICLE_DESC& desc)
 
 			XMStoreFloat3(&m_vecVelocities[i], finalVelocity);
 
-			pBuffer[i].vRight = _float4(fSize, 0.f, 0.f, 0.f);
-			pBuffer[i].vUp = _float4(0.f, fSize, 0.f, 0.f);
-			pBuffer[i].vLook = _float4(0.f, 0.f, fSize, 0.f);
-
+			if (desc.b3DSize)
+			{
+				_float fSizeZ = m_pGameInstance->Compute_Random(desc.v3DSize.z * 0.5f, desc.v3DSize.z * 1.5f);
+				pBuffer[i].vRight = _float4(desc.v3DSize.x, 0.f, 0.f, 0.f);
+				pBuffer[i].vUp = _float4(0.f, desc.v3DSize.y, 0.f, 0.f);
+				pBuffer[i].vLook = _float4(0.f, 0.f, fSizeZ, 0.f);
+			}
+			else // 랜덤 사이즈 사용
+			{
+				pBuffer[i].vRight = _float4(fSize, 0.f, 0.f, 0.f);
+				pBuffer[i].vUp = _float4(0.f, fSize, 0.f, 0.f);
+				pBuffer[i].vLook = _float4(0.f, 0.f, fSize, 0.f);
+			}
 
 			pBuffer[i].vTranslation = _float4(
 				m_pGameInstance->Compute_Random(desc.vCenter.x - desc.vRange.x * 0.5f, desc.vCenter.x + desc.vRange.x * 0.5f),
@@ -370,7 +395,12 @@ HRESULT CParticleSystem::CreateVertexInstances(const PARTICLE_DESC& desc)
 			_float angleX = XMConvertToRadians(m_pGameInstance->Compute_Random(-m_ParticleDesc.fSpreadAngle * 0.5f, m_ParticleDesc.fSpreadAngle * 0.5f));
 			_float angleY = XMConvertToRadians(m_pGameInstance->Compute_Random(-m_ParticleDesc.fSpreadAngle * 0.5f, m_ParticleDesc.fSpreadAngle * 0.5f));
 			_float angleZ = XMConvertToRadians(m_pGameInstance->Compute_Random(-m_ParticleDesc.fSpreadAngle * 0.5f, m_ParticleDesc.fSpreadAngle * 0.5f));
-
+			if (desc.b3DRotation)
+			{
+				angleX = XMConvertToRadians(desc.v3DRotation.x);
+				angleY = XMConvertToRadians(desc.v3DRotation.y);
+				angleZ = XMConvertToRadians(desc.v3DRotation.z);
+			}
 			_vector baseDir = XMLoadFloat3(&m_ParticleDesc.vVelocity);
 			if (XMVector3Equal(baseDir, XMVectorZero()))
 				baseDir = XMVectorSet(0.f, 1.f, 0.f, 0.f); // 기본 위 방향
@@ -384,9 +414,19 @@ HRESULT CParticleSystem::CreateVertexInstances(const PARTICLE_DESC& desc)
 
 			XMStoreFloat3(&m_vecVelocities[i], finalVelocity);
 
-			pBuffer[i].vRight = _float4(fSize, 0.f, 0.f, 0.f);
-			pBuffer[i].vUp = _float4(0.f, fSize, 0.f, 0.f);
-			pBuffer[i].vLook = _float4(0.f, 0.f, fSize, 0.f);
+			if (desc.b3DSize)
+			{
+				_float fSizeZ = m_pGameInstance->Compute_Random(desc.v3DSize.z * 0.5f, desc.v3DSize.z * 1.5f);
+				pBuffer[i].vRight = _float4(desc.v3DSize.x, 0.f, 0.f, 0.f);
+				pBuffer[i].vUp = _float4(0.f, desc.v3DSize.y, 0.f, 0.f);
+				pBuffer[i].vLook = _float4(0.f, 0.f, fSizeZ, 0.f);
+			}
+			else // 랜덤 사이즈 사용
+			{
+				pBuffer[i].vRight = _float4(fSize, 0.f, 0.f, 0.f);
+				pBuffer[i].vUp = _float4(0.f, fSize, 0.f, 0.f);
+				pBuffer[i].vLook = _float4(0.f, 0.f, fSize, 0.f);
+			}
 
 
 			pBuffer[i].vTranslation = _float4(

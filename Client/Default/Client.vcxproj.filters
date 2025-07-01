@@ -229,6 +229,12 @@
     <Filter Include="01.GameObject\Effect\Particle\SlashHit">
       <UniqueIdentifier>{0b1e7c91-3719-44ca-a111-ba60a5848092}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.GameObject\Effect\Particle\SlashHit\Point">
+      <UniqueIdentifier>{bed6281e-1980-4d73-93c1-99647d4d365b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Effect\Particle\SlashHit\Cross">
+      <UniqueIdentifier>{13ed1714-744b-41d9-8489-46c9bcaa6113}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -523,7 +529,10 @@
       <Filter>94. Pattern\State\Enmu</Filter>
     </ClInclude>
     <ClInclude Include="..\public\HitParticle.h">
-      <Filter>01.GameObject\Effect\Particle\SlashHit</Filter>
+      <Filter>01.GameObject\Effect\Particle\SlashHit\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HitSlashCrossParticle.h">
+      <Filter>01.GameObject\Effect\Particle\SlashHit\Cross</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -832,7 +841,10 @@
       <Filter>94. Pattern\State\Enmu</Filter>
     </ClCompile>
     <ClCompile Include="..\private\HitParticle.cpp">
-      <Filter>01.GameObject\Effect\Particle\SlashHit</Filter>
+      <Filter>01.GameObject\Effect\Particle\SlashHit\Point</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HitSlashCrossParticle.cpp">
+      <Filter>01.GameObject\Effect\Particle\SlashHit\Cross</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

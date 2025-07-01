@@ -1,7 +1,8 @@
 #include "Engine_Shader_Defines.hlsli"
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D g_Texture;
+texture2D g_Texture : register(t0);
+texture2D g_MaskTexture : register(t1);
 vector g_vCamPosition;
 
 struct VS_IN
@@ -201,7 +202,7 @@ PS_OUT PS_MAIN_MASK2(PS_IN In)
 {
 	PS_OUT Out;
     float4 tex = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    if (tex.r < 0.3f)
+    if (tex.r < 0.1f)
         discard;
 
     // ºñÀ² (0center, 1outer)

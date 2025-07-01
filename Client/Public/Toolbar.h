@@ -41,6 +41,9 @@ private:
 	// 파티클
 	void ParticleEditor();
 	HRESULT DrawParticlePreview();
+	// 파티클로 만든 이펙트 생성
+	void ParticleEffectEditor();
+	void CreateParticleEffect(const _wstring& particleName, PARTICLE_UV vUV, _uint iTextureIndex = 0, _uint iShaderPass = 0);
 	// 컷씬 카메라용 프리뷰
 	void EditCutSceneCamera();
 	void RenderCutScene(_float fTimeDelta);
@@ -100,6 +103,8 @@ private:
 	CShader* m_pPreviewShader = nullptr;
 	CTexture* m_pPreviewTexture = nullptr;
 	ID3D11ShaderResourceView* m_pEffectPreviewSRV = nullptr; // 렌더 타겟 뷰
+	class CParticleEffect* m_pParticleEffect = nullptr; // 파티클 이펙트
+
 
 	// 네비 매쉬용
 	CNavigation* m_pNavigation = nullptr;

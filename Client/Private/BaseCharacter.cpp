@@ -363,7 +363,8 @@ void CBaseCharacter::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
 		//BodyHitParticle
 		if (m_pAnimatorCom->CheckBool("Hurted"))
 			return; // 이미 피격 중이면 무시
-		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
+		//CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
+	//	CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
 	}
 }
 

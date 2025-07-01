@@ -355,6 +355,16 @@ HRESULT CJsonLoader::Load_Particle(const string& filePath, CParticleSystem** ppP
 
 	if (j.contains("PlayAwake"))
 		particleDesc.bPlayAwake = j["PlayAwake"].get<bool>();
+	if (j.contains("Use3DSize"))
+		particleDesc.b3DSize = j["Use3DSize"].get<bool>();
+	if (j.contains("3DSize") && j["3DSize"].is_array() && j["3DSize"].size() == 3)
+	{
+		particleDesc.v3DSize = {
+			j["3DSize"][0].get<float>(),
+			j["3DSize"][1].get<float>(),
+			j["3DSize"][2].get<float>()
+		};
+	}
 
 	*ppParticle = CParticleSystem::Create(m_pDevice, m_pContext, particleDesc);
 
@@ -418,14 +428,7 @@ HRESULT CJsonLoader::Save_Objects(const string& filePath, function<void()> onEnt
 		jArr.push_back(pObj->Serialize());
 	}
 
-	//// 2) 모든 실수를 소수점 2자리로 반올림
-	//RoundJsonFloats(jArr, 2);
-
-
 	string jsonStr = jArr.dump(4);
-
-	// 5) 정규식으로 소수점 둘째 자리까지만 남기기
-	//    음수 지원: -? 추가, 숫자가 문자열 안일 경우 영향을 줄 수 있으므로 JSON 구조에 숫자 문자열이 없을 때만 사용하세요.
 	static const regex floatPattern(R"((-?\d+)\.(\d{1,2})\d*)");
 	jsonStr = regex_replace(jsonStr, floatPattern, "$1.$2");
 

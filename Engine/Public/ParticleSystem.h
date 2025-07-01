@@ -9,7 +9,11 @@ public:
 	{
 		PARTICLE_TYPE eParticleType = PARTICLE_TYPE::RECT; // 입자 타입 (POINT, RECT)
 		_bool	isLoop = true;
-		_bool   bPlayAwake = true;				// 시작 시 자동 재생 여부
+		_bool   bPlayAwake = true;								// 시작 시 자동 재생 여부
+		_bool   b3DSize = false;								// 3D 크기 사용 여부 사용한다면 부모의 사이즈말고 이걸로 처리
+		_bool   b3DRotation = false;							// 3D 회전 사용 여부
+		_float3 v3DRotation = _float3(0.f, 0.f, 0.f);			// 3D 회전 축별로 회전
+		_float3 v3DSize = _float3(1.f, 1.f, 1.f);				// 3D 크기 축별로 사이즈
 		_float2 vLifeTime = _float2(0.f, 5.f);					// 생명주기 고정 5초
 		_float2 vSpeed = _float2(0.f, 5.f);						// 속도 고정 5
 		_float3 vStartColor = _float3(1.f, 1.f, 1.f);			// 시작 색상
@@ -69,6 +73,14 @@ public:
 		return m_ParticleDesc;
 	}
 	_bool IsPlaying() const { return m_bStarted; }
+	HRESULT ResetDesc(const PARTICLE_DESC& desc)
+	{
+		m_ParticleDesc = desc;
+		SetVertexInfo(desc);
+		if (FAILED(CreateVertexInstances(desc)))
+			return E_FAIL;
+		return S_OK;
+	}
 private:
 	void    SetVertexInfo(const PARTICLE_DESC& desc);
 	HRESULT CreateVertexBuffer();

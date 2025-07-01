@@ -45,6 +45,7 @@ public:
 
 	virtual void OnEnable() override;
 	virtual void OnDisable() override;
+
 protected:
 	virtual HRESULT Bind_Shader();
 protected:

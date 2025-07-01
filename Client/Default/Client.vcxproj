@@ -195,6 +195,7 @@
     <ClInclude Include="..\public\FreeCamera.h" />
     <ClInclude Include="..\public\Gizmo.h" />
     <ClInclude Include="..\public\Hierarchy.h" />
+    <ClInclude Include="..\Public\HitSlashCrossParticle.h" />
     <ClInclude Include="..\public\IMGUIMag.h" />
     <ClInclude Include="..\public\InputBuffer.h" />
     <ClInclude Include="..\public\InspectorPannel.h" />
@@ -301,6 +302,7 @@
     <ClCompile Include="..\private\FreeCamera.cpp" />
     <ClCompile Include="..\private\Gizmo.cpp" />
     <ClCompile Include="..\private\Hierarchy.cpp" />
+    <ClCompile Include="..\Private\HitSlashCrossParticle.cpp" />
     <ClCompile Include="..\private\IMGUIMag.cpp" />
     <ClCompile Include="..\private\InputBuffer.cpp" />
     <ClCompile Include="..\private\InspectorPannel.cpp" />

@@ -321,6 +321,7 @@ void CWeapon::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
 		//	return; // 이미 데미지를 입힌 대상이면 무시
 		//m_DamagedTargets.insert(pTarget); // 데미지를 입힌 대상에 추가
 		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
 	}
 	// 때린게 엔무 파츠면
 	else if (auto pBossParts = dynamic_cast<CEnmuParts*>(other->GetOwner()))
@@ -329,6 +330,7 @@ void CWeapon::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
 		//	return; // 이미 데미지를 입힌 대상이면 무시
 		//m_DamagedTargets.insert(pBossParts); // 데미지를 입힌 대상에 추가
 		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
+	//	CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
 	}
 	else if (auto pBossParts = dynamic_cast<CEnmuParts*>(other->GetOwner()->GetParent()))
 	{
@@ -336,6 +338,7 @@ void CWeapon::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
 		//	return; // 이미 데미지를 입힌 대상이면 무시
 		//m_DamagedTargets.insert(pBossParts); // 데미지를 입힌 대상에 추가
 		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
+		//CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
 	}
 }
 

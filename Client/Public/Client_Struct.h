@@ -36,3 +36,16 @@ struct InputData
     {
     }
 };
+
+typedef struct tagParticleUV
+{
+	_float2 vUVOffset = { 0.f, 0.f }; // UV 오프셋
+	_float2 vUVScale = { 1.f, 1.f }; // UV 스케일
+	_float fCurrentTime = 0.f; // 현재 시간 (애니메이션 시간)
+	_float fFrameTime = 0.f; // 프레임 시간 (애니메이션 속도)
+	_int iTotalFrames = 0; // 총 프레임 수
+	_int iCurrentFrame = 0; // 현재 프레임
+	_int iCols = 1; // 열 수
+	_int iRows = 1; // 행 수
+
+} PARTICLE_UV;
