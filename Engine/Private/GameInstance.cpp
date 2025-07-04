@@ -381,13 +381,26 @@ const _float4x4* CGameInstance::Get_Transform_Float4x4(TRANSFORM eState) const
 {
 	return m_pTransformPipeline->Get_Transform_Float4x4(eState);
 }
+const _float4x4* CGameInstance::Get_Transform_Float4x4_Inv(TRANSFORM eState) const
+{
+	return m_pTransformPipeline->Get_Transform_Float4x4_Inv(eState);
+}
 const _matrix CGameInstance::Get_Transform_Matrix(TRANSFORM eState) const
 {
 	return m_pTransformPipeline->Get_Transform_Matrix(eState);
 }
+const _matrix CGameInstance::Get_Transform_Matrix_Inv(TRANSFORM eState) const
+{
+	return m_pTransformPipeline->Get_Transform_Matrix_Inv(eState);
+}
 const _float4* CGameInstance::Get_CamPosition() const
 {
 	return m_pTransformPipeline->Get_CamPosition();
+}
+
+_float CGameInstance::Get_CameraFar() const
+{
+	return m_pTransformPipeline->Get_CameraFar();
 }
 
 _vector CGameInstance::UnprojectToGround(_float mx, _float my, const D3D11_VIEWPORT& vp)

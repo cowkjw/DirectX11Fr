@@ -18,8 +18,12 @@ public:
 	void Set_Transform(TRANSFORM eState, _fmatrix TransformMatrix);
 	const _float4x4* Get_Transform_Float4x4(TRANSFORM eState) const;
 	const _matrix Get_Transform_Matrix(TRANSFORM eState) const;
+
+	const _float4x4* Get_Transform_Float4x4_Inv(TRANSFORM eState) const;
+	const _matrix Get_Transform_Matrix_Inv(TRANSFORM eState) const;
 	const _float4* Get_CamPosition() const;
 	_vector UnprojectToGround(_float mx, _float my, const D3D11_VIEWPORT& vp);
+	_float Get_CameraFar() const;
 
 
 public:

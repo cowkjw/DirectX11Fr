@@ -140,39 +140,6 @@ void StateStep::Update(CBaseCharacter* pChar, const InputData& input, float fTim
 			pChar->ChangeState(new StateIdle(TEXT("Idle")));
 			return;
 		}
-		//// 2) 1단 스텝(Left, Right)일 때만 연속 스텝
-		//if (m_eDirection == EDirection::Left
-		//	|| m_eDirection == EDirection::Right)
-		//{
-
-
-		//	dir = XMVector3Normalize(dir);
-
-		//	// 3) basicDir 판정 (Left/Right만 관심)
-		//	float r = XMVectorGetX(XMVector3Dot(pChar->GetTransform()->Get_State(STATE::RIGHT), dir));
-		//	const float dead = 0.3f;
-		//	EDirection basicDir = (r > dead ? EDirection::Right
-		//		: r < -dead ? EDirection::Left
-		//		: EDirection::NONE);
-		//	if (basicDir == EDirection::NONE)
-		//	{
-		//		pChar->ChangeState(new StateIdle(TEXT("Idle")));
-		//		return;
-		//	}
-
-		//	// 4) 토글 로직
-		//	EDirection last = pChar->GetLastStepDirection();
-		//	EDirection next = basicDir;
-		///*	if (basicDir == EDirection::Left)
-		//		next = (last == EDirection::Left ? EDirection::Left2 : EDirection::Left);
-		//	else if (basicDir == EDirection::Right)
-		//		next = (last == EDirection::Right ? EDirection::Right2 : EDirection::Right);*/
-
-		//	// 5) 연속 스텝 호출
-		//	buf->PopCommand(ECommand::Dash, 1);
-		//	pChar->ChangeState(new StateStep(TEXT("Step"), next));
-		//	return;
-		//}
 
 		_bool moving = !XMVector3Equal(dir, XMVectorZero());
 		if (moving && !anim->CheckBool("Attacking") && !anim->CheckBool("Jump"))

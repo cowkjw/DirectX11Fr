@@ -9,7 +9,7 @@ class CModel;
 END_NAMESPACE
 
 BEGIN_NAMESPACE(Client)
-class CEnvironment : public CGameObject
+class CEnvironment : public CGameObject, public ICollisionListener
 {
 public:
 	typedef struct tagEnvironmentDesc : public CGameObject::GAMEOBJECT_DESC
@@ -42,6 +42,11 @@ public:
 	static CEnvironment* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
+
+	virtual void OnCollisionEnter(CCollider* other) override;
+	virtual void OnCollisionEnter(CCollider* other, const _float3& hitPos) override;
+	virtual void OnCollisionStay(CCollider* other, float fTimeDelta) override;
+	virtual void OnCollisionExit(CCollider* other) override;
 };
 END_NAMESPACE
 

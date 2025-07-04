@@ -63,6 +63,31 @@ void BossPunch::Update(CEnmuMeat* pChar, _float fTimeDelta)
 		pAnimatorLeft->SetTrigger("Punch");
 	}
 
+	if (!m_bDetectedLeftt&&m_fTimeElapsed >= LEFTARM_START_TIME + 0.5f && m_bAttackedLeft && m_pWarnings[0] )
+	{
+		_vector vTargetPos = pChar->GetTarget()->GetTransform()->Get_State(STATE::POSITION);
+		_vector vMyPos = m_pWarnings[0]->GetTransform()->Get_State(STATE::POSITION);
+		_vector vDelta = vTargetPos - vMyPos;
+
+		_float fHalfWidth = 60.f * 0.5f;   // X绵 规氢 馆气
+		_float fHalfDepth = 300.f * 0.5f;   // Z绵 规氢 馆气
+		_float dx = XMVectorGetX(vDelta);
+		_float dz = XMVectorGetZ(vDelta);
+		if (fabsf(dx) <= fHalfWidth && fabsf(dz) <= fHalfDepth)
+		{
+			pChar->OnAttackHit(pChar->GetTarget());
+			/*		pChar->Blow(this, 40.f);
+					pChar->TakeDamage(15.f);
+					pChar->GetTarget()->HurtDown();
+					pChar->GetTarget()->TakeDamage(7.f);
+					pChar->GetTarget()->StartHitStop(0.3f);
+					pChar->StartHitStop(0.3f);*/
+		}
+
+		m_bDetectedLeftt = true;
+	}
+
+
 
 	if (m_fTimeElapsed >= RIGHTARM_START_TIME && !m_bAttackedRight)
 	{
@@ -72,7 +97,25 @@ void BossPunch::Update(CEnmuMeat* pChar, _float fTimeDelta)
 		}
 		m_bAttackedRight = true;
 		pAnimatorRight->SetTrigger("Punch");
+		
 	}
+	if (!m_bDetectedRight&&m_fTimeElapsed >= RIGHTARM_START_TIME + 0.5f && m_bAttackedRight && m_pWarnings[1])
+	{
+		_vector vTargetPos = pChar->GetTarget()->GetTransform()->Get_State(STATE::POSITION);
+		_vector vMyPos = m_pWarnings[1]->GetTransform()->Get_State(STATE::POSITION);
+		_vector vDelta = vTargetPos - vMyPos;
+
+		_float fHalfWidth = 60.f * 0.5f;   // X绵 规氢 馆气
+		_float fHalfDepth = 300.f * 0.5f;   // Z绵 规氢 馆气
+		_float dx = XMVectorGetX(vDelta);
+		_float dz = XMVectorGetZ(vDelta);
+		if (fabsf(dx) <= fHalfWidth && fabsf(dz) <= fHalfDepth)
+		{
+			pChar->OnAttackHit(pChar->GetTarget());
+		}
+		m_bDetectedRight = true;
+	}
+
 
 	if (m_fTimeElapsed >= ATTACK_END_TIME)
 	{

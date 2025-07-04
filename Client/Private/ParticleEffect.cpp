@@ -67,16 +67,15 @@ void CParticleEffect::Update(_float fTimeDelta)
 		_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
 		_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
 
-		// 본 매트릭스를 그대로 사용 (정규화하지 않음)
 		_matrix matBoneLocal = XMLoadFloat4x4(&boneLocal);
 		_matrix matParentWorld = XMLoadFloat4x4(&parentWorld);
 
-		// 올바른 매트릭스 곱셈 순서: ParentWorld * BoneLocal
 		_matrix world = XMMatrixMultiply(matBoneLocal, matParentWorld);
 
 		// 파티클 이펙트의 로컬 오프셋이 있다면 적용
 		 _matrix localOffset = XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix());
 		 world = XMMatrixMultiply(localOffset, world);
+
 
 		XMStoreFloat4x4(&m_CombinedWorldMatrix, world);
 	//	m_pTransformCom->Set_WorldMatrix(m_CombinedWorldMatrix);
@@ -103,7 +102,7 @@ void CParticleEffect::Update(_float fTimeDelta)
 
 void CParticleEffect::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONLIGHT, this);
 }
 
 HRESULT CParticleEffect::Render()

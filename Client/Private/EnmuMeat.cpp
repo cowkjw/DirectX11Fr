@@ -12,8 +12,8 @@
 
 CEnmuMeat::CEnmuMeat(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
-	, m_fHp(300.f)
-	, m_fMaxHp(300.f)
+	, m_fHp(800.f)
+	, m_fMaxHp(800.f)
 	, m_CD_Punch(0.f)
 	, m_CD_Swing(0.f)
 	, m_CD_Hand(0.f)
@@ -290,6 +290,7 @@ void CEnmuMeat::OnAttackHit(CGameObject* pTarget)
 		case EnmuState::PUNCH:
 			pChar->Blow(this, 40.f);
 			pChar->TakeDamage(15.f);
+			StartHitStop(0.3f);
 			break;
 		case EnmuState::FOLLOWPUNCH:
 			pChar->HurtDown();

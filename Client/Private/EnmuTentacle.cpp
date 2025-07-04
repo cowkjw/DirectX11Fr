@@ -24,7 +24,7 @@ CEnmuTentacle::CEnmuTentacle(const CEnmuTentacle& rhs)
 
 HRESULT CEnmuTentacle::Initialize_Prototype()
 {
-	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxAnimMesh"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_Toon"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	return S_OK;
@@ -92,7 +92,7 @@ HRESULT CEnmuTentacle::Render()
 
 		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
 
-		if (FAILED(m_pShaderCom->Begin(0)))
+		if (FAILED(m_pShaderCom->Begin(3)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))
@@ -167,18 +167,10 @@ HRESULT CEnmuTentacle::Bind_Shaders()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
+	_float fCamFar = m_pGameInstance->Get_CameraFar();
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCameraFar", &fCamFar, sizeof(_float))))
+		return E_FAIL;
 
-	//const LIGHT_DESC* pLightDesc = m_pGameInstance->Get_Light(0);
-
-
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
-	//	return E_FAIL;
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))
-	//	return E_FAIL;
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
-	//	return E_FAIL;
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
-	//	return E_FAIL;
 
 	return S_OK;
 }

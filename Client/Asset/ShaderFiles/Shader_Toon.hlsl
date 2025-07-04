@@ -13,6 +13,7 @@ texture2D g_DiffuseTexture;
 //float4 g_vLightAmbient;
 //float4 g_vLightSpecular;
 
+float g_fCameraFar;
 float4 g_vCamPosition;
 
 // 머티리얼 속성
@@ -41,6 +42,7 @@ struct VS_OUT
 	float2 vTexcoord : TEXCOORD0;
 	float4 vWorldPos : TEXCOORD1;
 	float3 vViewDir : TEXCOORD2;
+	float4 vProjPos : TEXCOORD3; 
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -69,6 +71,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	// 뷰 방향 계산 (림 라이팅용)
 	Out.vViewDir = normalize(g_vCamPosition.xyz - Out.vWorldPos.xyz);
+	Out.vProjPos = Out.vPosition;
 
 	return Out;
 }
@@ -80,6 +83,7 @@ struct PS_IN
 	float2 vTexcoord : TEXCOORD0;
 	float4 vWorldPos : TEXCOORD1;
 	float3 vViewDir : TEXCOORD2;
+	float4 vProjPos : TEXCOORD3; 
 };
 
 //struct PS_OUT
@@ -90,6 +94,7 @@ struct PS_OUT
 {
 	vector vDiffuse : SV_TARGET0;
 	vector vNormal : SV_TARGET1;
+	vector vDepth : SV_TARGET2; // 깊이값을 저장할 타겟
 };
 
 float4 AdjustSaturation(float4 color, float saturation)
@@ -100,40 +105,6 @@ float4 AdjustSaturation(float4 color, float saturation)
 
 PS_OUT PS_MAIN_TOON(PS_IN In)
 {
-//	PS_OUT Out;
-
-	//vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearClampSampler, In.vTexcoord);
-
-	//// 노말과 라이트 방향
-	//float3 normal = normalize(In.vNormal.xyz);
-	//float3 lightDir = normalize(-g_vLightDir.xyz);
-
-	//float NdotL = max(0.0f, dot(normal, lightDir));
-
-	//float isLit = step(g_fShadowThreshold, NdotL);
-
-	//// 기본 색상
-	//float4 baseColor = vMtrlDiffuse;
-
-	//// 2단계 색상 정의
-	//float4 litColor = baseColor;// *g_vLightDiffuse;      // 밝은 부분
-	//float4 shadowColor = baseColor * g_vShadowColor;  // 그림자 부분
-
-	//// 하드 컷 적용
-	//float4 toonColor = lerp(shadowColor, litColor, isLit);
-
-	//// 최소한의 앰비언트만 추가
-	//float4 ambientColor = g_vMtrlAmibient * vMtrlDiffuse * g_vLightAmbient;// g_fAmbientStrength* g_vLightSpecular;
-
-	//// 최종 색상
-	//float4 finalColor = toonColor + ambientColor;
-
-	//// 채도 부스트
-	//finalColor = AdjustSaturation(finalColor, g_fSaturationBoost);
-
-	//Out.vColor = saturate(finalColor);
-	//Out.vColor.a = vMtrlDiffuse.a;
-
 	PS_OUT Out;
 
 	vector  vMtrlDiffuse = g_DiffuseTexture.Sample(LinearClampSampler, In.vTexcoord);
@@ -144,6 +115,8 @@ PS_OUT PS_MAIN_TOON(PS_IN In)
 
 	/* -1.f -> 0.f, 1.f -> 1.f */
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
+	// 깊이값 계산
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCameraFar, 0.f, 0.f);
 
 
 	return Out;
@@ -194,7 +167,7 @@ PS_OUT PS_MAIN_WrapTOON(PS_IN In)
 
 	/* -1.f -> 0.f, 1.f -> 1.f */
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
-
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCameraFar, 0.f, 0.f);
 	return Out;
 
 }
@@ -220,7 +193,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	/* -1.f -> 0.f, 1.f -> 1.f */
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
-
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCameraFar, 0.f, 0.f);
 	return Out;
 }
 
@@ -235,6 +208,8 @@ PS_OUT PS_MAIN_CLAMP(PS_IN In)
 
 	/* -1.f -> 0.f, 1.f -> 1.f */
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
+	// 깊이값 계산
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCameraFar, 0.f, 0.f);
 
 	return Out;
 }

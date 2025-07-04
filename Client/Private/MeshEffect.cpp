@@ -9,7 +9,9 @@ CMeshEffect::CMeshEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CMeshEffect::CMeshEffect(const CMeshEffect& Prototype)
     : CEffect(Prototype),
 	m_pModelCom{ Prototype.m_pModelCom },
-	m_bUseOffset{ Prototype.m_bUseOffset }
+	m_bUseOffset{ Prototype.m_bUseOffset },
+	m_vUVScale{ Prototype.m_vUVScale }
+	,m_vUVOffset{Prototype.m_vUVOffset}
 {
 	Safe_AddRef(m_pModelCom);
 }
@@ -81,7 +83,7 @@ void CMeshEffect::SetRenderMesh(_bool bRenderMesh)
 	m_bRenderMesh = bRenderMesh;
 	if (m_bRenderMesh)
 	{
-		m_fUVOffset = _float2(0.5f, 0.f); // UV 오프셋 초기화
+		m_vUVOffset = _float2(0.5f, 0.f); // UV 오프셋 초기화
 		m_bUseOffset = true; // UV 애니메이션 활성화
 		for (const auto& particles : m_ParticleEffects)
 		{

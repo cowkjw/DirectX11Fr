@@ -5,6 +5,7 @@
 #include "Model.h"
 #include <JsonLoader.h>
 #include <BaseCharacter.h>
+#include "EffectManager.h"
 #include <ThirdPersonCamera.h>
 
 
@@ -645,6 +646,7 @@ void CEnmuArm::Ready_Collider()
 	}
 	this->AddChild(m_pBodyColliderCom);
 	m_pBodyColliderCom->Initialize(&desc);
+		//m_pBodyColliderCom->GetCollider(0)->SetListener(this);
 }
 
 void CEnmuArm::ActiveCollider()
@@ -706,6 +708,11 @@ void CEnmuArm::Free()
 
 void CEnmuArm::OnCollisionEnter(CCollider* other)
 {
+}
+
+void CEnmuArm::OnCollisionEnter(CCollider* other, const _float3& hitPos)
+{
+
 }
 
 void CEnmuArm::OnCollisionStay(CCollider* other, float fTimeDelta)

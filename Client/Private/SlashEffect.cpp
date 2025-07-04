@@ -31,6 +31,7 @@ HRESULT CSlashEffect::Initialize(void* pArg)
 	// 테스트용 컬러
 	m_vColor = _float4(1.f, 0.7f,0.0f, 0.85f); // 주황 느낌
 	m_bUseOffset = true;
+	m_vUVScale = _float2(2.f, 1.f); // UV 스케일
 
 
 	return S_OK;
@@ -54,17 +55,17 @@ void CSlashEffect::Update(_float fTimeDelta)
 
 	if (m_bUseOffset)
 	{
-		m_fUVOffset.x += fTimeDelta*2.f; // UV 애니메이션 속도 조절
+		m_vUVOffset.x += fTimeDelta*2.f; // UV 애니메이션 속도 조절
 		//m_fUVOffset.y += fTimeDelta * 0.5f; // UV 애니메이션 속도 조절
-		if (m_fUVOffset.x >= 1.f)
+		if (m_vUVOffset.x >= 1.f)
 		{
 			m_bRenderMesh = false;
 			m_bUseOffset = false;
 			//SetActive(false);
-			m_fUVOffset.x = 0.f;
+			m_vUVOffset.x = 0.f;
 		}
-		if (m_fUVOffset.y > 1.f)
-			m_fUVOffset.y = 0.f;
+		if (m_vUVOffset.y > 1.f)
+			m_vUVOffset.y = 0.f;
 	}
 	for (auto& particle : m_ParticleEffects)
 	{
@@ -168,7 +169,7 @@ HRESULT CSlashEffect::Ready_Components()
 HRESULT CSlashEffect::Bind_Shader()
 {
 	__super::Bind_Shader();
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUVOffset", &m_fUVOffset, sizeof(_float2))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVOffset", &m_vUVOffset, sizeof(_float2))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4))))
 		return E_FAIL;
@@ -181,7 +182,7 @@ void CSlashEffect::OnDisable()
 	//{
 	//	m_pHitParticle->SetActive(false); // 히트 파티클 비활성화
 	//}
-	m_fUVOffset = _float2(0.5f, 0.f); // UV 오프셋 초기화
+	m_vUVOffset = _float2(0.5f, 0.f); // UV 오프셋 초기화
 }
 
 void CSlashEffect::OnEnable()

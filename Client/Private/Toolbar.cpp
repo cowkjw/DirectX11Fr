@@ -55,9 +55,16 @@ HRESULT CToolbar::Initialize()
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Particle"), static_cast<_uint>(ViewportDesc.Width), static_cast<_uint>(ViewportDesc.Height), DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.0f, 0.f, 255.f, 0.f))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_MultiParticle"), static_cast<_uint>(ViewportDesc.Width), static_cast<_uint>(ViewportDesc.Height), DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.0f, 0.f, 255.f, 0.f))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Tools"), TEXT("Target_Particle"))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_EffectTools"), TEXT("Target_MultiParticle"))))
+		return E_FAIL;
 	m_pEffectPreviewSRV = m_pGameInstance->Get_RenderTargetSRV(TEXT("Target_Particle"));
+	m_pMultiEffectPreviewSRV = m_pGameInstance->Get_RenderTargetSRV(TEXT("Target_MultiParticle"));
 
 
 
@@ -80,6 +87,8 @@ HRESULT CToolbar::Initialize()
 	{
 		m_pFreeCamera = static_cast<CFreeCamera*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::STATIC), TEXT("FreeCamera")));
 	}
+
+	m_pMySequence = new CMySequence(m_vecSequenceItems,this);
 
 	return S_OK;
 }
@@ -110,6 +119,14 @@ void CToolbar::Update(_float fTimeDelta)
 		if (m_pFreeCamera && !m_pFreeCamera->IsActive())
 			m_pFreeCamera->SetActive(true);
 		m_pCutSceneCamera->SetMainpulate(false);
+	}
+
+	for (auto& item : m_vecSequenceItems)
+	{
+		if (item.pPS)
+		{
+			item.pPS->UpdateVertexInstances(fTimeDelta);
+		}
 	}
 }
 
@@ -602,7 +619,10 @@ void CToolbar::FBXLoader()
 		for (const auto& path : m_FbxFilePaths)
 		{
 			string pathStr = WStringToString(path);
-			CModel::Create(m_pDevice, m_pContext, isAnimation ? MODEL::ANIM : MODEL::NONANIM, pathStr.c_str());
+			_matrix		PreTransformMatrix = XMMatrixIdentity();
+
+			PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(-270.f));
+			CModel::Create(m_pDevice, m_pContext, isAnimation ? MODEL::ANIM : MODEL::NONANIM, pathStr.c_str(), PreTransformMatrix);
 		}
 	}
 
@@ -635,8 +655,7 @@ void CToolbar::DrawAnimEventEditor()
 
 	ImGui::Begin("Animation Event Editor");
 
-	// 1) 애니메이션 선택 재생 
-	// 콤보박스
+	// 애니메이션 선택 재생 
 	vector<const char*> animNames(animCount);
 	for (_int i = 0; i < animCount; ++i)
 		animNames[i] = animations[i]->Get_Name();
@@ -661,8 +680,6 @@ void CToolbar::DrawAnimEventEditor()
 	}
 
 
-
-	// 동기화된 재생 시간
 	CAnimation* anim = animations[selectedAnim];
 	_float duration = anim->GetDuration();
 	playTime = anim->GetCurrentTrackPosition();
@@ -670,12 +687,10 @@ void CToolbar::DrawAnimEventEditor()
 	ImGui::Text("Play Time: %.2f / %.2f", playTime, duration);
 	if (ImGui::SliderFloat("Time", &playTime, 0.f, duration))
 	{
-		// 슬라이더로 타임 직접 세팅
 		anim->SetCurrentTrackPosition(playTime);
 	}
 	ImGui::Separator();
 
-	//  2) 애니 이벤트 편집
 	if (ImGui::Button("Add Manual Event"))
 		anim->AddEvent({ playTime, "NewEvent" });
 
@@ -765,11 +780,9 @@ void CToolbar::DrawAnimEventEditor()
 		ifstream ifs(path);
 		if (ifs.is_open()) {
 			ifs >> root;
-			// "animations" 배열 순회
 			for (auto& jclip : root["animations"])
 			{
 				string clipName = jclip["clipName"];
-				// 해당 이름의 CAnimation* 찾기
 				for (auto* clip : animations)
 				{
 					if (clip->Get_Name() == clipName)
@@ -795,7 +808,7 @@ void CToolbar::ShowCells()
 {
 	if (m_pNavigation && m_bIsNavMeshCreating)
 	{
-		static const auto& cells = m_pNavigation->GetCells();  // 셀 리스트 (const ref)
+		static const auto& cells = m_pNavigation->GetCells();  // 셀 리스트
 		static _int selectedCellIndex = -1;
 
 		ImGui::Begin("Cell List");
@@ -841,25 +854,25 @@ void CToolbar::ParticleEditor()
 	if (!ImGui::Begin("Particle Editor"))
 		return;
 	static _bool bActive = true;
-	static _wstring shaderKey;
-	static _wstring textureKey;
+	//static _wstring shaderKey;
+	//static _wstring textureKey;
 	_bool isShaderKeySet = false;
 	_bool isTextureKeySet = false;
 	_bool isChangeValue = false;
 	_bool bPlayAwakeChange = false;
 	_bool bChangeActive = false;
 	
-	string curShader = WStringToString(shaderKey);
+	string curShader = WStringToString(m_ShaderKey);
 	if (isShaderKeySet = ImGui::BeginCombo("Shader Key", curShader.c_str()))
 	{
 		for (size_t i = 0; i < m_ShaderKeys.size(); ++i)
 		{
 			// 벡터에서 꺼낸 wstring을 string으로 변환
 			string key = WStringToString(m_ShaderKeys[i]);
-			_bool selected = (shaderKey == m_ShaderKeys[i]);
+			_bool selected = (m_ShaderKey == m_ShaderKeys[i]);
 			if (ImGui::Selectable(key.c_str(), selected))
 			{
-				shaderKey = m_ShaderKeys[i];  // 선택 시 wstring으로 저장
+				m_ShaderKey = m_ShaderKeys[i];  // 선택 시 wstring으로 저장
 			}
 			if (selected)
 				ImGui::SetItemDefaultFocus();
@@ -867,16 +880,16 @@ void CToolbar::ParticleEditor()
 		ImGui::EndCombo();
 	}
 
-	string curTex = WStringToString(textureKey);
+	string curTex = WStringToString(m_TextureKey);
 	if (isTextureKeySet = ImGui::BeginCombo("Texture Key", curTex.c_str()))
 	{
 		for (size_t i = 0; i < m_TextureKeys.size(); ++i)
 		{
 			string key = WStringToString(m_TextureKeys[i]);
-			_bool selected = (textureKey == m_TextureKeys[i]);
+			_bool selected = (m_TextureKey == m_TextureKeys[i]);
 			if (ImGui::Selectable(key.c_str(), selected))
 			{
-				textureKey = m_TextureKeys[i];
+				m_TextureKey = m_TextureKeys[i];
 			}
 			if (selected)
 				ImGui::SetItemDefaultFocus();
@@ -935,12 +948,12 @@ void CToolbar::ParticleEditor()
 		if (desc.eParticleType == PARTICLE_TYPE::POINT)
 		{
 			m_bIsPointInstance = true;  // 포인트 인스턴스 활성화
-			shaderKey = TEXT("Shader_VtxPointInstance");
+			m_ShaderKey = TEXT("Shader_VtxPointInstance");
 		}
 		else if (desc.eParticleType == PARTICLE_TYPE::RECT)
 		{
 			m_bIsPointInstance = false; // 포인트 인스턴스 비활성화
-			shaderKey = TEXT("Shader_VtxRectInstance");
+			m_ShaderKey = TEXT("Shader_VtxRectInstance");
 		}
 	}
 	bChangeActive = ImGui::Checkbox("Particle Active", &bActive);
@@ -954,6 +967,7 @@ void CToolbar::ParticleEditor()
 	bPlayAwakeChange = ImGui::Checkbox("PlayAwake", &desc.bPlayAwake);
 	isChangeValue |= ImGui::Checkbox("Loop", &desc.isLoop);
 	isChangeValue |= ImGui::Checkbox("Use 3D Size", &desc.b3DSize);
+	isChangeValue |= ImGui::Checkbox("Use 3D Rotation", &desc.b3DRotation);
 	isChangeValue |= ImGui::DragFloat3("Center", &desc.vCenter.x, 0.1f);
 	isChangeValue |= ImGui::DragFloat3("Range", &desc.vRange.x, 0.1f);
 	if (desc.b3DSize)
@@ -967,6 +981,10 @@ void CToolbar::ParticleEditor()
 	isChangeValue |= ImGui::DragFloat2("Lifetime", &desc.vLifeTime.x, 0.1f);
 	isChangeValue |= ImGui::DragFloat2("Speed", &desc.vSpeed.x, 0.1f);
 	isChangeValue |= ImGui::DragFloat3("Velocity", &desc.vVelocity.x, 0.1f);
+	if (desc.b3DRotation)
+	{
+		isChangeValue |= ImGui::DragFloat3("3D Rotation", &desc.v3DRotation.x, 0.01f);
+	}
 	isChangeValue |= ImGui::DragFloat("Spread Angle", &desc.fSpreadAngle, 1.0f);
 	isChangeValue |= ImGui::DragFloat("Gravity", &desc.fGravity, 0.01f);
 	isChangeValue |= ImGui::ColorEdit3("Start Color", &desc.vStartColor.x);
@@ -1084,13 +1102,13 @@ void CToolbar::ParticleEditor()
 				{
 				case PARTICLE_TYPE::POINT:
 				{
-					shaderKey = TEXT("Shader_VtxPointInstance");
+					m_ShaderKey = TEXT("Shader_VtxPointInstance");
 					m_bIsPointInstance = true;  // 포인트 인스턴스 활성화
 				}
 					break;
 				case PARTICLE_TYPE::RECT:
 				{
-					shaderKey = TEXT("Shader_VtxRectInstance");
+					m_ShaderKey = TEXT("Shader_VtxRectInstance");
 					m_bIsPointInstance = false; // 포인트 인스턴스 비활성화
 				}
 					break;
@@ -1133,13 +1151,13 @@ void CToolbar::ParticleEditor()
 	if (isTextureKeySet)
 	{
 		Safe_Release(m_pPreviewTexture);
-		m_pPreviewTexture = m_pGameInstance->GetTexture(textureKey, true);
+		m_pPreviewTexture = m_pGameInstance->GetTexture(m_TextureKey, true);
 		m_iMaxTextureCount = m_pPreviewTexture ? m_pPreviewTexture->Get_NumTextures() : 0;
 	}
 	if (isShaderKeySet)
 	{
 		Safe_Release(m_pPreviewShader);
-		m_pPreviewShader = m_pGameInstance->GetShader(shaderKey, true);
+		m_pPreviewShader = m_pGameInstance->GetShader(m_ShaderKey, true);
 	}
 
 	static _bool bCreateParticleEffect = false;
@@ -1268,6 +1286,10 @@ HRESULT CToolbar::DrawParticlePreview()
 			ImGui::End();
 		}
 	}
+
+	// 멀티 이펙트용 
+	MultiParticleEditorBySqeuence();
+
 	return S_OK;
 }
 
@@ -1326,7 +1348,279 @@ void CToolbar::ParticleEffectEditor()
 		ImGui::Text("No Particle Effect Created");
 	}
 
+
 	ImGui::End();
+}
+
+void CToolbar::MultiParticleEditorBySqeuence()
+{
+	static _bool          expanded       = true;// 트랙 확장 여부
+	static _int           currentFrame   = 0;   // 커서 프레임
+	static _int           firstFrame     = 0;   // 보이는 첫 프레임
+	static _int           selectedEntry  = -1;  // 선택된 아이템 인덱스
+	static _int playSpeed = 1;
+	static const _float FRAME = 60.f; // 1초당 60프레임 기준
+	ImGui::Begin("MultiEffect Editor");
+	if (ImGui::Button("Add Particle System"))
+	{
+			
+		if (m_pParticleSystem)
+		{
+			CMySequence::SequenceItem item;
+			item.pPS = static_cast<CParticleSystem*>(m_pParticleSystem->Clone(nullptr));
+
+			item.start = currentFrame;
+			item.end = currentFrame + 10;
+			item.type = 0;
+			item.color = 0xFF00CCFF;
+			item.name = "Effect" + to_string(m_vecSequenceItems.size());
+			AddSequence(item);
+		}
+	}
+
+	if (m_bIsPlaying)
+	{
+		if (ImGui::Button("Stop"))
+		{
+			m_bIsPlaying = false;
+			// 모든 파티클 정지
+			for (auto& it : m_vecSequenceItems) 
+			{
+				if (it.pPS) 
+					it.pPS->StopParticle();
+			}
+		}
+	}
+	else
+	{
+		if (ImGui::Button(" Play"))
+		{
+			m_bIsPlaying = true;
+		}
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Reset"))
+	{
+		currentFrame = 0;
+		m_bIsPlaying = false;
+		for (auto& it : m_vecSequenceItems)
+		{
+			if (it.pPS) 
+				it.pPS->ResetParticle();
+		}
+	}
+
+	// 재생 속도 조절
+	ImGui::SameLine();
+	ImGui::SliderInt("Speed", &playSpeed, 1, 10);
+
+	// 자동 재생 로직
+	if (m_bIsPlaying)
+	{
+		static _float lastTime = 0.0f;
+		_float currentTime = ImGui::GetTime();
+
+		if (currentTime - lastTime >= (1.0f / (60.0f * playSpeed))) // 60fps 기준
+		{
+			currentFrame++;
+			if (currentFrame > m_pMySequence->GetFrameMax())
+			{
+				currentFrame = m_pMySequence->GetFrameMin();
+			}
+			lastTime = currentTime;
+		}
+	}
+
+	
+	if (ImSequencer::Sequencer(
+		m_pMySequence,
+		&currentFrame,
+		&expanded,
+		&selectedEntry,
+		&firstFrame,
+		ImSequencer::SEQUENCER_EDIT_ALL|
+		ImSequencer::SEQUENCER_ADD |
+		ImSequencer::SEQUENCER_DEL 
+	))
+	{
+		
+	}
+	for (auto& it : m_vecSequenceItems) 
+	{
+		if (!it.pPS) continue;
+		if (currentFrame == it.start)
+		{
+			it.pPS->SetActive(true);
+			it.pPS->PlayParticle();
+		}
+		if (currentFrame == it.end)
+		{
+			it.pPS->ResetParticle();
+			it.pPS->StopParticle();
+			it.pPS->SetActive(false);
+		}
+		//if (currentFrame >= it.start && currentFrame <= it.end)
+		//{
+
+		//}
+	}
+	if(m_vecSequenceItems.empty() == false)
+		DrawMultiParticlePreview();
+	ImGui::End();
+}
+
+HRESULT CToolbar::DrawMultiParticlePreview()
+{
+	static _float4x4 viewMat, projMat;
+	static _float fYaw = 0.0f;
+	static _float fPitch = 0.0f;
+	static _float fDistance = 10.0f;
+	// 어차피 원점에서 프리뷰로 보기만할 거
+	static _float4x4 worldMatrix = {
+		1.f, 0.f, 0.f, 0.f,
+		0.f, 1.f, 0.f, 0.f,
+		0.f, 0.f, 1.f, 0.f,
+		0.f, 0.f, 0.f, 1.f
+	};
+	m_pGameInstance->Begin_MRT(TEXT("MRT_EffectTools"));
+	for (_int i = 0; i < static_cast<_int>(m_vecSequenceItems.size()); i++)
+	{
+		auto pShader = m_vecMultiParticleShaders[i];
+		auto pTexture = m_vecMultiParticleTextures[i];
+		auto pParticle = m_vecSequenceItems[i].pPS;
+		_int iTextureIndex = m_vecMultiParticleTextureIndices[i];
+		_int iShaderPass = m_vecMultiParticleShaderPasses[i];
+
+		if (pShader && pTexture)
+		{
+			_float3 vLook = { 0.f, 0.f, 0.f };
+			_float3 vEye;
+			vEye.x = vLook.x + fDistance * cosf(fPitch) * sinf(fYaw);
+			vEye.y = vLook.y + fDistance * sinf(fPitch);
+			vEye.z = vLook.z + fDistance * cosf(fPitch) * cosf(fYaw);
+
+			_matrix vView = XMMatrixLookAtLH(XMLoadFloat3(&vEye), XMLoadFloat3(&vLook), XMVectorSet(0.f, 1.f, 0.f, 0.f));
+			_matrix vProj = XMMatrixPerspectiveLH(XMConvertToRadians(60.f), 1.0f, 1.f, 300.f);
+
+			XMStoreFloat4x4(&viewMat, vView);
+			XMStoreFloat4x4(&projMat, vProj);
+
+			if (FAILED(pShader->Bind_Matrix("g_WorldMatrix", &worldMatrix)))
+			{
+				return E_FAIL;
+			}
+			if (FAILED(pShader->Bind_Matrix("g_ViewMatrix", &viewMat)))
+			{
+				return E_FAIL;
+			}
+			if (FAILED(pShader->Bind_Matrix("g_ProjMatrix", &projMat)))
+			{
+				return E_FAIL;
+			}
+
+			if (m_bIsPointInstance)
+			{
+				_float4 vCamPos = _float4(vEye.x, vEye.y, vEye.z, 1.f);
+				if (FAILED(pShader->Bind_RawValue("g_vCamPosition", &vCamPos, sizeof(_float4))))
+					return E_FAIL;
+			}
+
+			if (FAILED(pTexture->Bind_ShaderResource(pShader, "g_Texture", iTextureIndex)))
+				return E_FAIL;
+
+			if (FAILED(pShader->Begin(iShaderPass)))
+				return E_FAIL;
+		}
+		if (pParticle && pParticle->IsActive())
+		{
+			if (FAILED(pParticle->Bind_Buffers()))
+				return E_FAIL;
+			if (FAILED(pParticle->Render()))
+				return E_FAIL;
+
+		}
+	}
+	m_pGameInstance->End_MRT();
+
+	if (m_pMultiEffectPreviewSRV)
+	{
+		if (ImGui::Begin("MultiParticle Preview"))
+		{
+			ImVec2 vAvail = ImGui::GetContentRegionAvail();
+			_float fSize = min(vAvail.x, vAvail.y);
+
+			// 정중앙 정렬
+			ImVec2 vCursorPos = ImGui::GetCursorPos();
+			ImGui::SetCursorPosX(vCursorPos.x + (vAvail.x - fSize) * 0.5f);
+			ImGui::SetCursorPosY(vCursorPos.y + (vAvail.y - fSize) * 0.5f);
+
+			ImVec2 vImagePos = ImGui::GetCursorScreenPos();
+			ImVec2 vImageSize(fSize, fSize);
+			ImVec2 vMousePos = ImGui::GetMousePos();
+
+			// 이미지 내부에서만 카메라 조작
+			_bool bIsInImage = vMousePos.x >= vImagePos.x && vMousePos.x <= vImagePos.x + vImageSize.x &&
+				vMousePos.y >= vImagePos.y && vMousePos.y <= vImagePos.y + vImageSize.y;
+
+			if (bIsInImage)
+			{
+				if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+				{
+					ImVec2 delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Left);
+					fYaw -= delta.x * 0.005f;
+					fPitch -= delta.y * 0.005f;
+					ImGui::ResetMouseDragDelta();
+				}
+
+				_float fWheel = ImGui::GetIO().MouseWheel;
+				if (fWheel != 0.0f)
+				{
+					fDistance -= fWheel * 1.0f;
+					if (fDistance < 1.0f) fDistance = 1.0f;
+					if (fDistance > 100.0f) fDistance = 100.0f;
+				}
+			}
+
+			if (fPitch < -XM_PIDIV2 + 0.01f)
+				fPitch = -XM_PIDIV2 + 0.01f;
+			if (fPitch > XM_PIDIV2 - 0.01f)
+				fPitch = XM_PIDIV2 - 0.01f;
+
+			ImGui::Image((ImTextureID)m_pMultiEffectPreviewSRV, vImageSize);
+		}
+		ImGui::End();
+	}
+	return S_OK;
+}
+
+void CToolbar::AddSequence(const CMySequence::SequenceItem& item)
+{
+	if (m_pMySequence == nullptr)
+	{
+			return;
+	}
+	Safe_AddRef(item.pPS);
+	m_vecSequenceItems.push_back(item);
+	m_vecMultiParticleShaderPasses.push_back(m_iShaderPass);
+	m_vecMultiParticleShaders.push_back(m_pGameInstance->GetShader(m_ShaderKey,true));
+	m_vecMultiParticleTextures.push_back(m_pGameInstance->GetTexture(m_TextureKey,true));
+	m_vecMultiParticleTextureIndices.push_back(m_iTextureIndex);
+}
+
+void CToolbar::RemoveSequence(_int iIndex)
+{
+	if (iIndex < 0 || iIndex >= static_cast<_int>(m_vecSequenceItems.size()))
+		return;
+
+	m_vecMultiParticleShaderPasses.erase(
+		m_vecMultiParticleShaderPasses.begin() + iIndex);
+	m_vecMultiParticleShaders.erase(
+		m_vecMultiParticleShaders.begin() + iIndex);
+	m_vecMultiParticleTextures.erase(
+		m_vecMultiParticleTextures.begin() + iIndex);
+	m_vecMultiParticleTextureIndices.erase(
+		m_vecMultiParticleTextureIndices.begin() + iIndex);
 }
 
 void CToolbar::CreateParticleEffect(const _wstring& particleName, PARTICLE_UV vUV, _uint iTextureIndex, _uint iShaderPass)
@@ -1743,6 +2037,7 @@ void CToolbar::Free()
 	m_TextureKeys.clear();
 	m_LevelStringMap.clear();
 	m_CurrentPrototype = "";
+	Safe_Delete(m_pMySequence);
 	Safe_Release(m_JsonLoader);
 	Safe_Release(m_pNavigation);
 	Safe_Release(m_pPreviewShader);
@@ -1752,4 +2047,5 @@ void CToolbar::Free()
 	Safe_Release(m_pCutSceneCamera);
 	Safe_Release(m_pEffectPreviewSRV);
 	Safe_Release(m_pCutSceneCameraSRV);
+	Safe_Release(m_pMultiEffectPreviewSRV);
 }

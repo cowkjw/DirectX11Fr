@@ -46,6 +46,10 @@ public:
 	virtual void OnEnable() override;
 	virtual void OnDisable() override;
 
+	void SetTextureIndex(_uint iTextureIndex) {
+		m_iTextureIndex = iTextureIndex;
+	}
+
 protected:
 	virtual HRESULT Bind_Shader();
 protected:
@@ -53,6 +57,7 @@ protected:
 	array<CTexture*, TEX_MAX> m_Textures{};
 	CShader* m_pShaderCom = { nullptr };
 	_uint m_iShaderPass = { 0 };
+	_uint m_iTextureIndex = { 0 };
 	_float m_fDuration = 0.f;
 	_float m_fElapsed = 0.f;
 	_bool m_bLoop = false;

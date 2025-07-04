@@ -1,8 +1,13 @@
 #include "Loader.h"
 
+#include "KyojuroEnkSpiralEffect.h"
 #include "HitSlashCrossParticle.h"
 #include "ThirdPersonCamera.h"	
+#include "KyojuroKienEffect.h"
+#include "KyojuroNobEffect.h"
+#include "KyojuroEnkEffect.h"
 #include "WarningZoneDecal.h"
+#include "WindSlashEffect.h"
 #include "FireSlashEffect.h"
 #include "CutSceneCamera.h"
 #include "ParticleEffect.h"
@@ -12,6 +17,7 @@
 #include "HitParticle.h"
 #include "SlashEffect.h"
 #include "FreeCamera.h"
+#include "KyojuroEnk.h"
 #include "BackGround.h"
 #include "Navigation.h"
 #include "JsonLoader.h"
@@ -221,18 +227,41 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 
-		if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Sky"),
-			CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Map/Sky.bin", PreTransformMatrix))))
-			return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Sky"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Map/Sky.bin", PreTransformMatrix))))
+		return E_FAIL;
 
-		PreTransformMatrix = XMMatrixScaling(100.f, 100.f, 100.f) * XMMatrixRotationY(XMConvertToRadians(180.f));// *XMMatrixRotationZ(XMConvertToRadians(180.f));
-		if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_FireSlash2"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/SM_e_Plc_P0012_Slash001.fbx", PreTransformMatrix))))
-			return E_FAIL;
-		PreTransformMatrix = XMMatrixScaling(100.f, 100.f, 100.f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f));
-		if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_DefaultSlash"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/DefaultSlash/SM_e_Plc_P0012_Slash001.fbx", PreTransformMatrix))))
-			return E_FAIL;
+	PreTransformMatrix = XMMatrixScaling(100.f, 100.f, 100.f) * XMMatrixRotationY(XMConvertToRadians(180.f));// *XMMatrixRotationZ(XMConvertToRadians(180.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_FireSlash2"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/SM_e_Plc_P0012_Slash001.fbx", PreTransformMatrix))))
+		return E_FAIL;
+	PreTransformMatrix = XMMatrixScaling(100.f, 100.f, 100.f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_DefaultSlash"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/DefaultSlash/SM_e_Plc_P0012_Slash001.fbx", PreTransformMatrix))))
+		return E_FAIL;
+	PreTransformMatrix = XMMatrixScaling(200.f, 200.f, 200.f);// *XMMatrixRotationX(XMConvertToRadians(180.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_WindSlash"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Akaza/WindSlash.fbx", PreTransformMatrix))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_EnkFire"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/Enk/EnkMainFire.bin", PreTransformMatrix))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_EnkFireSpiral"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/Enk/EnkSpiral.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Kien"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/Kien.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Nob"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/Nob/Nob.bin", PreTransformMatrix))))
+		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_Nob"),
+	//	CKyojuroNobEffect::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
 
@@ -260,8 +289,19 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CSlashEffect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_WindSlash"),
+		CWindSlashEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_FireSlash"),
 		CFireSlashEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	//KyojuroEnkEffect
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_EnkFire"),
+		CKyojuroEnkEffect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Kyojuro */
@@ -349,6 +389,9 @@ HRESULT CLoader::Loading_For_Editor()
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_DefaultSlash"),
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/DefaultSlash/SM_e_Plc_P0012_Slash001.bin", PreTransformMatrix))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_WindSlash"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Akaza/WindSlash.bin", PreTransformMatrix))))
+		return E_FAIL;
 
 	/*"Prototype_Component_Model_Tanjiro"*/
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_Tanjiro"),
@@ -424,6 +467,7 @@ HRESULT CLoader::Loading_For_Editor()
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/EnmuBoss/Head/EnmuBossHead.bin", PreTransformMatrix))))
 		return E_FAIL;
 
+
 	/* For.Prototype_GameObject_EnmuMeat */
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_EnmuMeat"),
 		CEnmuMeat::Create(m_pDevice, m_pContext))))
@@ -442,6 +486,9 @@ HRESULT CLoader::Loading_For_Editor()
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_Slash"),
 		CSlashEffect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_WindSlash"),
+		CWindSlashEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	///* Prototype_Component_Navigation */
 	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Navigation"),
@@ -450,6 +497,43 @@ HRESULT CLoader::Loading_For_Editor()
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_WarningZone"),
 		CWarningZoneDecal::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_EnkFire"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/Enk/EnkMainFire.bin", PreTransformMatrix))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_EnkFireSpiral"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/Enk/EnkSpiral.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_EnkFire"),
+		CKyojuroEnkEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_EnkSpiral"),
+		CKyojuroEnkSpiralEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Kien"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/Kien.bin", PreTransformMatrix))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_Kien"),
+		CKyojuroKienEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Nob"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/Nob/Nob.bin", PreTransformMatrix))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_Nob"),
+		CKyojuroNobEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	//KyojuroEnk
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_KyojuroEnk"),
+		CKyojuroEnk::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 
 	m_isFinished = true;

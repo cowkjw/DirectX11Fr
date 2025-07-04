@@ -6,7 +6,7 @@
             "events": [
                 {
                     "name": "Death",
-                    "time": 75.80000305175781
+                    "time": 75.5
                 },
                 {
                     "name": "FireSlashEffectOff",
@@ -119,12 +119,12 @@
         {
             "clipName": "A_P0000_V00_C00_DmgFall01_0",
             "duration": 10.0,
-          "events": [
-            {
-              "name": "DeactiveHitbox",
-              "time": 1.0
-            }
-          ]
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P0000_V00_C00_DmgFall01_1",
@@ -134,12 +134,12 @@
         {
             "clipName": "A_P0000_V00_C00_DmgFall01_2",
             "duration": 50.0,
-          "events": [
-            {
-              "name": "EndHurt",
-              "time": 49.5
-            }
-          ]
+            "events": [
+                {
+                    "name": "EndHurt",
+                    "time": 49.5
+                }
+            ]
         },
         {
             "clipName": "A_P0000_V00_C00_DmgGuardBrk01",
@@ -280,20 +280,12 @@
             "duration": 65.0,
             "events": [
                 {
-                    "name": "ActiveHitbox",
-                    "time": 8.0
+                    "name": "ActiveBodyCollider",
+                    "time": 9.979999542236328
                 },
                 {
-                    "name": "DeactiveHitbox",
+                    "name": "DeactiveBodyCollider",
                     "time": 13.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 40.0
-                },
-                {
-                    "name": "ActiveHitbox",
-                    "time": 26.0
                 },
                 {
                     "name": "FireSlashEffectOn",
@@ -302,6 +294,14 @@
                 {
                     "name": "FireSlashEffectOff",
                     "time": 40.0
+                },
+                {
+                    "name": "ActiveHitbox",
+                    "time": 26.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 32.08824920654297
                 }
             ]
         },
@@ -362,6 +362,30 @@
                 {
                     "name": "FireSlashEffectOff",
                     "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
                 }
             ]
         },
@@ -406,6 +430,10 @@
                 {
                     "name": "EndAttack",
                     "time": 76.94000244140625
+                },
+                {
+                    "name": "ActiveEnkSkill",
+                    "time": 26.0
                 }
             ]
         },
@@ -450,6 +478,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 20.0
+                },
+                {
+                    "name": "ActiveKienSkill",
+                    "time": 11.501226425170898
                 }
             ]
         },
@@ -520,6 +552,14 @@
                 {
                     "name": "DeactiveRangebox",
                     "time": 21.0
+                },
+                {
+                    "name": "ActiveNobSkill",
+                    "time": 9.500582695007324
+                },
+                {
+                    "name": "ActiveNobSkill",
+                    "time": 20.0
                 }
             ]
         },
@@ -655,6 +695,30 @@
                 },
                 {
                     "name": "FireSlashEffectOff",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
                     "time": 0.0
                 }
             ]

@@ -158,6 +158,8 @@ HRESULT CTanjiro::Render()
 
 void CTanjiro::TakeDamage(_float fDamage)
 {
+	if(m_fCurrentHP<=0.f)
+		return;
 	if (m_eState == CSTATE::DOWN)
 	{
 		__super::TakeDamage(fDamage);
@@ -685,27 +687,51 @@ void CTanjiro::Ready_Animation()
 	CAnimController::Condition StepBack{ "StepBack", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(idleIdx, stepBackIdx, StepBack, 0.1f);
 	ctrl->AddTransition(runIdx, stepBackIdx, StepBack, 0.1f);
+	ctrl->AddTransition(runEndIdx, stepBackIdx, StepBack, 0.1f);
 	ctrl->AddTransition(stepBackIdx, runIdx, cFin);
 	ctrl->AddTransition(stepBackIdx, idleIdx, cSpeedDown);
 
 	CAnimController::Condition StepFront{ "StepFront", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(idleIdx, stepFrontIdx, StepFront, 0.1f);
 	ctrl->AddTransition(runIdx, stepFrontIdx, StepFront, 0.1f);
+	ctrl->AddTransition(runEndIdx, stepFrontIdx, StepFront, 0.1f);
 	ctrl->AddTransition(stepFrontIdx, runIdx, cFin);
 	ctrl->AddTransition(stepFrontIdx, idleIdx, cSpeedDown);
 
 	CAnimController::Condition StepLeft{ "StepLeft", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(idleIdx, stepLeftIdx, StepLeft, 0.1f);
+	ctrl->AddTransition(runEndIdx, stepRightIdx, StepLeft, 0.1f);
 	ctrl->AddTransition(runIdx, stepLeftIdx, StepLeft, 0.1f);
 	ctrl->AddTransition(stepLeftIdx, runIdx, cFin);
+
+
 	ctrl->AddTransition(stepLeftIdx, idleIdx, cSpeedDown);
 
 	CAnimController::Condition StepRight{ "StepRight", CAnimController::EOp::Trigger, 0.f };
 
 	ctrl->AddTransition(idleIdx, stepRightIdx, StepRight, 0.1f);
+	ctrl->AddTransition(runEndIdx, stepRightIdx, StepRight, 0.1f);
 	ctrl->AddTransition(runIdx, stepRightIdx, StepRight, 0.1f);
 	ctrl->AddTransition(stepRightIdx, runIdx, cFin);
 	ctrl->AddTransition(stepRightIdx, idleIdx, cSpeedDown);
+
+	ctrl->AddTransition(stepRightIdx, stepLeftIdx, StepLeft);
+	ctrl->AddTransition(stepRightIdx, stepFrontIdx, StepFront);
+	ctrl->AddTransition(stepRightIdx, stepBackIdx, StepBack);
+
+	ctrl->AddTransition(stepLeftIdx, stepRightIdx, StepRight);
+	ctrl->AddTransition(stepLeftIdx, stepFrontIdx, StepFront);
+	ctrl->AddTransition(stepLeftIdx, stepBackIdx, StepBack);
+
+
+	ctrl->AddTransition(stepFrontIdx, stepLeftIdx, StepLeft);
+	ctrl->AddTransition(stepFrontIdx, stepRightIdx, StepRight);
+	ctrl->AddTransition(stepFrontIdx, stepBackIdx, StepBack);
+
+
+	ctrl->AddTransition(stepBackIdx, stepLeftIdx, StepLeft);
+	ctrl->AddTransition(stepBackIdx, stepRightIdx, StepRight);
+	ctrl->AddTransition(stepBackIdx, stepFrontIdx, StepFront);
 
 	CAnimController::Condition StepRight2{ "StepRight2", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(stepRightIdx, stepRightIdx2, StepRight2);
@@ -716,6 +742,8 @@ void CTanjiro::Ready_Animation()
 	ctrl->AddTransition(stepLeftIdx, stepLeftIdx2, StepLeft2);
 	ctrl->AddTransition(stepLeftIdx2, stepLeftIdx, StepLeft);
 	ctrl->AddTransition(stepLeftIdx2, idleIdx, cFin);
+
+
 
 	CAnimController::Condition StepRightJump{ "StepRightJump", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(jump0Idx, stepRightJumpIdx, StepRightJump, 0.1f);

@@ -2,6 +2,7 @@
 #include "Shader.h"
 #include "Model.h"
 #include "GameInstance.h"
+#include "EffectManager.h"
 
 CEnvironment::CEnvironment(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -131,17 +132,9 @@ HRESULT CEnvironment::Bind_Shaders()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
 
-	//const LIGHT_DESC* pLightDesc = m_pGameInstance->Get_Light(1);
-	//if (!pLightDesc)
-	//	return E_FAIL;
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
-	//	return E_FAIL;
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))
-	//	return E_FAIL;
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
-	//	return E_FAIL;
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
-	//	return E_FAIL;
+	_float fCamFar = m_pGameInstance->Get_CameraFar();
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCameraFar", &fCamFar, sizeof(_float))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -175,4 +168,27 @@ void CEnvironment::Free()
 		Safe_Release(m_pShaderCom);
 	}
 	Safe_Release(m_pModelCom);
+}
+
+void CEnvironment::OnCollisionEnter(CCollider* other)
+{
+}
+
+void CEnvironment::OnCollisionEnter(CCollider* other, const _float3& hitPos)
+{
+	if (other->GetType() == ColliderType::HITBOX)
+	{
+		auto pOtherOwner = other->GetOwner();
+		//if (m_eState != EnmuState::SWINGATTACK)
+		//{
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitGroundParticle"), hitPos);
+	}
+}
+
+void CEnvironment::OnCollisionStay(CCollider* other, float fTimeDelta)
+{
+}
+
+void CEnvironment::OnCollisionExit(CCollider* other)
+{
 }

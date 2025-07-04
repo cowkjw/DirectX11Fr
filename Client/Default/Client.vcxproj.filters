@@ -235,6 +235,24 @@
     <Filter Include="01.GameObject\Effect\Particle\SlashHit\Cross">
       <UniqueIdentifier>{13ed1714-744b-41d9-8489-46c9bcaa6113}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.GameObject\Effect\Particle\SlashHit\Shock">
+      <UniqueIdentifier>{af8bac01-5b1a-49dc-a65b-961faa18dc8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Effect\Mesh\Akaza">
+      <UniqueIdentifier>{b33676ff-8c02-4335-8e82-8074e6077813}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Effect\Mesh\Kyo\Enk">
+      <UniqueIdentifier>{a1d14b4d-8dd2-4b88-82f9-8557504a727d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Effect\KyojuroEffect">
+      <UniqueIdentifier>{220b8871-9543-402a-97ab-00762bb0dce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Effect\Mesh\Kyo\Kie">
+      <UniqueIdentifier>{03f6709d-627d-4315-97d8-67b4e79f308b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Effect\Mesh\Kyo\Nob">
+      <UniqueIdentifier>{104df070-6a42-47af-9704-dfbe1c6e2f11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -533,6 +551,30 @@
     </ClInclude>
     <ClInclude Include="..\Public\HitSlashCrossParticle.h">
       <Filter>01.GameObject\Effect\Particle\SlashHit\Cross</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MySequence.h">
+      <Filter>97.IMGUI\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HitShockParticle.h">
+      <Filter>01.GameObject\Effect\Particle\SlashHit\Shock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WindSlashEffect.h">
+      <Filter>01.GameObject\Effect\Mesh\Akaza</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\KyojuroEnkEffect.h">
+      <Filter>01.GameObject\Effect\Mesh\Kyo\Enk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\KyojuroEnkSpiralEffect.h">
+      <Filter>01.GameObject\Effect\Mesh\Kyo\Enk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\KyojuroEnk.h">
+      <Filter>01.GameObject\Effect\KyojuroEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\KyojuroKienEffect.h">
+      <Filter>01.GameObject\Effect\Mesh\Kyo\Kie</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\KyojuroNobEffect.h">
+      <Filter>01.GameObject\Effect\Mesh\Kyo\Nob</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -845,6 +887,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\HitSlashCrossParticle.cpp">
       <Filter>01.GameObject\Effect\Particle\SlashHit\Cross</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MySequence.cpp">
+      <Filter>97.IMGUI\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HitShockParticle.cpp">
+      <Filter>01.GameObject\Effect\Particle\SlashHit\Shock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WindSlashEffect.cpp">
+      <Filter>01.GameObject\Effect\Mesh\Akaza</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\KyojuroEnkEffect.cpp">
+      <Filter>01.GameObject\Effect\Mesh\Kyo\Enk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\KyojuroEnkSpiralEffect.cpp">
+      <Filter>01.GameObject\Effect\Mesh\Kyo\Enk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\KyojuroEnk.cpp">
+      <Filter>01.GameObject\Effect\KyojuroEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\KyojuroKienEffect.cpp">
+      <Filter>01.GameObject\Effect\Mesh\Kyo\Kie</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\KyojuroNobEffect.cpp">
+      <Filter>01.GameObject\Effect\Mesh\Kyo\Nob</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

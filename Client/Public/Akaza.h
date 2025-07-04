@@ -40,6 +40,7 @@ public:
 private:
 	virtual HRESULT Ready_Components() override;
 	virtual void Ready_Animation() override;
+	void ReadyAnimEvents();
 
 	_bool IsCooldownReady(_float& fCooldownVar, _float fTimeDelta, _float fBaseDelay);
 	virtual void FillInput(InputData& outInput) override;
@@ -47,6 +48,8 @@ private:
 
 	void ActiveCollider();
 	void DeactiveCollider();
+	void ActiveFootCollider();
+	void DeactiveFootCollider();
 
 
 private:

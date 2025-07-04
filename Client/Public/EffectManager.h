@@ -39,6 +39,8 @@ private:
 	unordered_map<_wstring, CEffect*> m_EffectMap;
 	list<CParticleEffect*> m_ActiveParticleList;
 	list<CParticleEffect*> m_PendingParticleList;
+	list <CMeshEffect*> m_ActiveMeshEffectList;
+	list <CMeshEffect*> m_PendingMeshEffectList;
 public:
 	virtual void Free() override;
 };

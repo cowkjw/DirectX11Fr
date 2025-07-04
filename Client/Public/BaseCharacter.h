@@ -73,6 +73,8 @@ public:
 	virtual void ActiveCollider() {};
 	virtual void DeactiveCollider() {};
 	virtual void TakeDamage(_float fDamage) {
+		if (m_fCurrentHP <= 0.f) 
+			return;
 		StartHitStop(0.25f); // 히트 스탑 시작
 		m_fCurrentHP -= fDamage;
 		if (m_fCurrentHP <= 0.f)

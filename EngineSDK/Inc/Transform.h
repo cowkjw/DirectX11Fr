@@ -86,6 +86,8 @@ public:
 	void SetDirty(_bool bDirty) { m_bDirty = bDirty; }
 	void UpdateEulerAngles();
 
+	void Set_SpeedPerSec(_float fSpeedPerSec) { m_fSpeedPerSec = fSpeedPerSec; }
+	void Set_RotationPerSec(_float fRotationPerSec) { m_fRotationPerSec = fRotationPerSec; }
 	_float Get_SpeedPerSec() const { return m_fSpeedPerSec; }
 	_float Get_RotationPerSec() const { return m_fRotationPerSec; }
 

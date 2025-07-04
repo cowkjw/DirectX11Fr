@@ -5,6 +5,12 @@ texture2D g_Texture : register(t0);
 texture2D g_MaskTexture : register(t1);
 vector g_vCamPosition;
 
+cbuffer CB_UV : register(b0)
+{
+    float2 g_uvOffset;
+    float2 g_uvScale;      // UV 스케일 (default는 (1,1))
+}
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -164,7 +170,6 @@ PS_OUT PS_MAIN(PS_IN In)
     // 최종 생명 종료 조건
     if (In.vLifeTime.y >= In.vLifeTime.x)
         discard;
-
     return Out;
 }
 
@@ -225,6 +230,32 @@ PS_OUT PS_MAIN_MASK2(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_MASK_UV(PS_IN In)
+{
+    PS_OUT Out;
+    float2 uv;
+    uv.x = In.vTexcoord.x * g_uvScale.x + g_uvOffset.x;
+    uv.y = In.vTexcoord.y * g_uvScale.y + g_uvOffset.y;
+    float4 tex = g_Texture.Sample(DefaultSampler, uv);
+    if (tex.r < 0.1f)
+        discard;
+
+    // 비율 (0center, 1outer)
+    // 알파를 거리 비율로 사용
+    float dist = distance(uv, float2(0.5f, 0.5f)) / In.fAlphaVar;
+    dist = saturate(dist);
+
+    // 중심은 StartColor, 외곽은 EndColor
+    float3 radialColor = lerp(In.vStartColor, In.vEndColor, dist);
+
+    float3 finalRGB = tex.a * radialColor;
+    float  finalA = tex.a;
+    Out.vColor = float4(finalRGB, finalA);
+    //Out.vColor = float4(finalRGB, finalA);
+
+    return Out;
+}
+
 
 
 technique11 DefaultTechnique
@@ -233,7 +264,7 @@ technique11 DefaultTechnique
     pass Default
     {
         SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 
@@ -245,7 +276,7 @@ technique11 DefaultTechnique
     pass Mask
     {
 		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DSS_Default, 0);
+		SetDepthStencilState(DSS_None, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = compile gs_5_0 GS_MAIN();
@@ -254,11 +285,22 @@ technique11 DefaultTechnique
 	pass Mask2
     {
         SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN_MASK2();
     }
+
+    pass MaskUV
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_MASK_UV();
+    }
+
 
 }

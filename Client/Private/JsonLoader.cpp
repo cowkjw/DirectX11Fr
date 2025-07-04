@@ -365,6 +365,16 @@ HRESULT CJsonLoader::Load_Particle(const string& filePath, CParticleSystem** ppP
 			j["3DSize"][2].get<float>()
 		};
 	}
+	if (j.contains("Use3DRotation"))
+		particleDesc.b3DRotation = j["Use3DRotation"].get<bool>();
+	if (j.contains("3DRotation") && j["3DRotation"].is_array() && j["3DRotation"].size() == 3)
+	{
+		particleDesc.v3DRotation = {
+			j["3DRotation"][0].get<float>(),
+			j["3DRotation"][1].get<float>(),
+			j["3DRotation"][2].get<float>()
+		};
+	}
 
 	*ppParticle = CParticleSystem::Create(m_pDevice, m_pContext, particleDesc);
 

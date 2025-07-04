@@ -38,6 +38,10 @@ void CEffectManager::SpawnParticleEffect(const _wstring& effectName, const _floa
 			}
 		}
 	}
+	else
+	{
+		static_cast<CMeshEffect*>(it->second)->SetBone(nullptr); // 본 소켓이 없으면 그냥 월드에 생성하도록
+	}
 }
 
 void CEffectManager::RegisterEffect(const _wstring& effectName, CEffect* pEffect)
@@ -66,6 +70,20 @@ void CEffectManager::ClenUpPendingParticleEffects()
 		}
 	}
 	m_PendingParticleList.clear();
+
+	for (auto it = m_PendingMeshEffectList.begin(); it != m_PendingMeshEffectList.end();)
+	{
+		if ((*it)->IsActive() == false)
+		{
+			Safe_Release(*it);
+			it = m_PendingMeshEffectList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+	m_PendingMeshEffectList.clear();
 }
 
 void CEffectManager::RemoveEffect(const _wstring& effectName)
