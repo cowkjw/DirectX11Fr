@@ -13,6 +13,8 @@
 #include "StateHurt.h"
 #include "StateHurtAir.h"
 #include "StateHurtBlow.h"
+#include <SlashEffect.h>
+#include "EffectManager.h"
 
 using AniCon = CAnimController::Condition;
 CTanjiro::CTanjiro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -62,10 +64,28 @@ HRESULT CTanjiro::Initialize(void* pArg)
 
 	Set_Weapon("R_Hand_1_Lct", dynamic_cast<CWeapon*>(pWeapon));
 
+
 	if (m_pWeapon) // 자식벡터로 넣지는 않음
 	{
 		m_pWeapon->SetParent(this);
+		CSlashEffect* pSlashEffect = dynamic_cast<CSlashEffect*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Effect_Slash"),
+			ToIndex(LEVEL::ENMU_BOSS), TEXT("Slash")));
+
+		CEffectManager::Get_Instance()->RegisterEffect(TEXT("Slash"), pSlashEffect);
+		if (pSlashEffect)
+		{
+			CBone* pBone = static_cast<CModel*>(m_pWeapon->Get_Component(TEXT("Com_Model")))->Get_Bone("C_Blade_2");// _end");
+
+			if (pBone)
+			{
+				pSlashEffect->SetParent(m_pWeapon);
+				pSlashEffect->Set_BoneSocket(pBone);
+				pSlashEffect->SetActive(false);
+				pSlashEffect->SetColor(_float4(0.247f, 0.572f, 0.88f, 1.f));
+			}
+		}
 	}
+
 
 	m_pColliderCom->SetListener(this);
 	ChangeState(new StateIdle(TEXT("Idle")));
@@ -941,6 +961,25 @@ void CTanjiro::ReadyAnimEvents()
 		}
 		});
 
+	m_pAnimatorCom->RegisterEventListener("SlashEffectOn", [&](const string& eventName) {
+
+		auto pFireSlashEffect = CEffectManager::Get_Instance()->GetEffect(TEXT("Slash"));
+		if (pFireSlashEffect)
+		{
+			static_cast<CMeshEffect*>(pFireSlashEffect)->SetRenderMesh(true);
+			pFireSlashEffect->SetActive(true);
+		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("SlashEffectOff", [&](const string& eventName) {
+
+		auto pFireSlashEffect = CEffectManager::Get_Instance()->GetEffect(TEXT("Slash"));
+		if (pFireSlashEffect)
+		{
+			static_cast<CMeshEffect*>(pFireSlashEffect)->SetRenderMesh(false);
+			//	pFireSlashEffect->SetActive(false);
+		}
+		});
 }
 
 void CTanjiro::ActiveCollider()

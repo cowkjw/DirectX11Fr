@@ -961,7 +961,26 @@ void CAkaza::Ready_Animation()
 	ctrl->AddTransition(attack4Idx, fall0Idx, cHurtBlow, 0.1f);
 	ctrl->AddTransition(attack5Idx, fall0Idx, cHurtBlow, 0.1f);
 
+	ctrl->AddTransition(hurtFIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(hurtFIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(hurtFIdx, fall0Idx, cHurtBlow, 0.1f);
 
+	ctrl->AddTransition(hurtAirborneIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(hurtAirborneIdx, fall0Idx, cHurtBlow, 0.1f);
+
+	ctrl->AddTransition(boundIdx, hurtFIdx, cHurt, 0.1f);
+
+	ctrl->AddTransition(fall0Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(fall1Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(fall2Idx, hurtFIdx, cHurt, 0.1f);
+
+	ctrl->AddTransition(fall0Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(fall1Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(fall2Idx, boundIdx, cHurtBound, 0.1f);
+
+	ctrl->AddTransition(fall0Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(fall1Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(fall2Idx, fall0Idx, cHurtBlow, 0.1f);
 
 }
 

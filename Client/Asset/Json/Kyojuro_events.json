@@ -386,6 +386,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
                 }
             ]
         },
@@ -400,6 +404,14 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 15.0
+                },
+                {
+                    "name": "FireSlashEffectOn",
+                    "time": 13.001630783081055
+                },
+                {
+                    "name": "FireSlashEffectOff",
+                    "time": 26.003026962280273
                 }
             ]
         },
@@ -695,6 +707,10 @@
                 },
                 {
                     "name": "FireSlashEffectOff",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
                     "time": 0.0
                 },
                 {

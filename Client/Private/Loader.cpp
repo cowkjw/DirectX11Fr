@@ -236,8 +236,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/SM_e_Plc_P0012_Slash001.fbx", PreTransformMatrix))))
 		return E_FAIL;
 	PreTransformMatrix = XMMatrixScaling(100.f, 100.f, 100.f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f));
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_DefaultSlash"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/DefaultSlash/SM_e_Plc_P0012_Slash001.fbx", PreTransformMatrix))))
+	//	return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_DefaultSlash"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/DefaultSlash/SM_e_Plc_P0012_Slash001.fbx", PreTransformMatrix))))
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/DefaultSlash/DefaultSlash.bin", PreTransformMatrix))))
 		return E_FAIL;
 	PreTransformMatrix = XMMatrixScaling(200.f, 200.f, 200.f);// *XMMatrixRotationX(XMConvertToRadians(180.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_WindSlash"),
@@ -245,7 +249,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_EnkFire"),
-		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/Enk/EnkMainFire.bin", PreTransformMatrix))))
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/Enk/Tiger.bin", PreTransformMatrix))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_EnkFireSpiral"),
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/Enk/EnkSpiral.bin", PreTransformMatrix))))
@@ -387,7 +391,7 @@ HRESULT CLoader::Loading_For_Editor()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_DefaultSlash"),
-		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/DefaultSlash/SM_e_Plc_P0012_Slash001.bin", PreTransformMatrix))))
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/DefaultSlash/DefaultSlash.bin", PreTransformMatrix))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_WindSlash"),
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Akaza/WindSlash.bin", PreTransformMatrix))))
@@ -501,7 +505,7 @@ HRESULT CLoader::Loading_For_Editor()
 
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_EnkFire"),
-		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/Enk/EnkMainFire.bin", PreTransformMatrix))))
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/Enk/Tiger.bin", PreTransformMatrix))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_EnkFireSpiral"),
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/Enk/EnkSpiral.bin", PreTransformMatrix))))
@@ -594,11 +598,21 @@ HRESULT CLoader::Loading_For_EnmuBoss()
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::ANIM, "../Asset/Resources/Models/Tanjiro/Tanjiro.bin", PreTransformMatrix))))
 		return E_FAIL;
 
-
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_DefaultSlash"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Kyo/DefaultSlash/DefaultSlash.bin", PreTransformMatrix))))
+		return E_FAIL;
 	PreTransformMatrix =  XMMatrixRotationX(XMConvertToRadians(90.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_TanjiroWeapon"),
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Weapon/TanjiroWeapon.bin", PreTransformMatrix))))
 		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Effect_Slash"),
+		CSlashEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+
 
 
 

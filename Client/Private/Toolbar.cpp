@@ -621,7 +621,14 @@ void CToolbar::FBXLoader()
 			string pathStr = WStringToString(path);
 			_matrix		PreTransformMatrix = XMMatrixIdentity();
 
-			PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(-270.f));
+			//XMVECTOR q = XMQuaternionRotationRollPitchYaw(
+			//	XMConvertToRadians(90.f),
+			//	XMConvertToRadians(180.f),
+			//	XMConvertToRadians(0.f)
+			//);
+			//// 행렬로 변환
+		//	PreTransformMatrix = XMMatrixRotationQuaternion(q);
+			PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 			CModel::Create(m_pDevice, m_pContext, isAnimation ? MODEL::ANIM : MODEL::NONANIM, pathStr.c_str(), PreTransformMatrix);
 		}
 	}

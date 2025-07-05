@@ -38,10 +38,6 @@ void CEffectManager::SpawnParticleEffect(const _wstring& effectName, const _floa
 			}
 		}
 	}
-	else
-	{
-		static_cast<CMeshEffect*>(it->second)->SetBone(nullptr); // 본 소켓이 없으면 그냥 월드에 생성하도록
-	}
 }
 
 void CEffectManager::RegisterEffect(const _wstring& effectName, CEffect* pEffect)

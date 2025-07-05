@@ -295,7 +295,7 @@ HRESULT CKyojuroEnk::Ready_Effects()
 	}
 
 	m_Effects.reserve(3);
-	for (_int i = 0; i < 3; ++i)
+	for (_int i = 0; i < 1; ++i)
 	{
 		_float fYawOffset = XM_PIDIV2 * i;
 		_float fDegree = XMConvertToDegrees(fYawOffset);

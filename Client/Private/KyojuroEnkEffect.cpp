@@ -28,16 +28,18 @@ HRESULT CKyojuroEnkEffect::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 	m_iShaderPass = 4; 
-	m_pTransformCom->Scaling(_float3(1.3f, 1.2f, 1.3f));
+	//m_pTransformCom->Scaling(_float3(10.3f, 10.2f, 30.f));
+	m_pTransformCom->Scaling(_float3(0.2f, 0.2f, 0.2f));
 
 	m_bUseOffset = true;
 	m_bRenderMesh = true;
-	m_vUVScale = { 1.f,2.5f };
+//	m_vUVScale = { 1.f,2.5f };
+	m_vUVScale = { 1.f,5.f };
 	m_fRotationSpeed = 3.5f;
 
 
 	
-	m_pTransformCom->Set_SpeedPerSec(40.f);
+	m_pTransformCom->Set_SpeedPerSec(35.f);
 	return S_OK;
 }
 
@@ -63,14 +65,11 @@ void CKyojuroEnkEffect::Update(_float fTimeDelta)
 
 	if (m_bUseOffset)
 	{
-	/*	m_fUVOffset.y += fTimeDelta*0.7f;
-		if (m_fUVOffset.y >= 1.f)
+		m_vUVOffset.y += fTimeDelta*0.7f;
+		if (m_vUVOffset.y >= 1.f)
 		{
-			m_fUVOffset.y = 0.f;
-		}*/
-	
-		_vector vAxis = m_pTransformCom->Get_State(STATE::LOOK);
-		m_pTransformCom->Turn(vAxis, fTimeDelta * m_fRotationSpeed);
+			m_vUVOffset.y = 0.f;
+		}
 	}
 	for (auto& particle : m_ParticleEffects)
 	{

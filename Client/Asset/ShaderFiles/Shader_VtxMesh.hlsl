@@ -10,6 +10,8 @@ texture2D g_EmissiveTexture;
 float2 g_vUVOffset;
 float2 g_vUVScale;
 
+float  g_fTime;       // 누적 시간
+float  g_fDuration;   // 총 지속 시간
 float g_fCameraFar;
 
 float4 g_vCamPosition;
@@ -153,43 +155,79 @@ PS_OUT_PRE PS_MAIN_Effect_Fire(PS_IN In)
 
     float2 uv = (In.vTexcoord + g_vUVOffset) * g_vUVScale;
 
-    // uv로 일단 늘리기
+    vector  Mask = g_SpecularTexture.Sample(DefaultSampler, uv);
+    if (Mask.r < 0.1f)
+        discard;
+ //   float2 raw = g_NormalTexture.Sample(MirrSmp, uv).rg;
+ //   float2 off = (raw - 0.5) * 0.5;
+ //   float2 uvD = uv + off;
 
-    vector  vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler,uv);
-    // 마스크 처리
-	vector  vMtrlSpec = g_SpecularTexture.Sample(DefaultSampler, uv);
-    if(vMtrlSpec.r<0.1f)
-		discard;
-	Out.vColor = vMtrlDiffuse;
+ //   vector  vMtrlDiffuse = g_DiffuseTexture.Sample(MirrSmp, uvD);
+ //    마스크 처리
+
+	//Out.vColor = vMtrlDiffuse;
+
+    vector  vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    //if (vMtrlDiffuse.a < 0.1f)
+    //    discard;
+
+    Out.vColor = vMtrlDiffuse;
     return Out;
 }
 
 PS_OUT_PRE PS_MAIN_Effect_MASK_NORMAL(PS_IN In)
 {
+ //   PS_OUT_PRE Out;
+
+ //   float2 uv = (In.vTexcoord + g_vUVOffset);
+ //       float mask = g_NormalTexture.Sample(DefaultSampler, uv).r;
+ //   if (mask < 0.1f)
+ //       discard;
+ //   // 디스토션 적용
+ //   // 왜곡이 0~1 기준으로 처리해서 없으면 텍스쳐가 0.5 아니면 왼쪽으로 -5 아니면 오른쪽으로 5
+ //   float2 distortion = (g_SpecularTexture.Sample(DefaultSampler, uv).rg - 0.5f) * 0.5f;
+ //   float2 distortedUV = uv + distortion;
+	//// distortedUV로 디퓨즈 텍스처 샘플링
+	//float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, distortedUV);
+
+
+ //   // 기본 컬러
+ //   vDiffuse*= g_vColor;
+
+ //   // 마스크
+
+
+ //   Out.vColor = vDiffuse;
+ //   Out.vColor.a *= mask;
+
     PS_OUT_PRE Out;
 
-    float2 uv = (In.vTexcoord + g_vUVOffset);
-        float mask = g_NormalTexture.Sample(DefaultSampler, uv).r;
-    if (mask < 0.1f)
-        discard;
-    // 디스토션 적용
-    // 왜곡이 0~1 기준으로 처리해서 없으면 텍스쳐가 0.5 아니면 왼쪽으로 -5 아니면 오른쪽으로 5
-    float2 distortion = (g_SpecularTexture.Sample(DefaultSampler, uv).rg - 0.5f) * 0.5f;
-    float2 distortedUV = uv + distortion;
-	// distortedUV로 디퓨즈 텍스처 샘플링
-	float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, distortedUV);
+    // 1) 기본 UV
+    float2 uv0 = (In.vTexcoord + g_vUVOffset) * g_vUVScale;
+    uv0.x *= 0.5f;
 
+    float mask = g_DiffuseTexture.Sample(DefaultSampler, uv0).r;
+    if (mask < 0.1) discard;
+	//uv0.x *= 2.0f; // 원상복구
+    float2 uvW = uv0;// +float2(0, -g_fTime * 0.5);
+    float wave = g_EmissiveTexture.Sample(DefaultSampler, uvW).r;
 
-    // 기본 컬러
-    vDiffuse*= g_vColor;
+    float2 uvS = uv0;// + float2(g_fTime * 0.2, 0);
+    float2 swirl = (g_NormalTexture.Sample(DefaultSampler, uvS).rg - 0.5) * 0.2;
 
-    // 마스크
+    // 노이즈
+    float2 uvN = uv0;/// +float2(-g_fTime * 0.3, 0);
+    float noise = (g_SpecularTexture.Sample(DefaultSampler, uvN).r - 0.5) * 0.5;
 
+    float2 uvD = uv0 + swirl + float2(noise, noise);
 
-    Out.vColor = vDiffuse;
-    Out.vColor.a *= mask;
+    float4 col = g_vColor + wave;
 
+    col.a = mask *wave;
+
+    Out.vColor = col;
     return Out;
+
 }
 
 PS_OUT_PRE PS_MAIN_Effect_DistMask(PS_IN In)
@@ -210,7 +248,7 @@ PS_OUT_PRE PS_MAIN_Effect_DistMask(PS_IN In)
 
 
     //Out.vColor = vMtrlDiffuse;
-
+    //return Out;
 
     float2 uv0 = In.vTexcoord + g_vUVOffset;
 
@@ -239,8 +277,6 @@ PS_OUT_PRE PS_MAIN_Effect_DistMask(PS_IN In)
     return Out;
 }
 
-float  g_fTime;       // 누적 시간
-float  g_fDuration;   // 총 지속 시간
 
 PS_OUT_PRE PS_MAIN_Effect_Nob(PS_IN In)
 {

@@ -28,14 +28,14 @@ HRESULT CKyojuroEnkSpiralEffect::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 	m_iShaderPass = 4; 
-	m_pTransformCom->Scaling(_float3(0.3f, 0.25f, 0.25f));
+	m_pTransformCom->Scaling(_float3(0.3f, 0.3f, 0.35f));
 
 	m_bUseOffset = true;
 	m_bRenderMesh = true;
 
 
 	m_fRotationSpeed = 5.f;
-	m_pTransformCom->Set_SpeedPerSec(40.f);
+	m_pTransformCom->Set_SpeedPerSec(45.f);
 	return S_OK;
 }
 

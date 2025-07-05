@@ -14,6 +14,13 @@ sampler PointSampler = sampler_state
     AddressV = wrap;
 };
 
+sampler MirrSmp = sampler_state
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = MIRROR; // U축을 미러 반복
+    AddressV = CLAMP;
+};
+
 sampler LinearClampSampler = sampler_state
 {
     filter = min_mag_mip_linear;
