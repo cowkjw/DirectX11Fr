@@ -2,6 +2,7 @@
 #include <BaseCharacter.h>
 #include "GameInstance.h"
 #include <EnmuParts.h>
+#include "EffectManager.h"
 
 CBodyColliderParts::CBodyColliderParts(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -262,6 +263,22 @@ void CBodyColliderParts::OnCollisionEnter(CCollider* other)
 				pBoss->OnAttackHit(pTarget);
 			}
 		}
+	}
+}
+
+void CBodyColliderParts::OnCollisionEnter(CCollider* other, const _float3& hitPos)
+{
+	auto pMyParent = m_pParent;
+	auto otherOwner = other->GetOwner();
+	if (pMyParent == otherOwner->GetParent())
+		return; // 자기 자신과 충돌은 무시)
+
+	if (other->GetType() != ColliderType::HITBOX&&other->GetType()!=ColliderType::ENVIRONMENT)
+	{
+		if (m_DamagedTargets.find(other->GetOwner()->GetParent()) != m_DamagedTargets.end())
+			return; // 이미 데미지를 입힌 대상이면 무시
+		m_DamagedTargets.insert(other->GetOwner()->GetParent()); // 데미지를 입힌 대상에 추가
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitBodyShockParticle"), hitPos);
 	}
 }
 

@@ -29,9 +29,10 @@ HRESULT CSlashEffect::Initialize(void* pArg)
 	m_iShaderPass = 3; // 일단 2번으로 테스트
 	m_pTransformCom->Scaling(_float3(1.f, 1.f, 1.f));
 	// 테스트용 컬러
-	m_vColor = _float4(1.f, 0.7f,0.0f, 0.85f); // 주황 느낌
+	m_vColor = _float4(0.705f, 0.317f,0.168f, 1.f); // 주황 느낌
 	m_bUseOffset = true;
-
+	m_vUVScale = _float2(1.f, 1.f); // UV 스케일
+	m_fDuration = 3.f;
 
 	return S_OK;
 }
@@ -54,17 +55,14 @@ void CSlashEffect::Update(_float fTimeDelta)
 
 	if (m_bUseOffset)
 	{
-		m_fUVOffset.x += fTimeDelta*2.f; // UV 애니메이션 속도 조절
+		m_vUVOffset.x += fTimeDelta*2.f; // UV 애니메이션 속도 조절
 		//m_fUVOffset.y += fTimeDelta * 0.5f; // UV 애니메이션 속도 조절
-		if (m_fUVOffset.x >= 1.f)
+		if (m_vUVOffset.x >= 1.f)
 		{
 			m_bRenderMesh = false;
 			m_bUseOffset = false;
-			//SetActive(false);
-			m_fUVOffset.x = 0.f;
+			SetActive(false);
 		}
-		if (m_fUVOffset.y > 1.f)
-			m_fUVOffset.y = 0.f;
 	}
 	for (auto& particle : m_ParticleEffects)
 	{
@@ -77,37 +75,6 @@ void CSlashEffect::Update(_float fTimeDelta)
 
 void CSlashEffect::Late_Update(_float fTimeDelta)
 {
-	//if (m_pBoneSocket)
-	//{
-	//	_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
-	//	_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
-
-	//	_matrix matScale = XMMatrixScaling(30.f, 30.f, 30.f);
-	//	_matrix world = XMMatrixMultiply(XMLoadFloat4x4(&boneLocal), XMLoadFloat4x4(&parentWorld));
-	//	//world = XMMatrixMultiply(matScale, world); 
-
-	//	_float4x4 WorldMatrix{};
-	//	XMStoreFloat4x4(&WorldMatrix, world);
-	//	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
-	//}
-
-	//if (m_pBoneSocket)
-	//{
-	//	_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
-	//	_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
-	//	_matrix matBoneLocal = XMLoadFloat4x4(&boneLocal);
-	//	for (size_t i = 0; i < 3; i++)
-	//		matBoneLocal.r[i] = XMVector3Normalize(matBoneLocal.r[i]);
-
-	//	_matrix matScale = XMMatrixScaling(1.f, 1.f, 1.f);
-	//	//	_matrix world = XMMatrixMultiply(XMLoadFloat4x4(&boneLocal), XMLoadFloat4x4(&parentWorld));
-	//	_matrix world = XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix()) * matBoneLocal * XMLoadFloat4x4(&parentWorld);
-	//	//world = XMMatrixMultiply(matScale, world); 
-
-	//	_float4x4 WorldMatrix{};
-	//	XMStoreFloat4x4(&m_CombinedWorldMatrix, world);
-	//	m_pTransformCom->Set_WorldMatrix(m_CombinedWorldMatrix);
-	//}
 	if (m_pBoneSocket)
 	{
 		_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
@@ -141,7 +108,11 @@ void CSlashEffect::Late_Update(_float fTimeDelta)
 }
 
 HRESULT CSlashEffect::Render()
-{
+{	// 4번에 Emissive 라인텍스쳐 빛나는 영역인듯
+	// 6번에 Normal distortion 넣어둠
+	// 8번에 Specular 노이즈 
+	// 1번에 Diffuse 마스크
+	m_pModelCom->Bind_Material(m_pShaderCom, "g_EmissiveTexture", 0, aiTextureType_EMISSIVE, 0);
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
@@ -158,6 +129,8 @@ HRESULT CSlashEffect::Ready_Components()
 	if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_DefaultSlash"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 	{
+		if (FAILED(__super::Add_Component(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_DefaultSlash"),
+			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 	}
 
@@ -168,9 +141,11 @@ HRESULT CSlashEffect::Ready_Components()
 HRESULT CSlashEffect::Bind_Shader()
 {
 	__super::Bind_Shader();
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUVOffset", &m_fUVOffset, sizeof(_float2))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVOffset", &m_vUVOffset, sizeof(_float2))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVScale", &m_vUVScale, sizeof(_float2))))
 		return E_FAIL;
 	return S_OK;
 }
@@ -181,7 +156,7 @@ void CSlashEffect::OnDisable()
 	//{
 	//	m_pHitParticle->SetActive(false); // 히트 파티클 비활성화
 	//}
-	m_fUVOffset = _float2(0.5f, 0.f); // UV 오프셋 초기화
+	m_vUVOffset = _float2(0.5f, 0.f); // UV 오프셋 초기화
 }
 
 void CSlashEffect::OnEnable()

@@ -1,6 +1,7 @@
 #pragma once
 #include "Pannel.h"
 #include <JsonLoader.h>
+#include "MySequence.h"
 BEGIN_NAMESPACE(Engine)
 class CGameObject;
 class CAnimation;
@@ -24,6 +25,8 @@ public:
 	// 네비 매쉬용
 	void CreatePoints(const _float3& worldPos);
 	void DeletePoints(const _float3& worldPos);
+	// 멀티 파티클용
+	void RemoveSequence(_int iIndex);
 private:
 	void DrawToolbar();
 
@@ -43,6 +46,10 @@ private:
 	HRESULT DrawParticlePreview();
 	// 파티클로 만든 이펙트 생성
 	void ParticleEffectEditor();
+	void MultiParticleEditorBySqeuence();
+	HRESULT DrawMultiParticlePreview();
+	void AddSequence(const CMySequence::SequenceItem& item);
+	
 	void CreateParticleEffect(const _wstring& particleName, PARTICLE_UV vUV, _uint iTextureIndex = 0, _uint iShaderPass = 0);
 	// 컷씬 카메라용 프리뷰
 	void EditCutSceneCamera();
@@ -94,17 +101,30 @@ private:
 
 
 
-	// 파티클 시스템 관련
+	// 파티클 관련
 	_bool m_bIsPointInstance = false; // 포인트 인스턴스 모드 여부
-	_int m_iShaderPass = 0; // 현재 셰이더 패스
-	_int m_iTextureIndex = 0;
-	_uint m_iMaxTextureCount = 1; // 최대 텍스처 개수
-	CParticleSystem* m_pParticleSystem = nullptr; // 파티클 시스템
-	CShader* m_pPreviewShader = nullptr;
+	_int m_iShaderPass = 0; // 현재 프리뷰 쉐이더 패스
+	_int m_iTextureIndex = 0; // 현재 프리뷰 텍스쳐 인덱스
+	_uint m_iMaxTextureCount = 1; // 최대 텍스처 개수 (미리 보기용 텍스쳐의 텍스쳐 수)
+	_wstring m_ShaderKey; // 미리 보기용 쉐이더 키
+	_wstring m_TextureKey; // 미리 보기용 텍스쳐 키
+	CShader* m_pPreviewShader = nullptr; // 파티클 미리보기용 쉐이더
 	CTexture* m_pPreviewTexture = nullptr;
+	CParticleSystem* m_pParticleSystem = nullptr; // 파티클 시스템 (1개 짜리 만들어서 볼 때 디버그용)
+	// 멀티 파티클 (이펙트 한번에 터질 때 변수들)
+	vector<CParticleSystem*> m_vecParticleSystems; // 파티클 시스템들
+	vector<CTexture*> m_vecMultiParticleTextures; // 파티클 텍스쳐들
+	vector<CShader*> m_vecMultiParticleShaders; // 파티클 셰이더들
+	vector<_int> m_vecMultiParticleTextureIndices; // 파티클 텍스쳐 인덱스들
+	vector<_int> m_vecMultiParticleShaderPasses; // 파티클 셰이더 패스들
 	ID3D11ShaderResourceView* m_pEffectPreviewSRV = nullptr; // 렌더 타겟 뷰
-	class CParticleEffect* m_pParticleEffect = nullptr; // 파티클 이펙트
+	ID3D11ShaderResourceView* m_pMultiEffectPreviewSRV = nullptr; // 렌더 타겟 뷰
+	CMySequence* m_pMySequence = nullptr; 
+	vector<CMySequence::SequenceItem> m_vecSequenceItems; // 시퀀스 아이템들
+	_bool m_bIsPlaying = false;
 
+	// 일단 보류
+	class CParticleEffect* m_pParticleEffect = nullptr; // 파티클 이펙트
 
 	// 네비 매쉬용
 	CNavigation* m_pNavigation = nullptr;

@@ -1,17 +1,21 @@
 #include "Kyojuro.h"
 #include "BodyColliderParts.h"
-#include "GameInstance.h"
+#include "KyojuroKienEffect.h"
+#include "KyojuroNobEffect.h"
+#include "FireSlashEffect.h"
+#include "DashSmokeEffect.h"
+#include "EffectManager.h"
 #include "UIProgressBar.h"
+#include "GameInstance.h"
 #include "InputBuffer.h"
+#include <SlashEffect.h>
 #include <JsonLoader.h>
 #include "Animation.h"
 #include "Navigation.h"
 #include "StateIdle.h"
+#include "KyojuroEnk.h"
 #include "StateHurt.h"
 #include "Weapon.h"	
-#include "FireSlashEffect.h"
-#include "EffectManager.h"
-#include <SlashEffect.h>
 
 using AniCon = CAnimController::Condition;
 CKyojuro::CKyojuro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -126,8 +130,15 @@ HRESULT CKyojuro::Initialize(void* pArg)
 		m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
 	}
 	// 테스트용
-	m_fMaxHP = 200.f;
+	m_fMaxHP = 150.f;
 	m_fCurrentHP = m_fMaxHP;
+
+
+
+	if(FAILED(Ready_Effects()))
+		return E_FAIL;
+
+
 	return S_OK;
 }
 
@@ -144,11 +155,45 @@ void CKyojuro::Update(_float fTimeDelta)
 		child->Update(fTimeDelta);
 	}
 
+	if (m_pEnk&& m_pEnk->IsActive())
+	{
+		m_pEnk->Update(fTimeDelta);
+	}
+
+	if (m_pKienEffect && m_pKienEffect->IsActive())
+	{
+		m_pKienEffect->Update(fTimeDelta);
+	}
+	for (auto& pNob : m_pNobEffect)
+	{
+		if (pNob && pNob->IsActive())
+		{
+			pNob->Update(fTimeDelta);
+		}
+	}
+
 }
 
 void CKyojuro::Late_Update(_float fTimeDelta)
 {
 
+
+	if (m_pEnk && m_pEnk->IsActive())
+	{
+		m_pEnk->Late_Update(fTimeDelta);
+	}
+
+	if (m_pKienEffect && m_pKienEffect->IsActive())
+	{
+		m_pKienEffect->Late_Update(fTimeDelta);
+	}
+	for (auto& pNob : m_pNobEffect)
+	{
+		if (pNob && pNob->IsActive())
+		{
+			pNob->Late_Update(fTimeDelta);
+		}
+	}
 
 	__super::Late_Update(fTimeDelta);
 	for (auto& child : m_vecChildren)
@@ -179,6 +224,8 @@ HRESULT CKyojuro::Render()
 
 void CKyojuro::TakeDamage(_float fDamage)
 {
+	if (m_fCurrentHP <= 0.f)
+		return;
 	if (m_eState == CSTATE::GUARD)
 	{
 		fDamage *= 0.5f; // 가드 중에는 피해량 감소
@@ -245,12 +292,9 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
 				pCharacter->TakeDamage(2.5f);
-				if (pCharacter->IsAirborne())
-				{
-					StartHitStop(0.2f);
-					pCharacter->LaunchAirborne(40.f);
-					pCharacter->PushBack(this);
-				}
+				pCharacter->StartHitStop(0.4f);
+				StartHitStop(0.4f);					
+				pCharacter->PushBack(this);
 			}
 			break;
 		case CSTATE::ATTACK_DOWN:
@@ -268,11 +312,11 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 			}
 			break;
 		case CSTATE::SKILL:
-			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
-			{
-				pCharacter->TakeDamage(10.f);
-				pCharacter->LaunchAirborne(40.f);
-			}
+			//if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
+			//{
+			//	pCharacter->TakeDamage(10.f);
+			//	pCharacter->LaunchAirborne(40.f);
+			//}
 			break;
 		case CSTATE::SKILL1:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
@@ -308,6 +352,7 @@ void CKyojuro::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
 	if (other->GetType() == ColliderType::HITBOX)
 	{
 		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("AkazaHitParticle"), hitPos);
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitBodyShockParticle"), hitPos);
 	}
 }
 
@@ -339,6 +384,45 @@ HRESULT CKyojuro::Ready_Components()
 	return S_OK;
 }
 
+HRESULT CKyojuro::Ready_Effects()
+{	
+	//enk skill
+	m_pEnk = CKyojuroEnk::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pEnk)
+	{
+		return E_FAIL;
+	}
+	m_pEnk->SetParent(this);
+	m_pEnk->SetActive(false); // 초기에는 비활성화
+	m_pKienEffect = CKyojuroKienEffect::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pKienEffect)
+	{
+		return E_FAIL;
+	}
+	m_pKienEffect->Initialize(nullptr);
+	m_pKienEffect->SetActive(false);
+
+	for (auto& pNob : m_pNobEffect)
+	{
+		pNob = CKyojuroNobEffect::Create(m_pDevice, m_pContext);
+		if (nullptr == pNob)
+		{
+			return E_FAIL;
+		}
+		pNob->Initialize(nullptr);
+		pNob->SetActive(false);
+	}
+
+	m_pDashSmokeEffect = CDashSmokeEffect::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pDashSmokeEffect)
+	{
+		return E_FAIL;
+	}
+	m_pDashSmokeEffect->Initialize(nullptr);
+	m_pDashSmokeEffect->SetActive(false);
+	return S_OK;
+}
+
 void CKyojuro::ReadyAnimEvents()
 {// 애니메이션 이벤트 등록
 	m_pAnimatorCom->RegisterEventListener("ActiveHitbox", [&](const string&) {
@@ -348,11 +432,24 @@ void CKyojuro::ReadyAnimEvents()
 	m_pAnimatorCom->RegisterEventListener("DeactiveHitbox", [&](const string&) {
 		DeactiveCollider();
 		});
+	m_pAnimatorCom->RegisterEventListener("ActiveBodyCollider", [&](const string&) {
+		ActiveBodyCollider();
+		});
+	m_pAnimatorCom->RegisterEventListener("DeactiveBodyCollider", [&](const string&) {
+		DeactiveBodyCollider();
+		});
+
 
 	m_pAnimatorCom->RegisterEventListener("GuardSkill", [&](const string&) {
 		m_Velocity.y = 50.f;
 		m_Velocity.x = 0.f;
 		m_Velocity.z = 0.f;
+		auto vDir = XMVector3Normalize(
+			m_pTransformCom->Get_State(STATE::LOOK)
+		);
+		_float fSpeed = 7.f; 
+		m_Velocity.x = XMVectorGetX(vDir) *fSpeed;
+		m_Velocity.z = XMVectorGetZ(vDir) *fSpeed;
 		m_bAirborne = true;
 		});
 
@@ -404,6 +501,83 @@ void CKyojuro::ReadyAnimEvents()
 			static_cast<CMeshEffect*>(pFireSlashEffect)->SetRenderMesh(false);
 		//	pFireSlashEffect->SetActive(false);
 		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("ActiveEnkSkill", [&](const string& eventName) {
+		if (m_pEnk)
+		{
+			m_pEnk->SetActive(true);
+			_vector vForward = XMVector3Normalize(
+				m_pTransformCom->Get_State(STATE::LOOK)
+			);
+			XMVECTOR enkPos = m_pTransformCom->Get_State(STATE::POSITION);
+			_vector offsetForward = XMVectorScale(vForward, 40.f);
+			_vector offsetUp = XMVectorSet(0.f, 17.f, 0.f, 0.f);
+			enkPos = XMVectorAdd(enkPos, offsetForward);
+			enkPos = XMVectorAdd(enkPos, offsetUp);
+
+			m_pEnk->RotationDirection(vForward);
+
+			m_pEnk->SetPosition(enkPos);
+
+		}
+		});
+	m_pAnimatorCom->RegisterEventListener("ActiveKienSkill", [&](const string& eventName) {
+		if (m_pKienEffect)
+		{
+			m_pKienEffect->SetActive(true);
+			_vector vForward = XMVector3Normalize(
+				m_pTransformCom->Get_State(STATE::LOOK)
+			);
+			XMVECTOR kienPos = m_pTransformCom->Get_State(STATE::POSITION);
+			_vector offsetForward = XMVectorScale(vForward, 1.f);
+			_vector offsetUp = XMVectorSet(0.f, 17.f, 0.f, 0.f);
+
+			kienPos = XMVectorAdd(kienPos, offsetUp);
+
+			m_pKienEffect->GetTransform()->RotateToDirection(vForward);
+
+			m_pKienEffect->GetTransform()->Set_State(STATE::POSITION, XMVectorSetW(kienPos,1.f));
+
+		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("ActiveNobSkill", [&](const string& eventName) {
+		static _uint nobIndex = 0;
+			auto pNobEffect = m_pNobEffect[nobIndex];
+		if (pNobEffect)
+		{
+			_vector vForward = XMVector3Normalize(
+				m_pTransformCom->Get_State(STATE::LOOK)
+			);
+			XMVECTOR nobPos = m_pTransformCom->Get_State(STATE::POSITION);
+			_vector offsetForward = XMVectorScale(vForward, 1.f);
+			_vector offsetUp = XMVectorSet(0.f, XMVectorGetY(nobPos) + 17.f, 0.f, 0.f);
+
+			nobPos = XMVectorAdd(nobPos, offsetUp);
+
+			pNobEffect->GetTransform()->RotateToDirection(vForward);
+
+			 if (nobIndex == 0)
+			 {
+				 pNobEffect->GetTransform()->Scaling(_float3(30.f,10.f,10.f));
+			 }
+			 else if (nobIndex == 1)
+			 {
+				 pNobEffect->GetTransform()->Scaling(_float3(30.f, 14.f, 14.f));
+			 }
+			pNobEffect->GetTransform()->Set_State(STATE::POSITION, XMVectorSetW(nobPos, 1.f));
+			pNobEffect->SetActive(true);
+			nobIndex++;
+		}
+		if (nobIndex >= m_pNobEffect.size())
+			nobIndex = 0; // 인덱스 초기화
+		});
+
+	m_pAnimatorCom->RegisterEventListener("MoveLook", [&](const string& eventName) {
+
+		/*auto vDir = XMVector3Normalize(	m_pTransformCom->Get_State(STATE::LOOK));
+		m_pTransformCom->MoveDirection(vDir, m_pGameInstance->Get_TimeDelta(TEXT("Timer_60")) * 10.f, m_pNavigationCom);*/
 		});
 }
 
@@ -849,27 +1023,51 @@ void CKyojuro::Ready_Animation()
 	CAnimController::Condition StepBack{ "StepBack", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(idleIdx, stepBackIdx, StepBack, 0.1f);
 	ctrl->AddTransition(runIdx, stepBackIdx, StepBack, 0.1f);
+	ctrl->AddTransition(runEndIdx, stepBackIdx, StepBack, 0.1f);
 	ctrl->AddTransition(stepBackIdx, runIdx, cFin);
 	ctrl->AddTransition(stepBackIdx, idleIdx, cSpeedDown);
 
 	CAnimController::Condition StepFront{ "StepFront", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(idleIdx, stepFrontIdx, StepFront, 0.1f);
 	ctrl->AddTransition(runIdx, stepFrontIdx, StepFront, 0.1f);
+	ctrl->AddTransition(runEndIdx, stepFrontIdx, StepFront, 0.1f);
 	ctrl->AddTransition(stepFrontIdx, runIdx, cFin);
 	ctrl->AddTransition(stepFrontIdx, idleIdx, cSpeedDown);
 
 	CAnimController::Condition StepLeft{ "StepLeft", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(idleIdx, stepLeftIdx, StepLeft, 0.1f);
+	ctrl->AddTransition(runEndIdx, stepRightIdx, StepLeft, 0.1f);
 	ctrl->AddTransition(runIdx, stepLeftIdx, StepLeft, 0.1f);
 	ctrl->AddTransition(stepLeftIdx, runIdx, cFin);
+
+
 	ctrl->AddTransition(stepLeftIdx, idleIdx, cSpeedDown);
 
 	CAnimController::Condition StepRight{ "StepRight", CAnimController::EOp::Trigger, 0.f };
 
 	ctrl->AddTransition(idleIdx, stepRightIdx, StepRight, 0.1f);
+	ctrl->AddTransition(runEndIdx, stepRightIdx, StepRight, 0.1f);
 	ctrl->AddTransition(runIdx, stepRightIdx, StepRight, 0.1f);
 	ctrl->AddTransition(stepRightIdx, runIdx, cFin);
 	ctrl->AddTransition(stepRightIdx, idleIdx, cSpeedDown);
+
+	ctrl->AddTransition(stepRightIdx, stepLeftIdx, StepLeft);
+	ctrl->AddTransition(stepRightIdx, stepFrontIdx, StepFront);
+	ctrl->AddTransition(stepRightIdx, stepBackIdx, StepBack);
+
+	ctrl->AddTransition(stepLeftIdx, stepRightIdx, StepRight);
+	ctrl->AddTransition(stepLeftIdx, stepFrontIdx, StepFront);
+	ctrl->AddTransition(stepLeftIdx, stepBackIdx, StepBack);
+
+
+	ctrl->AddTransition(stepFrontIdx, stepLeftIdx, StepLeft);
+	ctrl->AddTransition(stepFrontIdx, stepRightIdx, StepRight);
+	ctrl->AddTransition(stepFrontIdx, stepBackIdx, StepBack);
+
+
+	ctrl->AddTransition(stepBackIdx, stepLeftIdx, StepLeft);
+	ctrl->AddTransition(stepBackIdx, stepRightIdx, StepRight);
+	ctrl->AddTransition(stepBackIdx, stepFrontIdx, StepFront);
 
 	CAnimController::Condition StepRight2{ "StepRight2", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(stepRightIdx, stepRightIdx2, StepRight2);
@@ -1026,11 +1224,22 @@ void CKyojuro::ActiveCollider()
 			collider2->SetDrawDebug(true);
 		}
 	}
+	//for (auto& pBodyColl : m_vecChildren)
+	//{
+	//	if (dynamic_cast<CBodyColliderParts*>(pBodyColl))
+	//	{
+	//		pBodyColl->SetActive(true);
+	//	}
+	//}
+}
+
+void CKyojuro::ActiveBodyCollider()
+{
 	for (auto& pBodyColl : m_vecChildren)
 	{
-		if (dynamic_cast<CBodyColliderParts*>(pBodyColl))
+		if (auto bodyCol = dynamic_cast<CBodyColliderParts*>(pBodyColl))
 		{
-			pBodyColl->SetActive(true);
+			bodyCol->SetActive(true);
 		}
 	}
 }
@@ -1061,6 +1270,17 @@ void CKyojuro::DeactiveCollider()
 		}
 		m_pWeapon->ClearDamagedTargets();
 	}
+	//for (auto& pBodyColl : m_vecChildren)
+	//{
+	//	if (auto bodyCol = dynamic_cast<CBodyColliderParts*>(pBodyColl))
+	//	{
+	//		bodyCol->SetActive(false);
+	//	}
+	//}
+}
+
+void CKyojuro::DeactiveBodyCollider()
+{
 	for (auto& pBodyColl : m_vecChildren)
 	{
 		if (auto bodyCol = dynamic_cast<CBodyColliderParts*>(pBodyColl))
@@ -1098,5 +1318,12 @@ CGameObject* CKyojuro::Clone(void* pArg)
 void CKyojuro::Free()
 {
 	__super::Free();
+	Safe_Release(m_pEnk);
+	Safe_Release(m_pKienEffect);
+	for (auto& pNob : m_pNobEffect)
+	{
+		Safe_Release(pNob);
+	}
+
 	CEffectManager::Get_Instance()->RemoveEffect(TEXT("Slash"));
 }

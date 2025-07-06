@@ -24,8 +24,8 @@ public:
 	void RemoveParticleSystem(const _wstring& particleName);
 	void ClearParticleSystems();
 
-	void SpwanParticle();
-	void DespwanParticle();
+	virtual void SpwanParticle();
+	virtual void DespwanParticle();
 
 	virtual void OnEnable() override;
 

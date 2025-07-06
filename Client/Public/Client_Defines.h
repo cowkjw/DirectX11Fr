@@ -26,6 +26,7 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "../../External Libraries/ImGuizmo-master/ImGuizmo.h"
+#include "../../External Libraries/ImGuizmo-master/ImSequencer.h"
 #include "imnodes.h"
 #include "imnodes_internal.h"
 

@@ -24,6 +24,23 @@ HRESULT CLight_Manager::Add_Light(const LIGHT_DESC& LightDesc)
 	return S_OK;
 }
 
+HRESULT CLight_Manager::Render_Lights(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	if (m_Lights.empty())
+		return S_OK;
+	if (nullptr == pShader || nullptr == pVIBuffer)
+		return E_FAIL;
+	for (auto& pLight : m_Lights)
+	{
+		if (nullptr == pLight)
+			continue;
+		if (FAILED(pLight->Render(pShader, pVIBuffer)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 void CLight_Manager::Clear_Lights()
 {
 	for (auto& pLight : m_Lights)

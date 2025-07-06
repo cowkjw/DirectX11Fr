@@ -43,6 +43,8 @@ typedef struct tagParticleUV
 	_float2 vUVScale = { 1.f, 1.f }; // UV 스케일
 	_float fCurrentTime = 0.f; // 현재 시간 (애니메이션 시간)
 	_float fFrameTime = 0.f; // 프레임 시간 (애니메이션 속도)
+	_float fCols = 1.f; // 열 수 
+	_float fRows = 1.f; // 행 수 
 	_int iTotalFrames = 0; // 총 프레임 수
 	_int iCurrentFrame = 0; // 현재 프레임
 	_int iCols = 1; // 열 수

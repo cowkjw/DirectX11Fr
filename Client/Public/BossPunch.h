@@ -17,6 +17,9 @@ private:
 	_float m_fTimeElapsed = 0.f; // 경과 시간
 	_bool m_bAttackedLeft = false; // 왼팔 공격 여부
 	_bool m_bAttackedRight = false; // 오른팔 공격 여부
+	_bool m_bDetectedRight = false;
+	_bool m_bDetectedLeftt = false;
+
 	const _float LEFTARM_START_TIME= 3.f; // 왼팔 공격 시작 시간
 	const _float RIGHTARM_START_TIME = 2.5f; // 오른팔 공격 시작 시간
 	const _float ATTACK_END_TIME = 5.f;

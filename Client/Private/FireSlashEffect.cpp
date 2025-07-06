@@ -38,12 +38,12 @@ void CFireSlashEffect::Update(_float fTimeDelta)
 
 	if (m_bUseOffset)
 	{
-	m_fUVOffset.x += fTimeDelta * 0.5f; // UV 애니메이션 속도 조절
-	m_fUVOffset.y += fTimeDelta * 0.5f; // UV 애니메이션 속도 조절
-	if (m_fUVOffset.x > 1.f)
-		m_fUVOffset.x = 0.f;
-	if (m_fUVOffset.y > 1.f)
-		m_fUVOffset.y = 0.f;
+	m_vUVOffset.x += fTimeDelta * 0.5f; // UV 애니메이션 속도 조절
+	m_vUVOffset.y += fTimeDelta * 0.5f; // UV 애니메이션 속도 조절
+	if (m_vUVOffset.x > 1.f)
+		m_vUVOffset.x = 0.f;
+	if (m_vUVOffset.y > 1.f)
+		m_vUVOffset.y = 0.f;
 	}
 	
 }
@@ -78,7 +78,7 @@ HRESULT CFireSlashEffect::Ready_Components()
 HRESULT CFireSlashEffect::Bind_Shader()
 {
 	__super::Bind_Shader();
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUVOffset", &m_fUVOffset, sizeof(_float2))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVOffset", &m_vUVOffset, sizeof(_float2))))
 		return E_FAIL;
 	return S_OK;
 }

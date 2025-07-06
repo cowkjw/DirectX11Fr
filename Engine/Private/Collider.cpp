@@ -105,6 +105,7 @@ json CCollider::Serialize()
 	j["Offset"] = { m_offset.x, m_offset.y, m_offset.z };
 	j["IsTrigger"] = m_bIsTrigger;
 	j["Priority"] = m_iPriority;
+	j["CollisionType"] = static_cast<_int>(m_eColliderType);
 	return j;
 }
 
@@ -123,6 +124,10 @@ void CCollider::Deserialize(const json& j)
 	if (j.contains("Priority"))
 	{
 		m_iPriority = j["Priority"];
+	}
+	if (j.contains("CollisionType"))
+	{
+		m_eColliderType = static_cast<ColliderType>(j["CollisionType"].get<_int>());
 	}
 }
 

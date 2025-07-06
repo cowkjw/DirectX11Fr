@@ -6,7 +6,15 @@
             "events": [
                 {
                     "name": "Death",
-                    "time": 75.80000305175781
+                    "time": 75.5
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 1.0
                 }
             ]
         },
@@ -47,12 +55,12 @@
         {
             "clipName": "A_P0000_V00_C00_Dmg01_B",
             "duration": 18.0,
-          "events": [
-            {
-              "name": "DeactiveHitbox",
-              "time": 1.0
-            }
-          ]
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P0000_V00_C00_Dmg01_F",
@@ -65,6 +73,10 @@
                 {
                     "name": "EndHurt",
                     "time": 17.5
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 1.0
                 }
             ]
         },
@@ -105,6 +117,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 0.13600000739097595
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 0.1599999964237213
                 }
             ]
         },
@@ -120,13 +136,26 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 1.0
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 1.0
                 }
             ]
         },
         {
             "clipName": "A_P0000_V00_C00_DmgFall01_1",
             "duration": 10.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P0000_V00_C00_DmgFall01_2",
@@ -307,6 +336,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 15.0
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 1.0
                 }
             ]
         },
@@ -315,12 +348,12 @@
             "duration": 40.0,
             "events": [
                 {
-                    "name": "ActiveHitbox",
+                    "name": "ActiveFootHitbox",
                     "time": 6.500774383544922
                 },
                 {
-                    "name": "DeactiveHitbox",
-                    "time": 25.0
+                    "name": "DeactiveFootHitbox",
+                    "time": 14.0
                 }
             ]
         },
@@ -329,12 +362,8 @@
             "duration": 59.0,
             "events": [
                 {
-                    "name": "ActiveHitbox",
-                    "time": 5.380000114440918
-                },
-                {
                     "name": "DeactiveHitbox",
-                    "time": 15.0
+                    "time": 1.0
                 },
                 {
                     "name": "ActiveHitbox",
@@ -342,7 +371,23 @@
                 },
                 {
                     "name": "DeactiveHitbox",
-                    "time": 25.0
+                    "time": 22.0
+                },
+                {
+                    "name": "ActiveFootHitbox",
+                    "time": 10.0
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 13.0
+                },
+                {
+                    "name": "WindLeftHandSlashEffectOn",
+                    "time": 20.0
+                },
+                {
+                    "name": "WindLeftHandSlashEffectOff",
+                    "time": 35.0
                 }
             ]
         },
@@ -351,20 +396,20 @@
             "duration": 57.0,
             "events": [
                 {
-                    "name": "ActiveHitbox",
-                    "time": 3.0
-                },
-                {
                     "name": "DeactiveHitbox",
-                    "time": 6.0
+                    "time": 1.0
                 },
                 {
-                    "name": "ActiveHitbox",
-                    "time": 8.0
+                    "name": "ActiveFootHitbox",
+                    "time": 9.0
                 },
                 {
-                    "name": "DeactiveHitbox",
-                    "time": 18.335285186767578
+                    "name": "DeactiveFootHitbox",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 12.668143272399902
                 }
             ]
         },
@@ -373,24 +418,24 @@
             "duration": 50.0,
             "events": [
                 {
-                    "name": "ActiveHitbox",
-                    "time": 3.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 12.0
-                },
-                {
-                    "name": "ActiveHitbox",
-                    "time": 17.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 22.0
-                },
-                {
                     "name": "HitedAir",
                     "time": 17.0
+                },
+                {
+                    "name": "ActiveFootHitbox",
+                    "time": 7.00088357925415
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 10.334680557250977
+                },
+                {
+                    "name": "ActiveFootHitbox",
+                    "time": 16.00201988220215
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 22.0
                 }
             ]
         },
@@ -413,6 +458,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 25.010452270507813
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 1.0
                 }
             ]
         },
@@ -492,6 +541,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 4.0
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 1.0
                 }
             ]
         },
@@ -510,6 +563,10 @@
                 {
                     "name": "EndAttack",
                     "time": 46.503787994384766
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 1.0
                 }
             ]
         },
@@ -672,7 +729,11 @@
             "events": [
                 {
                     "name": "DeactiveHitbox",
-                    "time": 0.0
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
                 }
             ]
         },
@@ -692,7 +753,11 @@
             "events": [
                 {
                     "name": "DeactiveHitbox",
-                    "time": 0.0
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 1.0
                 }
             ]
         },
@@ -724,17 +789,44 @@
         {
             "clipName": "A_P1012_V00_C90_BaseStepB01",
             "duration": 20.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P1012_V00_C90_BaseStepF01",
             "duration": 20.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P1012_V00_C90_BaseStepL01",
             "duration": 20.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P1012_V00_C90_BaseStepL02",
@@ -744,7 +836,16 @@
         {
             "clipName": "A_P1012_V00_C90_BaseStepR01",
             "duration": 20.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveFootHitbox",
+                    "time": 1.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P1012_V00_C90_BaseStepR02",

@@ -12,6 +12,7 @@
 #include "EnmuMeat.h"
 #include "UIImage.h"
 #include "Weapon.h"
+#include <HitShockParticle.h>
 
 CLevel_EnmuBoss::CLevel_EnmuBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -62,6 +63,27 @@ HRESULT CLevel_EnmuBoss::Initialize()
 
 	static_cast<CHitParticle*>(pEffect)->AddParticleSystem(L"BodyHit", pParticleSystem);
 	CEffectManager::Get_Instance()->RegisterEffect(TEXT("TanjiroHitParticle"), pEffect);
+
+	// Å¸°Ý¿ë
+	pEffect = CHitShockParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect->Initialize(nullptr);
+	jsonLoader.Load_Particle("../Asset/Json/Particle/HitBodyShock_Particle.json", &pParticleSystem);
+	static_cast<CHitShockParticle*>(pEffect)->AddParticleSystem(L"HitShock", pParticleSystem);
+	static_cast<CHitShockParticle*>(pEffect)->SetInitParticleUV(4, 4, 0.0001f);
+	pEffect->SetTextureIndex(1);
+	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitBodyShockParticle"), pEffect);
+
+	pEffect = CHitShockParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect->Initialize(nullptr);
+	jsonLoader.Load_Particle("../Asset/Json/Particle/HitGroundShock_Particle.json", &pParticleSystem);
+	static_cast<CHitShockParticle*>(pEffect)->AddParticleSystem(L"HitShock", pParticleSystem);
+	static_cast<CHitShockParticle*>(pEffect)->SetInitParticleUV(4, 4, 0.05f);
+	pEffect->SetTextureIndex(25);
+	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitGroundParticle"), pEffect);
 	jsonLoader.Free();
 	return S_OK;
 }
@@ -114,23 +136,23 @@ HRESULT CLevel_EnmuBoss::Ready_Lights()
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vDirection = _float4(1.f, 1.f, 1.f, 0.f);
+	LightDesc.vDiffuse = _float4(0.6f, 0.65f, 0.6f, 1.f);
+	LightDesc.fAmbient = 0.5f;
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
 
 
-	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection = _float4(1.f, 1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(0.4f, 0.4f, 0.4f, 1.f);
-	LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
-	LightDesc.vSpecular = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	//LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+	//LightDesc.vDirection = _float4(1.f, 1.f, 1.f, 0.f);
+	//LightDesc.vDiffuse = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	//LightDesc.fAmbient = 0.4;
+	//LightDesc.vSpecular = _float4(0.4f, 0.4f, 0.4f, 1.f);
 
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -299,6 +321,7 @@ CLevel_EnmuBoss* CLevel_EnmuBoss::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 void CLevel_EnmuBoss::Free()
 {
 	__super::Free();
+	CEffectManager::Get_Instance()->Free();
 
 
 }

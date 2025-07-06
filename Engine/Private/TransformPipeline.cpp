@@ -19,6 +19,16 @@ const _matrix CTransformPipeline::Get_Transform_Matrix(TRANSFORM eState) const
 	return XMLoadFloat4x4(&m_TransformationMatrices[ToIndex(eState)]);
 }
 
+const _float4x4* CTransformPipeline::Get_Transform_Float4x4_Inv(TRANSFORM eState) const
+{
+	return &m_TransformationMatrixInverse[ToIndex(eState)];
+}
+
+const _matrix CTransformPipeline::Get_Transform_Matrix_Inv(TRANSFORM eState) const
+{
+	return XMLoadFloat4x4(&m_TransformationMatrixInverse[ToIndex(eState)]);
+}
+
 const _float4* CTransformPipeline::Get_CamPosition() const
 {
 	return &m_vCamPosition;
@@ -54,6 +64,17 @@ _vector CTransformPipeline::UnprojectToGround(_float mx, _float my, const D3D11_
 
     _float t = -oy / dy;
     return nearPt + dir * t;
+}
+
+ _float CTransformPipeline::Get_CameraFar() const
+{
+	_matrix proj = Get_Transform_Matrix(TRANSFORM::PROJECTION);
+
+	_float A = proj.r[2].m128_f32[2];       //   zf/(zf-zn)
+	_float B = proj.r[3].m128_f32[2];       //  -zn*zf/(zf-zn)
+
+	_float farPlane = -B / (A - 1.f);       // = zf
+	return farPlane;
 }
 
 void CTransformPipeline::Update()

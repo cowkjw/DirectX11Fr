@@ -20,6 +20,7 @@ CEffect::CEffect(const CEffect& Prototype)
 	, m_fElapsed(Prototype.m_fElapsed)
 	, m_bLoop(Prototype.m_bLoop)
 	, m_CombinedWorldMatrix(Prototype.m_CombinedWorldMatrix)
+	, m_iTextureIndex(Prototype.m_iTextureIndex)
 {
 	for (_uint i = 0; i < TEX_MAX; i++)
 	{
@@ -39,7 +40,7 @@ HRESULT CEffect::Initialize(void* pArg)
 	if (pArg == nullptr)
 	{
 		GAMEOBJECT_DESC GameObjectDesc = {};
-		GameObjectDesc.fSpeedPerSec = 20.f;
+		GameObjectDesc.fSpeedPerSec = 30.f;
 		GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.f);
 		GameObjectDesc.strName = TEXT("Effect");
 
@@ -81,7 +82,7 @@ void CEffect::Late_Update(_float fTimeDelta)
 	//	XMStoreFloat4x4(&WorldMatrix, world);
 	//	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 	//}
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONLIGHT, this);
 }
 
 HRESULT CEffect::Render()
@@ -117,17 +118,6 @@ HRESULT CEffect::Bind_Shader()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
 
-	const LIGHT_DESC* pLightDesc = m_pGameInstance->Get_Light(0);
-
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
-		return E_FAIL;
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
-	//	return E_FAIL;
 
 	return S_OK;
 }

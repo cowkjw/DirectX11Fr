@@ -70,6 +70,7 @@ public:
 
 	// ICollisionListener을(를) 통해 상속됨
 	void OnCollisionEnter(CCollider* other) override;
+	virtual void OnCollisionEnter(CCollider* other, const _float3& hitPos) override;
 
 	void OnCollisionStay(CCollider* other, float fTimeDelta) override;
 

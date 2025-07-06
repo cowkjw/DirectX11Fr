@@ -41,7 +41,7 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
     cout << "[BossIdle] Current HP: " << pChar->GetHp() << endl;
 
     // 현재 HP가 속한 100단위 구간 계산
-    _int currentHpThreshold = static_cast<_int>(fHp) / 100;
+    _int currentHpThreshold = static_cast<_int>(fHp) / 300;
 
     // HP가 감소하여 새로운 100단위 구간에 진입했을 때
     if (lastHpThreshold == -1)
@@ -323,27 +323,27 @@ switch (chosenIdx)
 {
 case 0: // BossPunch
     pChar->ChangeState(new BossPunch(TEXT("BossPunchAttack")));
-    pChar->m_CD_Punch = 4.f;   // 원하는 쿨타임 설정
+//pChar->m_CD_Punch = 4.f;   // 원하는 쿨타임 설정
     break;
 case 1: // BossHandAttack
     pChar->ChangeState(new BossHandAttack(TEXT("BossHandAttack")));
-    pChar->m_CD_Hand = 8.f;
+  //  pChar->m_CD_Hand = 8.f;
     break;
 case 2: // BossFreezeAttack
     pChar->ChangeState(new BossFreezeAttack(TEXT("BossFreezeAttack")));
-    pChar->m_CD_Freeze = 5.f;
+  //  pChar->m_CD_Freeze = 5.f;
     break;
 case 3: // BossSwingAttack
     pChar->ChangeState(new BossSwingAttack(TEXT("BossSwingAttack")));
-    pChar->m_CD_Swing = 9.f;
+   // pChar->m_CD_Swing = 9.f;
     break;
 case 4: // BossFollowPunch
     pChar->ChangeState(new BossFollowPunch(TEXT("BossFollowPunchAttack")));
-    pChar->m_CD_FollowPunch = 6.f;
+   // pChar->m_CD_FollowPunch = 6.f;
     break;
 case 5: // BossTentacle
     pChar->ChangeState(new BossTentacle(TEXT("BossTentacleAttack")));
-    pChar->m_CD_Tentacle = 7.f;
+   // pChar->m_CD_Tentacle = 7.f;
     break;
 }
 

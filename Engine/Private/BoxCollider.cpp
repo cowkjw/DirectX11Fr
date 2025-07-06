@@ -55,9 +55,25 @@ void CBoxCollider::Update()
 		if (pTransform)
 		{
 		
-			_vector pos = pTransform->Get_State(STATE::POSITION);
+			/*_vector pos = pTransform->Get_State(STATE::POSITION);
 			XMVECTOR center = pos + XMLoadFloat3(&m_offset);
 			XMVECTOR quat = pTransform->Get_RotationQuaternion();
+			XMStoreFloat3(&Box.Center, center);
+			Box.Extents = m_vHalfExtents;
+			XMStoreFloat4(reinterpret_cast<XMFLOAT4*>(&Box.Orientation), quat);*/
+
+			_vector pos = pTransform->Get_State(STATE::POSITION);
+
+			// 로컬 Offset 벡터
+			_vector offsetLocal = XMLoadFloat3(&m_offset);  
+
+			//  월드 회전
+			_vector quat = pTransform->Get_RotationQuaternion();
+			_vector offsetWorld = XMVector3Rotate(offsetLocal, quat);
+
+			//  위치 + 회전된 Offset
+			XMVECTOR center = XMVectorAdd(pos, offsetWorld);
+
 			XMStoreFloat3(&Box.Center, center);
 			Box.Extents = m_vHalfExtents;
 			XMStoreFloat4(reinterpret_cast<XMFLOAT4*>(&Box.Orientation), quat);

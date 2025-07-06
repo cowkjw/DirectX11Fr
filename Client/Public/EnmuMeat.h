@@ -90,8 +90,8 @@ private:
 	_float m_CD_Tentacle;
 	_float m_fHitStopTime = 0.f;  // 남은 히트스탑 시간
 	
-	_float m_fHp = 500.f;
-	_float m_fMaxHp = 500.f;
+	_float m_fHp = 800.f;
+	_float m_fMaxHp = 800.f;
 
 	class CBaseCharacter* m_pTarget{ nullptr }; // 타겟 캐릭터
 	class BossState* m_pBossState{ nullptr };

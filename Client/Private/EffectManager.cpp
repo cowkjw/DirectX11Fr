@@ -66,6 +66,20 @@ void CEffectManager::ClenUpPendingParticleEffects()
 		}
 	}
 	m_PendingParticleList.clear();
+
+	for (auto it = m_PendingMeshEffectList.begin(); it != m_PendingMeshEffectList.end();)
+	{
+		if ((*it)->IsActive() == false)
+		{
+			Safe_Release(*it);
+			it = m_PendingMeshEffectList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+	m_PendingMeshEffectList.clear();
 }
 
 void CEffectManager::RemoveEffect(const _wstring& effectName)

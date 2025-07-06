@@ -9,10 +9,14 @@
 #include "UIProgressBar.h"
 #include <EnmuMeat.h>
 #include <EnmuParts.h>
+#include "TanjiroMig.h"
 #include "Navigation.h"
 #include "StateHurt.h"
 #include "StateHurtAir.h"
 #include "StateHurtBlow.h"
+#include "DashSmokeEffect.h"
+#include <SlashEffect.h>
+#include "EffectManager.h"
 
 using AniCon = CAnimController::Condition;
 CTanjiro::CTanjiro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -62,10 +66,28 @@ HRESULT CTanjiro::Initialize(void* pArg)
 
 	Set_Weapon("R_Hand_1_Lct", dynamic_cast<CWeapon*>(pWeapon));
 
+
 	if (m_pWeapon) // 자식벡터로 넣지는 않음
 	{
 		m_pWeapon->SetParent(this);
+		CSlashEffect* pSlashEffect = dynamic_cast<CSlashEffect*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Effect_Slash"),
+			ToIndex(LEVEL::ENMU_BOSS), TEXT("Slash")));
+
+		CEffectManager::Get_Instance()->RegisterEffect(TEXT("Slash"), pSlashEffect);
+		if (pSlashEffect)
+		{
+			CBone* pBone = static_cast<CModel*>(m_pWeapon->Get_Component(TEXT("Com_Model")))->Get_Bone("C_Blade_2");// _end");
+
+			if (pBone)
+			{
+				pSlashEffect->SetParent(m_pWeapon);
+				pSlashEffect->Set_BoneSocket(pBone);
+				pSlashEffect->SetActive(false);
+				pSlashEffect->SetColor(_float4(0.247f, 0.572f, 0.88f, 1.f));
+			}
+		}
 	}
+
 
 	m_pColliderCom->SetListener(this);
 	ChangeState(new StateIdle(TEXT("Idle")));
@@ -88,6 +110,12 @@ HRESULT CTanjiro::Initialize(void* pArg)
 	m_pRangeColliderCom->SetListener(this);
 	m_pRangeColliderCom->SetColliderType(ColliderType::RANGE);
 	m_pRangeColliderCom->SetActive(false); // 초기에는 비활성화
+
+
+	if (FAILED(Ready_Effects()))
+		return E_FAIL;
+
+
 
     return S_OK;
 }
@@ -115,6 +143,10 @@ void CTanjiro::Update(_float fTimeDelta)
 	for (auto& child : m_vecChildren)
 	{
 		child->Update(fTimeDelta);
+	}
+	if (m_pMig&& m_pMig->IsActive())
+	{
+		m_pMig->Update(fTimeDelta);
 	}
 }
 
@@ -145,6 +177,11 @@ void CTanjiro::Late_Update(_float fTimeDelta)
 		//		sprintf_s(buf, "현재 애니메이션: %s", currentState);
 		//		SetWindowTextA(g_hWnd, buf);
 	}
+
+	if (m_pMig && m_pMig->IsActive())
+	{
+		m_pMig->Late_Update(fTimeDelta);
+	}
 }
 
 HRESULT CTanjiro::Render()
@@ -158,6 +195,8 @@ HRESULT CTanjiro::Render()
 
 void CTanjiro::TakeDamage(_float fDamage)
 {
+	if(m_fCurrentHP<=0.f)
+		return;
 	if (m_eState == CSTATE::DOWN)
 	{
 		__super::TakeDamage(fDamage);
@@ -255,6 +294,26 @@ HRESULT CTanjiro::Ready_Components()
 		return E_FAIL;
 
 
+	return S_OK;
+}
+
+HRESULT CTanjiro::Ready_Effects()
+{
+	m_pMig = CTanjiroMig::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pMig)
+	{
+		return E_FAIL;
+	}
+	m_pMig->Initialize(nullptr);
+	m_pMig->SetActive(false);
+	m_pDashSmokeEffect = CDashSmokeEffect::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pDashSmokeEffect)
+	{
+		return E_FAIL;
+	}
+	m_pDashSmokeEffect->Initialize(nullptr);
+	m_pDashSmokeEffect->SetActive(false);
+	m_pDashSmokeEffect->SetColor(_float4(0.247f, 0.572f, 0.88f, 1.f));
 	return S_OK;
 }
 
@@ -685,27 +744,51 @@ void CTanjiro::Ready_Animation()
 	CAnimController::Condition StepBack{ "StepBack", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(idleIdx, stepBackIdx, StepBack, 0.1f);
 	ctrl->AddTransition(runIdx, stepBackIdx, StepBack, 0.1f);
+	ctrl->AddTransition(runEndIdx, stepBackIdx, StepBack, 0.1f);
 	ctrl->AddTransition(stepBackIdx, runIdx, cFin);
 	ctrl->AddTransition(stepBackIdx, idleIdx, cSpeedDown);
 
 	CAnimController::Condition StepFront{ "StepFront", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(idleIdx, stepFrontIdx, StepFront, 0.1f);
 	ctrl->AddTransition(runIdx, stepFrontIdx, StepFront, 0.1f);
+	ctrl->AddTransition(runEndIdx, stepFrontIdx, StepFront, 0.1f);
 	ctrl->AddTransition(stepFrontIdx, runIdx, cFin);
 	ctrl->AddTransition(stepFrontIdx, idleIdx, cSpeedDown);
 
 	CAnimController::Condition StepLeft{ "StepLeft", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(idleIdx, stepLeftIdx, StepLeft, 0.1f);
+	ctrl->AddTransition(runEndIdx, stepRightIdx, StepLeft, 0.1f);
 	ctrl->AddTransition(runIdx, stepLeftIdx, StepLeft, 0.1f);
 	ctrl->AddTransition(stepLeftIdx, runIdx, cFin);
+
+
 	ctrl->AddTransition(stepLeftIdx, idleIdx, cSpeedDown);
 
 	CAnimController::Condition StepRight{ "StepRight", CAnimController::EOp::Trigger, 0.f };
 
 	ctrl->AddTransition(idleIdx, stepRightIdx, StepRight, 0.1f);
+	ctrl->AddTransition(runEndIdx, stepRightIdx, StepRight, 0.1f);
 	ctrl->AddTransition(runIdx, stepRightIdx, StepRight, 0.1f);
 	ctrl->AddTransition(stepRightIdx, runIdx, cFin);
 	ctrl->AddTransition(stepRightIdx, idleIdx, cSpeedDown);
+
+	ctrl->AddTransition(stepRightIdx, stepLeftIdx, StepLeft);
+	ctrl->AddTransition(stepRightIdx, stepFrontIdx, StepFront);
+	ctrl->AddTransition(stepRightIdx, stepBackIdx, StepBack);
+
+	ctrl->AddTransition(stepLeftIdx, stepRightIdx, StepRight);
+	ctrl->AddTransition(stepLeftIdx, stepFrontIdx, StepFront);
+	ctrl->AddTransition(stepLeftIdx, stepBackIdx, StepBack);
+
+
+	ctrl->AddTransition(stepFrontIdx, stepLeftIdx, StepLeft);
+	ctrl->AddTransition(stepFrontIdx, stepRightIdx, StepRight);
+	ctrl->AddTransition(stepFrontIdx, stepBackIdx, StepBack);
+
+
+	ctrl->AddTransition(stepBackIdx, stepLeftIdx, StepLeft);
+	ctrl->AddTransition(stepBackIdx, stepRightIdx, StepRight);
+	ctrl->AddTransition(stepBackIdx, stepFrontIdx, StepFront);
 
 	CAnimController::Condition StepRight2{ "StepRight2", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(stepRightIdx, stepRightIdx2, StepRight2);
@@ -716,6 +799,8 @@ void CTanjiro::Ready_Animation()
 	ctrl->AddTransition(stepLeftIdx, stepLeftIdx2, StepLeft2);
 	ctrl->AddTransition(stepLeftIdx2, stepLeftIdx, StepLeft);
 	ctrl->AddTransition(stepLeftIdx2, idleIdx, cFin);
+
+
 
 	CAnimController::Condition StepRightJump{ "StepRightJump", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(jump0Idx, stepRightJumpIdx, StepRightJump, 0.1f);
@@ -852,6 +937,65 @@ void CTanjiro::Ready_Animation()
 	ctrl->AddTransition(fall2Idx, fall2Idx, cHurtDown, 0.2f);
 
 
+	ctrl->AddTransition(jump0Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(jump1Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(jump3Idx, hurtFIdx, cHurt, 0.1f);
+
+	ctrl->AddTransition(jump0Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(jump1Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(jump3Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+
+	ctrl->AddTransition(jump0Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(jump1Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(jump3Idx, boundIdx, cHurtBound, 0.1f);
+
+	ctrl->AddTransition(jump0Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(jump1Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(jump3Idx, fall0Idx, cHurtBlow, 0.1f);
+
+	ctrl->AddTransition(jump0Idx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(jump1Idx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(jump3Idx, fall2Idx, cHurtDown, 0.1f);
+
+
+	ctrl->AddTransition(skillDefaultIdx1, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(skillDefaultIdx2, hurtFIdx, cHurt, 0.1f);
+
+	ctrl->AddTransition(skillDefaultIdx1, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(skillDefaultIdx2, hurtAirborneIdx, cHurtAir, 0.1f);
+
+	ctrl->AddTransition(skillDefaultIdx1, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(skillDefaultIdx2, boundIdx, cHurtBound, 0.1f);
+
+	ctrl->AddTransition(skillDefaultIdx1, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(skillDefaultIdx2, fall0Idx, cHurtBlow, 0.1f);
+
+	ctrl->AddTransition(skillDefaultIdx1, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(skillDefaultIdx2, fall2Idx, cHurtDown, 0.1f);
+
+
+	ctrl->AddTransition(hurtFIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(hurtFIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(hurtFIdx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(hurtFIdx, fall2Idx, cHurtDown, 0.1f);
+
+	// 바운드 상태에서 
+	ctrl->AddTransition(boundIdx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(boundIdx, fall2Idx, cHurtDown, 0.1f);
+
+
+	ctrl->AddTransition(hurtAirborneIdx, runIdx, cSpeedUp, 0.15f);
+	ctrl->AddTransition(boundIdx, runIdx, cSpeedUp, 0.15f);
+	ctrl->AddTransition(fall0Idx, runIdx, cSpeedUp, 0.15f);
+	ctrl->AddTransition(fall1Idx, runIdx, cSpeedUp, 0.15f);
+
+	// 같은 피격 상태로의 재전환 시 더 긴 쿨다운
+	ctrl->AddTransition(hurtFIdx, hurtFIdx, cHurt, 0.3f);
+	ctrl->AddTransition(boundIdx, boundIdx, cHurtBound, 0.3f);
+	ctrl->AddTransition(fall0Idx, fall0Idx, cHurtBlow, 0.3f);
+	ctrl->AddTransition(fall1Idx, fall1Idx, cHurtBlow, 0.3f);
+	ctrl->AddTransition(fall2Idx, fall2Idx, cHurtDown, 0.3f);
+
 }
 
 void CTanjiro::ReadyAnimEvents()
@@ -913,6 +1057,45 @@ void CTanjiro::ReadyAnimEvents()
 		}
 		});
 
+	m_pAnimatorCom->RegisterEventListener("SlashEffectOn", [&](const string& eventName) {
+
+		auto pFireSlashEffect = CEffectManager::Get_Instance()->GetEffect(TEXT("Slash"));
+		if (pFireSlashEffect)
+		{
+			static_cast<CMeshEffect*>(pFireSlashEffect)->SetRenderMesh(true);
+			pFireSlashEffect->SetActive(true);
+		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("SlashEffectOff", [&](const string& eventName) {
+
+		auto pFireSlashEffect = CEffectManager::Get_Instance()->GetEffect(TEXT("Slash"));
+		if (pFireSlashEffect)
+		{
+			static_cast<CMeshEffect*>(pFireSlashEffect)->SetRenderMesh(false);
+			//	pFireSlashEffect->SetActive(false);
+		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("ActiveMigSkill", [&](const string& eventName) {
+		if (m_pMig)
+		{
+			m_pMig->SetActive(true);
+			_vector vForward = XMVector3Normalize(
+				m_pTransformCom->Get_State(STATE::LOOK)
+			);
+			_vector migPos = m_pTransformCom->Get_State(STATE::POSITION);
+			_vector offsetForward = XMVectorScale(vForward, 1.f);
+			_vector offsetUp = XMVectorSet(0.f, 15.f, 0.f, 0.f);
+
+			migPos = XMVectorAdd(migPos, offsetUp);
+
+			m_pMig->RotationDirection(vForward);
+
+			m_pMig->SetPosition(XMVectorSetW(migPos, 1.f));
+
+		}
+		});
 }
 
 void CTanjiro::ActiveCollider()

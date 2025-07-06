@@ -45,23 +45,27 @@ public:
 	virtual void FillInput(InputData& outInput);
 
 	void SetIsJumping(_bool bIsJumping) { m_bIsJumping = bIsJumping; }
-	_bool IsJumping() const { return m_bIsJumping; }
 	void Set_Target(const _wstring& name, LEVEL eLevel);
-	CGameObject* Get_Target() const { return m_pTarget; }
 	void SetLastStepDirection(EDirection eDirection) { m_eLastStepDirection = eDirection; }
-
 	void SetState(CSTATE eState) { m_eState = eState; } // 캐릭터 상태
-	CSTATE GetState() const { return m_eState; }
-
-	EDirection GetLastStepDirection() const { return m_eLastStepDirection; } // 마지막 방향
-	const _float3& GetVelocity() const { return m_Velocity; }
-	void SetVelocity(const _float3& velocity) { 
-		m_Velocity = velocity; 
+	void SetVelocity(const _float3& velocity) {
+		m_Velocity = velocity;
 		if (m_Velocity.y > 0.f) // 점프 중일 때
 		{
 			m_bAirborne = true;
 		}
 	}
+
+
+	_bool IsAirborne() const { return m_bAirborne; } // 공중에 떠 있는지 여부
+	_bool IsJumping() const { return m_bIsJumping; }
+	_bool IsFalling() const { return m_bFalling; }
+	CSTATE GetState() const { return m_eState; }
+	EDirection GetLastStepDirection() const { return m_eLastStepDirection; } // 마지막 방향
+	const _float3& GetVelocity() const { return m_Velocity; }
+	CGameObject* Get_Target() const { return m_pTarget; }
+	class CNavigation* GetNavigation() const { return m_pNavigationCom; }
+	class CDashSmokeEffect* GetDashSmokeEffect() const { return m_pDashSmokeEffect; }
 
 	void LaunchAirborne(_float fJumpForce = 10.f, _bool bIsBound = false); // 에어본
 	void LaunchAirborneFall(_float fJumpForce = 10.f); // 에어본
@@ -73,6 +77,8 @@ public:
 	virtual void ActiveCollider() {};
 	virtual void DeactiveCollider() {};
 	virtual void TakeDamage(_float fDamage) {
+		if (m_fCurrentHP <= 0.f) 
+			return;
 		StartHitStop(0.25f); // 히트 스탑 시작
 		m_fCurrentHP -= fDamage;
 		if (m_fCurrentHP <= 0.f)
@@ -80,17 +86,14 @@ public:
 			m_fCurrentHP = 0.f;
 		}
 	}
-	_bool IsAirborne() const { return m_bAirborne; } // 공중에 떠 있는지 여부
 
 	virtual void OnAttackHit(CGameObject* pTarget) {};
 
-	class CNavigation* GetNavigation() const { return m_pNavigationCom; }
-
-	_bool IsFalling() const { return m_bFalling; }
-
 	// 히트 스탑
 	void StartHitStop(_float duration);
+
 	void SetGameStarted(_bool bStarted) { m_bGameStarted = bStarted; }
+	virtual HRESULT Ready_Effects() { return S_OK; }
 protected:
 	virtual void Ready_Animation();
 
@@ -131,6 +134,8 @@ protected:
 
 	CSphereCollider* m_pRangeColliderCom{ nullptr }; // 추가 충돌체
 
+
+	class CDashSmokeEffect* m_pDashSmokeEffect = { nullptr };
 	class CWeapon* m_pWeapon{ nullptr }; // 무기
 	class CInputBuffer* m_pInputBuffer{ nullptr }; // 입력 버퍼 (커맨드 패턴)
 	EDirection m_eLastStepDirection{ EDirection::NONE }; // 마지막 이동 방향

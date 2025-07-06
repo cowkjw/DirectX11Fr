@@ -67,23 +67,23 @@ void StateMove::Update(CBaseCharacter* pChar, const InputData& input, float fTim
 
 		dir = XMVector3Normalize(input.moveDir);
 
-		// 1) 적 상대 전방/우 방향
 		_vector playerPos = pChar->GetTransform()->Get_State(STATE::POSITION);
 		_vector enemyPos = pTarget->GetTransform()->Get_State(STATE::POSITION);
 		_vector forwardEn = XMVector3Normalize(enemyPos - playerPos);
 		_vector rightEn = XMVector3Normalize(XMVector3Cross(XMVectorSet(0, 1, 0, 0), forwardEn));
 
-		// 2) 기본 방향 판정
-		float fDot = XMVectorGetX(XMVector3Dot(forwardEn, dir));
-		float rDot = XMVectorGetX(XMVector3Dot(rightEn, dir));
-		const float dead = 0.3f;
+		_float fDot = XMVectorGetX(XMVector3Dot(forwardEn, dir));
+		_float rDot = XMVectorGetX(XMVector3Dot(rightEn, dir));
+		const _float dead = 0.3f;
 
 		EDirection basicDir = EDirection::NONE;
-		if (fabsf(fDot) > fabsf(rDot)) {
+		if (fabsf(fDot) > fabsf(rDot))
+		{
 			if (fDot > dead) basicDir = EDirection::Forward;
 			else if (fDot < -dead) basicDir = EDirection::Backward;
 		}
-		else {
+		else
+		{
 			if (rDot > dead) basicDir = EDirection::Right;
 			else if (rDot < -dead) basicDir = EDirection::Left;
 		}

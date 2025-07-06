@@ -30,10 +30,12 @@ void BossDeath::Enter(CEnmuMeat* pChar)
 void BossDeath::Update(CEnmuMeat* pChar, _float fTimeDelta)
 {
 	auto pCutSceneCam = dynamic_cast<CCutSceneCamera*>(CCameraMag::Get_Instance()->GetActiveCamera());
+	auto pHead = pChar->GetPart(CEnmuMeat::Parts::HEAD);
 	if (pCutSceneCam&& pCutSceneCam->IsPlaying() == false)
 	{
 		pChar->SetState(EnmuState::DIE);
 		pChar->GetTarget()->SetActive(true);
+		static_cast<CAnimator*>(pHead->Get_Component(TEXT("Com_Animator")))->StopAnimation();
 		CCameraMag::Get_Instance()->ActiveCamera(TEXT("MainCamera"));
 		return;
 	}

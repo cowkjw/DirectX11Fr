@@ -180,6 +180,7 @@
     <ClInclude Include="..\public\Command.h" />
     <ClInclude Include="..\Public\CompositeNode.h" />
     <ClInclude Include="..\public\CutSceneCamera.h" />
+    <ClInclude Include="..\Public\DashSmokeEffect.h" />
     <ClInclude Include="..\public\Decal.h" />
     <ClInclude Include="..\public\Effect.h" />
     <ClInclude Include="..\public\EffectManager.h" />
@@ -195,12 +196,18 @@
     <ClInclude Include="..\public\FreeCamera.h" />
     <ClInclude Include="..\public\Gizmo.h" />
     <ClInclude Include="..\public\Hierarchy.h" />
+    <ClInclude Include="..\Public\HitShockParticle.h" />
     <ClInclude Include="..\Public\HitSlashCrossParticle.h" />
     <ClInclude Include="..\public\IMGUIMag.h" />
     <ClInclude Include="..\public\InputBuffer.h" />
     <ClInclude Include="..\public\InspectorPannel.h" />
     <ClInclude Include="..\public\JsonLoader.h" />
     <ClInclude Include="..\Public\Kyojuro.h" />
+    <ClInclude Include="..\public\KyojuroEnk.h" />
+    <ClInclude Include="..\Public\KyojuroEnkEffect.h" />
+    <ClInclude Include="..\Public\KyojuroEnkSpiralEffect.h" />
+    <ClInclude Include="..\Public\KyojuroKienEffect.h" />
+    <ClInclude Include="..\Public\KyojuroNobEffect.h" />
     <ClInclude Include="..\Public\Level_Editor.h" />
     <ClInclude Include="..\Public\Level_BattleSelect.h" />
     <ClInclude Include="..\Public\Level_EnmuBoss.h" />
@@ -211,6 +218,7 @@
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\public\MeshEffect.h" />
+    <ClInclude Include="..\public\MySequence.h" />
     <ClInclude Include="..\Public\Node.h" />
     <ClInclude Include="..\public\Observer.h" />
     <ClInclude Include="..\public\ObserverManager.h" />
@@ -242,6 +250,9 @@
     <ClInclude Include="..\public\StateSkill2.h" />
     <ClInclude Include="..\public\StateStep.h" />
     <ClInclude Include="..\public\Tanjiro.h" />
+    <ClInclude Include="..\Public\TanjiroMig.h" />
+    <ClInclude Include="..\Public\TanMigEffect.h" />
+    <ClInclude Include="..\Public\TanMigRingEffect.h" />
     <ClInclude Include="..\Public\TaskNode.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\ThirdPersonCamera.h" />
@@ -251,6 +262,7 @@
     <ClInclude Include="..\public\UIAnimImage.h" />
     <ClInclude Include="..\public\WarningZoneDecal.h" />
     <ClInclude Include="..\public\Weapon.h" />
+    <ClInclude Include="..\Public\WindSlashEffect.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -287,6 +299,7 @@
     <ClCompile Include="..\private\BossTentacle.cpp" />
     <ClCompile Include="..\private\CameraMag.cpp" />
     <ClCompile Include="..\private\CutSceneCamera.cpp" />
+    <ClCompile Include="..\Private\DashSmokeEffect.cpp" />
     <ClCompile Include="..\private\Decal.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
     <ClCompile Include="..\private\EffectManager.cpp" />
@@ -302,12 +315,18 @@
     <ClCompile Include="..\private\FreeCamera.cpp" />
     <ClCompile Include="..\private\Gizmo.cpp" />
     <ClCompile Include="..\private\Hierarchy.cpp" />
+    <ClCompile Include="..\Private\HitShockParticle.cpp" />
     <ClCompile Include="..\Private\HitSlashCrossParticle.cpp" />
     <ClCompile Include="..\private\IMGUIMag.cpp" />
     <ClCompile Include="..\private\InputBuffer.cpp" />
     <ClCompile Include="..\private\InspectorPannel.cpp" />
     <ClCompile Include="..\private\JsonLoader.cpp" />
     <ClCompile Include="..\Private\Kyojuro.cpp" />
+    <ClCompile Include="..\private\KyojuroEnk.cpp" />
+    <ClCompile Include="..\Private\KyojuroEnkEffect.cpp" />
+    <ClCompile Include="..\Private\KyojuroEnkSpiralEffect.cpp" />
+    <ClCompile Include="..\Private\KyojuroKienEffect.cpp" />
+    <ClCompile Include="..\Private\KyojuroNobEffect.cpp" />
     <ClCompile Include="..\Private\Level_Editor.cpp" />
     <ClCompile Include="..\Private\Level_BattleSelect.cpp" />
     <ClCompile Include="..\Private\Level_EnmuBoss.cpp" />
@@ -318,6 +337,7 @@
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\MeshEffect.cpp" />
+    <ClCompile Include="..\private\MySequence.cpp" />
     <ClCompile Include="..\private\ObserverManager.cpp" />
     <ClCompile Include="..\private\Pannel.cpp" />
     <ClCompile Include="..\private\Sky.cpp" />
@@ -347,6 +367,9 @@
     <ClCompile Include="..\private\StateSkill2.cpp" />
     <ClCompile Include="..\private\StateStep.cpp" />
     <ClCompile Include="..\private\Tanjiro.cpp" />
+    <ClCompile Include="..\Private\TanjiroMig.cpp" />
+    <ClCompile Include="..\Private\TanMigEffect.cpp" />
+    <ClCompile Include="..\Private\TanMigRingEffect.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\ThirdPersonCamera.cpp" />
     <ClCompile Include="..\private\GameplayCanvas.cpp" />
@@ -355,6 +378,7 @@
     <ClCompile Include="..\private\UIAnimImage.cpp" />
     <ClCompile Include="..\private\WarningZoneDecal.cpp" />
     <ClCompile Include="..\private\Weapon.cpp" />
+    <ClCompile Include="..\Private\WindSlashEffect.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>

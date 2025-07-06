@@ -22,6 +22,14 @@ public:
 public:
 	HRESULT Initialize(_uint iWidth, _uint iHeight, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 	void Clear();
+	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pContant);
+
+#ifdef _DEBUG
+public:
+	HRESULT Ready_Debug(_float fX, _float fY, _float fSizeX, _float fSizeY);
+	HRESULT Render(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+
+#endif
 private:
 	ID3D11Device*					m_pDevice = { nullptr };
 	ID3D11DeviceContext*			m_pContext = { nullptr };
@@ -32,6 +40,7 @@ private:
 
 private:
 	_float4							m_vClearColor = {};
+	_float4x4						m_WorldMatrix = {};
 
 
 public:

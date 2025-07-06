@@ -22,7 +22,7 @@ HRESULT CHitSlashCrossParticle::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-
+	SetTextureIndex(2);
 
     return S_OK;
 }
@@ -34,6 +34,7 @@ void CHitSlashCrossParticle::Priority_Update(_float fTimeDelta)
 void CHitSlashCrossParticle::Update(_float fTimeDelta)
 {
 	__super::Update(fTimeDelta);
+	m_pTransformCom->Turn(XMVectorSet(0.f, 0.f, 1.f, 0.f), fTimeDelta); // Y축으로 90도 회전
 }
 
 void CHitSlashCrossParticle::Late_Update(_float fTimeDelta)
@@ -43,7 +44,7 @@ void CHitSlashCrossParticle::Late_Update(_float fTimeDelta)
 
 HRESULT CHitSlashCrossParticle::Render()
 {
-	if (FAILED(m_Textures[TEX_MASK]->Bind_ShaderResource(m_pShaderCom, "g_Texture", 1)))
+	if (FAILED(m_Textures[TEX_MASK]->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_iTextureIndex)))
 		return E_FAIL;
 	__super::Render();
     return S_OK;
@@ -61,10 +62,10 @@ HRESULT CHitSlashCrossParticle::Ready_Components()
 
 
 	////// 테스트용 
-	CJsonLoader jsonLoader(m_pDevice,m_pContext);
+	//CJsonLoader jsonLoader(m_pDevice,m_pContext);
 
-	jsonLoader.Load_Particle("../Asset/Json/Particle/HitCross_Particle.json", &m_ParticleSystems[L"TEST"]);
-	jsonLoader.Free();
+	//jsonLoader.Load_Particle("../Asset/Json/Particle/HitCross_Particle.json", &m_ParticleSystems[L"TEST"]);
+	//jsonLoader.Free();
 
 	/* For.Com_Texture */
 

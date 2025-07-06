@@ -96,16 +96,17 @@
         {
             "clipName": "A_P1011_V18_C00_AtkSkl03_1",
             "duration": 30.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P1011_V18_C00_AtkSkl03_2",
             "duration": 20.0,
             "events": [
-                {
-                    "name": "ActiveHitbox",
-                    "time": 10.000991821289063
-                },
                 {
                     "name": "CameraShake",
                     "time": 18.0
@@ -154,7 +155,12 @@
         {
             "clipName": "A_P1011_V18_C00_AtkSkl04_3",
             "duration": 53.0,
-            "events": []
+            "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 1.0
+                }
+            ]
         },
         {
             "clipName": "A_P1011_V18_C00_AtkSkl04_4",
@@ -162,7 +168,7 @@
             "events": [
                 {
                     "name": "DeactiveHitbox",
-                    "time": 5.0
+                    "time": 1.0
                 }
             ]
         },
@@ -270,22 +276,6 @@
             "clipName": "A_P1011_V18_C00_AtkSkl09_2",
             "duration": 81.0,
             "events": [
-                {
-                    "name": "ActiveHitbox",
-                    "time": 15.001615524291992
-                },
-                {
-                    "name": "StrecthRadius",
-                    "time": 15.001615524291992
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 57.01068115234375
-                },
-                {
-                    "name": "ResetRadius",
-                    "time": 57.01068115234375
-                },
                 {
                     "name": "CameraShake",
                     "time": 24.002960205078125

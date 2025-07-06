@@ -12,10 +12,13 @@
 #include "StateSkill0.h"
 #include "StateSkill1.h"
 #include "StateSkill2.h"
+#include "DashSmokeEffect.h"
 #include "BodyColliderParts.h"
 #include "UIProgressBar.h"
+#include "WindSlashEffect.h"
 #include <JsonLoader.h>
 #include "Navigation.h"
+#include "EffectManager.h"
 
 
 using AniCon = CAnimController::Condition;
@@ -53,29 +56,14 @@ HRESULT CAkaza::Initialize(void* pArg)
 
 	m_pTransformCom->Scaling(_float3(0.1f, 0.1f, 0.1f));
 
-
-	// 애니메이션 이벤트 등록
-	m_pAnimatorCom->RegisterEventListener("ActiveHitbox", [&](const string&) {
-		ActiveCollider();
-		});
-
-	m_pAnimatorCom->RegisterEventListener("DeactiveHitbox", [&](const string&) {
-		DeactiveCollider();
-		});
-
-
-
+	ReadyAnimEvents();
 	Ready_Animation();
-
 
 	Add_Component(TEXT("Com_CapsuleCollider"), CCapsuleCollider::Create(m_pDevice, m_pContext, 3.5f, 77.f), reinterpret_cast<CComponent**>(&m_pColliderCom));
 
 	m_pColliderCom->Initialize(nullptr);
 	m_pColliderCom->SetOffset(_float3(0.f, 8.1f, 0.f));
 
-	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_CapsuleCollider"),
-	//	TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom))))
-	//	return E_FAIL;
 	ChangeState(new StateIdle(TEXT("Idle")));
 	m_eComState = COM_STATE::IDLE;
 	m_pColliderCom->SetListener(this);
@@ -92,33 +80,50 @@ HRESULT CAkaza::Initialize(void* pArg)
 	{
 		if (auto parts = dynamic_cast<CBodyColliderParts*>(m_vecChildren[i]))
 		{
-			CBone* pBoneRHand = nullptr;
+			CBone* pBone = nullptr;
 
 			if (i == 0)
 			{
-				pBoneRHand = m_pModelCom->Get_Bone("L_Hand_1");
+				pBone = m_pModelCom->Get_Bone("L_Hand_1");
 			}
 			else if (i == 1)
 			{
-				pBoneRHand = m_pModelCom->Get_Bone("R_Hand_1");
+				pBone = m_pModelCom->Get_Bone("R_Hand_1");
+
 			}
 			else if (i == 2)
 			{
-				pBoneRHand = m_pModelCom->Get_Bone("R_Foot_1");
+				pBone = m_pModelCom->Get_Bone("R_Foot_1");
 			}
 			else if (i == 3)
 			{
-				pBoneRHand = m_pModelCom->Get_Bone("L_Foot_1");
+				
+				pBone = m_pModelCom->Get_Bone("L_Foot_1");
+			
 			}
-			if (!pBoneRHand)
+			if (!pBone)
 			{
 				MSG_BOX("CAkaza::Initialize - Bone not found");
 				return E_FAIL;
 			}
-			parts->Set_BoneSocket(pBoneRHand);
+			parts->Set_BoneSocket(pBone);
 		}
 	}
 
+	//// 왼발이랑 오른 팔에 붙이기
+	//CWindSlashEffect* pSlashEffect = dynamic_cast<CWindSlashEffect*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_WindSlash"),
+	//	ToIndex(LEVEL::GAMEPLAY), TEXT("WindSlash")));
+	//if (pSlashEffect)
+	//{
+	//	pSlashEffect->SetActive(false);
+	//CEffectManager::Get_Instance()->RegisterEffect(TEXT("WindSlash"), pSlashEffect);
+	//}
+	//if (pSlashEffect)
+	//{
+	//	pSlashEffect->SetActive(true);
+	//	CEffectManager::Get_Instance()->RegisterEffect(TEXT("LeftWindSlash"), pSlashEffect);
+	//	//pSlashEffect = nullptr;
+	//}
 	m_iShaderPass = 3;
 
 	if (m_pNavigationCom)
@@ -129,6 +134,9 @@ HRESULT CAkaza::Initialize(void* pArg)
 	m_fMaxHP = 250.f;
 	m_fCurrentHP = m_fMaxHP;
 
+	if (FAILED(Ready_Effects()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -136,18 +144,18 @@ void CAkaza::Priority_Update(_float fTimeDelta)
 {
 	CBaseCharacter::Priority_Update(fTimeDelta);
 
-	static _uint iAnim = 0;
-	if (m_pGameInstance->IsKeyPressed('N'))
-	{
-		m_pAnimatorCom->Set_Animation(iAnim, 0.15f);
-		iAnim++;
-	}
+	//static _uint iAnim = 0;
+	//if (m_pGameInstance->IsKeyPressed('N'))
+	//{
+	//	m_pAnimatorCom->Set_Animation(iAnim, 0.15f);
+	//	iAnim++;
+	//}
 
-	if (m_pGameInstance->IsKeyPressed('M'))
-	{
-		m_pAnimatorCom->Set_Animation(iAnim, 0.15f);
-		iAnim = max(0, iAnim - 1);
-	}
+	//if (m_pGameInstance->IsKeyPressed('M'))
+	//{
+	//	m_pAnimatorCom->Set_Animation(iAnim, 0.15f);
+	//	iAnim = max(0, iAnim - 1);
+	//}
 
 	//if (m_fCurrentHP <= 0.f)
 	//{
@@ -212,7 +220,6 @@ void CAkaza::Late_Update(_float fTimeDelta)
 		//		sprintf_s(buf, "현재 애니메이션: %s", currentState);
 		//		SetWindowTextA(g_hWnd, buf);
 	}
-	//PredictPlayerState();
 }
 
 HRESULT CAkaza::Render()
@@ -223,6 +230,12 @@ HRESULT CAkaza::Render()
 
 void CAkaza::TakeDamage(_float fDamage)
 {
+	if (m_fCurrentHP <= 0.f)
+		return;
+	if (m_eState == CSTATE::GUARD)
+	{
+		fDamage *= 0.5f; // 가드 중에는 피해량 감소
+	}
 	__super::TakeDamage(fDamage);
 	if(!m_bAirborne&&!m_bIsBound)
 	{
@@ -300,8 +313,8 @@ void CAkaza::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::ATTACK_UP:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
-				StartHitStop(0.2f);
 				pCharacter->TakeDamage(6.f);
+				StartHitStop(0.2f);
 				m_bCanBlowAttack = true;
 			}
 			break;
@@ -361,12 +374,6 @@ HRESULT CAkaza::Ready_Components()
 	//	return E_FAIL;
 
 
-	//if (m_pGameInstance->Get_CurrentLevelIndex() == 3)
-	//{
-
-
-
-	//}
 	/* For.Com_Navigation */
 	CNavigation::NAVIGATION_DESC		NaviDesc{};
 	NaviDesc.iIndex = 1;
@@ -374,6 +381,19 @@ HRESULT CAkaza::Ready_Components()
 	if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
+	return S_OK;
+}
+
+HRESULT CAkaza::Ready_Effects()
+{
+	m_pDashSmokeEffect = CDashSmokeEffect::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pDashSmokeEffect)
+	{
+		return E_FAIL;
+	}
+	m_pDashSmokeEffect->Initialize(nullptr);
+	m_pDashSmokeEffect->SetActive(false);
+	m_pDashSmokeEffect->SetColor(_float4(0.247f, 0.572f, 0.88f, 1.f));
 	return S_OK;
 }
 
@@ -388,7 +408,6 @@ void CAkaza::Ready_Animation()
 
 
 	auto ctrl = m_pAnimatorCom->GetAnimController();
-	// 2) 상태(State) 등록
 	   // Idle
 	auto idleAnim = m_pModelCom->GetAnimationClipByName("A_P1012_V00_C90_BaseNut01_1");
 	idleAnim->SetLoop(true);
@@ -399,7 +418,6 @@ void CAkaza::Ready_Animation()
 	runAnim->SetLoop(true);
 	size_t runIdx = ctrl->AddState("Run", runAnim, 1);
 
-	// RunEnd (달리다 멈추는)  논루프
 	auto runEndAnim = m_pModelCom->GetAnimationClipByName("A_P1012_V00_C90_BaseRun01_2");
 	runEndAnim->SetLoop(false);
 	size_t runEndIdx = ctrl->AddState("RunEnd", runEndAnim, 1);
@@ -436,7 +454,7 @@ void CAkaza::Ready_Animation()
 	comboAttackClips.push_back(attackUp);
 
 
-	comboAttackClips[2]->SetTickPerSecond(25.f); // 3타 공격 속도
+	comboAttackClips[2]->SetTickPerSecond(25.5f); // 3타 공격 속도
 	comboAttackClips[4]->SetTickPerSecond(20.f); // 아래 공격 속도
 	comboAttackClips[5]->SetTickPerSecond(20.f); // 위 공격 속도
 	size_t attack0Idx = ctrl->AddState("attack0", comboAttackClips[0], 3);
@@ -599,10 +617,6 @@ void CAkaza::Ready_Animation()
 	size_t skill1Idx2 = ctrl->AddState("skill1_2", skill1Clips[2], 10);
 	size_t skill1EndIdx = ctrl->AddState("skill1End", skill1Clips[3], 10);
 
-
-
-
-	// 3) 파라미터(Parameter) 등록
 	m_pAnimatorCom->AddBool("Move");
 	m_pAnimatorCom->AddBool("Jump");
 	m_pAnimatorCom->AddBool("Guard");
@@ -964,8 +978,87 @@ void CAkaza::Ready_Animation()
 	ctrl->AddTransition(attack4Idx, fall0Idx, cHurtBlow, 0.1f);
 	ctrl->AddTransition(attack5Idx, fall0Idx, cHurtBlow, 0.1f);
 
+	ctrl->AddTransition(hurtFIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(hurtFIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(hurtFIdx, fall0Idx, cHurtBlow, 0.1f);
 
+	ctrl->AddTransition(hurtAirborneIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(hurtAirborneIdx, fall0Idx, cHurtBlow, 0.1f);
 
+	ctrl->AddTransition(boundIdx, hurtFIdx, cHurt, 0.1f);
+
+	ctrl->AddTransition(fall0Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(fall1Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(fall2Idx, hurtFIdx, cHurt, 0.1f);
+
+	ctrl->AddTransition(fall0Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(fall1Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(fall2Idx, boundIdx, cHurtBound, 0.1f);
+
+	ctrl->AddTransition(fall0Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(fall1Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(fall2Idx, fall0Idx, cHurtBlow, 0.1f);
+
+}
+
+void CAkaza::ReadyAnimEvents()
+{	
+	// 애니메이션 이벤트 등록
+	m_pAnimatorCom->RegisterEventListener("ActiveHitbox", [&](const string&) {
+		ActiveCollider();
+		});
+
+	m_pAnimatorCom->RegisterEventListener("DeactiveHitbox", [&](const string&) {
+		DeactiveCollider();
+		});
+	m_pAnimatorCom->RegisterEventListener("ActiveFootHitbox", [&](const string&) {
+		ActiveFootCollider();
+		});
+	m_pAnimatorCom->RegisterEventListener("DeactiveFootHitbox", [&](const string&) {
+		DeactiveFootCollider();
+		});
+
+	m_pAnimatorCom->RegisterEventListener("WindLeftHandSlashEffectOn", [&](const string& eventName) {
+
+		auto pSlashEffect = CEffectManager::Get_Instance()->GetEffect(TEXT("WindSlash"));
+		if (pSlashEffect)
+		{
+			CBone* pBone = m_pModelCom->Get_Bone("R_Hand_1");
+			if (!pBone)
+				return;
+			// 본의 로컬을 월드로 
+
+			static_cast<CMeshEffect*>(pSlashEffect)->SetRenderMesh(true);
+			_float4x4 parentWorld = GetTransform()->Get_WorldMatrix();
+			_float4x4 boneLocal = *pBone->Get_CombinedTransformationMatrix();
+
+			// 본 매트릭스를 그대로 사용 (정규화하지 않음)
+			_matrix matBoneLocal = XMLoadFloat4x4(&boneLocal);
+			_matrix matParentWorld = XMLoadFloat4x4(&parentWorld);
+
+			// 올바른 매트릭스 곱셈 순서: ParentWorld * BoneLocal
+			_matrix world = XMMatrixMultiply(matBoneLocal, matParentWorld);
+
+			//// 파티클 이펙트의 로컬 오프셋이 있다면 적용
+			//_matrix localOffset = XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix());
+			//world = XMMatrixMultiply(localOffset, world);
+
+			XMStoreFloat4x4(&m_pTransformCom->Get_WorldMatrix(), world);
+			pSlashEffect->GetTransform()->Set_WorldMatrix(m_pTransformCom->Get_WorldMatrix());
+	
+		//	pSlashEffect->GetTransform()->Set_State(STATE::POSITION, GetTransform()->Get_State(STATE::POSITION));
+			pSlashEffect->SetActive(true);
+		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("WindLeftHandSlashEffectOff", [&](const string& eventName) {
+
+		auto pSlashEffect = CEffectManager::Get_Instance()->GetEffect(TEXT("WindSlash"));
+		if (pSlashEffect)
+		{
+			static_cast<CMeshEffect*>(pSlashEffect)->SetRenderMesh(false);
+		}
+		});
 }
 
 
@@ -1013,7 +1106,7 @@ void CAkaza::FillInput(InputData& outInput)
 	if (m_pInputBuffer->CheckCombo(commands,
 		{ ECommand::LightAttack, ECommand::LightAttack,
 		  ECommand::LightAttack, ECommand::LightAttack },
-		1.f))
+		1.2f))
 	{
 		if (m_Distribution(m_RandGen) < 0.5f)
 		{
@@ -1064,7 +1157,7 @@ void CAkaza::FillInput(InputData& outInput)
 			outInput.doJump = true;
 			break;
 		case ECommand::Dash:
-			outInput.doStep = true; // 또는 doDash 로 따로 관리
+			outInput.doStep = true;
 			{
 				// 상대가 가드 중인지 체크
 				_bool targetIsGuarding = (pTarget->GetState() == CBaseCharacter::CSTATE::GUARD || pTarget->GetState() == CBaseCharacter::CSTATE::MOVE||
@@ -1128,13 +1221,13 @@ void CAkaza::HandleInput()
 		m_fJumpCooldown -= dt;
 
 	//거리/방향 계산 (XZ 평면)
-	XMVECTOR myPos = GetTransform()->Get_State(STATE::POSITION);
-	XMVECTOR tgtPos = pTarget->GetTransform()->Get_State(STATE::POSITION);
+	_vector myPos = GetTransform()->Get_State(STATE::POSITION);
+	_vector tgtPos = pTarget->GetTransform()->Get_State(STATE::POSITION);
 	myPos = XMVectorSetY(myPos, 0.f);
 	tgtPos = XMVectorSetY(tgtPos, 0.f);
-	XMVECTOR diff = tgtPos - myPos;
-	float    dist = XMVectorGetX(XMVector3Length(diff));
-	XMVECTOR dirToPlayer = (dist > 0.001f) ? XMVector3Normalize(diff) : XMVectorZero();
+	_vector diff = tgtPos - myPos;
+	_float    dist = XMVectorGetX(XMVector3Length(diff));
+	_vector dirToPlayer = (dist > 0.001f) ? XMVector3Normalize(diff) : XMVectorZero();
 
 	CBaseCharacter::CSTATE playerState = pTarget->GetState();
 
@@ -1345,24 +1438,35 @@ void CAkaza::HandleInput()
 
 void CAkaza::ActiveCollider()
 {
-	for (auto& pBodyColl : m_vecChildren)
-	{
-		if (dynamic_cast<CBodyColliderParts*>(pBodyColl))
-		{
-			pBodyColl->SetActive(true);
-		}
-	}
+	m_vecChildren[0]->SetActive(true);
+	m_vecChildren[1]->SetActive(true);
 }
 
 void CAkaza::DeactiveCollider()
 {
-	for (auto& pBodyColl : m_vecChildren)
-	{
-		if (dynamic_cast<CBodyColliderParts*>(pBodyColl))
-		{
-			pBodyColl->SetActive(false);
-		}
-	}
+	//for (auto& pBodyColl : m_vecChildren)
+	//{
+	//	if (dynamic_cast<CBodyColliderParts*>(pBodyColl))
+	//	{
+	//		pBodyColl->SetActive(false);
+	//	}
+	//}
+	m_vecChildren[0]->SetActive(false); 
+	m_vecChildren[1]->SetActive(false); 
+}
+
+void CAkaza::ActiveFootCollider()
+{
+	// 3,4 번 BodyCollider
+	m_vecChildren[2]->SetActive(true); // 오른발
+	m_vecChildren[3]->SetActive(true); //  왼발
+}
+
+void CAkaza::DeactiveFootCollider()
+{
+
+	m_vecChildren[2]->SetActive(false); // 오른발
+	m_vecChildren[3]->SetActive(false); // 왼발
 }
 
 

@@ -42,7 +42,7 @@ void CHitParticle::Late_Update(_float fTimeDelta)
 
 HRESULT CHitParticle::Render()
 {
-	if (FAILED(m_Textures[TEX_MASK]->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_Textures[TEX_MASK]->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_iTextureIndex)))
 		return E_FAIL;
 	__super::Render();
     return S_OK;

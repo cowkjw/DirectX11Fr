@@ -69,7 +69,7 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    -111.46,
+                    -111.44,
                     -13.42,
                     5.09
                 ],
@@ -161,7 +161,7 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    -103.96,
+                    -103.94,
                     0.0,
                     -104.48
                 ],
@@ -309,9 +309,9 @@
                     180.0
                 ],
                 "Scale": [
-                    7.90,
+                    7.88,
                     8.0,
-                    7.90
+                    7.88
                 ]
             }
         },
@@ -437,9 +437,9 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    -105.12,
+                    -97.06,
                     0.0,
-                    -215.33
+                    -230.93
                 ],
                 "Rotation": [
                     -0.0,
@@ -447,9 +447,9 @@
                     180.0
                 ],
                 "Scale": [
-                    7.92,
+                    19.61,
                     8.0,
-                    7.92
+                    7.90
                 ]
             }
         },
@@ -529,7 +529,7 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    -119.10,
+                    -119.08,
                     -8.42,
                     -60.5
                 ],
@@ -575,9 +575,9 @@
                 "ComponentTag": "",
                 "IsActive": true,
                 "Position": [
-                    177.55,
+                    160.20,
                     0.93,
-                    -192.5
+                    -236.98
                 ],
                 "Rotation": [
                     -0.0,
@@ -585,7 +585,7 @@
                     180.0
                 ],
                 "Scale": [
-                    8.0,
+                    13.89,
                     8.0,
                     8.0
                 ]
@@ -649,6 +649,26 @@
         "ProtoLevel": 4,
         "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
         "components": {
+            "Com_Collider0": {
+                "CollisionType": 5,
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "HalfExtents": [
+                    90.58,
+                    129.38,
+                    3.78
+                ],
+                "IsActive": true,
+                "IsTrigger": false,
+                "Offset": [
+                    13.60,
+                    -3.08,
+                    -16.0
+                ],
+                "Priority": 0,
+                "Type": "BoxCollider"
+            },
             "Com_Model": {
                 "ComponentCreateLevel": 0,
                 "ComponentLevel": 0,
@@ -679,7 +699,7 @@
                 "Scale": [
                     0.05,
                     0.04,
-                    0.04
+                    0.02
                 ]
             }
         },
@@ -769,9 +789,9 @@
                     0.0
                 ],
                 "Scale": [
-                    4.97,
+                    4.95,
                     5.0,
-                    4.97
+                    4.95
                 ]
             }
         },
@@ -861,9 +881,9 @@
                     0.0
                 ],
                 "Scale": [
-                    3.47,
+                    3.45,
                     3.5,
-                    3.47
+                    3.45
                 ]
             }
         },
@@ -907,9 +927,9 @@
                     0.0
                 ],
                 "Scale": [
-                    3.47,
+                    3.45,
                     3.5,
-                    3.47
+                    3.45
                 ]
             }
         },
@@ -953,9 +973,9 @@
                     -0.0
                 ],
                 "Scale": [
-                    19.97,
+                    19.95,
                     20.0,
-                    19.97
+                    19.95
                 ]
             }
         },
@@ -999,9 +1019,9 @@
                     -0.0
                 ],
                 "Scale": [
-                    19.98,
+                    19.96,
                     20.0,
-                    19.98
+                    19.96
                 ]
             }
         },

@@ -14,7 +14,7 @@
     "IsLoop": false,
     "LifeTime": [
         0.0,
-        1.5
+        1.1
     ],
     "NumInstance": 100,
     "ParticleType": 0,
@@ -26,7 +26,7 @@
     ],
     "Size": [
         0.3,
-        0.6
+        1.0
     ],
     "Speed": [
         25.5999999046325684,

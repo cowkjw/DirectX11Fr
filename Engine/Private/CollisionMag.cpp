@@ -12,7 +12,9 @@ void CCollisionMag::Update(_float fTimeDelta)
         return;
 
     for (auto& collider : m_vColliders)
+    {
         collider->Update();
+    }
 
     // 이번 프레임에 충돌이 발생한 오브젝트
     //    pair<CBaseCharacter*, CBaseCharacter*> 형태로 저장
@@ -28,7 +30,6 @@ void CCollisionMag::Update(_float fTimeDelta)
         {
             auto B = m_vColliders[j];
 
-            // (a) 둘 중 하나라도 비활성화 상태면 무시
             if (!A->IsActive() || !B->IsActive())
                 continue;
 
@@ -51,13 +52,12 @@ void CCollisionMag::Update(_float fTimeDelta)
                 || grandParentB == ownerA)
                 continue;
 
-            // 5) 실제 충돌 여부 체크
+            // 충돌 여부 체크
             if (!A->Intersects(B))
                 continue;
 
             _float3 hitPosition = CalculateHitPosition(A, B);
 
-            // 6) **소유자 단위로 중복 처리 방지**
             //    (ownerA, ownerB) 쌍 정렬 => (min, max) 형태로 key 생성
             pair<CGameObject*, CGameObject*> ownerPair =
                 ownerA < ownerB
@@ -100,7 +100,9 @@ void CCollisionMag::Update(_float fTimeDelta)
 
                 if (pusher->GetType() != ColliderType::HITBOX
                     && pushed->GetType() != ColliderType::HITBOX && pusher->GetType() != ColliderType::RANGE &&
-                    pushed->GetType() != ColliderType::RANGE)
+                    pushed->GetType() != ColliderType::RANGE
+                   &&pusher->GetType()!=ColliderType::ENVIRONMENT&&
+                    pushed->GetType()!=ColliderType::ENVIRONMENT)
                 {
                     ResolvePenetrationXZ(pusher, pushed);
                 }
@@ -130,7 +132,9 @@ void CCollisionMag::Update(_float fTimeDelta)
                 if (pusher->GetType() != ColliderType::HITBOX
                     && pushed->GetType() != ColliderType::HITBOX
                    && pusher->GetType()!=ColliderType::RANGE&&
-                    pushed->GetType()!=ColliderType::RANGE)
+                    pushed->GetType()!=ColliderType::RANGE &&
+                    pusher->GetType() != ColliderType::ENVIRONMENT &&
+                    pushed->GetType() != ColliderType::ENVIRONMENT)
                 {
                     ResolvePenetrationXZ(pusher, pushed);
                 }
@@ -157,6 +161,8 @@ void CCollisionMag::DebugDraw()
 {
 	for (auto& collider : m_vColliders)
 	{
+		if (!collider->IsActive())
+			continue;
 		collider->DebugDraw();
 	}
 }

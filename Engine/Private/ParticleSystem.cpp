@@ -13,8 +13,9 @@ CParticleSystem::CParticleSystem(const CParticleSystem& Prototype)
 	, m_vecVelocities{Prototype.m_vecVelocities}
 	, m_bIsLoop{ Prototype.m_bIsLoop }
 	, m_ParticleDesc{ Prototype.m_ParticleDesc }
+	,m_vecUseVelocities{Prototype.m_vecUseVelocities }
 {
-
+	m_vecUseVelocities.resize(Prototype.m_vecUseVelocities.size());
 }
 
 HRESULT CParticleSystem::Initialize_Prototype()

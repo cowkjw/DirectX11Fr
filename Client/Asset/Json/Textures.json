@@ -383,6 +383,18 @@
       "path": "../Asset/Resources/Textures/Effect/Hit/T_e_cmn_SlashHit001.dds",
       "numTextures": 1,
       "static": true
+    },
+    {
+      "key": "Shock",
+      "path": "../Asset/Resources/Textures/Effect/Hit/Shock_%d.dds",
+      "numTextures": 33,
+      "static": true
+    },
+    {
+      "key": "TrainLight",
+      "path": "../Asset/Resources/Textures/Effect/Train/T_e_Env_e_201_Radial001.dds",
+      "numTextures": 1,
+      "static": true
     }
   ]
 }

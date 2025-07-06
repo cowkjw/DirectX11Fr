@@ -1,6 +1,7 @@
 #include "Target_Manager.h"
 #include "RenderTarget.h"
 
+
 CTarget_Manager::CTarget_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice { pDevice }
 	, m_pContext { pContext }
@@ -123,6 +124,38 @@ HRESULT CTarget_Manager::End_MRT()
 {
 	m_pContext->OMSetRenderTargets(1, &m_pBackBuffer, m_pOriginalDSV);
 
+	return S_OK;
+}
+
+HRESULT CTarget_Manager::Bind_ShaderResource(const _wstring& strTargetTag, CShader* pShader, const _char* pContantName)
+{
+	CRenderTarget* pRenderTarget = Find_RenderTarget(strTargetTag);
+	if (nullptr == pRenderTarget)
+		return E_FAIL;
+
+	return pRenderTarget->Bind_ShaderResource(pShader, pContantName);
+}
+
+HRESULT CTarget_Manager::Ready_Debug(const _wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
+{
+	CRenderTarget* pRenderTarget = Find_RenderTarget(strTargetTag);
+	if (nullptr == pRenderTarget)
+		return E_FAIL;
+	return pRenderTarget->Ready_Debug(fX, fY, fSizeX, fSizeY);
+}
+
+HRESULT CTarget_Manager::Render_Debug(const _wstring& strMRTTag, CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	vector<CRenderTarget*>* pMRTList = Find_MRT(strMRTTag);
+	if (nullptr == pMRTList)
+		return E_FAIL;
+	for (const auto& pRenderTarget : *pMRTList)
+	{
+		if (nullptr == pRenderTarget)
+			continue;
+		if (FAILED(pRenderTarget->Render(pShader, pVIBuffer)))
+			return E_FAIL;
+	}
 	return S_OK;
 }
 
