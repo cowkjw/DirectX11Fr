@@ -24,6 +24,7 @@ public:
 
 private:
 	virtual HRESULT Ready_Components() override;
+	virtual HRESULT Ready_Effects() override;
 	void ReadyAnimEvents();
 	virtual void Ready_Animation() override;
 	void ActiveCollider();
@@ -35,6 +36,7 @@ private:
 	class CKyojuroEnk* m_pEnk = { nullptr };
 	class CKyojuroKienEffect* m_pKienEffect = { nullptr };
 	array<class CKyojuroNobEffect*, 2> m_pNobEffect = { nullptr, nullptr };
+
 
 public:
 	static CKyojuro* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -4,20 +4,24 @@
 #include "HitSlashCrossParticle.h"
 #include "ThirdPersonCamera.h"	
 #include "KyojuroKienEffect.h"
+#include "TanMigRingEffect.h"
 #include "KyojuroNobEffect.h"
 #include "KyojuroEnkEffect.h"
 #include "WarningZoneDecal.h"
+#include "DashSmokeEffect.h"
 #include "WindSlashEffect.h"
 #include "FireSlashEffect.h"
 #include "CutSceneCamera.h"
 #include "ParticleEffect.h"
 #include "GameInstance.h"
 #include "EnmuTentacle.h"
-#include "Environment.h"
+#include "TanMigEffect.h"
 #include "HitParticle.h"
+#include "Environment.h"
 #include "SlashEffect.h"
-#include "FreeCamera.h"
+#include "TanjiroMig.h"
 #include "KyojuroEnk.h"
+#include "FreeCamera.h"
 #include "BackGround.h"
 #include "Navigation.h"
 #include "JsonLoader.h"
@@ -539,7 +543,29 @@ HRESULT CLoader::Loading_For_Editor()
 		return E_FAIL;
 
 
+	// Mig
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_MigCrossRing"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Tan/Mig/MigCrossRing.bin", PreTransformMatrix))))
+		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_MigRing"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Tan/Mig/MigRing.bin", PreTransformMatrix))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Effect_MigCross"),
+		CTanMigRingEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Effect_Mig"),
+		CTanMigEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_TanjiroMig"),
+		CTanjiroMig::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Effect_Dash"),
+		CDashSmokeEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 	m_isFinished = true;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
@@ -604,6 +630,14 @@ HRESULT CLoader::Loading_For_EnmuBoss()
 	PreTransformMatrix =  XMMatrixRotationX(XMConvertToRadians(90.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_TanjiroWeapon"),
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Weapon/TanjiroWeapon.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_MigCrossRing"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Tan/Mig/MigCrossRing.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_MigRing"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Tan/Mig/MigRing.bin", PreTransformMatrix))))
 		return E_FAIL;
 
 

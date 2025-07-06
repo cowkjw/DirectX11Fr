@@ -3,6 +3,7 @@
 #include "KyojuroKienEffect.h"
 #include "KyojuroNobEffect.h"
 #include "FireSlashEffect.h"
+#include "DashSmokeEffect.h"
 #include "EffectManager.h"
 #include "UIProgressBar.h"
 #include "GameInstance.h"
@@ -129,35 +130,13 @@ HRESULT CKyojuro::Initialize(void* pArg)
 		m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
 	}
 	// 테스트용
-	m_fMaxHP = 100.f;
+	m_fMaxHP = 150.f;
 	m_fCurrentHP = m_fMaxHP;
 
-	//enk skill
-	m_pEnk = CKyojuroEnk::Create(m_pDevice, m_pContext);
-	if (nullptr==m_pEnk)
-	{
-		return E_FAIL;
-	}
-	m_pEnk->SetParent(this);
-	m_pEnk->SetActive(false); // 초기에는 비활성화
-	m_pKienEffect = CKyojuroKienEffect::Create(m_pDevice, m_pContext);
-	if (nullptr == m_pKienEffect)
-	{
-		return E_FAIL;
-	}
-	m_pKienEffect->Initialize(nullptr);
-	m_pKienEffect->SetActive(false);
 
-	for (auto& pNob : m_pNobEffect)
-	{
-		pNob = CKyojuroNobEffect::Create(m_pDevice, m_pContext);
-		if (nullptr == pNob)
-		{
-			return E_FAIL;
-		}
-		pNob->Initialize(nullptr);
-		pNob->SetActive(false);
-	}
+
+	if(FAILED(Ready_Effects()))
+		return E_FAIL;
 
 
 	return S_OK;
@@ -313,12 +292,9 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
 				pCharacter->TakeDamage(2.5f);
-				if (pCharacter->IsAirborne())
-				{
-					StartHitStop(0.2f);
-					pCharacter->LaunchAirborne(40.f);
-					pCharacter->PushBack(this);
-				}
+				pCharacter->StartHitStop(0.4f);
+				StartHitStop(0.4f);					
+				pCharacter->PushBack(this);
 			}
 			break;
 		case CSTATE::ATTACK_DOWN:
@@ -408,6 +384,45 @@ HRESULT CKyojuro::Ready_Components()
 	return S_OK;
 }
 
+HRESULT CKyojuro::Ready_Effects()
+{	
+	//enk skill
+	m_pEnk = CKyojuroEnk::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pEnk)
+	{
+		return E_FAIL;
+	}
+	m_pEnk->SetParent(this);
+	m_pEnk->SetActive(false); // 초기에는 비활성화
+	m_pKienEffect = CKyojuroKienEffect::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pKienEffect)
+	{
+		return E_FAIL;
+	}
+	m_pKienEffect->Initialize(nullptr);
+	m_pKienEffect->SetActive(false);
+
+	for (auto& pNob : m_pNobEffect)
+	{
+		pNob = CKyojuroNobEffect::Create(m_pDevice, m_pContext);
+		if (nullptr == pNob)
+		{
+			return E_FAIL;
+		}
+		pNob->Initialize(nullptr);
+		pNob->SetActive(false);
+	}
+
+	m_pDashSmokeEffect = CDashSmokeEffect::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pDashSmokeEffect)
+	{
+		return E_FAIL;
+	}
+	m_pDashSmokeEffect->Initialize(nullptr);
+	m_pDashSmokeEffect->SetActive(false);
+	return S_OK;
+}
+
 void CKyojuro::ReadyAnimEvents()
 {// 애니메이션 이벤트 등록
 	m_pAnimatorCom->RegisterEventListener("ActiveHitbox", [&](const string&) {
@@ -429,6 +444,12 @@ void CKyojuro::ReadyAnimEvents()
 		m_Velocity.y = 50.f;
 		m_Velocity.x = 0.f;
 		m_Velocity.z = 0.f;
+		auto vDir = XMVector3Normalize(
+			m_pTransformCom->Get_State(STATE::LOOK)
+		);
+		_float fSpeed = 7.f; 
+		m_Velocity.x = XMVectorGetX(vDir) *fSpeed;
+		m_Velocity.z = XMVectorGetZ(vDir) *fSpeed;
 		m_bAirborne = true;
 		});
 
@@ -537,18 +558,13 @@ void CKyojuro::ReadyAnimEvents()
 
 			pNobEffect->GetTransform()->RotateToDirection(vForward);
 
-			float rollAngleDeg = 20.f;
-			 pNobEffect->GetTransform()->Turn(
-			     vForward,
-			     0.016f
-			 );
 			 if (nobIndex == 0)
 			 {
 				 pNobEffect->GetTransform()->Scaling(_float3(30.f,10.f,10.f));
 			 }
 			 else if (nobIndex == 1)
 			 {
-				 pNobEffect->GetTransform()->Scaling(_float3(30.f, 12.f, 12.f));
+				 pNobEffect->GetTransform()->Scaling(_float3(30.f, 14.f, 14.f));
 			 }
 			pNobEffect->GetTransform()->Set_State(STATE::POSITION, XMVectorSetW(nobPos, 1.f));
 			pNobEffect->SetActive(true);
@@ -556,6 +572,12 @@ void CKyojuro::ReadyAnimEvents()
 		}
 		if (nobIndex >= m_pNobEffect.size())
 			nobIndex = 0; // 인덱스 초기화
+		});
+
+	m_pAnimatorCom->RegisterEventListener("MoveLook", [&](const string& eventName) {
+
+		/*auto vDir = XMVector3Normalize(	m_pTransformCom->Get_State(STATE::LOOK));
+		m_pTransformCom->MoveDirection(vDir, m_pGameInstance->Get_TimeDelta(TEXT("Timer_60")) * 10.f, m_pNavigationCom);*/
 		});
 }
 

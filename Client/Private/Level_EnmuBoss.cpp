@@ -321,6 +321,7 @@ CLevel_EnmuBoss* CLevel_EnmuBoss::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 void CLevel_EnmuBoss::Free()
 {
 	__super::Free();
+	CEffectManager::Get_Instance()->Free();
 
 
 }

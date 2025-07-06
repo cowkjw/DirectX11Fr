@@ -252,12 +252,12 @@ void CKyojuroEnk::OnCollisionEnter(CCollider* other, const _float3& hitPos)
 		{
 			m_pColliderCom->SetActive(false); 
 			m_pColliderCom->SetDrawDebug(false); 
-			pChar->Blow(this, 30.f);
+			pChar->Blow(this->m_pParent, 30.f);
 			pChar->TakeDamage(10.f);
 			pChar->TakeDamage(5.f);
 			pChar->TakeDamage(3.5f);
-			pChar->StartHitStop(0.25f);
-			dynamic_cast<CBaseCharacter*>(m_pParent)->StartHitStop(0.25f);
+			pChar->StartHitStop(0.35f);
+			dynamic_cast<CBaseCharacter*>(m_pParent)->StartHitStop(0.35f);
 		}
 	}
 }

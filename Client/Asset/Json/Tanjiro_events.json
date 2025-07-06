@@ -326,6 +326,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
                 }
             ]
         },
@@ -423,6 +427,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 5.0
+                },
+                {
+                    "name": "ActiveMigSkill",
+                    "time":1.0
                 }
             ]
         },
@@ -685,6 +693,10 @@
             "clipName": "A_P0001_V00_C00_BaseNut01_1",
             "duration": 69.0,
             "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
                 {
                     "name": "DeactiveHitbox",
                     "time": 0.0

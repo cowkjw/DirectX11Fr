@@ -390,6 +390,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
                 }
             ]
         },
@@ -572,6 +576,14 @@
                 {
                     "name": "ActiveNobSkill",
                     "time": 20.0
+                },
+                {
+                    "name": "MoveLook",
+                    "time": 8.500521659851074
+                },
+                {
+                    "name": "MoveLook",
+                    "time": 19.0
                 }
             ]
         },
@@ -707,6 +719,10 @@
                 },
                 {
                     "name": "FireSlashEffectOff",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
                     "time": 0.0
                 },
                 {

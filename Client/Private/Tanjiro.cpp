@@ -9,10 +9,12 @@
 #include "UIProgressBar.h"
 #include <EnmuMeat.h>
 #include <EnmuParts.h>
+#include "TanjiroMig.h"
 #include "Navigation.h"
 #include "StateHurt.h"
 #include "StateHurtAir.h"
 #include "StateHurtBlow.h"
+#include "DashSmokeEffect.h"
 #include <SlashEffect.h>
 #include "EffectManager.h"
 
@@ -109,6 +111,12 @@ HRESULT CTanjiro::Initialize(void* pArg)
 	m_pRangeColliderCom->SetColliderType(ColliderType::RANGE);
 	m_pRangeColliderCom->SetActive(false); // 초기에는 비활성화
 
+
+	if (FAILED(Ready_Effects()))
+		return E_FAIL;
+
+
+
     return S_OK;
 }
 
@@ -135,6 +143,10 @@ void CTanjiro::Update(_float fTimeDelta)
 	for (auto& child : m_vecChildren)
 	{
 		child->Update(fTimeDelta);
+	}
+	if (m_pMig&& m_pMig->IsActive())
+	{
+		m_pMig->Update(fTimeDelta);
 	}
 }
 
@@ -164,6 +176,11 @@ void CTanjiro::Late_Update(_float fTimeDelta)
 		//		char buf[MAX_PATH];
 		//		sprintf_s(buf, "현재 애니메이션: %s", currentState);
 		//		SetWindowTextA(g_hWnd, buf);
+	}
+
+	if (m_pMig && m_pMig->IsActive())
+	{
+		m_pMig->Late_Update(fTimeDelta);
 	}
 }
 
@@ -277,6 +294,26 @@ HRESULT CTanjiro::Ready_Components()
 		return E_FAIL;
 
 
+	return S_OK;
+}
+
+HRESULT CTanjiro::Ready_Effects()
+{
+	m_pMig = CTanjiroMig::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pMig)
+	{
+		return E_FAIL;
+	}
+	m_pMig->Initialize(nullptr);
+	m_pMig->SetActive(false);
+	m_pDashSmokeEffect = CDashSmokeEffect::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pDashSmokeEffect)
+	{
+		return E_FAIL;
+	}
+	m_pDashSmokeEffect->Initialize(nullptr);
+	m_pDashSmokeEffect->SetActive(false);
+	m_pDashSmokeEffect->SetColor(_float4(0.247f, 0.572f, 0.88f, 1.f));
 	return S_OK;
 }
 
@@ -900,6 +937,65 @@ void CTanjiro::Ready_Animation()
 	ctrl->AddTransition(fall2Idx, fall2Idx, cHurtDown, 0.2f);
 
 
+	ctrl->AddTransition(jump0Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(jump1Idx, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(jump3Idx, hurtFIdx, cHurt, 0.1f);
+
+	ctrl->AddTransition(jump0Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(jump1Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(jump3Idx, hurtAirborneIdx, cHurtAir, 0.1f);
+
+	ctrl->AddTransition(jump0Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(jump1Idx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(jump3Idx, boundIdx, cHurtBound, 0.1f);
+
+	ctrl->AddTransition(jump0Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(jump1Idx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(jump3Idx, fall0Idx, cHurtBlow, 0.1f);
+
+	ctrl->AddTransition(jump0Idx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(jump1Idx, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(jump3Idx, fall2Idx, cHurtDown, 0.1f);
+
+
+	ctrl->AddTransition(skillDefaultIdx1, hurtFIdx, cHurt, 0.1f);
+	ctrl->AddTransition(skillDefaultIdx2, hurtFIdx, cHurt, 0.1f);
+
+	ctrl->AddTransition(skillDefaultIdx1, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(skillDefaultIdx2, hurtAirborneIdx, cHurtAir, 0.1f);
+
+	ctrl->AddTransition(skillDefaultIdx1, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(skillDefaultIdx2, boundIdx, cHurtBound, 0.1f);
+
+	ctrl->AddTransition(skillDefaultIdx1, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(skillDefaultIdx2, fall0Idx, cHurtBlow, 0.1f);
+
+	ctrl->AddTransition(skillDefaultIdx1, fall2Idx, cHurtDown, 0.1f);
+	ctrl->AddTransition(skillDefaultIdx2, fall2Idx, cHurtDown, 0.1f);
+
+
+	ctrl->AddTransition(hurtFIdx, hurtAirborneIdx, cHurtAir, 0.1f);
+	ctrl->AddTransition(hurtFIdx, boundIdx, cHurtBound, 0.1f);
+	ctrl->AddTransition(hurtFIdx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(hurtFIdx, fall2Idx, cHurtDown, 0.1f);
+
+	// 바운드 상태에서 
+	ctrl->AddTransition(boundIdx, fall0Idx, cHurtBlow, 0.1f);
+	ctrl->AddTransition(boundIdx, fall2Idx, cHurtDown, 0.1f);
+
+
+	ctrl->AddTransition(hurtAirborneIdx, runIdx, cSpeedUp, 0.15f);
+	ctrl->AddTransition(boundIdx, runIdx, cSpeedUp, 0.15f);
+	ctrl->AddTransition(fall0Idx, runIdx, cSpeedUp, 0.15f);
+	ctrl->AddTransition(fall1Idx, runIdx, cSpeedUp, 0.15f);
+
+	// 같은 피격 상태로의 재전환 시 더 긴 쿨다운
+	ctrl->AddTransition(hurtFIdx, hurtFIdx, cHurt, 0.3f);
+	ctrl->AddTransition(boundIdx, boundIdx, cHurtBound, 0.3f);
+	ctrl->AddTransition(fall0Idx, fall0Idx, cHurtBlow, 0.3f);
+	ctrl->AddTransition(fall1Idx, fall1Idx, cHurtBlow, 0.3f);
+	ctrl->AddTransition(fall2Idx, fall2Idx, cHurtDown, 0.3f);
+
 }
 
 void CTanjiro::ReadyAnimEvents()
@@ -978,6 +1074,26 @@ void CTanjiro::ReadyAnimEvents()
 		{
 			static_cast<CMeshEffect*>(pFireSlashEffect)->SetRenderMesh(false);
 			//	pFireSlashEffect->SetActive(false);
+		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("ActiveMigSkill", [&](const string& eventName) {
+		if (m_pMig)
+		{
+			m_pMig->SetActive(true);
+			_vector vForward = XMVector3Normalize(
+				m_pTransformCom->Get_State(STATE::LOOK)
+			);
+			_vector migPos = m_pTransformCom->Get_State(STATE::POSITION);
+			_vector offsetForward = XMVectorScale(vForward, 1.f);
+			_vector offsetUp = XMVectorSet(0.f, 15.f, 0.f, 0.f);
+
+			migPos = XMVectorAdd(migPos, offsetUp);
+
+			m_pMig->RotationDirection(vForward);
+
+			m_pMig->SetPosition(XMVectorSetW(migPos, 1.f));
+
 		}
 		});
 }

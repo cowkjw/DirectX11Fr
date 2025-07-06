@@ -154,9 +154,6 @@ float4 AdjustSaturation(float4 color, float saturation)
 // 외곽선
 float DetectEdge(float2 uv, float2 texelSize)
 {
-    //// 현재 픽셀의 노말과 깊이
-    //float3 normal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.0 - 1.0); // 노말 렌더 타겟꺼 다시 사용
-    //float depth = g_DepthTexture.Sample(DefaultSampler, uv).r; // 기존 렌더타겟에 그린 깊이 값으로 사용함
 
     // 주변 픽셀들 검사하기 노말이랑 똑같이 x,y,z 다시 되돌려서 계산
     // 주변 4개의 픽셀로만 8개 하니까 너무 좀 이상해 보임
@@ -168,15 +165,18 @@ float DetectEdge(float2 uv, float2 texelSize)
 
 	// 노말 차이 계산
 
+    // 내적하면 제곱합을 구할 수 있음
+
     float normalDiffX = dot(normalRight - normalLeft, normalRight - normalLeft);
     float normalDiffY = dot(normalUp - normalDown, normalUp - normalDown);
+
+    // 제곱의 합을 제곱근으로 구함
     float normalEdge = sqrt(normalDiffX + normalDiffY);
 
     // 엣지 강도 구하기 깊이 노말 더 큰걸로 
-    float edge = max(normalEdge * g_fNormalEdgeStrength, 0.f);
+    float edge = normalEdge * g_fNormalEdgeStrength;
     return step(g_fOutlineThreshold, edge);
 }
-
 
 PS_OUT PS_MAIN_DEFERRED_TOON_WRAP(PS_IN In)
 {

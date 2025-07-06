@@ -12,6 +12,7 @@
 #include "StateSkill0.h"
 #include "StateSkill1.h"
 #include "StateSkill2.h"
+#include "DashSmokeEffect.h"
 #include "BodyColliderParts.h"
 #include "UIProgressBar.h"
 #include "WindSlashEffect.h"
@@ -132,6 +133,9 @@ HRESULT CAkaza::Initialize(void* pArg)
 
 	m_fMaxHP = 250.f;
 	m_fCurrentHP = m_fMaxHP;
+
+	if (FAILED(Ready_Effects()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -377,6 +381,19 @@ HRESULT CAkaza::Ready_Components()
 	if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
+	return S_OK;
+}
+
+HRESULT CAkaza::Ready_Effects()
+{
+	m_pDashSmokeEffect = CDashSmokeEffect::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pDashSmokeEffect)
+	{
+		return E_FAIL;
+	}
+	m_pDashSmokeEffect->Initialize(nullptr);
+	m_pDashSmokeEffect->SetActive(false);
+	m_pDashSmokeEffect->SetColor(_float4(0.247f, 0.572f, 0.88f, 1.f));
 	return S_OK;
 }
 
@@ -1089,13 +1106,12 @@ void CAkaza::FillInput(InputData& outInput)
 	if (m_pInputBuffer->CheckCombo(commands,
 		{ ECommand::LightAttack, ECommand::LightAttack,
 		  ECommand::LightAttack, ECommand::LightAttack },
-		1.f))
+		1.2f))
 	{
 		if (m_Distribution(m_RandGen) < 0.5f)
 		{
 			outInput.doAttack3Up = true;
-			if(pTarget->Get_Animator()->CheckBool("Hurted"))
-				m_bCanBlowAttack = true;
+			m_bCanBlowAttack = true;
 		}
 		else if (m_Distribution(m_RandGen) < 0.3f)
 		{
@@ -1141,7 +1157,7 @@ void CAkaza::FillInput(InputData& outInput)
 			outInput.doJump = true;
 			break;
 		case ECommand::Dash:
-			outInput.doStep = true; // 또는 doDash 로 따로 관리
+			outInput.doStep = true;
 			{
 				// 상대가 가드 중인지 체크
 				_bool targetIsGuarding = (pTarget->GetState() == CBaseCharacter::CSTATE::GUARD || pTarget->GetState() == CBaseCharacter::CSTATE::MOVE||
@@ -1205,13 +1221,13 @@ void CAkaza::HandleInput()
 		m_fJumpCooldown -= dt;
 
 	//거리/방향 계산 (XZ 평면)
-	XMVECTOR myPos = GetTransform()->Get_State(STATE::POSITION);
-	XMVECTOR tgtPos = pTarget->GetTransform()->Get_State(STATE::POSITION);
+	_vector myPos = GetTransform()->Get_State(STATE::POSITION);
+	_vector tgtPos = pTarget->GetTransform()->Get_State(STATE::POSITION);
 	myPos = XMVectorSetY(myPos, 0.f);
 	tgtPos = XMVectorSetY(tgtPos, 0.f);
-	XMVECTOR diff = tgtPos - myPos;
-	float    dist = XMVectorGetX(XMVector3Length(diff));
-	XMVECTOR dirToPlayer = (dist > 0.001f) ? XMVector3Normalize(diff) : XMVectorZero();
+	_vector diff = tgtPos - myPos;
+	_float    dist = XMVectorGetX(XMVector3Length(diff));
+	_vector dirToPlayer = (dist > 0.001f) ? XMVector3Normalize(diff) : XMVectorZero();
 
 	CBaseCharacter::CSTATE playerState = pTarget->GetState();
 

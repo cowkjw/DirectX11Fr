@@ -39,6 +39,7 @@ public:
 	virtual void OnCollisionEnter(CCollider* other) override;
 private:
 	virtual HRESULT Ready_Components() override;
+	virtual HRESULT Ready_Effects() override;
 	virtual void Ready_Animation() override;
 	void ReadyAnimEvents();
 

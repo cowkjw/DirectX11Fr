@@ -180,6 +180,7 @@
     <ClInclude Include="..\public\Command.h" />
     <ClInclude Include="..\Public\CompositeNode.h" />
     <ClInclude Include="..\public\CutSceneCamera.h" />
+    <ClInclude Include="..\Public\DashSmokeEffect.h" />
     <ClInclude Include="..\public\Decal.h" />
     <ClInclude Include="..\public\Effect.h" />
     <ClInclude Include="..\public\EffectManager.h" />
@@ -249,6 +250,9 @@
     <ClInclude Include="..\public\StateSkill2.h" />
     <ClInclude Include="..\public\StateStep.h" />
     <ClInclude Include="..\public\Tanjiro.h" />
+    <ClInclude Include="..\Public\TanjiroMig.h" />
+    <ClInclude Include="..\Public\TanMigEffect.h" />
+    <ClInclude Include="..\Public\TanMigRingEffect.h" />
     <ClInclude Include="..\Public\TaskNode.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\ThirdPersonCamera.h" />
@@ -295,6 +299,7 @@
     <ClCompile Include="..\private\BossTentacle.cpp" />
     <ClCompile Include="..\private\CameraMag.cpp" />
     <ClCompile Include="..\private\CutSceneCamera.cpp" />
+    <ClCompile Include="..\Private\DashSmokeEffect.cpp" />
     <ClCompile Include="..\private\Decal.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
     <ClCompile Include="..\private\EffectManager.cpp" />
@@ -362,6 +367,9 @@
     <ClCompile Include="..\private\StateSkill2.cpp" />
     <ClCompile Include="..\private\StateStep.cpp" />
     <ClCompile Include="..\private\Tanjiro.cpp" />
+    <ClCompile Include="..\Private\TanjiroMig.cpp" />
+    <ClCompile Include="..\Private\TanMigEffect.cpp" />
+    <ClCompile Include="..\Private\TanMigRingEffect.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\ThirdPersonCamera.cpp" />
     <ClCompile Include="..\private\GameplayCanvas.cpp" />

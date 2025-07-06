@@ -1,6 +1,8 @@
 #include "StateStep.h"
 #include "StateIdle.h"
 #include "StateMove.h"
+#include "DashSmokeEffect.h"
+#include <Tanjiro.h>
 
 
 void StateStep::Enter(CBaseCharacter* pChar)
@@ -47,12 +49,43 @@ void StateStep::Enter(CBaseCharacter* pChar)
 	}
 	m_vStepDir = XMVector3Normalize(m_vStepDir); // 방향 벡터 정규화
 
+	auto pDash = pChar->GetDashSmokeEffect();
+	if (pDash)
+	{
+		pDash->SetActive(true);
+		auto vPos = pChar->GetTransform()->Get_State(STATE::POSITION);
+		_vector offsetUp{};
+
+		// 탄지로 높이가 좀 다른듯 함.
+		if (dynamic_cast<CTanjiro*>(pChar))
+		{
+			offsetUp = XMVectorSet(0.f, XMVectorGetY(vPos) + 27.f, 0.f, 0.f);
+
+		}
+		else
+		{
+			offsetUp = XMVectorSet(0.f, XMVectorGetY(vPos) + 8.f, 0.f, 0.f);
+
+		}
+		vPos = XMVectorAdd(vPos, offsetUp);
+
+		pDash->GetTransform()->Set_State(STATE::POSITION, vPos);
+
+		// 플레이어 위치에서 스텝 할 방향으로 바라보게
+		pDash->GetTransform()->LookAtXZ(pChar->GetTransform()->Get_State(STATE::POSITION) + m_vStepDir);
+	}
 }
 
 void StateStep::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)
 {
 	auto buf = pChar->GetInputBuffer();
 	auto anim = pChar->Get_Animator();
+	auto pDash = pChar->GetDashSmokeEffect();
+	if (pDash)
+	{
+		pDash->Update(fTimeDelta);
+		pDash->Late_Update(fTimeDelta);
+	}
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	//if (pGameInstance->IsKeyPressed('O'))
@@ -151,7 +184,7 @@ void StateStep::Update(CBaseCharacter* pChar, const InputData& input, float fTim
 	}
 
 	// t < 1: 기존대로 이동 및 바라보기
-	pChar->GetTransform()->MoveDirection(m_vStepDir, fTimeDelta,pChar->GetNavigation());
+	pChar->GetTransform()->MoveDirection(m_vStepDir, fTimeDelta, pChar->GetNavigation());
 	if (pChar->Get_Target())
 		pChar->GetTransform()->LookAtXZ(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
 }

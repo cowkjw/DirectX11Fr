@@ -329,6 +329,134 @@ PS_OUT_PRE PS_MAIN_Effect_Nob(PS_IN In)
 
 
 
+PS_OUT_PRE PS_MAIN_Effect_MigCross(PS_IN In)
+{
+    PS_OUT_PRE Out;
+
+    float2 uv0 = (In.vTexcoord + g_vUVOffset) * g_vUVScale;
+    float mask = g_DiffuseTexture.Sample(DefaultSampler, uv0).r;
+
+  
+    if (mask < 0.33f)
+        discard;
+    float3 baseCol = g_vColor.rgb;
+    Out.vColor = float4(baseCol, mask);
+    float fade = saturate(1.0 - g_fTime / g_fDuration);
+    Out.vColor.a *= fade;
+    return Out;
+}
+
+PS_OUT PS_MAIN_Effect_Mig(PS_IN In)
+{
+    //PS_OUT_PRE Out;
+    PS_OUT Out;
+
+    float2 uv0 = (In.vTexcoord + g_vUVOffset) * g_vUVScale;
+    vector  vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv0);
+    if (vMtrlDiffuse.a < 0.1f)
+        discard;
+
+    Out.vDiffuse = vMtrlDiffuse;
+
+    /* -1.f -> 0.f, 1.f -> 1.f */
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCameraFar, 0.f, 0.f);
+    float fade = saturate(1.0 - g_fTime / g_fDuration);
+    Out.vDiffuse.a *= fade;
+    return Out;
+
+}
+
+PS_OUT PS_MAIN_Effect_Dash(PS_IN In)
+{
+ //   PS_OUT Out;
+
+ //   float2 uv0 = (In.vTexcoord + g_vUVOffset) * g_vUVScale;
+ //   vector  vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv0); // 라인
+ //   if (vMtrlDiffuse.a < 0.1f)
+ //       discard;
+	//vector vMtrlSmoke = g_EmissiveTexture.Sample(DefaultSampler, uv0); // 연기
+	//vector vMtrlGradiant = (g_NormalTexture.Sample(DefaultSampler, uv0).rg - 0.5) * 0.5f // 그라디언트
+	//	+ 0.5f; // 0.0 ~ 1.0 범위로 조정
+	//// 그라디언트 적용
+	//vMtrlDiffuse.rgb *= vMtrlGradiant.r;
+	//vMtrlDiffuse.a *= vMtrlGradiant.r;
+	//// Out.vColor = vMtrlDiffuse;
+	//Out.vDiffuse = vMtrlDiffuse * vMtrlGradiant.r
+
+ //   /* -1.f -> 0.f, 1.f -> 1.f */
+ //   Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+ //   Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCameraFar, 0.f, 0.f);
+ //   float fade = saturate(1.0 - g_fTime / g_fDuration);
+ //   Out.vDiffuse.a *= fade;
+ //   float3 baseCol = g_vColor.rgb;
+	//Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, baseCol, 0.5f); // 기본 색상과 섞기
+ //   return Out;
+
+    //PS_OUT Out;
+
+    //// 1) UV 세팅
+    //float2 uv0 = (In.vTexcoord + g_vUVOffset) * g_vUVScale;
+
+
+    //float4 lineSample = g_DiffuseTexture.Sample(DefaultSampler, uv0);
+    //if (lineSample.a < 0.1f)
+    //    discard;
+
+
+    //float smokeVal = g_NormalTexture.Sample(DefaultSampler, uv0).r;
+
+    //float gradVal = g_SpecularTexture.Sample(DefaultSampler, uv0).r;
+
+    //
+    //float3 baseCol = lerp(lineSample.rgb, g_vColor.rgb, gradVal);
+
+    //// 6) 노이즈·페이드 곱하기
+    ////    smokeVal 로 RGB 떨림/흐림, alpha에도 곱해 꼬리 페이드
+    //float  fade = saturate(1.0 - g_fTime / g_fDuration);
+    //float3 finalRgb = baseCol * smokeVal;
+    //float  finalA = lineSample.a * smokeVal * fade;
+
+    //// 7) 결과
+    //Out.vDiffuse = float4(finalRgb, finalA);
+    //Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w,
+    //    In.vProjPos.w / g_fCameraFar,
+    //    0.f, 0.f);
+    //return Out;
+
+    PS_OUT Out;
+
+
+ float2 uv0 = (In.vTexcoord + g_vUVOffset) * g_vUVScale;
+
+    float mask = g_DiffuseTexture.Sample(DefaultSampler, uv0).r;
+    if (mask < 0.1) discard;
+
+    // 시간에 따른 페이드
+    float fade = saturate(1.0 - g_fTime / g_fDuration);
+
+    // 그라데이션
+    float spec = g_SpecularTexture.Sample(DefaultSampler, uv0).r;
+
+    // 기본 컬러 + 스페큘러 보강
+    float3 baseColor = g_vColor.rgb;
+
+    baseColor += spec * fade * 0.8;   
+
+    // 최종 알파
+    float alpha = mask * fade;
+
+    Out.vDiffuse = float4(baseColor, alpha);
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w,
+        In.vProjPos.w / g_fCameraFar,
+        0.f, 0.f);
+    return Out;
+}
+
+
+
 technique11 DefaultTechnique
 {
 
@@ -397,5 +525,35 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_Effect_Nob();
     }
 
+
+    pass MigCrossEffect
+    {
+
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_Effect_MigCross();
+    }
+
+    pass MigEffect
+    {
+
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_Effect_Mig();
+    }
+
+    pass DashEffect
+    {
+
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_Effect_Dash();
+    }
 
 }

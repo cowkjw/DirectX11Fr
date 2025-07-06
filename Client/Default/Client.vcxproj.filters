@@ -253,6 +253,15 @@
     <Filter Include="01.GameObject\Effect\Mesh\Kyo\Nob">
       <UniqueIdentifier>{104df070-6a42-47af-9704-dfbe1c6e2f11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.GameObject\Effect\Mesh\Tan">
+      <UniqueIdentifier>{28aae667-2a0d-41d5-bfe0-ba50e674e30c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Effect\TanjiroEffect">
+      <UniqueIdentifier>{c5851811-d34b-4bf7-a187-1d796642b3f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Effect\Mesh\Tan\Mig">
+      <UniqueIdentifier>{fde6c41d-019a-4588-8f59-e2bfc65399cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -575,6 +584,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\KyojuroNobEffect.h">
       <Filter>01.GameObject\Effect\Mesh\Kyo\Nob</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TanMigRingEffect.h">
+      <Filter>01.GameObject\Effect\Mesh\Tan\Mig</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TanMigEffect.h">
+      <Filter>01.GameObject\Effect\Mesh\Tan\Mig</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TanjiroMig.h">
+      <Filter>01.GameObject\Effect\TanjiroEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DashSmokeEffect.h">
+      <Filter>01.GameObject\Effect\Mesh\Akaza</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -911,6 +932,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\KyojuroNobEffect.cpp">
       <Filter>01.GameObject\Effect\Mesh\Kyo\Nob</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TanMigRingEffect.cpp">
+      <Filter>01.GameObject\Effect\Mesh\Tan\Mig</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TanMigEffect.cpp">
+      <Filter>01.GameObject\Effect\Mesh\Tan\Mig</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TanjiroMig.cpp">
+      <Filter>01.GameObject\Effect\TanjiroEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DashSmokeEffect.cpp">
+      <Filter>01.GameObject\Effect\Mesh\Akaza</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

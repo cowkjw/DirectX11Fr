@@ -4,6 +4,7 @@
 #include "Level_Loading.h"
 #include <JsonLoader.h>
 #include "ThirdPersonCamera.h"
+#include "DashSmokeEffect.h"
 CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::Get_Instance() }
 {
@@ -106,6 +107,13 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_GameObject_ThirdPersonCamera"),
 		CThirdPersonCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Model_Dash"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/DashSmoke/DashSmoke.bin"))))
+		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Effect_Dash"),
+	//	CDashSmokeEffect::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
 
 	CParticleSystem::PARTICLE_DESC ParticleDesc{};
 	ParticleDesc.iNumInstance = 5000;

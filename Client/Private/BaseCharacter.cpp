@@ -1,4 +1,5 @@
 #include "BaseCharacter.h"
+#include "DashSmokeEffect.h"
 #include "StateBoundHurt.h"
 #include "StateHurtBlow.h"
 #include "EffectManager.h"
@@ -38,6 +39,7 @@ CBaseCharacter::CBaseCharacter(const CBaseCharacter& Prototype)
 	, m_pState{ nullptr }
 	, m_pRangeColliderCom{ Prototype.m_pRangeColliderCom }
 	, m_bGameStarted{ Prototype.m_bGameStarted }
+	, m_pDashSmokeEffect{ Prototype.m_pDashSmokeEffect }
 {
 
 }
@@ -73,7 +75,7 @@ HRESULT CBaseCharacter::Initialize(void* pArg)
 		if (auto pChar = dynamic_cast<CBaseCharacter*>(m_pTarget))
 		{
 			if (m_bCanBlowAttack && pChar->GetState() != CSTATE::GUARD)
-				pChar->Blow(this, 45.f);
+				pChar->Blow(this, 40.f);
 		}
 		});
 
@@ -434,18 +436,18 @@ void CBaseCharacter::Blow(CGameObject* pAttacker, _float fBlowForce)
 	if (m_eState != CSTATE::GUARD)
 	{
 		// 공격자의 위치에서 나를 향하는 방향 벡터 계산
-		XMVECTOR attackerPos = pAttacker->GetTransform()->Get_State(STATE::POSITION);
-		XMVECTOR myPos = m_pTransformCom->Get_State(STATE::POSITION);
+		_vector attackerPos = pAttacker->GetTransform()->Get_State(STATE::POSITION);
+		_vector myPos = m_pTransformCom->Get_State(STATE::POSITION);
 		attackerPos = XMVectorSetY(attackerPos, XMVectorGetY(myPos)); // xz로 안하니까 y 차이가 너무 크면 이상하게 처리됨
-		XMVECTOR dirXZ = XMVector3Normalize(myPos - attackerPos);
-		_float   distSq = XMVectorGetX(XMVector3LengthSq(dirXZ));
-		if (distSq <= 1.f) // 너무 가까우면 그냥 뒤로 밀림
+		_float   distSq = XMVectorGetX(XMVector3LengthSq(myPos - attackerPos));
+		_vector dirXZ{};
+		if (distSq <= 600.f) // 너무 가까우면 그냥 뒤로 밀림
 		{
-			dirXZ = (pAttacker->GetTransform()->Get_State(STATE::LOOK));
+			dirXZ = XMVector3Normalize(pAttacker->GetTransform()->Get_State(STATE::LOOK));
 		}
 		else
 		{
-			dirXZ = XMVector3Normalize(dirXZ);
+			dirXZ = XMVector3Normalize(myPos - attackerPos);
 		}
 		XMStoreFloat3(&m_Velocity, XMVectorScale(dirXZ, fBlowForce));
 		m_Velocity.y = fBlowForce + 6.f; 
@@ -659,8 +661,8 @@ void CBaseCharacter::Free()
 	Safe_Delete(m_pState);
 	Safe_Release(m_pInputBuffer);
 	Safe_Release(m_pNavigationCom);
+	Safe_Release(m_pDashSmokeEffect);
 	Safe_Release(m_pRangeColliderCom);
-
 }
 
 
