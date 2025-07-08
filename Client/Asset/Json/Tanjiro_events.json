@@ -227,6 +227,10 @@
                 {
                     "name": "SlashEffectOff",
                     "time": 14.00117015838623
+                },
+                {
+                    "name": "AttackSound",
+                    "time": 4.260000228881836
                 }
             ]
         },
@@ -265,6 +269,10 @@
                 {
                     "name": "SlashEffectOff",
                     "time": 9.0
+                },
+                {
+                    "name": "AttackSound",
+                    "time": 4.570000171661377
                 }
             ]
         },
@@ -287,13 +295,22 @@
                 {
                     "name": "SlashEffectOff",
                     "time": 25.836139678955078
+                },
+                {
+                    "name": "AttackSound",
+                    "time": 10.899999618530273
                 }
             ]
         },
         {
             "clipName": "A_P0001_V00_C00_AtkCmbW03D01",
             "duration": 78.0,
-            "events": []
+            "events": [
+                {
+                    "name": "FinalAttackSound",
+                    "time": 33.04999923706055
+                }
+            ]
         },
         {
             "clipName": "A_P0001_V00_C00_AtkCmbW03U01",
@@ -326,6 +343,22 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                },
+                {
+                    "name": "FinalAttackSound",
+                    "time": 10.00114631652832
                 },
                 {
                     "name": "DeactiveHitbox",
@@ -397,6 +430,10 @@
                 {
                     "name": "ActiveHitbox",
                     "time": 1.1729999780654907
+                },
+                {
+                    "name": "MigSkillSound",
+                    "time": 5.000516891479492
                 }
             ]
         },
@@ -430,7 +467,7 @@
                 },
                 {
                     "name": "ActiveMigSkill",
-                    "time":1.0
+                    "time": 1.0
                 }
             ]
         },
@@ -472,6 +509,10 @@
                 {
                     "name": "GuardSkillAirborne",
                     "time": 2.0
+                },
+                {
+                    "name": "NejSkillSound",
+                    "time": 2.0
                 }
             ]
         },
@@ -506,6 +547,10 @@
                 {
                     "name": "RyusoSkill",
                     "time": 3.5003368854522705
+                },
+                {
+                    "name": "TakSkillSound",
+                    "time": 10.000916481018066
                 }
             ]
         },
@@ -693,6 +738,18 @@
             "clipName": "A_P0001_V00_C00_BaseNut01_1",
             "duration": 69.0,
             "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
                 {
                     "name": "DeactiveHitbox",
                     "time": 0.0

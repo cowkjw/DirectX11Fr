@@ -234,6 +234,10 @@
                 {
                     "name": "FireSlashEffectOff",
                     "time": 21.002548217773438
+                },
+                {
+                    "name": "AttackSound",
+                    "time": 2.5899999141693115
                 }
             ]
         },
@@ -272,6 +276,10 @@
                 {
                     "name": "FireSlashEffectOff",
                     "time": 20.0
+                },
+                {
+                    "name": "AttackSound",
+                    "time": 4.579999923706055
                 }
             ]
         },
@@ -302,6 +310,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 32.08824920654297
+                },
+                {
+                    "name": "AttackSound",
+                    "time": 19.469999313354492
                 }
             ]
         },
@@ -324,6 +336,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 14.260000228881836
+                },
+                {
+                    "name": "FinalAttackSound",
+                    "time": 1.9500000476837158
                 }
             ]
         },
@@ -394,6 +410,22 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
+                },
+                {
+                    "name": "FinalAttackSound",
+                    "time": 6.000661849975586
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
                 }
             ]
         },
@@ -416,6 +448,10 @@
                 {
                     "name": "FireSlashEffectOff",
                     "time": 26.003026962280273
+                },
+                {
+                    "name": "FinalAttackSound",
+                    "time": 7.900000095367432
                 }
             ]
         },
@@ -450,6 +486,10 @@
                 {
                     "name": "ActiveEnkSkill",
                     "time": 26.0
+                },
+                {
+                    "name": "EnkSkillSound",
+                    "time": 6.5
                 }
             ]
         },
@@ -498,6 +538,10 @@
                 {
                     "name": "ActiveKienSkill",
                     "time": 11.501226425170898
+                },
+                {
+                    "name": "KieSkillSound",
+                    "time": 8.40999984741211
                 }
             ]
         },
@@ -584,6 +628,10 @@
                 {
                     "name": "MoveLook",
                     "time": 19.0
+                },
+                {
+                    "name": "NobSkillSound",
+                    "time": 1.0099999904632568
                 }
             ]
         },
@@ -719,6 +767,18 @@
                 },
                 {
                     "name": "FireSlashEffectOff",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
                     "time": 0.0
                 },
                 {

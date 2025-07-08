@@ -12,6 +12,8 @@ void StateAttackUp::Enter(CBaseCharacter* pChar)
 	pAnim->SetBool("Move", false);
 	pAnim->SetBool("Jump", false);
 	pChar->SetState(CBaseCharacter::CSTATE::ATTACK_UP);
+
+	
 }
 
 void StateAttackUp::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)

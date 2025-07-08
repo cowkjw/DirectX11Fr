@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="Bank" id="{3e317d36-f330-4dc7-9429-f8ff3cf41f1b}">
+		<property name="name">
+			<value>Kyojuro</value>
+		</property>
+		<relationship name="folder">
+			<destination>{4dd038ff-5587-40bd-ae81-f044223845ae}</destination>
+		</relationship>
+	</object>
+</objects>

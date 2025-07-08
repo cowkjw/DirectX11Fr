@@ -12,6 +12,8 @@ void StateAttack4::Enter(CBaseCharacter* pChar)
 	pChar->Get_Animator()->SetBool("Move", false);
 	//pChar->SetState(CBaseCharacter::CSTATE::ATTACK);
 	pChar->SetState(CBaseCharacter::CSTATE::ATTACK4);
+
+
 }
 
 void StateAttack4::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)

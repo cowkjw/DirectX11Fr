@@ -11,6 +11,8 @@ void StateSkill0::Enter(CBaseCharacter* pChar)
 	pAnim->SetBool("Jump", false);
 
 	pChar->SetState(CBaseCharacter::CSTATE::SKILL);
+
+
 }
 
 void StateSkill0::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)

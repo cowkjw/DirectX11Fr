@@ -29,6 +29,12 @@ using namespace DirectX;
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 
+#include "fmod.h"
+#include "fmod_studio.hpp"
+#include "fmod.hpp"
+#include "fmod_errors.h"
+
+using namespace FMOD;
 #include <thread>
 #include <string>
 #include <map>

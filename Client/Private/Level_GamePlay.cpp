@@ -10,6 +10,7 @@
 #include "GameInstance.h"
 #include "HitParticle.h"
 #include "JsonLoader.h"
+#include "SoundMag.h"
 #include "UIImage.h"
 #include "Weapon.h"
 
@@ -131,6 +132,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	pEffect->SetTextureIndex(1);
 	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitBodyShockParticle"), pEffect);
 	jsonLoader.Free();
+
+	CSoundMag::Get_Instance()->PlayBGM("event:/BGM/RengokuBGM");
+	CSoundMag::Get_Instance()->PlayEffect("event:/Map/BattlStartAkKyo");
 	return S_OK;
 }
 
@@ -144,6 +148,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	}
 	UpdateGameFlow(fTimeDelta);
 	CEffectManager::Get_Instance()->Update_ActivedParticle(fTimeDelta);
+
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -203,8 +208,8 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, 1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(0.3f, 0.3f, 0.3f, 1.f);
-	LightDesc.fAmbient = 0.5f;
+	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.fAmbient = 0.2f;
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
@@ -225,6 +230,7 @@ void CLevel_GamePlay::UpdateGameFlow(_float fTimeDelta)
 			if (pUiImage)
 			{
 				pUiImage->SetActive(false);
+
 			}
 			m_bStartGame = false;
 			if (m_pKyojuro)
@@ -240,7 +246,7 @@ void CLevel_GamePlay::UpdateGameFlow(_float fTimeDelta)
 
 	if (m_pKyojuro)
 	{
-		if (m_pKyojuro->GetState() == CBaseCharacter::CSTATE::DIE)
+		if (!m_bEndGame&&m_pKyojuro->GetState() == CBaseCharacter::CSTATE::DIE)
 		{
 			m_bEndGame = true;
 			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StopImage"));
@@ -248,12 +254,12 @@ void CLevel_GamePlay::UpdateGameFlow(_float fTimeDelta)
 			{
 				pUiImage->SetActive(true);
 			}
-
+			CSoundMag::Get_Instance()->StopBGM();
 		}
 	}
 	 if (m_pAkaza)
 	{
-		if (m_pAkaza->GetState() == CBaseCharacter::CSTATE::DIE)
+		if (!m_bEndGame&&m_pAkaza->GetState() == CBaseCharacter::CSTATE::DIE)
 		{
 			m_bEndGame = true;
 			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StopImage"));
@@ -261,6 +267,8 @@ void CLevel_GamePlay::UpdateGameFlow(_float fTimeDelta)
 			{
 				pUiImage->SetActive(true);
 			}
+			CSoundMag::Get_Instance()->StopBGM();
+
 		}
 	}
 
@@ -285,6 +293,7 @@ void CLevel_GamePlay::UpdateGameFlow(_float fTimeDelta)
 
 	if (m_bIsGameOver)
 	{
+
 		m_fFinalImageElapsedTime += fTimeDelta;
 		if (m_fFinalImageElapsedTime >= m_fFinalImageTime)
 		{

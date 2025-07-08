@@ -14,6 +14,7 @@
 #include "FrustumCull.h"
 #include "GameObject.h"
 #include "UIManager.h"
+#include "SoundMag.h"
 #include "Renderer.h"
 #include "Picking.h"
 #include "FontMag.h"
@@ -90,10 +91,6 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	m_pFont_Manager = CFontMag::Create(*ppDeviceOut, *ppContextOut);
 	if (nullptr == m_pFont_Manager)
 		return E_FAIL;
-
-
-
-	
 	return S_OK;
 }
 
@@ -670,6 +667,7 @@ HRESULT CGameInstance::Render_MRT_Debug(const _wstring& strMRTTag, CShader* pSha
 		return E_FAIL;
 	return m_pTarget_Manager->Render_Debug(strMRTTag, pShader, pVIBuffer);
 }
+
 #pragma endregion
 
 void CGameInstance::Release_Engine()

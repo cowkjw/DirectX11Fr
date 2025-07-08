@@ -49,6 +49,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 	if (nullptr == m_pLoader)
 		return E_FAIL;
 	m_pGameInstance->ClearColliders();
+	CSoundMag::Get_Instance()->StopAll(true);
 
 	static _bool firstLoad = true;
 	if (firstLoad)
@@ -58,6 +59,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 
 	SetUpUI();
 	m_fShojiTime = 0.f;
+	
 	return S_OK;
 }
 
@@ -115,6 +117,7 @@ void CLevel_Loading::Update(_float fTimeDelta)
 			auto pLoadingCavnas = m_pGameInstance->GetCanvasUI(TEXT("LodingCanvas"));
 			if (pLoadingCavnas)
 			{
+				CSoundMag::Get_Instance()->PlayOneShot("event:/UI/Loading");
 				pLoadingCavnas->SetActive(true);
 			}
 			bIsFirst = false;

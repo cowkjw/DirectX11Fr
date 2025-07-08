@@ -39,7 +39,7 @@ HRESULT CLevel_Mode::Initialize()
 
 	Ready_UI_Setup();
 
-
+	CSoundMag::Get_Instance()->PlayBGM("event:/BGM/TitleBGM");
 	return S_OK;
 }
 
@@ -65,18 +65,24 @@ void CLevel_Mode::Update(_float fTimeDelta)
 		if (pModeButton->IsHovered())
 		{
 			
-			if (pCursorImage)
+			if (pCursorImage &&! pCursorImage->IsActive())
 			{
 				pCursorImage->SetActive(true);
+
+				CSoundMag::Get_Instance()->PlayEffect("event:/UI/ModeSelectHover");
+
 			}
 			pModeButton->GetButtonImage()->SetActive(false);
+
 		}
 		else
 		{
-			if (pCursorImage)
+			if (pCursorImage&& pCursorImage->IsActive())
 			{
 				pCursorImage->SetActive(false);
+
 			}
+			
 			pModeButton->GetButtonImage()->SetActive(true);
 		}
 	}

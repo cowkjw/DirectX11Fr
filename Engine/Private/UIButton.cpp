@@ -110,6 +110,8 @@ void CUIButton::Late_Update(_float fTimeDelta)
 		}
 		else
 		{
+			if (m_OnHover)
+				m_OnHover();
 			m_bPressed = false;
 		}
 	}

@@ -137,8 +137,8 @@ HRESULT CLevel_EnmuBoss::Ready_Lights()
 
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, 1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(0.6f, 0.65f, 0.6f, 1.f);
-	LightDesc.fAmbient = 0.5f;
+	LightDesc.vDiffuse = _float4(0.8f, 0.85f, 0.8f, 1.f);
+	LightDesc.fAmbient = 0.6f;
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
@@ -153,7 +153,8 @@ HRESULT CLevel_EnmuBoss::Ready_Lights()
 
 	//if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 	//	return E_FAIL;
-
+	CSoundMag::Get_Instance()->PlayBGM("event:/BGM/EnmuBgm");
+	CSoundMag::Get_Instance()->PlayEffect("event:/BGM/TrainAmb");
 	return S_OK;
 }
 

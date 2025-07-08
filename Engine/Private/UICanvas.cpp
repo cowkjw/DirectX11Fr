@@ -79,8 +79,19 @@ CUIObject* CUICanvas::GetChildUI(const _wstring& uiName)
 {
 	for (auto* pChild : m_vecChildren)
 	{
+		// 자식의 자식들도 한번 돌기
+		
+		for (auto* pChildChild : pChild->GetChildren())
+		{
+			if (pChildChild && pChildChild->Get_Name() == uiName)
+			{
+				return dynamic_cast<CUIObject*>(pChildChild);
+			}
+		}
 		if (pChild && pChild->Get_Name() == uiName)
+		{
 			return dynamic_cast<CUIObject*>(pChild);
+		}
 	}
 	return nullptr;
 }

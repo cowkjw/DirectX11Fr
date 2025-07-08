@@ -9,6 +9,7 @@
 #include "VIBuffer_Cell.h"
 #include "BoxCollider.h"
 #include "Transform.h"
+#include "SoundMag.h"
 #include "Animator.h"
 #include "Texture.h"
 #include "Shader.h"

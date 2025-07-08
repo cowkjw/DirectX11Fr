@@ -12,6 +12,8 @@ void StateSkill1::Enter(CBaseCharacter* pChar)
 	pAnim->SetBool("Move", false);
 	pAnim->SetBool("Jump", false);
 	pChar->SetState(CBaseCharacter::CSTATE::SKILL1);
+
+
 }
 
 

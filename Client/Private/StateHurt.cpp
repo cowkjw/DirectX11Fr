@@ -12,6 +12,22 @@ void StateHurt::Enter(CBaseCharacter* pChar)
 	pAnim->SetTrigger("Hurt");
 	pAnim->SetBool("Move", false);
 	pChar->SetState(CBaseCharacter::CSTATE::HURT);
+	//CSoundMag::Get_Instance()->StopAllEffects();
+	if (pChar->Get_Name() == TEXT("Kyojuro"))
+	{
+		CSoundMag::Get_Instance()->StopEffect("event:/Kyojuro/Nob");
+		CSoundMag::Get_Instance()->StopEffect("event:/Kyojuro/Enk");
+		CSoundMag::Get_Instance()->StopEffect("event:/Kyojuro/Kie");
+		CSoundMag::Get_Instance()->PlayOneShot("event:/Kyojuro/Hited");
+	}
+	else if (pChar->Get_Name() == TEXT("Akaza"))
+	{
+		CSoundMag::Get_Instance()->PlayOneShot("event:/Akaza/Hited");
+	}
+	else
+	{
+		CSoundMag::Get_Instance()->PlayOneShot("event:/Tanjiro/Hited");
+	}
 }
 
 void StateHurt::Update(CBaseCharacter* pChar, const InputData& input, _float fTimeDelta)

@@ -3,6 +3,7 @@
 #include "StateMove.h"
 #include "DashSmokeEffect.h"
 #include <Tanjiro.h>
+#include "GameInstance.h"
 
 
 void StateStep::Enter(CBaseCharacter* pChar)
@@ -12,6 +13,19 @@ void StateStep::Enter(CBaseCharacter* pChar)
 	m_fElapsedTime = 0.f;
 	pAnim->SetBool("Move", true);
 	pAnim->SetBool("Stepping", true);
+
+	if (pChar->Get_Name() == TEXT("Kyojuro"))
+	{
+		CSoundMag::Get_Instance()->PlayEffect("event:/Kyojuro/Step");
+	}
+	else if (pChar->Get_Name() == TEXT("Akaza"))
+	{
+		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/Step");
+	}
+	else
+	{
+		CSoundMag::Get_Instance()->PlayEffect("event:/Tanjiro/Step");
+	}
 
 	if (pChar->Get_Target())
 	{

@@ -340,6 +340,10 @@
                 {
                     "name": "DeactiveFootHitbox",
                     "time": 1.0
+                },
+                {
+                    "name": "AttackSound1",
+                    "time": 1.649999976158142
                 }
             ]
         },
@@ -354,6 +358,10 @@
                 {
                     "name": "DeactiveFootHitbox",
                     "time": 14.0
+                },
+                {
+                    "name": "AttackSound2",
+                    "time": 5.00061559677124
                 }
             ]
         },
@@ -388,6 +396,10 @@
                 {
                     "name": "WindLeftHandSlashEffectOff",
                     "time": 35.0
+                },
+                {
+                    "name": "AttackSound3",
+                    "time": 1.0
                 }
             ]
         },
@@ -410,6 +422,10 @@
                 {
                     "name": "DeactiveFootHitbox",
                     "time": 12.668143272399902
+                },
+                {
+                    "name": "AttackSound1",
+                    "time": 0.550000011920929
                 }
             ]
         },
@@ -436,6 +452,10 @@
                 {
                     "name": "DeactiveFootHitbox",
                     "time": 22.0
+                },
+                {
+                    "name": "AttackSound2",
+                    "time": 1.0
                 }
             ]
         },
@@ -462,6 +482,10 @@
                 {
                     "name": "DeactiveFootHitbox",
                     "time": 1.0
+                },
+                {
+                    "name": "AttackSound4",
+                    "time": 2.500241756439209
                 }
             ]
         },

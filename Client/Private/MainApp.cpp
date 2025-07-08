@@ -5,6 +5,7 @@
 #include <JsonLoader.h>
 #include "ThirdPersonCamera.h"
 #include "DashSmokeEffect.h"
+#include "SoundMag.h"
 CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::Get_Instance() }
 {
@@ -31,6 +32,9 @@ HRESULT CMainApp::Initialize()
 	Ready_Prototype_Component();
 	if (FAILED(Start_Level(LEVEL::LOGO)))
 		return E_FAIL;
+	CSoundMag::Get_Instance()->Initialize();
+	CSoundMag::Get_Instance()->LoadBanks("../Asset/SoundFmod/Build/Desktop/Master.bank", "../Asset/SoundFmod/Build/Desktop/Master.strings.bank");
+	CSoundMag::Get_Instance()->LoadAllBanks("../Asset/SoundFmod/Build/Desktop/");
 	return S_OK;
 }
 
@@ -38,6 +42,7 @@ void CMainApp::Update(_float fTimeDelta)
 {
 	m_pGameInstance->Fixed_Update(fTimeDelta);
 	m_pGameInstance->Update_Engine(fTimeDelta);
+	CSoundMag::Get_Instance()->Update();
 }
 
 HRESULT CMainApp::Render()
