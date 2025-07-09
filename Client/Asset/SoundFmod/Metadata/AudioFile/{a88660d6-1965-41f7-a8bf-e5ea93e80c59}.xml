@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{a88660d6-1965-41f7-a8bf-e5ea93e80c59}">
+		<property name="assetPath">
+			<value>Sound/공통 사운드/hit_sword_S.ogg</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>0.38498866213151928</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{bb2f4bf7-0ee5-4d3f-84f9-913cf38002f5}</destination>
+		</relationship>
+	</object>
+</objects>

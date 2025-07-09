@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{5cae243c-9ae3-439e-a3df-9167d4bdb1c0}">
+		<property name="assetPath">
+			<value>Sound/Akaza/akaza_ALTERED-73.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>3.1333333333333333</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{bb2f4bf7-0ee5-4d3f-84f9-913cf38002f5}</destination>
+		</relationship>
+	</object>
+</objects>

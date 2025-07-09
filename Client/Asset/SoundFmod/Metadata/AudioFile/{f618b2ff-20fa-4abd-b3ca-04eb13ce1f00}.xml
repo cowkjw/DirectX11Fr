@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{f618b2ff-20fa-4abd-b3ca-04eb13ce1f00}">
+		<property name="assetPath">
+			<value>Sound/탄지로 공격/탄지로 1타.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.38600000000000001</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{bb2f4bf7-0ee5-4d3f-84f9-913cf38002f5}</destination>
+		</relationship>
+	</object>
+</objects>

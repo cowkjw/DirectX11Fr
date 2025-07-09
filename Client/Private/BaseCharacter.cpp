@@ -75,7 +75,7 @@ HRESULT CBaseCharacter::Initialize(void* pArg)
 		if (auto pChar = dynamic_cast<CBaseCharacter*>(m_pTarget))
 		{
 			if (m_bCanBlowAttack && pChar->GetState() != CSTATE::GUARD)
-				pChar->Blow(this, 40.f);
+				pChar->Blow(this, 35.f);
 		}
 		});
 
@@ -91,6 +91,45 @@ HRESULT CBaseCharacter::Initialize(void* pArg)
 			m_pAnimatorCom->SetBool("Death", true);
 		}
 		});
+
+	m_pAnimatorCom->RegisterEventListener("AttackSound", [&](const string& eventName)
+		{
+			if (m_strName == TEXT("Kyojuro"))
+			{
+				CSoundMag::Get_Instance()->PlayEffect("event:/Kyojuro/Attack");
+				CSoundMag::Get_Instance()->PlayEffect("event:/Common/SlashSwing");
+
+			}
+			else if (m_strName == TEXT("Akaza"))
+			{
+				CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/Attack");
+			}
+			else
+			{
+				CSoundMag::Get_Instance()->PlayEffect("event:/Tanjiro/Attack");
+				CSoundMag::Get_Instance()->PlayEffect("event:/Common/SlashSwing");
+			}
+			
+		});
+
+	m_pAnimatorCom->RegisterEventListener("FinalAttackSound", [&](const string& eventName)
+		{
+			if (m_strName == TEXT("Kyojuro"))
+			{
+				CSoundMag::Get_Instance()->PlayEffect("event:/Kyojuro/Attack4");
+				CSoundMag::Get_Instance()->PlayEffect("event:/Common/SlashSwing");
+			}
+			else if (m_strName == TEXT("Akaza"))
+			{
+				CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/Attack4");
+			}
+			else
+			{
+				CSoundMag::Get_Instance()->PlayEffect("event:/Tanjiro/Attack4");
+				CSoundMag::Get_Instance()->PlayEffect("event:/Common/SlashSwing");
+			}
+
+		});
 	return S_OK;
 }
 
@@ -98,6 +137,14 @@ void CBaseCharacter::Priority_Update(_float fTimeDelta)
 {
 	if (m_fCurrentHP <= 0.f && m_eState != CSTATE::DIE&&m_pState->GetStateName()!=L"Death")
 	{
+		StartHitStop(3.f);
+		if (m_pTarget)
+		{
+			if (auto pChar = dynamic_cast<CBaseCharacter*>(m_pTarget))
+			{
+				pChar->StartHitStop(3.f);
+			}
+		}
 		ChangeState(new StateDeath());
 		return;
 	}
@@ -399,7 +446,7 @@ void CBaseCharacter::LaunchAirborne(_float fJumpForce, _bool bIsBound)
 	/*if (m_bIsBound)
 		return;*/
 	if (m_bAirborne)
-		m_Velocity.y = std::min(m_Velocity.y + fJumpForce, 38.f);
+		m_Velocity.y = min(m_Velocity.y + fJumpForce, 38.f);
 	else
 		m_Velocity.y = fJumpForce;
 	m_bAirborne = true;
@@ -508,6 +555,8 @@ void CBaseCharacter::UpdateAirborne(_float fTimeDelta)
 			if (m_pNavigationCom->isMove(curPos))
 				m_pTransformCom->Set_State(STATE::POSITION, curPos);
 		}
+
+		CSoundMag::Get_Instance()->PlayEffect("event:/Common/BodyFall");
 	}
 }
 

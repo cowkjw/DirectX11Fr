@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{a5544d26-2162-4f6d-a43f-fe33b1ccc730}">
+		<property name="assetPath">
+			<value>Sound/렌고쿠 오의/fire_07.ogg</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>3.3644444444444446</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{bb2f4bf7-0ee5-4d3f-84f9-913cf38002f5}</destination>
+		</relationship>
+	</object>
+</objects>

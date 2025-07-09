@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{1c6c9c65-640c-4c22-9b5f-527dab14d880}">
+		<property name="assetPath">
+			<value>Sound/아카자 히트음/AkazaBlow.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>1.3549166666666668</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{bb2f4bf7-0ee5-4d3f-84f9-913cf38002f5}</destination>
+		</relationship>
+	</object>
+</objects>

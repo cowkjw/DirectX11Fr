@@ -193,6 +193,15 @@
     <ClInclude Include="..\Public\Target_Manager.h">
       <Filter>01.Utility\05. Renderer\RenderTarget\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\SoundMag.h">
+      <Filter>12. Sound\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External Libraries\fmod\studio\inc\fmod_studio.hpp">
+      <Filter>12. Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External Libraries\fmod\core\inc\fmod.hpp">
+      <Filter>12. Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -369,6 +378,9 @@
     <ClCompile Include="..\Private\Target_Manager.cpp">
       <Filter>01.Utility\05. Renderer\RenderTarget\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\SoundMag.cpp">
+      <Filter>12. Sound\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00.System">
@@ -538,6 +550,12 @@
     </Filter>
     <Filter Include="01.Utility\05. Renderer\RenderTarget\Manager">
       <UniqueIdentifier>{2660112f-51c9-4a50-b896-6883f627ba4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="12. Sound">
+      <UniqueIdentifier>{e05e8e85-c7ff-4cb6-8b7d-fb7623f5fd5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="12. Sound\Manager">
+      <UniqueIdentifier>{3749e578-d491-4e25-85bc-a14399eaccee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -26,6 +26,7 @@ public:
 
 public:
 	void Set_OnClick(function<void()> OnClick) { m_OnClick = OnClick; }
+	void Set_OnHover(function<void()> OnHover) { m_OnHover = OnHover; }
 	void SetButtonImage(CUIImage* pButtonImage, CUIImage* pButtonImageHover = nullptr);
 	CUIImage* GetButtonImage() const { return m_pButtonImage; }
 	CUIImage* GetButtonImageHover() const { return m_pButtonImageHover; }
@@ -35,6 +36,7 @@ private:
 
 private:
 	function<void()> m_OnClick;
+	function<void()> m_OnHover;
 	_bool m_bHovered = false;
 	_bool m_bPressed = false;
 	CUIImage* m_pButtonImage{ nullptr };

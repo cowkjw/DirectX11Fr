@@ -255,6 +255,7 @@ void CWeapon::OnCollisionEnter(CCollider* other)
 		{
 			if (pTarget->GetState() != CBaseCharacter::CSTATE::DIE)
 			{
+				CSoundMag::Get_Instance()->PlayEffect("event:/Common/SlashHit");
 				pChar->OnAttackHit(pTarget);
 				m_pColliderCom->SetActive(false);
 				m_pColliderCom1->SetActive(false);
@@ -275,6 +276,7 @@ void CWeapon::OnCollisionEnter(CCollider* other)
 		{
 			if (auto pChar = dynamic_cast<CBaseCharacter*>(m_pParent))
 			{
+				CSoundMag::Get_Instance()->PlayEffect("event:/Common/SlashHit");
 				pChar->OnAttackHit(pBoss);
 				m_pColliderCom->SetActive(false);
 				m_pColliderCom1->SetActive(false);
@@ -294,6 +296,7 @@ void CWeapon::OnCollisionEnter(CCollider* other)
 		{
 			if (auto pChar = dynamic_cast<CBaseCharacter*>(m_pParent))
 			{
+				CSoundMag::Get_Instance()->PlayEffect("event:/Common/SlashHit");
 				pChar->OnAttackHit(pBoss);
 				m_pColliderCom->SetActive(false);
 				m_pColliderCom1->SetActive(false);
@@ -316,6 +319,7 @@ void CWeapon::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
 		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
 		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
 		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitShockParticle"), hitPos);
+
 	}
 	// 때린게 엔무 파츠면
 	else if (auto pBossParts = dynamic_cast<CEnmuParts*>(other->GetOwner()))

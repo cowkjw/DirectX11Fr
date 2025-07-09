@@ -289,9 +289,9 @@ HRESULT CTanjiro::Ready_Components()
 	CNavigation::NAVIGATION_DESC		NaviDesc{};
 	NaviDesc.iIndex = 4;
 
-	if (FAILED(__super::Add_Component(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Navigation"),
-		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
-		return E_FAIL;
+	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Navigation"),
+	//	TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+	//	return E_FAIL;
 
 
 	return S_OK;
@@ -1095,6 +1095,23 @@ void CTanjiro::ReadyAnimEvents()
 			m_pMig->SetPosition(XMVectorSetW(migPos, 1.f));
 
 		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("MigSkillSound", [&](const string& eventName) {
+
+		CSoundMag::Get_Instance()->PlayEffect("event:/Tanjiro/Mig");
+		});
+
+
+	m_pAnimatorCom->RegisterEventListener("TakSkillSound", [&](const string& eventName) {
+
+		CSoundMag::Get_Instance()->PlayEffect("event:/Tanjiro/Tak");
+		});
+
+
+	m_pAnimatorCom->RegisterEventListener("NejSkillSound", [&](const string& eventName) {
+
+		CSoundMag::Get_Instance()->PlayEffect("event:/Tanjiro/Nej");
 		});
 }
 

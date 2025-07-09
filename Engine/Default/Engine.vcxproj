@@ -112,16 +112,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../public/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../public/;$(SolutionDir)External Libraries\fmod\fsbank\inc;$(SolutionDir)External Libraries\fmod\core\inc;$(SolutionDir)External Libraries\fmod\studio\inc</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP
  %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>d3d11.lib;DirectXTKd.lib;Effects11d.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../ThirdPartyLib/;../ThirdPartyLib/PhysXDebug/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;DirectXTKd.lib;Effects11d.lib;assimp-vc143-mtd.lib;fmod_vc.lib;fsbank_vc.lib;fmodstudio_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../ThirdPartyLib/;../ThirdPartyLib/PhysXDebug/;$(SolutionDir)External Libraries/fmod/fsbank/lib/x64;$(SolutionDir)External Libraries/fmod/core/lib/x64;$(SolutionDir)External Libraries/fmod/studio/lib/x64</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ShaderType>Effect</ShaderType>
@@ -157,6 +158,8 @@ CALL $(SolutionDir)\UpdateLib.bat</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\External Libraries\fmod\core\inc\fmod.hpp" />
+    <ClInclude Include="..\..\External Libraries\fmod\studio\inc\fmod_studio.hpp" />
     <ClInclude Include="..\Private\DebugDraw.h" />
     <ClInclude Include="..\Public\Animation.h" />
     <ClInclude Include="..\public\Animator.h" />
@@ -203,6 +206,7 @@ CALL $(SolutionDir)\UpdateLib.bat</Command>
     <ClInclude Include="..\public\ResourceMag.h" />
     <ClInclude Include="..\public\Serializable.h" />
     <ClInclude Include="..\Public\Shader.h" />
+    <ClInclude Include="..\public\SoundMag.h" />
     <ClInclude Include="..\Public\SphereCollider.h" />
     <ClInclude Include="..\Public\Target_Manager.h" />
     <ClInclude Include="..\Public\Texture.h" />
@@ -263,6 +267,7 @@ CALL $(SolutionDir)\UpdateLib.bat</Command>
     <ClCompile Include="..\private\ResourceMag.cpp" />
     <ClCompile Include="..\private\Serializable.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
+    <ClCompile Include="..\private\SoundMag.cpp" />
     <ClCompile Include="..\Private\SphereCollider.cpp" />
     <ClCompile Include="..\Private\Target_Manager.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />

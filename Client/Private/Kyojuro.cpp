@@ -228,13 +228,13 @@ void CKyojuro::TakeDamage(_float fDamage)
 		return;
 	if (m_eState == CSTATE::GUARD)
 	{
-		fDamage *= 0.5f; // 가드 중에는 피해량 감소
+		fDamage *= 0.3f; // 가드 중에는 피해량 감소
 	}
 	if (m_eState == CSTATE::SKILL2)
 		return;
 	__super::TakeDamage(fDamage);
 	auto pLeftBar = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("LeftLifeBar"));
-	if (!m_bAirborne && !m_bIsBound)
+	if (!m_bAirborne && !m_bIsBound&& m_eState != CSTATE::GUARD)
 	{
 		ChangeState(new StateHurt());
 	}
@@ -574,10 +574,21 @@ void CKyojuro::ReadyAnimEvents()
 			nobIndex = 0; // 인덱스 초기화
 		});
 
-	m_pAnimatorCom->RegisterEventListener("MoveLook", [&](const string& eventName) {
+	m_pAnimatorCom->RegisterEventListener("NobSkillSound", [&](const string& eventName) {
 
-		/*auto vDir = XMVector3Normalize(	m_pTransformCom->Get_State(STATE::LOOK));
-		m_pTransformCom->MoveDirection(vDir, m_pGameInstance->Get_TimeDelta(TEXT("Timer_60")) * 10.f, m_pNavigationCom);*/
+		CSoundMag::Get_Instance()->PlayEffect("event:/Kyojuro/Nob");
+		});
+
+
+	m_pAnimatorCom->RegisterEventListener("EnkSkillSound", [&](const string& eventName) {
+
+		CSoundMag::Get_Instance()->PlayEffect("event:/Kyojuro/Enk");
+		});
+
+
+	m_pAnimatorCom->RegisterEventListener("KieSkillSound", [&](const string& eventName) {
+
+		CSoundMag::Get_Instance()->PlayEffect("event:/Kyojuro/Kie");
 		});
 }
 

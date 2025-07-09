@@ -25,19 +25,25 @@ HRESULT CLevel_BattleSelect::Initialize()
 	jsonLoader.Free();
 	
 	SetUpUI();
+
+
+	CSoundMag::Get_Instance()->PlayBGM("event:/BGM/SelectLevel");
 	return S_OK;
 }
 
 void CLevel_BattleSelect::Update(_float fTimeDelta)
 {
 	auto pButton = m_pGameInstance->Get_UI(TEXT("BattleSelectCanvas"), TEXT("AkazaButton"));
-	auto pCursorImage = m_pGameInstance->Get_UI(TEXT("BattleSelectCanvas"), TEXT("AkazaDfault"));
+	auto pCursorImage = m_pGameInstance->Get_UI(TEXT("BattleSelectCanvas"), TEXT("AkazaHover"));
 	if (auto pAkazaButton = dynamic_cast<CUIButton*>(pButton))
 	{
 		if (pAkazaButton->IsHovered())
 		{
-			if (pCursorImage)
+			if (pCursorImage&&!pCursorImage->IsActive())
 			{
+				CSoundMag::Get_Instance()->StopEffect("EnmuSelect");
+				CSoundMag::Get_Instance()->PlayEffect("event:/UI/AkazaSelect","AkazaSelect");
+
 				pCursorImage->SetActive(true);
 			}
 			pAkazaButton->GetButtonImage()->SetActive(false);
@@ -53,13 +59,15 @@ void CLevel_BattleSelect::Update(_float fTimeDelta)
 	}
 
 	auto pButton2 = m_pGameInstance->Get_UI(TEXT("BattleSelectCanvas"), TEXT("EnmuButton"));
-	auto pCursorImage2 = m_pGameInstance->Get_UI(TEXT("BattleSelectCanvas"), TEXT("EnmuDefault"));
+	auto pCursorImage2 = m_pGameInstance->Get_UI(TEXT("BattleSelectCanvas"), TEXT("EnmuHover"));
 	if (auto pEnmuButton = dynamic_cast<CUIButton*>(pButton2))
 	{
 		if (pEnmuButton->IsHovered())
 		{
-			if (pCursorImage2)
+			if (pCursorImage2&&!pCursorImage2->IsActive())
 			{
+				CSoundMag::Get_Instance()->StopEffect("AkazaSelect");
+				CSoundMag::Get_Instance()->PlayEffect("event:/UI/EnmuSelect","EnmuSelect");
 				pCursorImage2->SetActive(true);
 			}
 			pEnmuButton->GetButtonImage()->SetActive(false);
@@ -92,6 +100,7 @@ void CLevel_BattleSelect::SetUpUI()
 		{
 			pButton->Set_OnClick([this]() {
 				StartEnmu();
+				CSoundMag::Get_Instance()->PlayEffect("event:/UI/BattleStart");
 				});
 		}
 	}
@@ -104,6 +113,7 @@ void CLevel_BattleSelect::SetUpUI()
 		{
 			pButton->Set_OnClick([this]() {
 				StartAkaza();
+				CSoundMag::Get_Instance()->PlayEffect("event:/UI/BattleStart");
 				});
 		}
 	}

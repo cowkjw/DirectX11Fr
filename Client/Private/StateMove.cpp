@@ -18,6 +18,7 @@ void StateMove::Enter(CBaseCharacter* pChar)
 	}
 	pChar->SetState(CBaseCharacter::CSTATE::MOVE);
 	pChar->GetInputBuffer()->PopCommand(ECommand::Move);
+	CSoundMag::Get_Instance()->PlayEffect("event:/Common/FootGrass","FootGrass");
 }
 
 void StateMove::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)
@@ -120,4 +121,5 @@ void StateMove::Exit(CBaseCharacter* pChar)
 	{
 		col->SetPriority(0); 
 	}
+	CSoundMag::Get_Instance()->StopEffect("FootGrass");
 }

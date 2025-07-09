@@ -13,6 +13,8 @@ void StateSkill2::Enter(CBaseCharacter* pChar)
 	pAnim->SetBool("Guard", true);
 
 	pChar->SetState(CBaseCharacter::CSTATE::SKILL2);
+
+	
 }
 
 

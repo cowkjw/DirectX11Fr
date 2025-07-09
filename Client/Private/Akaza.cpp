@@ -1059,6 +1059,23 @@ void CAkaza::ReadyAnimEvents()
 			static_cast<CMeshEffect*>(pSlashEffect)->SetRenderMesh(false);
 		}
 		});
+
+	m_pAnimatorCom->RegisterEventListener("AttackSound1", [&](const string& eventName) {
+		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/Attack");
+		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/AttackSlash1");
+		});
+	m_pAnimatorCom->RegisterEventListener("AttackSound2", [&](const string& eventName) {
+		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/Attack");
+		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/AttackSlash2");
+		});
+	m_pAnimatorCom->RegisterEventListener("AttackSound3", [&](const string& eventName) {
+		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/Attack");
+		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/AttackSlash3");
+		});
+	m_pAnimatorCom->RegisterEventListener("AttackSound4", [&](const string& eventName) {
+		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/Attack");
+		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/AttackSlash4");
+		});
 }
 
 
@@ -1349,7 +1366,7 @@ void CAkaza::HandleInput()
 			}
 			else
 			{
-				m_pInputBuffer->AddCommand({ ECommand::Skill1, m_fTotalTime });
+				m_pInputBuffer->AddCommand({ ECommand::Skill2, m_fTotalTime });
 				return;
 			}
 		}
@@ -1362,10 +1379,10 @@ void CAkaza::HandleInput()
 
 			if (r < 0.85f)
 			{
+					m_pInputBuffer->AddCommand({ ECommand::Skill2, m_fTotalTime });
 				if (m_fGuardCooldown <= 0.f)
 				{
-					m_pInputBuffer->AddCommand({ ECommand::Guard, m_fTotalTime });
-					m_fGuardCooldown = 1.0f;
+					//m_fGuardCooldown = 1.0f;
 				}
 
 			}

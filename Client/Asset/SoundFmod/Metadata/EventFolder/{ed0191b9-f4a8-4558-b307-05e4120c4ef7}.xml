@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="EventFolder" id="{ed0191b9-f4a8-4558-b307-05e4120c4ef7}">
+		<property name="name">
+			<value>Enmu</value>
+		</property>
+		<relationship name="folder">
+			<destination>{cef012e2-141b-400d-b287-c306a0749974}</destination>
+		</relationship>
+	</object>
+</objects>

@@ -162,6 +162,11 @@ public:
 #endif
 #pragma endregion
 
+#pragma region SOUND
+	CSoundMag* GetSoundMag();
+#pragma endregion
+
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CLevel_Manager*		m_pLevel_Manager = { nullptr };

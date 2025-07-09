@@ -279,6 +279,7 @@ void CBodyColliderParts::OnCollisionEnter(CCollider* other, const _float3& hitPo
 			return; // 이미 데미지를 입힌 대상이면 무시
 		m_DamagedTargets.insert(other->GetOwner()->GetParent()); // 데미지를 입힌 대상에 추가
 		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitBodyShockParticle"), hitPos);
+		CSoundMag::Get_Instance()->PlayEffect("event:/Common/BodyAttack");
 	}
 }
 

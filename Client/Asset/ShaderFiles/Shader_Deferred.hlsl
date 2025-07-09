@@ -31,7 +31,6 @@ float4 g_vShadowColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
 
 float g_fOutlineThreshold = 1.2f;      // 외곽선 감지 임계값
 float g_fNormalEdgeStrength = 1.2f;    // 노말 엣지 강도
-float g_fDepthEdgeStrength = 1.2f;     // 깊이 엣지 강도
 float g_fOutlineStrength = 0.6f;       // 외곽선 최종 강도
 float4 g_vOutlineColor = float4(0.0f, 0.0f, 0.0f, 1.0f); // 외곽선 색상
 int g_iWinSizeX = 1280;                // 화면 너비
@@ -165,16 +164,24 @@ float DetectEdge(float2 uv, float2 texelSize)
 
 	// 노말 차이 계산
 
+    // 유클리드 공식으로 크기를 구하면 되는데
+    // 노말 벡터가 3차원 방향 정보를 가지고 있어서 차이말고 실제 거리로 구해야함
     // 내적하면 제곱합을 구할 수 있음
 
+	// 자기 자신의 제곱을 구하는 것과 같음
     float normalDiffX = dot(normalRight - normalLeft, normalRight - normalLeft);
     float normalDiffY = dot(normalUp - normalDown, normalUp - normalDown);
 
     // 제곱의 합을 제곱근으로 구함
     float normalEdge = sqrt(normalDiffX + normalDiffY);
 
-    // 엣지 강도 구하기 깊이 노말 더 큰걸로 
+    // 엣지 강도 구하기 
+    // 너무 작아서 값을 보정해줌
     float edge = normalEdge * g_fNormalEdgeStrength;
+
+	// step은 (float edgeThreshold, float edgeValue) 형태로
+	// edgeThreshold보다 edgeValue가 크면 1.0, 작으면 0.0을 반환
+    // g_fOutlineThreshold은 어느정도부터 엣지로 판별할건지
     return step(g_fOutlineThreshold, edge);
 }
 

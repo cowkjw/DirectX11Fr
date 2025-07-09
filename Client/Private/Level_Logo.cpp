@@ -38,6 +38,9 @@ HRESULT CLevel_Logo::Initialize()
 	//	});
 	//
 	Ready_UI_Setup();
+	CSoundMag::Get_Instance()->PlayBGM("event:/BGM/TitleBGM");
+	CSoundMag::Get_Instance()->PlayEffect("event:/UI/TtitleLogo");
+
 	return S_OK;
 }
 

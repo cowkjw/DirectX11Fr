@@ -57,15 +57,14 @@ HRESULT CRenderer::Initialize()
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(ViewportDesc.Width, ViewportDesc.Height, 0.0f, 1.f));
 
 
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Diffuse"), 100.0f, 100.0f, 200.0f, 200.0f)))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Normal"), 100.0f, 300.0f, 200.0f, 200.0f)))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Depth"), 100.0f, 500.0f, 200.0f, 200.0f)))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Shade"), 300.f, 100.0f, 200.0f, 200.0f)))
-		return E_FAIL;
-	m_pContext->OMGetRenderTargets(1, &m_pBackBuffer, &m_pOriginalDSV);
+	//if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Diffuse"), 100.0f, 100.0f, 200.0f, 200.0f)))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Normal"), 100.0f, 300.0f, 200.0f, 200.0f)))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Depth"), 100.0f, 500.0f, 200.0f, 200.0f)))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Shade"), 300.f, 100.0f, 200.0f, 200.0f)))
+	//	return E_FAIL;
 	return S_OK;
 }
 

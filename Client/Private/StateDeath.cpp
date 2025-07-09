@@ -8,6 +8,13 @@ void StateDeath::Enter(CBaseCharacter* pChar)
 	pModel->GetAnimationClipByName("A_P0000_V00_C00_Death")->SetLoop(false);
 	pChar->Get_Animator()->PlayClip(pModel->GetAnimationClipByName("A_P0000_V00_C00_Death"),false);
 	pChar->Get_Animator()->SetBool("Death", false);
+
+	if (pChar->Get_Name() == TEXT("Akaza"))
+	{
+		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/Death");
+	}
+
+	CSoundMag::Get_Instance()->PlayEffect("event:/UI/Shobu");
 }
 
 void StateDeath::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)

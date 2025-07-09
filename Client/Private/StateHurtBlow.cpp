@@ -9,6 +9,19 @@ void StateHurtBlow::Enter(CBaseCharacter* pChar)
 	pAnim->SetTrigger("HurtBlow");
 	pAnim->SetBool("Move", false);
 	pChar->SetState(CBaseCharacter::CSTATE::AIR);
+
+	if (pChar->Get_Name() == TEXT("Kyojuro"))
+	{
+		CSoundMag::Get_Instance()->PlayOneShot("event:/Kyojuro/Blow");
+	}
+	else if (pChar->Get_Name() == TEXT("Akaza"))
+	{
+		CSoundMag::Get_Instance()->PlayOneShot("event:/Akaza/Blow");
+	}
+	else
+	{
+		CSoundMag::Get_Instance()->PlayOneShot("event:/Tanjiro/Blow");
+	}
 }
 
 void StateHurtBlow::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)
