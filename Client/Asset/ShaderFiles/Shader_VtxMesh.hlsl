@@ -3,10 +3,13 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 
-texture2D g_DiffuseTexture;
-texture2D g_SpecularTexture;
-texture2D g_NormalTexture;
-texture2D g_EmissiveTexture;
+texture2D g_DiffuseTexture; // 1번
+texture2D g_SpecularTexture; // 8번
+texture2D g_NormalTexture; // 6번
+texture2D g_EmissiveTexture; // 4번
+texture2D g_NoiseTexture;
+texture2D g_DissolveTexture;
+texture2D g_DissolveEdgeTexture;
 float2 g_vUVOffset;
 float2 g_vUVScale;
 
@@ -78,6 +81,12 @@ struct PS_OUT_PRE
 	vector vColor : SV_TARGET0;
 };
 
+struct PS_OUT_DISTORTION
+{
+    vector vColor : SV_TARGET0;
+    vector vDistortion : SV_TARGET1; // 디스토션 효과를 위한 타겟
+};
+
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
@@ -96,11 +105,6 @@ PS_OUT PS_MAIN(PS_IN In)
 }
 
 
-// 툰 쉐이딩을 위한 smoothstep 함수
-float ToonStep(float threshold, float softness, float value)
-{
-    return smoothstep(threshold - softness, threshold + softness, value);
-}
 
 PS_OUT PS_MAIN_TOON(PS_IN In)
 {
@@ -252,26 +256,48 @@ PS_OUT_PRE PS_MAIN_Effect_DistMask(PS_IN In)
 
     float2 uv0 = In.vTexcoord + g_vUVOffset;
 
-    float mask = g_SpecularTexture.Sample(DefaultSampler, uv0).r;
+    //float mask = g_SpecularTexture.Sample(DefaultSampler, uv0).r;
+    //if (mask < 0.1)
+    //    discard;
+
+   
+    //float2 swirlUV = uv0;
+    //float2 swirlOff = (g_NormalTexture.Sample(DefaultSampler, swirlUV).rg - 0.5) * 0.1f;
+
+    //float4 aura = g_EmissiveTexture.Sample(DefaultSampler, uv0);
+
+    //float2 uvFinal = uv0 + swirlOff;//+ noiseOff;
+
+    //float4 col = g_DiffuseTexture.Sample(DefaultSampler, uvFinal);
+    //col.rgb += aura.rgb * 0.2f;
+    //col.a = mask;
+
+    //Out.vColor = col;
+    //return Out;
+
+    //float2 uv0 = (In.vTexcoord + g_vUVOffset) * float2(g_vUVScale.x, uvScaleY);
+
+    // 마스크
+    float mask = g_DiffuseTexture.Sample(DefaultSampler, uv0).r;
     if (mask < 0.1)
         discard;
 
-   
-    float2 swirlUV = uv0;
-    float2 swirlOff = (g_NormalTexture.Sample(DefaultSampler, swirlUV).rg - 0.5) * 0.1f;
+    // AuraSmoke  UV, 시간 기반 Offset
+    float2 auraUV = uv0 + float2(-g_fTime * 0.2, -g_fTime * 0.2);
 
+    // AuraSmoke 샘플
+    float4 auraSmoke = g_EmissiveTexture.Sample(DefaultSampler, auraUV);
 
-    //float2 noiseUV = uv0;
-    //float  noiseVal = g_EmissiveTexture.Sample(DefaultSampler, noiseUV).r;
-    //float2 noiseOff = (float2(noiseVal, noiseVal) - 0.5) * 0.5f;
+    // Diffuse 샘플
+    float4 col = g_DiffuseTexture.Sample(DefaultSampler, auraUV);
+    float4 specular = g_SpecularTexture.Sample(DefaultSampler, auraUV);
 
-    float4 aura = g_EmissiveTexture.Sample(DefaultSampler, uv0);
+    // 밝기 추가 를 합산
+    col.rgb += specular.rgb * 2.f;
 
-    float2 uvFinal = uv0 + swirlOff;//+ noiseOff;
-
-    float4 col = g_DiffuseTexture.Sample(DefaultSampler, uvFinal);
-    col.rgb += aura.rgb * 0.2f;
+    // 마스크와 페이드
     col.a = mask;
+
 
     Out.vColor = col;
     return Out;
@@ -280,51 +306,85 @@ PS_OUT_PRE PS_MAIN_Effect_DistMask(PS_IN In)
 
 PS_OUT_PRE PS_MAIN_Effect_Nob(PS_IN In)
 {
+//    PS_OUT_PRE Out;
+//
+//    //float2 uv = (In.vTexcoord + g_vUVOffset) * g_vUVScale;
+//    //vector  vMtrlSpec = g_SpecularTexture.Sample(DefaultSampler, uv);
+//    //if (vMtrlSpec.r < 0.1f)
+//    //    discard;
+//    //float2 distortion = (g_NormalTexture.Sample(DefaultSampler, uv).rg - 0.5f) * 0.5f;
+//
+//    //float2 distortedUV = uv + distortion;
+//    //// uv로 일단 늘리기
+//
+//    //vector  vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, distortedUV);
+//    //// 마스크 처리
+//
+//
+//    //Out.vColor = vMtrlDiffuse;
+//    float t = saturate(g_fTime / g_fDuration);
+//
+//    // 시간에 따라 y줄여가지고 사라지는 느낌으로
+//    float uvScaleY = lerp(1.0, 0.0, t);
+//    float2 uv0 = (In.vTexcoord + g_vUVOffset) * float2(g_vUVScale.x, uvScaleY);
+//
+//    float mask = g_SpecularTexture.Sample(DefaultSampler, uv0).r;
+//    if (mask < 0.1) discard;
+//
+//
+//    float2 swirlUV = uv0;
+//    float2 swirlOff = (g_NormalTexture.Sample(DefaultSampler, swirlUV).rg - 0.5) * 0.1f;
+//
+//
+//    //float2 noiseUV = uv0;
+//    //float  noiseVal = g_EmissiveTexture.Sample(DefaultSampler, noiseUV).r;
+//    //float2 noiseOff = (float2(noiseVal, noiseVal) - 0.5) * 0.5f;
+//
+//    float4 aura = g_EmissiveTexture.Sample(DefaultSampler, uv0);
+//
+//    float2 uvFinal = uv0 + swirlOff;//+ noiseOff;
+//
+//    float4 col = g_DiffuseTexture.Sample(DefaultSampler, uvFinal);
+//    col.rgb += aura.rgb * 0.1f;
+//    col.a = mask;
+//    float fade = saturate(1.0 - g_fTime / g_fDuration);
+//    col.a *= fade;
+//    Out.vColor = col;
+//  float2 swirlOff = (g_NormalTexture.Sample(DefaultSampler, swirlUV).rg - 0.5) * 0.1f;
+//
+//// distortion 출력용
+//float2 distortion = swirlOff;
     PS_OUT_PRE Out;
 
-    //float2 uv = (In.vTexcoord + g_vUVOffset) * g_vUVScale;
-    //vector  vMtrlSpec = g_SpecularTexture.Sample(DefaultSampler, uv);
-    //if (vMtrlSpec.r < 0.1f)
-    //    discard;
-    //float2 distortion = (g_NormalTexture.Sample(DefaultSampler, uv).rg - 0.5f) * 0.5f;
-
-    //float2 distortedUV = uv + distortion;
-    //// uv로 일단 늘리기
-
-    //vector  vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, distortedUV);
-    //// 마스크 처리
-
-
-    //Out.vColor = vMtrlDiffuse;
     float t = saturate(g_fTime / g_fDuration);
-
-    // 시간에 따라 y줄여가지고 사라지는 느낌으로
     float uvScaleY = lerp(1.0, 0.0, t);
     float2 uv0 = (In.vTexcoord + g_vUVOffset) * float2(g_vUVScale.x, uvScaleY);
 
-    float mask = g_SpecularTexture.Sample(DefaultSampler, uv0).r;
-    if (mask < 0.1) discard;
+    // 마스크
+    float mask = g_DiffuseTexture.Sample(DefaultSampler, uv0).r;
+    if (mask < 0.1)
+        discard;
 
+    // AuraSmoke  UV, 시간 기반 Offset
+    float2 auraUV = uv0 + float2(-g_fTime * 0.2, -g_fTime * 0.2); 
 
-    float2 swirlUV = uv0;
-    float2 swirlOff = (g_NormalTexture.Sample(DefaultSampler, swirlUV).rg - 0.5) * 0.1f;
+    // AuraSmoke 샘플
+    float4 auraSmoke = g_EmissiveTexture.Sample(DefaultSampler, auraUV);
 
+    // Diffuse 샘플
+    float4 col = g_DiffuseTexture.Sample(DefaultSampler, auraUV);
+	float4 specular = g_SpecularTexture.Sample(DefaultSampler, auraUV);
 
-    //float2 noiseUV = uv0;
-    //float  noiseVal = g_EmissiveTexture.Sample(DefaultSampler, noiseUV).r;
-    //float2 noiseOff = (float2(noiseVal, noiseVal) - 0.5) * 0.5f;
+    // 밝기 추가 를 합산
+    col.rgb += specular.rgb*5.f ; 
 
-    float4 aura = g_EmissiveTexture.Sample(DefaultSampler, uv0);
-
-    float2 uvFinal = uv0 + swirlOff;//+ noiseOff;
-
-    float4 col = g_DiffuseTexture.Sample(DefaultSampler, uvFinal);
-    col.rgb += aura.rgb * 0.1f;
+    // 마스크와 페이드
     col.a = mask;
     float fade = saturate(1.0 - g_fTime / g_fDuration);
     col.a *= fade;
+
     Out.vColor = col;
-    return Out;
+	return Out;
 }
 
 
@@ -363,6 +423,11 @@ PS_OUT PS_MAIN_Effect_Mig(PS_IN In)
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCameraFar, 0.f, 0.f);
     float fade = saturate(1.0 - g_fTime / g_fDuration);
     Out.vDiffuse.a *= fade;
+    if (Out.vDiffuse.b < 0.5f)
+    {
+        Out.vDiffuse.a *= 0.5f; // 파란색이 낮으면 알파도 낮추기
+        Out.vDiffuse.rgb = saturate(Out.vDiffuse.rgb * 1.5f); // 알파 낮췄으니까 좀 더 밝게 보이게 하기
+    }
     return Out;
 
 }
@@ -452,6 +517,55 @@ PS_OUT PS_MAIN_Effect_Dash(PS_IN In)
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w,
         In.vProjPos.w / g_fCameraFar,
         0.f, 0.f);
+    return Out;
+}
+
+PS_OUT_PRE PS_MAIN_Effect_Noise(PS_IN In)
+{
+    PS_OUT_PRE Out;
+
+    float2 uv = (In.vTexcoord);
+
+    // 노이즈 텍스처 샘플링
+    float2 noiseUV = uv + float2(g_fTime * 0.1, -g_fTime * 0.15);
+    float2 noise = (g_NoiseTexture.Sample(DefaultSampler, noiseUV).rg * 2.0 - 1.0) * 0.2;
+
+    // UV에 노이즈를 더해 물결 효과
+  
+    float2 finalUV = uv + noise;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, finalUV);
+    if (vMtrlDiffuse.a < 0.1f)
+        discard;
+
+	float2 dissolveUV = In.vTexcoord + g_vUVOffset;
+	float dissolveMask = g_DissolveTexture.Sample(LinearClampSampler, dissolveUV).r;
+	if (dissolveMask < 0.1f)
+    {
+		discard;
+    }
+    dissolveUV *= 10.f;
+    vector vDissolveEdge = g_DissolveEdgeTexture.Sample(LinearClampSampler, dissolveUV);
+
+    float edgeThreshold = 0.9f;
+    float isEdge = step(dissolveMask, edgeThreshold);
+
+    // 기본 디퓨즈 색상
+    Out.vColor.rgb = vMtrlDiffuse.rgb;
+    Out.vColor.a = vMtrlDiffuse.a;
+
+    // 경계 영역에서 엣지 텍스처 적용
+    if (isEdge > 0.3f)
+    {
+        // 엣지 텍스처의 흰색 영역만 사용
+        Out.vColor.rgb = lerp(vMtrlDiffuse.rgb, float3(1.0f, 1.0f, 1.0f), vDissolveEdge.r);
+        Out.vColor.a = vMtrlDiffuse.a;
+    }
+    if (Out.vColor.b > 0.5f)
+    {
+        Out.vColor.a *= 0.8f;
+        Out.vColor.rgb = saturate(Out.vColor.rgb * 1.5f); // 알파 낮췄으니까 좀 더 밝게 보이게 하기
+    }
     return Out;
 }
 
@@ -554,6 +668,15 @@ technique11 DefaultTechnique
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN_Effect_Dash();
+    }
+
+    pass NoiseEffect
+    {
+		SetRasterizerState(RS_Cull_None);
+		SetDepthStencilState(DSS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN();
+		PixelShader = compile ps_5_0 PS_MAIN_Effect_Noise();
     }
 
 }

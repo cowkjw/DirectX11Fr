@@ -39,6 +39,7 @@ private:
 	_float4 m_vColor = { 1.f, 1.f, 1.f, 1.f };
 	_float m_fRotationSpeed = 2.f;
 
+
 public:
 	static CKyojuroEnkSpiralEffect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;

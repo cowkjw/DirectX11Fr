@@ -15,6 +15,7 @@ private:
 public:
 
 	void Update_ActivedParticle(_float fTimeDelta);
+	void Late_Update(_float fTimeDelta);
 
 	void SpawnParticleEffect(const _wstring& effectName, const _float3& position, const _float3& scale = _float3(1.f, 1.f, 1.f));
 

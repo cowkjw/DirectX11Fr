@@ -264,7 +264,7 @@ namespace Engine
         XMFLOAT3  	    vEndColor;
         float			fAlphaVariation;
 
-        static const unsigned int					iNumElements = { 10 };
+        static const unsigned int					iNumElements = { 9 };
         static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
     }VTXPOINT_PARTICLE_INSTANCE;
 

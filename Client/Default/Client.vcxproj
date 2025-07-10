@@ -192,7 +192,9 @@
     <ClInclude Include="..\public\EnmuTentacle.h" />
     <ClInclude Include="..\public\Environment.h" />
     <ClInclude Include="..\public\BodyColliderParts.h" />
+    <ClInclude Include="..\Public\FireParticle.h" />
     <ClInclude Include="..\public\FireSlashEffect.h" />
+    <ClInclude Include="..\Public\FireSpreadParticle.h" />
     <ClInclude Include="..\public\FreeCamera.h" />
     <ClInclude Include="..\public\Gizmo.h" />
     <ClInclude Include="..\public\Hierarchy.h" />
@@ -251,8 +253,10 @@
     <ClInclude Include="..\public\StateStep.h" />
     <ClInclude Include="..\public\Tanjiro.h" />
     <ClInclude Include="..\Public\TanjiroMig.h" />
+    <ClInclude Include="..\Public\TanjiroTak.h" />
     <ClInclude Include="..\Public\TanMigEffect.h" />
     <ClInclude Include="..\Public\TanMigRingEffect.h" />
+    <ClInclude Include="..\Public\TanTakEffect.h" />
     <ClInclude Include="..\Public\TaskNode.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\ThirdPersonCamera.h" />
@@ -261,6 +265,8 @@
     <ClInclude Include="..\public\Toolbar.h" />
     <ClInclude Include="..\public\UIAnimImage.h" />
     <ClInclude Include="..\public\WarningZoneDecal.h" />
+    <ClInclude Include="..\Public\WaterParticle.h" />
+    <ClInclude Include="..\Public\WaterWaveParticle.h" />
     <ClInclude Include="..\public\Weapon.h" />
     <ClInclude Include="..\Public\WindSlashEffect.h" />
     <ClInclude Include="Client.h" />
@@ -311,7 +317,9 @@
     <ClCompile Include="..\private\EnmuTentacle.cpp" />
     <ClCompile Include="..\private\Environment.cpp" />
     <ClCompile Include="..\private\BodyColliderParts.cpp" />
+    <ClCompile Include="..\Private\FireParticle.cpp" />
     <ClCompile Include="..\private\FireSlashEffect.cpp" />
+    <ClCompile Include="..\Private\FireSpreadParticle.cpp" />
     <ClCompile Include="..\private\FreeCamera.cpp" />
     <ClCompile Include="..\private\Gizmo.cpp" />
     <ClCompile Include="..\private\Hierarchy.cpp" />
@@ -368,8 +376,10 @@
     <ClCompile Include="..\private\StateStep.cpp" />
     <ClCompile Include="..\private\Tanjiro.cpp" />
     <ClCompile Include="..\Private\TanjiroMig.cpp" />
+    <ClCompile Include="..\Private\TanjiroTak.cpp" />
     <ClCompile Include="..\Private\TanMigEffect.cpp" />
     <ClCompile Include="..\Private\TanMigRingEffect.cpp" />
+    <ClCompile Include="..\Private\TanTakEffect.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\ThirdPersonCamera.cpp" />
     <ClCompile Include="..\private\GameplayCanvas.cpp" />
@@ -377,6 +387,8 @@
     <ClCompile Include="..\private\Toolbar.cpp" />
     <ClCompile Include="..\private\UIAnimImage.cpp" />
     <ClCompile Include="..\private\WarningZoneDecal.cpp" />
+    <ClCompile Include="..\Private\WaterParticle.cpp" />
+    <ClCompile Include="..\Private\WaterWaveParticle.cpp" />
     <ClCompile Include="..\private\Weapon.cpp" />
     <ClCompile Include="..\Private\WindSlashEffect.cpp" />
     <ClCompile Include="Client.cpp" />

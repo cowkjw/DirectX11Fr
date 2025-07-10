@@ -84,6 +84,20 @@ HRESULT CLevel_EnmuBoss::Initialize()
 	static_cast<CHitShockParticle*>(pEffect)->SetInitParticleUV(4, 4, 0.05f);
 	pEffect->SetTextureIndex(25);
 	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitGroundParticle"), pEffect);
+
+
+
+
+	//pEffect = CParticleEffect::Create(m_pDevice, m_pContext);
+	//if (pEffect == nullptr)
+	//	return E_FAIL;
+	//pEffect->Initialize(nullptr);
+	//jsonLoader.Load_Particle("../Asset/Json/Particle/Water_Particle.json", &pParticleSystem);
+	//static_cast<CParticleEffect*>(pEffect)->AddParticleSystem(L"SpreadWater", pParticleSystem);
+	//CEffectManager::Get_Instance()->RegisterEffect(TEXT("SpreadWater"), pEffect);
+	//pEffect->SetShaderPass(1);
+	//static_cast<CParticleEffect*>(pEffect)->SetTexture(m_pGameInstance->GetTexture(TEXT("ParticleMask"), true), 9, L"SpreadWater");
+	//static_cast<CParticleEffect*>(pEffect)->SetUseParentTexture(true);
 	jsonLoader.Free();
 	return S_OK;
 }

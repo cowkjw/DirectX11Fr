@@ -3,6 +3,7 @@
 #include <JsonLoader.h>
 #include "ParticleSystem.h"
 #include "HitParticle.h"
+#include "EffectManager.h"
 #include <BaseCharacter.h>
 
 CKyojuroEnkEffect::CKyojuroEnkEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -78,6 +79,24 @@ void CKyojuroEnkEffect::Update(_float fTimeDelta)
 			particle.second->Update(fTimeDelta);
 		}
 	}
+
+	m_fParticleElapsed += fTimeDelta;
+	if (m_fParticleElapsed >= m_fParticleTime)
+	{
+		m_fParticleElapsed = 0.f;
+
+		_vector vForward = XMVector3Normalize(
+			m_pTransformCom->Get_State(STATE::LOOK)
+		);
+		XMVECTOR enkPos = m_pTransformCom->Get_State(STATE::POSITION);
+		_vector offsetForward = XMVectorScale(vForward, -5.f);
+		enkPos = XMVectorAdd(enkPos, offsetForward);
+
+		_float3 vPos{};
+		XMStoreFloat3(&vPos, enkPos);
+		CEffectManager::Get_Instance()->SpawnParticleEffect(L"FireSpread", vPos, _float3(1.5f, 1.5f, 1.5f));
+	}
+
 
 	_float4x4 matWorld = m_pTransformCom->Get_WorldMatrix();
 	m_CombinedWorldMatrix = matWorld;

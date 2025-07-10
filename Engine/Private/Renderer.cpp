@@ -31,6 +31,8 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Depth"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Distortion"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.5f, 0.5f, 0.f, 0.f))))
+		return E_FAIL;
 #pragma endregion
 
 #pragma region Create MRTs
@@ -43,6 +45,10 @@ HRESULT CRenderer::Initialize()
 
 	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Lights"), TEXT("Target_Shade"))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Effects"), TEXT("Target_Distortion"))))
+		return E_FAIL;
+
 #pragma endregion
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBuffer)
@@ -57,14 +63,16 @@ HRESULT CRenderer::Initialize()
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(ViewportDesc.Width, ViewportDesc.Height, 0.0f, 1.f));
 
 
-	//if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Diffuse"), 100.0f, 100.0f, 200.0f, 200.0f)))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Normal"), 100.0f, 300.0f, 200.0f, 200.0f)))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Depth"), 100.0f, 500.0f, 200.0f, 200.0f)))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Diffuse"), 100.0f, 100.0f, 200.0f, 200.0f)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Normal"), 100.0f, 300.0f, 200.0f, 200.0f)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Depth"), 100.0f, 500.0f, 200.0f, 200.0f)))
+		return E_FAIL;
 	//if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Shade"), 300.f, 100.0f, 200.0f, 200.0f)))
 	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Distortion"), 300.f, 100.0f, 200.0f, 200.0f)))
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -85,6 +93,8 @@ HRESULT CRenderer::Draw()
 		return E_FAIL;
 	if (FAILED(Render_NonBlend()))
 		return E_FAIL;
+	if (FAILED(Render_Distortion()))
+		return E_FAIL;
 	if (FAILED(Render_Lights()))
 		return E_FAIL;
 	//if (FAILED(Render_BackBuffer()))
@@ -101,7 +111,6 @@ HRESULT CRenderer::Draw()
 #ifdef _DEBUG
 	if (FAILED(Render_Debug()))
 		return E_FAIL;
-
 #endif
 	return S_OK;
 }
@@ -201,11 +210,29 @@ HRESULT CRenderer::Render_BackBuffer()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_Distortion()
+{
+	m_pGameInstance->Begin_MRT(TEXT("MRT_Effects"));
+	for (auto& pGameObject : m_RenderObjects[ToIndex(RENDERGROUP::DISTORTION)])
+	{
+		if (nullptr != pGameObject)
+			pGameObject->Render();
+
+	}
+	m_RenderObjects[ToIndex(RENDERGROUP::DISTORTION)].clear();
+
+	m_pGameInstance->End_MRT();
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_ToonBackBuffer()
 {
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_Diffuse"), m_pShader, "g_DiffuseTexture")))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_Shade"), m_pShader, "g_ShadeTexture")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_Distortion"), m_pShader, "g_DistortionTexture")))
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
@@ -269,6 +296,7 @@ HRESULT CRenderer::Render_Debug()
 
 	m_pGameInstance->Render_MRT_Debug(TEXT("MRT_GameObjects"), m_pShader, m_pVIBuffer);
 	m_pGameInstance->Render_MRT_Debug(TEXT("MRT_Lights"), m_pShader, m_pVIBuffer);
+	m_pGameInstance->Render_MRT_Debug(TEXT("MRT_Effects"), m_pShader, m_pVIBuffer);
 	return S_OK;
 }
 

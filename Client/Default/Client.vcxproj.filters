@@ -262,6 +262,21 @@
     <Filter Include="01.GameObject\Effect\Mesh\Tan\Mig">
       <UniqueIdentifier>{fde6c41d-019a-4588-8f59-e2bfc65399cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.GameObject\Effect\Mesh\Tan\Tak">
+      <UniqueIdentifier>{72afdeb4-5533-4bfa-b8e2-73d70b909f3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Effect\TanjiroEffect\Tak">
+      <UniqueIdentifier>{3794cbf6-8e57-40ce-98fa-c2c67e645c00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Effect\TanjiroEffect\Mig">
+      <UniqueIdentifier>{2feab6f1-b483-40d7-aefb-f1c6c6a0f24c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Effect\Particle\Water">
+      <UniqueIdentifier>{aa5776ec-b79f-4ae1-ae57-f3f60f56aa69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.GameObject\Effect\Particle\Fire">
+      <UniqueIdentifier>{9a81c86e-6e16-4d85-8890-4ceeea916869}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -591,11 +606,29 @@
     <ClInclude Include="..\Public\TanMigEffect.h">
       <Filter>01.GameObject\Effect\Mesh\Tan\Mig</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TanjiroMig.h">
-      <Filter>01.GameObject\Effect\TanjiroEffect</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\DashSmokeEffect.h">
       <Filter>01.GameObject\Effect\Mesh\Akaza</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TanTakEffect.h">
+      <Filter>01.GameObject\Effect\Mesh\Tan\Tak</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TanjiroMig.h">
+      <Filter>01.GameObject\Effect\TanjiroEffect\Mig</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TanjiroTak.h">
+      <Filter>01.GameObject\Effect\TanjiroEffect\Tak</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WaterParticle.h">
+      <Filter>01.GameObject\Effect\Particle\Water</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WaterWaveParticle.h">
+      <Filter>01.GameObject\Effect\Particle\Water</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FireParticle.h">
+      <Filter>01.GameObject\Effect\Particle\Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FireSpreadParticle.h">
+      <Filter>01.GameObject\Effect\Particle\Fire</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -939,11 +972,29 @@
     <ClCompile Include="..\Private\TanMigEffect.cpp">
       <Filter>01.GameObject\Effect\Mesh\Tan\Mig</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TanjiroMig.cpp">
-      <Filter>01.GameObject\Effect\TanjiroEffect</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\DashSmokeEffect.cpp">
       <Filter>01.GameObject\Effect\Mesh\Akaza</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TanTakEffect.cpp">
+      <Filter>01.GameObject\Effect\Mesh\Tan\Tak</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TanjiroMig.cpp">
+      <Filter>01.GameObject\Effect\TanjiroEffect\Mig</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TanjiroTak.cpp">
+      <Filter>01.GameObject\Effect\TanjiroEffect\Tak</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WaterParticle.cpp">
+      <Filter>01.GameObject\Effect\Particle\Water</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WaterWaveParticle.cpp">
+      <Filter>01.GameObject\Effect\Particle\Water</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FireParticle.cpp">
+      <Filter>01.GameObject\Effect\Particle\Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FireSpreadParticle.cpp">
+      <Filter>01.GameObject\Effect\Particle\Fire</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,20 @@ void CEffectManager::Update_ActivedParticle(_float fTimeDelta)
 	for (auto it = m_ActiveParticleList.begin(); it != m_ActiveParticleList.end();)
 	{
 		CParticleEffect* pParticleEffect = *it;
+		if (pParticleEffect->IsActive())
+		{
+			pParticleEffect->Update(fTimeDelta);
+			++it;;
+		}
+	}
+
+}
+
+void CEffectManager::Late_Update(_float fTimeDelta)
+{
+	for (auto it = m_ActiveParticleList.begin(); it != m_ActiveParticleList.end();)
+	{
+		CParticleEffect* pParticleEffect = *it;
 		if (pParticleEffect->IsActive() == false)
 		{
 			it = m_ActiveParticleList.erase(it);
@@ -15,7 +29,6 @@ void CEffectManager::Update_ActivedParticle(_float fTimeDelta)
 		}
 		else
 		{
-			pParticleEffect->Update(fTimeDelta);
 			pParticleEffect->Late_Update(fTimeDelta);
 			++it;
 		}
@@ -34,6 +47,7 @@ void CEffectManager::SpawnParticleEffect(const _wstring& effectName, const _floa
 			if (m_ActiveParticleList.back()->IsActive())
 			{
 				m_ActiveParticleList.back()->GetTransform()->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&position), 1.f));
+				m_ActiveParticleList.back()->GetTransform()->Scaling(scale);
 				m_ActiveParticleList.back()->SpwanParticle();
 			}
 		}

@@ -510,7 +510,7 @@ void CKyojuro::ReadyAnimEvents()
 			_vector vForward = XMVector3Normalize(
 				m_pTransformCom->Get_State(STATE::LOOK)
 			);
-			XMVECTOR enkPos = m_pTransformCom->Get_State(STATE::POSITION);
+			_vector enkPos = m_pTransformCom->Get_State(STATE::POSITION);
 			_vector offsetForward = XMVectorScale(vForward, 40.f);
 			_vector offsetUp = XMVectorSet(0.f, 17.f, 0.f, 0.f);
 			enkPos = XMVectorAdd(enkPos, offsetForward);
@@ -519,6 +519,12 @@ void CKyojuro::ReadyAnimEvents()
 			m_pEnk->RotationDirection(vForward);
 
 			m_pEnk->SetPosition(enkPos);
+			_float3 vPos{};
+			_vector vMyPos = m_pTransformCom->Get_State(STATE::POSITION);
+			vMyPos =  XMVectorAdd(vMyPos, offsetUp);
+			XMStoreFloat3(&vPos, vMyPos);
+			CEffectManager::Get_Instance()->SpawnParticleEffect(L"FireSpread", vPos);
+			CEffectManager::Get_Instance()->SpawnParticleEffect(L"Fire", vPos, _float3(1.5f, 1.5f, 1.5f));
 
 		}
 		});
@@ -538,6 +544,11 @@ void CKyojuro::ReadyAnimEvents()
 			m_pKienEffect->GetTransform()->RotateToDirection(vForward);
 
 			m_pKienEffect->GetTransform()->Set_State(STATE::POSITION, XMVectorSetW(kienPos,1.f));
+
+			_float3 vPos{};
+			XMStoreFloat3(&vPos, kienPos);
+			CEffectManager::Get_Instance()->SpawnParticleEffect(L"FireSpread", vPos, _float3(1.f, 3.f, 1.f));
+			CEffectManager::Get_Instance()->SpawnParticleEffect(L"Fire", vPos, _float3(1.f, 2.5f, 1.f));
 
 		}
 		});

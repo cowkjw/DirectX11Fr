@@ -1,6 +1,7 @@
 #include "KyojuroNobEffect.h"
 #include "GameInstance.h"
 #include <JsonLoader.h>
+#include "EffectManager.h"
 #include "ParticleSystem.h"
 #include "HitParticle.h"
 
@@ -81,6 +82,7 @@ void CKyojuroNobEffect::Late_Update(_float fTimeDelta)
 	{
 		__super::Late_Update(fTimeDelta);
 	}
+
 	for (auto& particle : m_ParticleEffects)
 	{
 		if (particle.second && particle.second->IsActive())
@@ -94,7 +96,7 @@ HRESULT CKyojuroNobEffect::Render()
 {
 	// 4번에 SmokeMask넣어둠
 	// 6번에 distortion 넣어둠
-	// 8번에 알파
+	// 8번에 알파보단 아마 이미시브같음
 	// 1번에 디퓨즈
 	m_pModelCom->Bind_Material(m_pShaderCom, "g_EmissiveTexture", 0, aiTextureType_EMISSIVE, 0);
 	if (FAILED(__super::Render()))
@@ -146,6 +148,10 @@ void CKyojuroNobEffect::OnEnable()
 	m_vUVScale = _float2(3.f, 1.f); // UV 스케일 설정
 	m_vUVOffset = _float2(0.f, 0.f); // UV 오프셋 초기화
 	m_fElapsed = 0.f; // 시간 초기화
+	_float3 vPos{};
+	XMStoreFloat3(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
+	CEffectManager::Get_Instance()->SpawnParticleEffect(L"Fire", vPos,_float3(1.f,2.f,1.f));
+	CEffectManager::Get_Instance()->SpawnParticleEffect(L"FireSpread", vPos);
 }
 
 CKyojuroNobEffect* CKyojuroNobEffect::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

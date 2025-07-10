@@ -1,11 +1,13 @@
 #include "Level_GamePlay.h"
 
 #include "HitSlashCrossParticle.h"
+#include "FireSpreadParticle.h"
 #include "ThirdPersonCamera.h"
 #include "HitShockParticle.h"
 #include "EffectManager.h"
 #include "Level_Loading.h"
 #include "BaseCharacter.h"
+#include "FireParticle.h"
 #include "UIProgressBar.h"
 #include "GameInstance.h"
 #include "HitParticle.h"
@@ -121,6 +123,24 @@ HRESULT CLevel_GamePlay::Initialize()
 	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitShockParticle"), pEffect);
 
 
+
+	pEffect = CFireParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect->Initialize(nullptr);
+	jsonLoader.Load_Particle("../Asset/Json/Particle/Fire_Particle.json", &pParticleSystem);
+	static_cast<CFireParticle*>(pEffect)->AddParticleSystem(L"Fire", pParticleSystem);
+	CEffectManager::Get_Instance()->RegisterEffect(TEXT("Fire"), pEffect);
+
+
+	pEffect = CFireSpreadParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect->Initialize(nullptr);
+	jsonLoader.Load_Particle("../Asset/Json/Particle/FireSpread_Particle.json", &pParticleSystem);
+	static_cast<CFireSpreadParticle*>(pEffect)->AddParticleSystem(L"FireSpread", pParticleSystem);
+	CEffectManager::Get_Instance()->RegisterEffect(TEXT("FireSpread"), pEffect);
+
 	// 아카자용
 	pEffect = CHitShockParticle::Create(m_pDevice, m_pContext);
 	if (pEffect == nullptr)
@@ -131,10 +151,17 @@ HRESULT CLevel_GamePlay::Initialize()
 	static_cast<CHitShockParticle*>(pEffect)->SetInitParticleUV(4, 4, 0.0001f);
 	pEffect->SetTextureIndex(1);
 	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitBodyShockParticle"), pEffect);
-	jsonLoader.Free();
+
+
+
 
 	CSoundMag::Get_Instance()->PlayBGM("event:/BGM/RengokuBGM");
 	CSoundMag::Get_Instance()->PlayEffect("event:/Map/BattlStartAkKyo");
+
+
+
+
+	jsonLoader.Free();
 	return S_OK;
 }
 

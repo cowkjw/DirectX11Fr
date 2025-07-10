@@ -1,6 +1,7 @@
 #include "Level_Editor.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "EffectManager.h"
 #include "GameObject.h"
 
 CLevel_Editor::CLevel_Editor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -64,6 +65,7 @@ void CLevel_Editor::Update(_float fTimeDelta)
 	//	return;
 	//}
 	m_pIMGUIMag->Update(fTimeDelta);
+	CEffectManager::Get_Instance()->Update_ActivedParticle(fTimeDelta);
 }
 
 HRESULT CLevel_Editor::Render()

@@ -22,7 +22,7 @@ public:
 		TEX_DISTORT,        // 화면 왜곡 전용 (Screen UV로)
 		TEX_ALPHA,          // 별도 알파 조절 텍스처
 		TEX_EMISSION,       // 발광용 텍스처 (자체 발광 영역)
-		TEX_FLOWMAP,        // 흐름 애니메이션용 플로우맵
+		TEX_DISSOLVE,        // 디졸브	효과용 텍스처
 		TEX_MAX
 	};
 protected:
@@ -50,6 +50,9 @@ public:
 		m_iTextureIndex = iTextureIndex;
 	}
 
+	void SetShaderPass(_uint iShaderPass) {
+		m_iShaderPass = iShaderPass;
+	}
 protected:
 	virtual HRESULT Bind_Shader();
 protected:

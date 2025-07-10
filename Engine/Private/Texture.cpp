@@ -91,7 +91,6 @@ CComponent* CTexture::Clone(void* pArg)
 	}
 
 	return pInstance;
-
 }
 
 void CTexture::Free()

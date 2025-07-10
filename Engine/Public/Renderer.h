@@ -37,6 +37,7 @@ private:
 	HRESULT Render_Blend();
 	HRESULT Render_Lights();
 	HRESULT Render_BackBuffer();
+	HRESULT Render_Distortion();
 	HRESULT Render_ToonBackBuffer();
 	HRESULT Render_NonLight();
 	HRESULT Render_UI();

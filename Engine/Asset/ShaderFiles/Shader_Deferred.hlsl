@@ -8,6 +8,7 @@ texture2D g_NormalTexture;
 texture2D g_DiffuseTexture;
 texture2D g_ShadeTexture;
 texture2D g_DepthTexture;
+Texture2D g_DistortionTexture;
 
 float g_fCameraFar;
 
@@ -221,29 +222,21 @@ PS_OUT PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE(PS_IN In)
 
  //   vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
  //   vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-	float4 vNormalSample = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
+    float2 uv = In.vTexcoord;
 
- //   float3 normal = normalize(vNormalSample.xyz * 2.f - 1.f);
- //   float3 lightDir = normalize(-g_vLightDir.xyz);
- //   float  NdotL = all(max(dot(normal, lightDir), 0.f));
- //   float  isLit = step(g_fShadowThreshold, NdotL);
- //   float4 baseColor = vMtrlDiffuse;
- //   float4 litColor = baseColor * g_vLightDiffuse;
- //   float4 shad = vMtrlDiffuse * g_vShadowColor;
- //   float4 toonColor = lerp(shad, litColor, isLit);
+    float2 distortion = g_DistortionTexture.Sample(DefaultSampler, uv).rg;
+    distortion = (distortion * 2.0f - 1.0f) *5.f; // Strength 조절
 
- //   float4 amb = vMtrlDiffuse * (g_fLightAmbient * g_fMtrlAmbient) * g_fAmbientStrength;
+    uv += distortion;
+	float4 vNormalSample = g_NormalTexture.Sample(DefaultSampler, uv);
 
- //   // 최종 및 채도 보정
- //   float4 finalColor = toonColor + amb;
- //   finalColor = AdjustSaturation(finalColor, g_fSaturationBoost);
 
     // 툰으로 그리기
     if (vNormalSample.w > 0.0f)
     {
-        vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
-        vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-        float4 vNormalSample = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
+        vector vShade = g_ShadeTexture.Sample(DefaultSampler, uv);
+        vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+        float4 vNormalSample = g_NormalTexture.Sample(DefaultSampler, uv);
 
         float3 normal = normalize(vNormalSample.xyz * 2.f - 1.f);
         float3 lightDir = normalize(-g_vLightDir.xyz);
@@ -269,7 +262,7 @@ PS_OUT PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE(PS_IN In)
         {
             float2 texelSize = 1.0 / float2(g_iWinSizeX, g_iWinSizeY);
 
-             float edge = DetectEdge(In.vTexcoord, texelSize);
+             float edge = DetectEdge(uv, texelSize);
              finalColor = lerp(saturate(finalColor), g_vOutlineColor, edge * g_fOutlineStrength);
              Out.vBackBuffer = finalColor;
         }
@@ -283,12 +276,12 @@ PS_OUT PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE(PS_IN In)
     else
     {
 
-        vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+        vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
         //if (all(vDiffuse.rgb == 0.f))
         if (vDiffuse.a == 0.f)
             discard;
 
-        vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
+        vector vShade = g_ShadeTexture.Sample(DefaultSampler, uv);
 
         Out.vBackBuffer = vDiffuse * vShade;
 

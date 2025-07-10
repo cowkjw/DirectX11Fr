@@ -17,6 +17,7 @@
 #include "DashSmokeEffect.h"
 #include <SlashEffect.h>
 #include "EffectManager.h"
+#include "TanTakEffect.h"
 
 using AniCon = CAnimController::Condition;
 CTanjiro::CTanjiro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -148,6 +149,10 @@ void CTanjiro::Update(_float fTimeDelta)
 	{
 		m_pMig->Update(fTimeDelta);
 	}
+	if (m_pTakEffect && m_pTakEffect->IsActive())
+	{
+		m_pTakEffect->Update(fTimeDelta);
+	}
 }
 
 void CTanjiro::Late_Update(_float fTimeDelta)
@@ -181,6 +186,11 @@ void CTanjiro::Late_Update(_float fTimeDelta)
 	if (m_pMig && m_pMig->IsActive())
 	{
 		m_pMig->Late_Update(fTimeDelta);
+	}
+
+	if (m_pTakEffect && m_pTakEffect->IsActive())
+	{
+		m_pTakEffect->Late_Update(fTimeDelta);
 	}
 }
 
@@ -314,6 +324,15 @@ HRESULT CTanjiro::Ready_Effects()
 	m_pDashSmokeEffect->Initialize(nullptr);
 	m_pDashSmokeEffect->SetActive(false);
 	m_pDashSmokeEffect->SetColor(_float4(0.247f, 0.572f, 0.88f, 1.f));
+
+
+	m_pTakEffect = CTanTakEffect::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pTakEffect)
+	{
+		return E_FAIL;
+	}
+	m_pTakEffect->Initialize(nullptr);
+	m_pTakEffect->SetActive(false);
 	return S_OK;
 }
 
@@ -1094,6 +1113,25 @@ void CTanjiro::ReadyAnimEvents()
 
 			m_pMig->SetPosition(XMVectorSetW(migPos, 1.f));
 
+		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("ActiveTakSkill", [&](const string& eventName) {
+		if (m_pTakEffect)
+		{
+			_vector vForward = XMVector3Normalize(
+				m_pTransformCom->Get_State(STATE::LOOK)
+			);
+
+			_vector takPos = m_pTransformCom->Get_State(STATE::POSITION);
+			_vector offsetForward = XMVectorScale(vForward, 20.f);
+			_vector offsetUp = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+
+			takPos = XMVectorAdd(takPos, offsetUp);
+			takPos = XMVectorAdd(takPos, offsetForward);
+			m_pTakEffect->GetTransform()->Set_State(STATE::POSITION, XMVectorSetW(takPos, 1.f));
+			m_pTakEffect->GetTransform()->RotateToDirection(vForward);
+			m_pTakEffect->SetActive(true);
 		}
 		});
 

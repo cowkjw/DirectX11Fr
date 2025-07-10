@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 #include <JsonLoader.h>
 #include "ParticleSystem.h"
+#include "EffectManager.h"
 #include "HitParticle.h"
 
 CKyojuroEnkSpiralEffect::CKyojuroEnkSpiralEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -15,6 +15,7 @@
 #include "ParticleEffect.h"
 #include "GameInstance.h"
 #include "EnmuTentacle.h"
+#include "TanTakEffect.h"
 #include "TanMigEffect.h"
 #include "HitParticle.h"
 #include "Environment.h"
@@ -562,6 +563,14 @@ HRESULT CLoader::Loading_For_Editor()
 		CTanjiroMig::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_Tak"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Tan/Tak/Tak.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_TanjiroTak"),
+		CTanTakEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Effect_Dash"),
 		CDashSmokeEffect::Create(m_pDevice, m_pContext))))
@@ -638,6 +647,11 @@ HRESULT CLoader::Loading_For_EnmuBoss()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_MigRing"),
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Tan/Mig/MigRing.bin", PreTransformMatrix))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_Tak"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Tan/Tak/Tak.bin", PreTransformMatrix))))
 		return E_FAIL;
 
 

@@ -37,7 +37,8 @@ private:
 	_float m_fRotationSpeed = 2.f;
 	_float4 m_vColor = { 1.f, 1.f, 1.f, 1.f };
 
-
+	_float m_fParticleTime = 0.07f; // 파티클 생성 시간 간격
+	_float m_fParticleElapsed = 0.f; // 경과 시간
 public:
 	static CKyojuroEnkEffect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;

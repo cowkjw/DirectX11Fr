@@ -8,14 +8,30 @@ CParticleSystem::CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 CParticleSystem::CParticleSystem(const CParticleSystem& Prototype)
 	: CVIBuffer_Instance(Prototype)
-	, m_pVertexInstances{ Prototype.m_pVertexInstances }
 	, m_vecSpeeds{ Prototype.m_vecSpeeds }
-	, m_vecVelocities{Prototype.m_vecVelocities}
+	, m_vecVelocities{ Prototype.m_vecVelocities }
 	, m_bIsLoop{ Prototype.m_bIsLoop }
 	, m_ParticleDesc{ Prototype.m_ParticleDesc }
-	,m_vecUseVelocities{Prototype.m_vecUseVelocities }
+	, m_vecUseVelocities{ Prototype.m_vecUseVelocities }
 {
+
+	if (m_ParticleDesc.eParticleType == PARTICLE_TYPE::POINT)
+	{
+		m_pVertexInstances = new VTXPOINT_PARTICLE_INSTANCE[m_ParticleDesc.iNumInstance];
+	}
+	else
+	{
+		m_pVertexInstances = new VTXRECT_PARTICLE_INSTANCE[m_ParticleDesc.iNumInstance];
+	}
+	memcpy(m_pVertexInstances,
+		Prototype.m_pVertexInstances,
+		m_iNumInstance * m_iVertexInstanceStride);
+
+	m_pVBInstance = nullptr;
+	m_VBInstanceSubresourceData.pSysMem = m_pVertexInstances;
+
 	m_vecUseVelocities.resize(Prototype.m_vecUseVelocities.size());
+	m_isCloned = true;
 }
 
 HRESULT CParticleSystem::Initialize_Prototype()
@@ -38,6 +54,9 @@ HRESULT CParticleSystem::Initialize_Prototype(const PARTICLE_DESC& desc)
 
 HRESULT CParticleSystem::Initialize(void* pArg)
 {
+
+		Safe_Release(m_pVBInstance);
+
 	if (FAILED(m_pDevice->CreateBuffer(&m_VBInstanceDesc, &m_VBInstanceSubresourceData, &m_pVBInstance)))
 		return E_FAIL;
     return S_OK;
@@ -307,6 +326,12 @@ HRESULT CParticleSystem::CreateIndexBuffer()
 		if (FAILED(m_pDevice->CreateBuffer(&IBBufferDesc, &IBInitialData, &m_pIB)))
 			return E_FAIL;
 		Safe_Delete_Array(pIndices);
+	}
+	else
+	{
+		// 포인트 파티클은 인덱스가 필요 없음
+		m_pIB = nullptr;
+		m_iNumIndices = 0;
 	}
 	return S_OK;
 }

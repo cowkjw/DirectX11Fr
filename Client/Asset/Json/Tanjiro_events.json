@@ -363,6 +363,10 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 36.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
                 }
             ]
         },
@@ -551,6 +555,10 @@
                 {
                     "name": "TakSkillSound",
                     "time": 10.000916481018066
+                },
+                {
+                    "name": "ActiveTakSkill",
+                    "time": 8.501160621643066
                 }
             ]
         },
@@ -738,6 +746,10 @@
             "clipName": "A_P0001_V00_C00_BaseNut01_1",
             "duration": 69.0,
             "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
                 {
                     "name": "DeactiveHitbox",
                     "time": 0.0
