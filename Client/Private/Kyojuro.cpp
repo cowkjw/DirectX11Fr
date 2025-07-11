@@ -55,7 +55,12 @@ HRESULT CKyojuro::Initialize(void* pArg)
 	CGameObject* pWeapon = m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("Weapon"));
 
 	if (pWeapon == nullptr)
-		pWeapon = m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("Weapon"));
+	{
+		pWeapon = CWeapon::Create(m_pDevice, m_pContext);
+
+		pWeapon->Initialize(nullptr);
+
+	}
 
 	//	Set_Weapon("R_Hand_1", dynamic_cast<CWeapon*>(pWeapon));
 	Set_Weapon("R_Hand_1_Lct", dynamic_cast<CWeapon*>(pWeapon));
@@ -177,6 +182,10 @@ void CKyojuro::Update(_float fTimeDelta)
 void CKyojuro::Late_Update(_float fTimeDelta)
 {
 
+	//if (m_pWeapon && m_pWeapon->IsActive())
+	//{
+	//	m_pWeapon->Late_Update(fTimeDelta);
+	//}
 
 	if (m_pEnk && m_pEnk->IsActive())
 	{
@@ -200,24 +209,14 @@ void CKyojuro::Late_Update(_float fTimeDelta)
 	{
 		child->Late_Update(fTimeDelta);
 	}
-//
-//	if (m_pState)
-//	{
-//		auto currentState = m_pState->GetStateName();
-//
-//		// 현재 애니메이션 상태를 윈도우 타이틀에 표시
-//		SetWindowTextA(g_hWnd, WStringToString(currentState).c_str());
-//
-////		char buf[MAX_PATH];
-////		sprintf_s(buf, "현재 애니메이션: %s", currentState);
-////		SetWindowTextA(g_hWnd, buf);
-//	}
+
+//	m_pGameInstance->Add_
 }
 
 HRESULT CKyojuro::Render()
 {
-	if (m_pNavigationCom)
-		m_pNavigationCom->Render();
+	//if (m_pNavigationCom)
+	//	m_pNavigationCom->Render();
 	__super::Render();
 	return S_OK;
 }
@@ -258,7 +257,7 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 				auto pState = pCharacter->GetState();
 				if (pCharacter->IsAirborne())
 				{
-					StartHitStop(0.2f);
+				//	StartHitStop(0.2f);
 					pCharacter->LaunchAirborne(40.f);
 					pCharacter->PushBack(this);
 				}
@@ -270,7 +269,7 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 				pCharacter->TakeDamage(3.5f);
 				if (pCharacter->IsAirborne())
 				{
-					StartHitStop(0.2f);
+					//StartHitStop(0.2f);
 					pCharacter->LaunchAirborne(40.f);
 					pCharacter->PushBack(this);
 				}
@@ -282,7 +281,7 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 				pCharacter->TakeDamage(3.f);
 				if (pCharacter->IsAirborne())
 				{
-					StartHitStop(0.2f);
+					//StartHitStop(0.2f);
 					pCharacter->LaunchAirborne(40.f);
 					pCharacter->PushBack(this);
 				}
@@ -352,7 +351,7 @@ void CKyojuro::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
 	if (other->GetType() == ColliderType::HITBOX)
 	{
 		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("AkazaHitParticle"), hitPos);
-		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitBodyShockParticle"), hitPos);
+	//	CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitBodyShockParticle"), hitPos);
 	}
 }
 
@@ -489,6 +488,7 @@ void CKyojuro::ReadyAnimEvents()
 		if (pFireSlashEffect)
 		{
 			static_cast<CMeshEffect*>(pFireSlashEffect)->SetRenderMesh(true);
+			static_cast<CSlashEffect*>(pFireSlashEffect)->UpdateTransform();
 			pFireSlashEffect->SetActive(true);
 		}
 		});
@@ -521,11 +521,23 @@ void CKyojuro::ReadyAnimEvents()
 			m_pEnk->SetPosition(enkPos);
 			_float3 vPos{};
 			_vector vMyPos = m_pTransformCom->Get_State(STATE::POSITION);
+		
 			vMyPos =  XMVectorAdd(vMyPos, offsetUp);
 			XMStoreFloat3(&vPos, vMyPos);
 			CEffectManager::Get_Instance()->SpawnParticleEffect(L"FireSpread", vPos);
 			CEffectManager::Get_Instance()->SpawnParticleEffect(L"Fire", vPos, _float3(1.5f, 1.5f, 1.5f));
 
+		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("ActiveEnkParticle", [&](const string& eventName) {
+		if (m_pEnk)
+		{
+			_float3 vPos{};
+			_vector vMyPos = m_pTransformCom->Get_State(STATE::POSITION);
+			XMStoreFloat3(&vPos, vMyPos);
+			CEffectManager::Get_Instance()->SpawnParticleEffect(L"EnkFireSpread", vPos, _float3(1.f, 1.5f, 1.f));
+			CEffectManager::Get_Instance()->SpawnParticleEffect(L"FireSpread", vPos);
 		}
 		});
 	m_pAnimatorCom->RegisterEventListener("ActiveKienSkill", [&](const string& eventName) {

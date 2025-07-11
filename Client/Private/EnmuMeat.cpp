@@ -112,11 +112,7 @@ void CEnmuMeat::Priority_Update(_float fTimeDelta)
 
 void CEnmuMeat::Update(_float fTimeDelta)
 {
-	if (m_fHitStopTime > 0.f)
-	{
-		m_fHitStopTime -= fTimeDelta;
-		fTimeDelta *= 0.1f; // HitStop 동안 시간 느리게 흐름
-	}
+	
 	if (m_pBossState)
 	{
 		m_pBossState->Update(this, fTimeDelta);
@@ -319,7 +315,8 @@ void CEnmuMeat::OnAttackHit(CGameObject* pTarget)
 
 void CEnmuMeat::StartHitStop(_float duration)
 {
-	m_fHitStopTime = duration;
+	m_pGameInstance->SetHitStop(true, duration);
+	//m_fHitStopTime = duration;
 }
 
 HRESULT CEnmuMeat::Ready_Parts()

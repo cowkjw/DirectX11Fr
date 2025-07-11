@@ -401,8 +401,8 @@ PS_OUT_PRE PS_MAIN_Effect_MigCross(PS_IN In)
         discard;
     float3 baseCol = g_vColor.rgb;
     Out.vColor = float4(baseCol, mask);
-    float fade = saturate(1.0 - g_fTime / g_fDuration);
-    Out.vColor.a *= fade;
+    //float fade = saturate(1.0 - g_fTime / g_fDuration);
+  //  Out.vColor.a *= fade;
     return Out;
 }
 
@@ -421,13 +421,9 @@ PS_OUT PS_MAIN_Effect_Mig(PS_IN In)
     /* -1.f -> 0.f, 1.f -> 1.f */
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCameraFar, 0.f, 0.f);
-    float fade = saturate(1.0 - g_fTime / g_fDuration);
-    Out.vDiffuse.a *= fade;
-    if (Out.vDiffuse.b < 0.5f)
-    {
-        Out.vDiffuse.a *= 0.5f; // 파란색이 낮으면 알파도 낮추기
-        Out.vDiffuse.rgb = saturate(Out.vDiffuse.rgb * 1.5f); // 알파 낮췄으니까 좀 더 밝게 보이게 하기
-    }
+    //float fade = saturate(1.0 - g_fTime / g_fDuration);
+    //Out.vDiffuse.a *= fade;
+
     return Out;
 
 }
@@ -561,11 +557,7 @@ PS_OUT_PRE PS_MAIN_Effect_Noise(PS_IN In)
         Out.vColor.rgb = lerp(vMtrlDiffuse.rgb, float3(1.0f, 1.0f, 1.0f), vDissolveEdge.r);
         Out.vColor.a = vMtrlDiffuse.a;
     }
-    if (Out.vColor.b > 0.5f)
-    {
-        Out.vColor.a *= 0.8f;
-        Out.vColor.rgb = saturate(Out.vColor.rgb * 1.5f); // 알파 낮췄으니까 좀 더 밝게 보이게 하기
-    }
+
     return Out;
 }
 

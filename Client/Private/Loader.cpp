@@ -409,9 +409,7 @@ HRESULT CLoader::Loading_For_Editor()
 
 
 	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
-	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_TanjiroWeapon"),
-		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Weapon/TanjiroWeapon.bin", PreTransformMatrix))))
-		return E_FAIL;
+
 	/* For.Prototype_GameObject_Snow */
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Particle_HitPoint"),
 		CHitParticle::Create(m_pDevice, m_pContext))))
@@ -574,6 +572,15 @@ HRESULT CLoader::Loading_For_Editor()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Effect_Dash"),
 		CDashSmokeEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	PreTransformMatrix = XMMatrixRotationX(XMConvertToRadians(70.f)) * XMMatrixRotationZ(XMConvertToRadians(30.f)) * XMMatrixTranslation(0.5f, 2.7f, 0.f);
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_KoujuroWeapon"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Weapon/KoujuroWeapon.bin", PreTransformMatrix))))
+		return E_FAIL;
+	PreTransformMatrix = XMMatrixRotationX(XMConvertToRadians(90.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Model_TanjiroWeapon"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Weapon/TanjiroWeapon.bin", PreTransformMatrix))))
 		return E_FAIL;
 	m_isFinished = true;
 

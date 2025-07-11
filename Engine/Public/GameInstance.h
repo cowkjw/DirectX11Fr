@@ -37,6 +37,11 @@ public:
 
 	ID3D11ShaderResourceView* GetSceneViewSRV() const;
 
+	void SetHitStop(_bool bHitStop,_float fHitStopTime) { 
+		m_bHitStop = bHitStop;
+		m_fHitStopTime = fHitStopTime;
+	}
+
 #pragma region LEVEL_MANAGER
 public:
 	HRESULT Change_Level(_uint iLevelIndex, class CLevel* pNewLevel);
@@ -152,7 +157,7 @@ public:
 	HRESULT Add_RenderTarget(const _wstring& strTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 	HRESULT Add_MRT(const _wstring& strMRTTag, const _wstring& strTargetTag);
 	ID3D11ShaderResourceView* Get_RenderTargetSRV(const _wstring& strTargetTag);
-	HRESULT Begin_MRT(const _wstring& strMRTTag);
+	HRESULT Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr, _bool isTargetClear = true, _bool isDepthClear = false);
 	HRESULT End_MRT();
 	HRESULT Bind_RT_ShaderResource(const _wstring& strTargetTag, class CShader* pShader, const _char* pContantName);
 
@@ -188,6 +193,10 @@ private:
 
 	_bool m_bActivePicking = { false }; // 피킹 활성화 여부
 	_bool m_bChangedLevel = { false }; // 레벨 변경 여부
+	_bool m_bHitStop = { false };
+
+	_float m_fHitStopTime = { 0.f }; // 히트스탑 시간
+	_float m_fHitStopElapsed = { 0.f }; // 히트스탑 경과 시간
 
 public:
 	void Release_Engine();

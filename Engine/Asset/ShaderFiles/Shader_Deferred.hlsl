@@ -9,6 +9,19 @@ texture2D g_DiffuseTexture;
 texture2D g_ShadeTexture;
 texture2D g_DepthTexture;
 Texture2D g_DistortionTexture;
+Texture2D g_BlurEffectTexture;
+texture2D g_BloomBlurXTexture;
+texture2D g_BloomBlurYTexture;
+Texture2D g_BloomEffectTexture;
+Texture2D g_EffectTexture;
+Texture2D g_BrightTexture;
+Texture2D g_BloomTexture;
+texture2D g_FinalTexture;
+texture2D g_BlurXTexture;
+texture2D g_BlurYTexture;
+texture2D g_RimLightTexture;
+
+
 
 float g_fCameraFar;
 
@@ -239,7 +252,7 @@ PS_OUT PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE(PS_IN In)
         float4 vNormalSample = g_NormalTexture.Sample(DefaultSampler, uv);
 
         float3 normal = normalize(vNormalSample.xyz * 2.f - 1.f);
-        float3 lightDir = normalize(-g_vLightDir.xyz);
+        float3 lightDir = normalize(g_vLightDir.xyz);
         float  NdotL = all(max(dot(normal, lightDir), 0.f));
         float  isLit = step(g_fShadowThreshold, NdotL);
         float4 baseColor = vMtrlDiffuse;
@@ -247,7 +260,7 @@ PS_OUT PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE(PS_IN In)
         float4 shad = vMtrlDiffuse * g_vShadowColor;
         //float4 toonColor = lerp(shad, litColor, isLit);
 
-        float levels = 3;                                 // 단계 수
+        float levels = 5;                                 // 단계 수
         float d = floor(NdotL * levels) / (levels - 1);   // 0.0, 0.33, 0.66, 1.0 등
         float4 toonColor = lerp(shad, litColor, d);
 
@@ -288,6 +301,201 @@ PS_OUT PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE(PS_IN In)
     }
 
   //  Out.vBackBuffer = finalColor;
+    return Out;
+}
+
+
+
+float g_fWeights[13] =
+{
+    0.0561, 0.1353, 0.278, 0.4868, 0.7261, 0.9231, 1.f, 0.9231, 0.7261, 0.4868, 0.278, 0.1353, 0.0561
+};
+
+
+
+struct PS_OUT_BLUR
+{
+    vector vColor : SV_TARGET0;
+};
+
+PS_OUT_BLUR PS_MAIN_BLURX(PS_IN In)
+{
+    PS_OUT_BLUR Out;
+
+    float2 vTexcoord;
+
+    vector vColor;
+    float sum = 0;
+    for (int i = -6; i < 7; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x + i / 1280.f;
+        vTexcoord.y = In.vTexcoord.y;
+		sum += g_fWeights[i + 6];
+        Out.vColor += g_fWeights[i + 6] * g_BlurEffectTexture.Sample(LinearClampSampler, vTexcoord);
+    }
+
+    Out.vColor /= sum;
+
+    return Out;
+}
+
+PS_OUT PS_MAIN_BLURY(PS_IN In)
+{
+    PS_OUT Out;
+
+    float2 vTexcoord;
+
+    vector vColor;
+    float sum = 0;
+    for (int i = -6; i < 7; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x;
+        vTexcoord.y = In.vTexcoord.y + i / 720.f;
+        sum += g_fWeights[i + 6];
+        Out.vBackBuffer += g_fWeights[i + 6] * g_BlurXTexture.Sample(LinearClampSampler, vTexcoord);
+    }
+
+    Out.vBackBuffer /= sum;
+
+    return Out;
+}
+
+
+PS_OUT PS_MAIN_BRIGHT_EFFECT(PS_IN In)
+{
+    PS_OUT Out;
+    float4 c = g_BloomEffectTexture.Sample(LinearClampSampler, In.vTexcoord);
+    // Luminance 계산
+    float lum = dot(c.rgb, float3(0.299, 0.587, 0.114));
+
+    // 1) Threshold(임계치)와 Knee(부드럼 영역 폭) 정의
+    float threshold = 0.8f;
+    float knee = 0.2f;   // 0.0 ~ 1.0  작을 수록 값자기 클수록 좀 부드럽게
+
+   //Soft threshold: knee 구간 안에서는 0 → 1로 선형 보간
+    float soft = saturate((lum - threshold + knee) / knee);
+    // 추출 계수: 임계치 아래에서는 0, knee 구간 안에서는 soft, 그 이상은 1
+    float extract = saturate((lum - threshold) / knee + 0.5f) * soft;
+
+    // 4) 추출 값으로 원본 컬러 스케일
+    Out.vBackBuffer = c * extract;
+
+    return Out;
+}
+
+PS_OUT PS_MAIN_BLOOM(PS_IN In)
+{
+    PS_OUT Out;
+
+	vector vBlur = g_BloomBlurYTexture.Sample(DefaultSampler, In.vTexcoord);
+	vector vBright = g_BrightTexture.Sample(DefaultSampler, In.vTexcoord);
+
+
+	Out.vBackBuffer = vBlur*3.f  + vBright*0.5f;
+    return Out;
+}
+
+PS_OUT_BLUR PS_MAIN_BLOOM_BLURX(PS_IN In)
+{
+    PS_OUT_BLUR Out;
+
+    float2 vTexcoord;
+
+    vector vColor;
+    float sum = 0;
+    for (int i = -6; i < 7; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x + i / 1280.f;
+        vTexcoord.y = In.vTexcoord.y;
+        sum += g_fWeights[i + 6];
+        Out.vColor += g_fWeights[i + 6] * g_BrightTexture.Sample(LinearClampSampler, vTexcoord);
+    }
+
+    Out.vColor /= sum;
+
+    return Out;
+}
+
+PS_OUT PS_MAIN_BLOOM_BLURY(PS_IN In)
+{
+    PS_OUT Out;
+
+    float2 vTexcoord;
+
+    vector vColor;
+    float sum = 0;
+    for (int i = -6; i < 7; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x;
+        vTexcoord.y = In.vTexcoord.y + i / 720.f;
+        sum += g_fWeights[i + 6];
+        Out.vBackBuffer += g_fWeights[i + 6] * g_BloomBlurXTexture.Sample(LinearClampSampler, vTexcoord);
+    }
+
+    Out.vBackBuffer /= sum;
+
+    return Out;
+}
+
+float g_fRimPower = 2.0f;              // 림라이트 강도 (높을수록 가장자리만)
+float g_fRimIntensity = 0.8f;          // 림라이트 밝기
+float4 g_vRimColor = float4(0.5f, 0.8f, 1.0f, 1.0f);  // 림라이트 색상 (연한 파란색)
+float g_fRimThreshold = 0.1f;          // 림라이트 임계값
+PS_OUT PS_MAIN_RIMLIGHT(PS_IN In)
+{
+	PS_OUT Out;
+    float2 uv = In.vTexcoord;
+
+    // 0) 알베도 알파가 0인 배경은 건너뛰기
+    float4 albedo = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (albedo.a == 0) discard;
+
+    // 1) 화면 → 월드 좌표 역변환
+    vector vDepth = g_DepthTexture.Sample(DefaultSampler, uv);
+    float fViewZ = vDepth.y * g_fCameraFar;
+    vector vWorldPos;
+    vWorldPos.x = uv.x * 2 - 1;
+    vWorldPos.y = uv.y * -2 + 1;
+    vWorldPos.z = vDepth.x;
+    vWorldPos.w = 1;
+    vWorldPos = vWorldPos * fViewZ;
+    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+
+    // 2) 노말 & 시선 벡터
+    float3 normal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2 - 1);
+    float3 viewDir = normalize(g_vCamPosition.xyz - vWorldPos.xyz);
+
+    float NdotV = dot(normal, viewDir);
+    float rimFactor = 1.0 - saturate(NdotV);
+
+    // 파워 적용으로 가장자리만 강조
+    float rim = pow(rimFactor, g_fRimPower);
+
+    // 임계값 적용 (너무 약한 림라이트는 제거)
+    rim = rim * step(g_fRimThreshold, rim);
+
+    // 강도 조절
+    rim *= g_fRimIntensity;
+
+    // 4) 최종 색상 출력 (설정한 림라이트 색상 사용)
+    Out.vBackBuffer = g_vRimColor * rim;
+    return Out;
+}
+
+
+PS_OUT PS_MAIN_FinalRender(PS_IN In)
+{
+    PS_OUT Out;
+
+
+    vector vFinal = g_FinalTexture.Sample(DefaultSampler, In.vTexcoord);
+	vector vBloom = g_BloomTexture.Sample(DefaultSampler, In.vTexcoord);
+	vector vBlurY = g_BlurYTexture.Sample(DefaultSampler, In.vTexcoord);
+	vector vRawEffect = g_EffectTexture.Sample(DefaultSampler, In.vTexcoord);
+	vector vRimLight = g_RimLightTexture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vBackBuffer = vFinal + vRawEffect + vBloom + vBlurY + vRimLight;
+
     return Out;
 }
 
@@ -352,15 +560,90 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE();
     }
 
-    //pass Deferred_ToonClamp
-    //{
-    //    SetRasterizerState(RS_Default);
-    //    SetDepthStencilState(DSS_None, 0);
-    //    SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+    pass BlurX
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLURX();
+    }
+
+    pass BlurY
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLURY();
+    }
+
+    pass FinalRender
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_FinalRender();
+    }
+
+    pass BrightPass
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0,0,0,0), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_BRIGHT_EFFECT();
+    }
 
 
-    //    VertexShader = compile vs_5_0 VS_MAIN();
-    //    PixelShader = compile ps_5_0 PS_MAIN_DEFERRED_TOON_WRAP();
-    //}
-  
+    pass Bloom
+    {   SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLOOM();
+    }
+
+
+    pass BloomBlurX
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLOOM_BLURX();
+    }
+
+        pass BloomBlurY
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLOOM_BLURY();
+    }
+
+	pass RimLight
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_None, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_RIMLIGHT();
+	}
 }

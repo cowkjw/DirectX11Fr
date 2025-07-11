@@ -97,11 +97,16 @@ ID3D11ShaderResourceView* CTarget_Manager::Get_RenderTargetSRV(const _wstring& s
 	return pRenderTarget->Get_SRV();
 }
 
-HRESULT CTarget_Manager::Begin_MRT(const _wstring& strMRTTag)  
+HRESULT CTarget_Manager::Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV, _bool isTargetClear, _bool isDepthClear)
 {  
 	vector<CRenderTarget*>* pMRTList = Find_MRT(strMRTTag);
    if (nullptr == pMRTList)  
        return E_FAIL;  
+
+   ID3D11DepthStencilView* pDepthStencilView = nullptr == pDSV ? m_pOriginalDSV : pDSV;
+
+   if (true == isDepthClear)
+	   m_pContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
    _uint iNumTargets = { 0 };  
    ID3D11RenderTargetView* pRenderTargets[8] = { };  
@@ -110,7 +115,8 @@ HRESULT CTarget_Manager::Begin_MRT(const _wstring& strMRTTag)
    {
 	   if (pRenderTarget)
 	   {
-		   pRenderTarget->Clear();
+		   if(isTargetClear)
+			pRenderTarget->Clear();
 		   pRenderTargets[iNumTargets++] = pRenderTarget->Get_RTV();
 	   }
    }

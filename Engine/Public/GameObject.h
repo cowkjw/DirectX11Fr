@@ -25,6 +25,7 @@ public:
 	virtual void Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual HRESULT Render_Shadow() { return S_OK; };
 
 	virtual void RenderInspector() {};
 

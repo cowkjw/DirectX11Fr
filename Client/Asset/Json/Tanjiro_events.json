@@ -222,7 +222,7 @@
                 },
                 {
                     "name": "SlashEffectOn",
-                    "time": 3.0002129077911377
+                    "time": 8.0002129077911377
                 },
                 {
                     "name": "SlashEffectOff",
@@ -254,22 +254,15 @@
                     "name": "ActiveHitbox",
                     "time": 4.0
                 },
-                {
-                    "name": "SlashEffectOn",
-                    "time": 1.0
-                },
-                {
-                    "name": "SlashEffectOn",
-                    "time": 4.0
-                },
-                {
-                    "name": "SlashEffectOff",
-                    "time": 3.0
-                },
-                {
-                    "name": "SlashEffectOff",
-                    "time": 9.0
-                },
+              {
+                "name": "SlashEffectOn",
+                "time": 5.39999847412109
+              },
+              {
+                "name": "SlashEffectOn",
+                "time": 15.050000190734863
+              },
+
                 {
                     "name": "AttackSound",
                     "time": 4.570000171661377
@@ -288,14 +281,11 @@
                     "name": "DeactiveHitbox",
                     "time": 27.086610794067383
                 },
-                {
-                    "name": "SlashEffectOn",
-                    "time": 13.334508895874023
-                },
-                {
-                    "name": "SlashEffectOff",
-                    "time": 25.836139678955078
-                },
+              {
+                "name": "SlashEffectOn",
+                "time": 19.350000381469727
+              },
+  
                 {
                     "name": "AttackSound",
                     "time": 10.899999618530273
@@ -330,44 +320,14 @@
                 },
                 {
                     "name": "SlashEffectOn",
-                    "time": 6.0
+                    "time":13.5
                 },
-                {
-                    "name": "SlashEffectOff",
-                    "time": 20.668636322021484
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
+         
                 {
                     "name": "FinalAttackSound",
                     "time": 10.00114631652832
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
                 }
+       
             ]
         },
         {
@@ -382,10 +342,10 @@
                     "name": "DeactiveHitbox",
                     "time": 18.50190544128418
                 },
-                {
-                    "name": "SlashEffectOn",
-                    "time": 8.59000015258789
-                },
+              {
+                "name": "SlashEffectOn",
+                "time":9
+              },
                 {
                     "name": "SlashEffectOff",
                     "time": 16.501731872558594

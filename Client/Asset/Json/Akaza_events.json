@@ -339,7 +339,7 @@
                 },
                 {
                     "name": "DeactiveFootHitbox",
-                    "time": 1.0
+                    "time": 2.0
                 },
                 {
                     "name": "AttackSound1",
@@ -362,6 +362,10 @@
                 {
                     "name": "AttackSound2",
                     "time": 5.00061559677124
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 2.0
                 }
             ]
         },
@@ -371,7 +375,7 @@
             "events": [
                 {
                     "name": "DeactiveHitbox",
-                    "time": 1.0
+                    "time": 1.2400000095367432
                 },
                 {
                     "name": "ActiveHitbox",

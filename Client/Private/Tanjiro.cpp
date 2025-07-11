@@ -64,7 +64,13 @@ HRESULT CTanjiro::Initialize(void* pArg)
 
 
 	CGameObject* pWeapon = m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("Weapon"));
+	if (pWeapon == nullptr)
+	{
+		pWeapon = CWeapon::Create(m_pDevice, m_pContext);
 
+		pWeapon->Initialize(nullptr);
+
+	}
 	Set_Weapon("R_Hand_1_Lct", dynamic_cast<CWeapon*>(pWeapon));
 
 
@@ -157,6 +163,10 @@ void CTanjiro::Update(_float fTimeDelta)
 
 void CTanjiro::Late_Update(_float fTimeDelta)
 {
+	if (m_pWeapon)
+	{
+		m_pWeapon->Late_Update(fTimeDelta);
+	}
 	__super::Late_Update(fTimeDelta);
 	for (auto& child : m_vecChildren)
 	{
@@ -196,8 +206,8 @@ void CTanjiro::Late_Update(_float fTimeDelta)
 
 HRESULT CTanjiro::Render()
 {
-	if (m_pNavigationCom)
-		m_pNavigationCom->Render();
+	//if (m_pNavigationCom)
+	//	m_pNavigationCom->Render();
 
 	
 	return __super::Render();
@@ -1081,7 +1091,8 @@ void CTanjiro::ReadyAnimEvents()
 		auto pFireSlashEffect = CEffectManager::Get_Instance()->GetEffect(TEXT("Slash"));
 		if (pFireSlashEffect)
 		{
-			static_cast<CMeshEffect*>(pFireSlashEffect)->SetRenderMesh(true);
+			static_cast<CSlashEffect*>(pFireSlashEffect)->SetRenderMesh(true);
+			static_cast<CSlashEffect*>(pFireSlashEffect)->UpdateTransform();
 			pFireSlashEffect->SetActive(true);
 		}
 		});

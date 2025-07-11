@@ -1,26 +1,25 @@
-#include "HitShockParticle.h"
+#include "HitBodyShockParticle.h"
 #include "GameInstance.h"
 #include "JsonLoader.h"
 
-CHitShockParticle::CHitShockParticle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CHitBodyShockParticle::CHitBodyShockParticle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CParticleEffect(pDevice, pContext)
 {
 	m_iShaderPass = 3; // 쉐이더 패스 
 }
 
-CHitShockParticle::CHitShockParticle(const CHitShockParticle& Prototype)
+CHitBodyShockParticle::CHitBodyShockParticle(const CHitBodyShockParticle& Prototype)
 	: CParticleEffect(Prototype)
 	, m_InitParticleUV(Prototype.m_InitParticleUV)
-	, m_UseParticleUV(Prototype.m_UseParticleUV)
 {
 }
 
-HRESULT CHitShockParticle::Initialize_Prototype()
+HRESULT CHitBodyShockParticle::Initialize_Prototype()
 {
     return S_OK;
 }
 
-HRESULT CHitShockParticle::Initialize(void* pArg)
+HRESULT CHitBodyShockParticle::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -41,14 +40,15 @@ HRESULT CHitShockParticle::Initialize(void* pArg)
 	//m_InitParticleUV.vUVOffset.y = 0.f;
 
 	//m_UseParticleUV = m_InitParticleUV;
+
     return S_OK;
 }
 
-void CHitShockParticle::Priority_Update(_float fTimeDelta)
+void CHitBodyShockParticle::Priority_Update(_float fTimeDelta)
 {
 }
 
-void CHitShockParticle::Update(_float fTimeDelta)
+void CHitBodyShockParticle::Update(_float fTimeDelta)
 {
 	__super::Update(fTimeDelta);
 	m_pTransformCom->Turn(XMVectorSet(0.f, 0.f, 1.f, 0.f), fTimeDelta); // Y축으로 90도 회전
@@ -70,19 +70,18 @@ void CHitShockParticle::Update(_float fTimeDelta)
 
 	if (m_UseParticleUV.iTotalFrames <= m_UseParticleUV.iCurrentFrame)
 	{
-
 			SetActive(false); // 비활성화
 	}
 }
 
-void CHitShockParticle::Late_Update(_float fTimeDelta)
+void CHitBodyShockParticle::Late_Update(_float fTimeDelta)
 {
-	//__super::Late_Update(fTimeDelta);
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::EFFECT, this);
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::BLOOM_EFFECT, this);
+//	__super::Late_Update(fTimeDelta);
+	//m_pGameInstance->Add_RenderGroup(RENDERGROUP::EFFECT, this);
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::BLUR_EFFECT, this);
 }
 
-HRESULT CHitShockParticle::Render()
+HRESULT CHitBodyShockParticle::Render()
 {
 	m_pShaderCom->Bind_RawValue("g_uvOffset", &m_UseParticleUV.vUVOffset, sizeof(_float2));
 	m_pShaderCom->Bind_RawValue("g_uvScale", &m_UseParticleUV.vUVScale, sizeof(_float2));
@@ -92,18 +91,18 @@ HRESULT CHitShockParticle::Render()
     return S_OK;
 }
 
-void CHitShockParticle::SpwanParticle()
+void CHitBodyShockParticle::SpwanParticle()
 {
 	m_UseParticleUV = m_InitParticleUV; // 파티클 초기화
 	__super::SpwanParticle();
 }
 
-void CHitShockParticle::DespwanParticle()
+void CHitBodyShockParticle::DespwanParticle()
 {
 	__super::DespwanParticle();
 }
 
-void CHitShockParticle::SetInitParticleUV(_int col,_int row,_float fFramTime)
+void CHitBodyShockParticle::SetInitParticleUV(_int col,_int row,_float fFramTime)
 {
 	m_InitParticleUV.fCols = static_cast<_float>(col);
 	m_InitParticleUV.fRows = static_cast<_float>(row);
@@ -123,7 +122,7 @@ void CHitShockParticle::SetInitParticleUV(_int col,_int row,_float fFramTime)
 
 }
 
-HRESULT CHitShockParticle::Ready_Components()
+HRESULT CHitBodyShockParticle::Ready_Components()
 {	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxPointInstance"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
@@ -148,29 +147,29 @@ HRESULT CHitShockParticle::Ready_Components()
 	return S_OK;
 }
 
-CHitShockParticle* CHitShockParticle::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CHitBodyShockParticle* CHitBodyShockParticle::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CHitShockParticle* pInstance = new CHitShockParticle(pDevice, pContext);
+	CHitBodyShockParticle* pInstance = new CHitBodyShockParticle(pDevice, pContext);
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CHitShockParticle");
+		MSG_BOX("Failed to Created : CHitBodyShockParticle");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CHitShockParticle::Clone(void* pArg)
+CGameObject* CHitBodyShockParticle::Clone(void* pArg)
 {
-	CHitShockParticle* pInstance = new CHitShockParticle(*this);
+	CHitBodyShockParticle* pInstance = new CHitBodyShockParticle(*this);
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Created : CHitShockParticle");
+		MSG_BOX("Failed to Created : CHitBodyShockParticle");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CHitShockParticle::Free()
+void CHitBodyShockParticle::Free()
 {
 	__super::Free();
 }

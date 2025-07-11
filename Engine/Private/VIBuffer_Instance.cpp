@@ -12,8 +12,8 @@ CVIBuffer_Instance::CVIBuffer_Instance(const CVIBuffer_Instance& Prototype)
 	, m_iNumInstance { Prototype.m_iNumInstance }
 	, m_iVertexInstanceStride { Prototype.m_iVertexInstanceStride }
 	, m_iNumIndexPerInstance { Prototype.m_iNumIndexPerInstance }
+	, m_pVBInstance{nullptr}
 {
-	m_pVBInstance = nullptr;
 }
 
 HRESULT CVIBuffer_Instance::Initialize_Prototype()

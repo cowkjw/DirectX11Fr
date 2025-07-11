@@ -106,6 +106,10 @@ void CParticleEffect::Update(_float fTimeDelta)
 			iActiveParticleCount++;
 			Pair.second->UpdateVertexInstances(fTimeDelta);
 		}
+		else
+		{
+			Pair.second->SetActive(false);
+		}
 	}
 	if (iActiveParticleCount == 0)
 	{
@@ -115,6 +119,7 @@ void CParticleEffect::Update(_float fTimeDelta)
 
 void CParticleEffect::Late_Update(_float fTimeDelta)
 {
+	//m_pGameInstance->Add_RenderGroup(RENDERGROUP::BLUR_EFFECT, this);
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONLIGHT, this);
 }
 
@@ -353,6 +358,7 @@ void CParticleEffect::DespwanParticle()
 	{
 		if (Pair.second)
 		{
+			//Pair.second->StopParticle();
 			Pair.second->SetActive(false);
 		}
 	}

@@ -630,6 +630,12 @@
     <ClInclude Include="..\Public\FireSpreadParticle.h">
       <Filter>01.GameObject\Effect\Particle\Fire</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\HitBodyShockParticle.h">
+      <Filter>01.GameObject\Effect\Particle\SlashHit\Shock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EnkFireSpreadParticle.h">
+      <Filter>01.GameObject\Effect\Particle\Fire</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -994,6 +1000,12 @@
       <Filter>01.GameObject\Effect\Particle\Fire</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\FireSpreadParticle.cpp">
+      <Filter>01.GameObject\Effect\Particle\Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HitBodyShockParticle.cpp">
+      <Filter>01.GameObject\Effect\Particle\SlashHit\Shock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EnkFireSpreadParticle.cpp">
       <Filter>01.GameObject\Effect\Particle\Fire</Filter>
     </ClCompile>
   </ItemGroup>

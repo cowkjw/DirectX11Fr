@@ -1,6 +1,8 @@
 #include "Level_GamePlay.h"
 
 #include "HitSlashCrossParticle.h"
+#include "EnkFireSpreadParticle.h"
+#include "HitBodyShockParticle.h"
 #include "FireSpreadParticle.h"
 #include "ThirdPersonCamera.h"
 #include "HitShockParticle.h"
@@ -117,7 +119,7 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 	pEffect->Initialize(nullptr);
 	jsonLoader.Load_Particle("../Asset/Json/Particle/HitShock_Particle.json", &pParticleSystem);
-	static_cast<CHitShockParticle*>(pEffect)->SetInitParticleUV(3, 3, 0.005f);
+	static_cast<CHitShockParticle*>(pEffect)->SetInitParticleUV(3, 3, 0.0085f);
 	pEffect->SetTextureIndex(8);
 	static_cast<CHitShockParticle*>(pEffect)->AddParticleSystem(L"HitShock", pParticleSystem);
 	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitShockParticle"), pEffect);
@@ -141,16 +143,27 @@ HRESULT CLevel_GamePlay::Initialize()
 	static_cast<CFireSpreadParticle*>(pEffect)->AddParticleSystem(L"FireSpread", pParticleSystem);
 	CEffectManager::Get_Instance()->RegisterEffect(TEXT("FireSpread"), pEffect);
 
+
+	pEffect = CEnkFireSpreadParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect->Initialize(nullptr);
+	jsonLoader.Load_Particle("../Asset/Json/Particle/KyojuroEnk_Particle.json", &pParticleSystem);
+	static_cast<CEnkFireSpreadParticle*>(pEffect)->AddParticleSystem(L"EnkFireSpread", pParticleSystem);
+	CEffectManager::Get_Instance()->RegisterEffect(TEXT("EnkFireSpread"), pEffect);
+
+
 	// 아카자용
-	pEffect = CHitShockParticle::Create(m_pDevice, m_pContext);
+	pEffect = CHitBodyShockParticle::Create(m_pDevice, m_pContext);
 	if (pEffect == nullptr)
 		return E_FAIL;
 	pEffect->Initialize(nullptr);
 	jsonLoader.Load_Particle("../Asset/Json/Particle/HitBodyShock_Particle.json", &pParticleSystem);
-	static_cast<CHitShockParticle*>(pEffect)->AddParticleSystem(L"HitShock", pParticleSystem);
-	static_cast<CHitShockParticle*>(pEffect)->SetInitParticleUV(4, 4, 0.0001f);
+	static_cast<CHitBodyShockParticle*>(pEffect)->AddParticleSystem(L"HitShock", pParticleSystem);
+	static_cast<CHitBodyShockParticle*>(pEffect)->SetInitParticleUV(4, 4, 0.0085f);
 	pEffect->SetTextureIndex(1);
 	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitBodyShockParticle"), pEffect);
+	CEffectManager::Get_Instance()->EnableConsole();
 
 
 
@@ -175,13 +188,14 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	}
 	UpdateGameFlow(fTimeDelta);
 	CEffectManager::Get_Instance()->Update_ActivedParticle(fTimeDelta);
+	CEffectManager::Get_Instance()->ClenUpPendingParticleEffects();
 
 }
 
 HRESULT CLevel_GamePlay::Render()
 {
 	//SetWindowText(g_hWnd, TEXT("게임플레이 레벨입니다."));
-	CEffectManager::Get_Instance()->ClenUpPendingParticleEffects();
+//	CEffectManager::Get_Instance()->ClenUpPendingParticleEffects();
 	return S_OK;
 }
 
@@ -355,5 +369,4 @@ void CLevel_GamePlay::Free()
 {
 	__super::Free();
 	CEffectManager::Get_Instance()->Free();
-
 }

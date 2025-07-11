@@ -23,7 +23,7 @@
     ],
     "NumInstance": 1,
     "ParticleType": 0,
-    "PlayAwake": true,
+    "PlayAwake": false,
     "Range": [
         0.0,
         0.0,

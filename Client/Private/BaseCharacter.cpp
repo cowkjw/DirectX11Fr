@@ -631,9 +631,23 @@ void CBaseCharacter::HurtDown()
 	ChangeState(new StateHurtDown());
 }
 
+void CBaseCharacter::TakeDamage(_float fDamage)
+{
+	if (m_fCurrentHP <= 0.f)
+		return;
+	m_pGameInstance->SetHitStop(true, 0.25f);
+	//StartHitStop(0.25f); // 히트 스탑 시작
+	m_fCurrentHP -= fDamage;
+	if (m_fCurrentHP <= 0.f)
+	{
+		m_fCurrentHP = 0.f;
+	}
+}
+
 void CBaseCharacter::StartHitStop(_float duration)
 {
-	m_fHitStopTime = duration;
+	m_pGameInstance->SetHitStop(true, 0.25f);
+	//m_fHitStopTime = duration;
 }
 
 void CBaseCharacter::Ready_Animation()

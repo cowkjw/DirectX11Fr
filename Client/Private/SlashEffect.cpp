@@ -75,28 +75,12 @@ void CSlashEffect::Update(_float fTimeDelta)
 
 void CSlashEffect::Late_Update(_float fTimeDelta)
 {
-	if (m_pBoneSocket)
-	{
-		_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
-		_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
 
-		// 본 매트릭스를 그대로 사용 (정규화하지 않음)
-		_matrix matBoneLocal = XMLoadFloat4x4(&boneLocal);
-		_matrix matParentWorld = XMLoadFloat4x4(&parentWorld);
-
-		// 올바른 매트릭스 곱셈 순서: ParentWorld * BoneLocal
-		_matrix world = XMMatrixMultiply(matBoneLocal, matParentWorld);
-
-		//// 파티클 이펙트의 로컬 오프셋이 있다면 적용
-		//_matrix localOffset = XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix());
-		//world = XMMatrixMultiply(localOffset, world);
-
-		XMStoreFloat4x4(&m_CombinedWorldMatrix, world);
-		//	m_pTransformCom->Set_WorldMatrix(m_CombinedWorldMatrix);
-	}
 	if (m_bRenderMesh)
 	{
-		__super::Late_Update(fTimeDelta);
+		//__super::Late_Update(fTimeDelta);
+		m_pGameInstance->Add_RenderGroup(RENDERGROUP::BLUR_EFFECT, this);
+
 	}
 	for (auto& particle : m_ParticleEffects)
 	{
@@ -117,6 +101,29 @@ HRESULT CSlashEffect::Render()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CSlashEffect::UpdateTransform()
+{
+	if (m_pBoneSocket)
+	{
+		_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
+		_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
+
+		// 본 매트릭스를 그대로 사용 (정규화하지 않음)
+		_matrix matBoneLocal = XMLoadFloat4x4(&boneLocal);
+		_matrix matParentWorld = XMLoadFloat4x4(&parentWorld);
+
+		// 올바른 매트릭스 곱셈 순서: ParentWorld * BoneLocal
+		_matrix world = XMMatrixMultiply(matBoneLocal, matParentWorld);
+
+		//// 파티클 이펙트의 로컬 오프셋이 있다면 적용
+		//_matrix localOffset = XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix());
+		//world = XMMatrixMultiply(localOffset, world);
+
+		XMStoreFloat4x4(&m_CombinedWorldMatrix, world);
+		//	m_pTransformCom->Set_WorldMatrix(m_CombinedWorldMatrix);
+	}
 }
 
 HRESULT CSlashEffect::Ready_Components()
@@ -161,6 +168,7 @@ void CSlashEffect::OnDisable()
 
 void CSlashEffect::OnEnable()
 {
+	
 
 }
 

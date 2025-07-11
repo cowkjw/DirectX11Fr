@@ -112,12 +112,13 @@ void CLevel_EnmuBoss::Update(_float fTimeDelta)
 	}
 	UpdateGameFlow(fTimeDelta);
 	CEffectManager::Get_Instance()->Update_ActivedParticle(fTimeDelta);
+	CEffectManager::Get_Instance()->ClenUpPendingParticleEffects();
+
 }
 
 HRESULT CLevel_EnmuBoss::Render()
 {
 	/*SetWindowText(g_hWnd, TEXT("엔무 보스 레벨"));*/
-	CEffectManager::Get_Instance()->ClenUpPendingParticleEffects();
 	return S_OK;
 }
 

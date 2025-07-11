@@ -236,6 +236,8 @@ PS_OUT PS_MAIN_MASK2(PS_IN In)
 
 PS_OUT PS_MAIN_MASK_UV(PS_IN In)
 {
+    if (In.vLifeTime.y >= In.vLifeTime.x)
+        discard;
     PS_OUT Out;
     float2 uv;
     uv.x = In.vTexcoord.x * g_uvScale.x + g_uvOffset.x;

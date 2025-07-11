@@ -38,7 +38,9 @@ void CWaterWaveParticle::Update(_float fTimeDelta)
 
 void CWaterWaveParticle::Late_Update(_float fTimeDelta)
 {
-	__super::Late_Update(fTimeDelta);
+	//__super::Late_Update(fTimeDelta);
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::EFFECT, this);
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::BLOOM_EFFECT, this);
 }
 
 HRESULT CWaterWaveParticle::Render()

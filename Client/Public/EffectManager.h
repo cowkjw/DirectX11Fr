@@ -13,6 +13,7 @@ private:
 	virtual ~CEffectManager() = default;
 
 public:
+	void EnableConsole();
 
 	void Update_ActivedParticle(_float fTimeDelta);
 	void Late_Update(_float fTimeDelta);

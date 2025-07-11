@@ -96,13 +96,30 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 
 void CGameInstance::Fixed_Update(_float fTimeDelta)
 {
-	if (!m_bChangedLevel)
+	/*if (!m_bChangedLevel)
 		return;
-	m_pCollisionMag->Update(fTimeDelta);
+	m_pCollisionMag->Update(fTimeDelta);*/
 }
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
+	if (!m_bChangedLevel)
+		return;
+
+	if (m_bHitStop)
+	{
+		m_fHitStopElapsed += fTimeDelta;
+		if (m_fHitStopElapsed >= m_fHitStopTime)
+		{
+			m_bHitStop = false;
+			m_fHitStopElapsed = 0.f;
+		}
+		else
+		{
+			fTimeDelta *= 0.2f;
+		}
+	}
+	m_pCollisionMag->Update(fTimeDelta);
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 	m_pTransformPipeline->Update();
 
@@ -637,11 +654,11 @@ ID3D11ShaderResourceView* CGameInstance::Get_RenderTargetSRV(const _wstring& str
 		return nullptr;
 	return m_pTarget_Manager->Get_RenderTargetSRV(strTargetTag);
 }
-HRESULT CGameInstance::Begin_MRT(const _wstring& strMRTTag)
+HRESULT CGameInstance::Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV, _bool isTargetClear, _bool isDepthClear)
 {
 	if (nullptr == m_pTarget_Manager)
 		return E_FAIL;
-	return m_pTarget_Manager->Begin_MRT(strMRTTag);
+	return m_pTarget_Manager->Begin_MRT(strMRTTag,pDSV,isTargetClear,isDepthClear);
 }
 HRESULT CGameInstance::End_MRT()
 {

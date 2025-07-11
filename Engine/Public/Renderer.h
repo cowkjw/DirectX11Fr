@@ -38,7 +38,15 @@ private:
 	HRESULT Render_Lights();
 	HRESULT Render_BackBuffer();
 	HRESULT Render_Distortion();
+	HRESULT Render_Bloom();
+	HRESULT Render_BlurEffect();
+	HRESULT Render_BloomEffect();
+	HRESULT Render_RawEffect();
 	HRESULT Render_ToonBackBuffer();
+	HRESULT Render_RimLight();
+	HRESULT Render_Bright();
+	HRESULT Render_Blur();
+	HRESULT Render_Final();
 	HRESULT Render_NonLight();
 	HRESULT Render_UI();
 #ifdef _DEBUG

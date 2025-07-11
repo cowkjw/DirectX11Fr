@@ -184,6 +184,7 @@
     <ClInclude Include="..\public\Decal.h" />
     <ClInclude Include="..\public\Effect.h" />
     <ClInclude Include="..\public\EffectManager.h" />
+    <ClInclude Include="..\Public\EnkFireSpreadParticle.h" />
     <ClInclude Include="..\public\EnmuArm.h" />
     <ClInclude Include="..\Public\EnmuBody.h" />
     <ClInclude Include="..\Public\EnmuHead.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="..\public\FreeCamera.h" />
     <ClInclude Include="..\public\Gizmo.h" />
     <ClInclude Include="..\public\Hierarchy.h" />
+    <ClInclude Include="..\Public\HitBodyShockParticle.h" />
     <ClInclude Include="..\Public\HitShockParticle.h" />
     <ClInclude Include="..\Public\HitSlashCrossParticle.h" />
     <ClInclude Include="..\public\IMGUIMag.h" />
@@ -309,6 +311,7 @@
     <ClCompile Include="..\private\Decal.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
     <ClCompile Include="..\private\EffectManager.cpp" />
+    <ClCompile Include="..\Private\EnkFireSpreadParticle.cpp" />
     <ClCompile Include="..\private\EnmuArm.cpp" />
     <ClCompile Include="..\Private\EnmuBody.cpp" />
     <ClCompile Include="..\Private\EnmuHead.cpp" />
@@ -323,6 +326,7 @@
     <ClCompile Include="..\private\FreeCamera.cpp" />
     <ClCompile Include="..\private\Gizmo.cpp" />
     <ClCompile Include="..\private\Hierarchy.cpp" />
+    <ClCompile Include="..\Private\HitBodyShockParticle.cpp" />
     <ClCompile Include="..\Private\HitShockParticle.cpp" />
     <ClCompile Include="..\Private\HitSlashCrossParticle.cpp" />
     <ClCompile Include="..\private\IMGUIMag.cpp" />

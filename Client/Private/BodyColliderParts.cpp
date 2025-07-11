@@ -278,8 +278,20 @@ void CBodyColliderParts::OnCollisionEnter(CCollider* other, const _float3& hitPo
 		if (m_DamagedTargets.find(other->GetOwner()->GetParent()) != m_DamagedTargets.end())
 			return; // 이미 데미지를 입힌 대상이면 무시
 		m_DamagedTargets.insert(other->GetOwner()->GetParent()); // 데미지를 입힌 대상에 추가
-		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitBodyShockParticle"), hitPos);
-		CSoundMag::Get_Instance()->PlayEffect("event:/Common/BodyAttack");
+		for (auto& pCollider : m_pColliderComs)
+		{
+			if (pCollider->GetType() == ColliderType::HITBOX)
+			{
+				pCollider->SetActive(false);
+				pCollider->SetDrawDebug(false);
+			}
+		}
+		if (dynamic_cast<CBaseCharacter*>(otherOwner))
+		{
+			CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitBodyShockParticle"), hitPos);
+			CSoundMag::Get_Instance()->PlayEffect("event:/Common/BodyAttack");
+		}
+		
 	}
 }
 
@@ -319,4 +331,5 @@ void CBodyColliderParts::OnCollisionStay(CCollider* other, float fTimeDelta)
 
 void CBodyColliderParts::OnCollisionExit(CCollider* other)
 {
+	
 }

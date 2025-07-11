@@ -50,7 +50,8 @@ void CFireSlashEffect::Update(_float fTimeDelta)
 
 void CFireSlashEffect::Late_Update(_float fTimeDelta)
 {
-	__super::Late_Update(fTimeDelta);
+	
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::BLUR_EFFECT, this);
 }
 
 HRESULT CFireSlashEffect::Render()

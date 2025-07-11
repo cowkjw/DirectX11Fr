@@ -41,7 +41,7 @@ HRESULT CMainApp::Initialize()
 
 void CMainApp::Update(_float fTimeDelta)
 {
-	m_pGameInstance->Fixed_Update(fTimeDelta);
+	//m_pGameInstance->Fixed_Update(fTimeDelta);
 	m_pGameInstance->Update_Engine(fTimeDelta);
 	CEffectManager::Get_Instance()->Late_Update(fTimeDelta);
 	CSoundMag::Get_Instance()->Update();

@@ -2,16 +2,49 @@
 
 IMPLEMENT_SINGLETON(CEffectManager);
 
+void CEffectManager::EnableConsole()
+{
+	AllocConsole();
+
+	// 2) C 표준 스트림을 콘솔로 리다이렉트
+	FILE* fp;
+	freopen_s(&fp, "CONOUT$", "w", stdout);
+	freopen_s(&fp, "CONIN$", "r", stdin);
+	// (원하면 stderr도 연결 가능)
+	// freopen_s(&fp, "CONERR$", "w", stderr);
+
+	// 3) C++ iostream 동기화
+	std::ios::sync_with_stdio();
+
+	std::cout << "[Console] 초기화 완료\n";  // 테스트 출력
+}
+
 void CEffectManager::Update_ActivedParticle(_float fTimeDelta)
 {
+
+	//for (auto it = m_ActiveParticleList.begin(); it != m_ActiveParticleList.end();)
+	//{
+	//	CParticleEffect* pParticleEffect = *it;
+	//	if (pParticleEffect->IsActive())
+	//	{
+	//		pParticleEffect->Update(fTimeDelta);
+	//		++it;;
+	//	}
+	//}
 
 	for (auto it = m_ActiveParticleList.begin(); it != m_ActiveParticleList.end();)
 	{
 		CParticleEffect* pParticleEffect = *it;
-		if (pParticleEffect->IsActive())
+		if (pParticleEffect->IsActive() == false)
+		{
+			it = m_ActiveParticleList.erase(it);
+			m_PendingParticleList.push_back(pParticleEffect);
+		}
+		else
 		{
 			pParticleEffect->Update(fTimeDelta);
-			++it;;
+			pParticleEffect->Late_Update(fTimeDelta);
+			++it;
 		}
 	}
 
@@ -19,7 +52,7 @@ void CEffectManager::Update_ActivedParticle(_float fTimeDelta)
 
 void CEffectManager::Late_Update(_float fTimeDelta)
 {
-	for (auto it = m_ActiveParticleList.begin(); it != m_ActiveParticleList.end();)
+	/*for (auto it = m_ActiveParticleList.begin(); it != m_ActiveParticleList.end();)
 	{
 		CParticleEffect* pParticleEffect = *it;
 		if (pParticleEffect->IsActive() == false)
@@ -32,11 +65,12 @@ void CEffectManager::Late_Update(_float fTimeDelta)
 			pParticleEffect->Late_Update(fTimeDelta);
 			++it;
 		}
-	}
+	}*/
 }
 
 void CEffectManager::SpawnParticleEffect(const _wstring& effectName, const _float3& position, const _float3& scale)
 {
+	 _uint i = 0;
 	auto it = m_EffectMap.find(effectName);
 	if (it != m_EffectMap.end())
 	{
@@ -50,6 +84,8 @@ void CEffectManager::SpawnParticleEffect(const _wstring& effectName, const _floa
 				m_ActiveParticleList.back()->GetTransform()->Scaling(scale);
 				m_ActiveParticleList.back()->SpwanParticle();
 			}
+			if(effectName == L"HitBodyShockParticle")
+			cout << "[SpawnParticleEffect] " << WStringToString(effectName) << " Active Count: " << m_ActiveParticleList.size() << endl;
 		}
 	}
 }
@@ -71,6 +107,7 @@ void CEffectManager::ClenUpPendingParticleEffects()
 	{
 		if ((*it)->IsActive() == false)
 		{
+			(*it)->DespwanParticle();
 			Safe_Release(*it);
 			it = m_PendingParticleList.erase(it);
 		}
@@ -125,5 +162,7 @@ void CEffectManager::Free()
 		Safe_Release(particle);
 	}
 	m_PendingParticleList.clear();
+
+
 
 }

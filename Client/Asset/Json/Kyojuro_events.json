@@ -229,11 +229,7 @@
                 },
                 {
                     "name": "FireSlashEffectOn",
-                    "time": 2.509999990463257
-                },
-                {
-                    "name": "FireSlashEffectOff",
-                    "time": 21.002548217773438
+                    "time": 8.119999885559082
                 },
                 {
                     "name": "AttackSound",
@@ -263,19 +259,11 @@
                 },
                 {
                     "name": "FireSlashEffectOn",
-                    "time": 2.740000009536743
+                    "time": 4.909999847412109
                 },
                 {
                     "name": "FireSlashEffectOn",
-                    "time": 12.0
-                },
-                {
-                    "name": "FireSlashEffectOff",
-                    "time": 6.0
-                },
-                {
-                    "name": "FireSlashEffectOff",
-                    "time": 20.0
+                    "time": 15.050000190734863
                 },
                 {
                     "name": "AttackSound",
@@ -297,11 +285,7 @@
                 },
                 {
                     "name": "FireSlashEffectOn",
-                    "time": 26.0
-                },
-                {
-                    "name": "FireSlashEffectOff",
-                    "time": 40.0
+                    "time": 27.350000381469727
                 },
                 {
                     "name": "ActiveHitbox",
@@ -340,6 +324,14 @@
                 {
                     "name": "FinalAttackSound",
                     "time": 1.9500000476837158
+                },
+                {
+                    "name": "FireSlashEffectOn",
+                    "time": 7.920000076293945
+                },
+                {
+                    "name": "FireSlashEffectOn",
+                    "time": 29.530000686645508
                 }
             ]
         },
@@ -368,51 +360,11 @@
                     "time": 43.674224853515625
                 },
                 {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
-                {
                     "name": "FireSlashEffectOn",
-                    "time": 27.0
+                    "time": 25.110000610351563
                 },
                 {
                     "name": "FireSlashEffectOff",
-                    "time": 36.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 36.0
-                },
-                {
-                    "name": "DeactiveHitbox",
                     "time": 36.0
                 },
                 {
@@ -443,7 +395,7 @@
                 },
                 {
                     "name": "FireSlashEffectOn",
-                    "time": 13.001630783081055
+                    "time": 12.239999771118164
                 },
                 {
                     "name": "FireSlashEffectOff",
@@ -487,10 +439,14 @@
                     "name": "ActiveEnkSkill",
                     "time": 26.0
                 },
-                {
-                    "name": "EnkSkillSound",
-                    "time": 6.5
-                }
+              {
+                "name": "EnkSkillSound",
+                "time": 6.5
+              },
+              {
+                "name": "ActiveEnkParticle",
+                "time": 3.0
+              }
             ]
         },
         {
@@ -767,6 +723,14 @@
                 },
                 {
                     "name": "FireSlashEffectOff",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
+                {
+                    "name": "DeactiveHitbox",
                     "time": 0.0
                 },
                 {
