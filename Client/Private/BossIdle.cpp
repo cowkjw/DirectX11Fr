@@ -42,7 +42,8 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
 
     cout << "[BossIdle] Current HP: " << pChar->GetHp() << endl;
 
-    // HP 체크 로직 (기존 유지)
+  
+    // 150씩 피가 떨어질 때 보스 열리도록
     _int currentHpThreshold = static_cast<_int>(fHp) / 150;
     if (lastHpThreshold == -1)
     {
@@ -80,17 +81,17 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
         return;
 
     _float fDist = pChar->GetDistanceToTarget();
-    cout << "[BossIdle] Distance to target: " << fDist << endl;
+    cout << "Distance to target: " << fDist << endl;
 
     // 거리별 사용 가능한 패턴 찾기 
-    vector<pair<int, float>> availablePatterns; // <패턴 인덱스, 가중치>
+    vector<pair<_int, _float>> availablePatterns; // 패턴 인덱스, 가중치
 
     // 거리 조건과 가중치 설정
     if (fDist >= -50.f && fDist <= 120.f)  // 근거리 범위 확장
     {
         availablePatterns.push_back({ 0, 1.0f }); // BossPunch
         if (fDist <= 100.f)
-            availablePatterns.push_back({ 1, 0.8f }); // BossHandAttack (근거리에서도 사용 가능)
+            availablePatterns.push_back({ 1, 0.8f }); // BossHandAttack 근거리에서도 사용 
     }
     if (fDist > 80.f && fDist <= 160.f)   // 중근거리
     {
@@ -102,7 +103,7 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
         availablePatterns.push_back({ 2, 1.0f }); // BossFreezeAttack
         availablePatterns.push_back({ 3, 1.0f }); // BossSwingAttack
     }
-    if (fDist > 150.f && fDist <= 220.f)  // 중원거리
+    if (fDist > 150.f && fDist <= 220.f)  
     {
         availablePatterns.push_back({ 3, 1.0f }); // BossSwingAttack
         availablePatterns.push_back({ 4, 1.0f }); // BossFollowPunch
@@ -121,7 +122,7 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
     }
 
     // 쿨타임이 완료된 패턴 찾기
-    vector<pair<int, float>> readyPatterns;
+    vector<pair<_int, _float>> readyPatterns;
     for (auto& pattern : availablePatterns)
     {
         _int idx = pattern.first;
@@ -131,32 +132,37 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
         switch (idx)
         {
         case 0: // BossPunch
-            if (pChar->m_CD_Punch == 0.f) isReady = true;
+            if (pChar->m_CD_Punch == 0.f)
+                isReady = true;
             break;
         case 1: // BossHandAttack
-            if (pChar->m_CD_Hand == 0.f) isReady = true;
+            if (pChar->m_CD_Hand == 0.f)
+                isReady = true;
             break;
         case 2: // BossFreezeAttack
-            if (pChar->m_CD_Freeze == 0.f) isReady = true;
+            if (pChar->m_CD_Freeze == 0.f) 
+                isReady = true;
             break;
         case 3: // BossSwingAttack
-            if (pChar->m_CD_Swing == 0.f) isReady = true;
+            if (pChar->m_CD_Swing == 0.f) 
+                isReady = true;
             break;
         case 4: // BossFollowPunch
-            if (pChar->m_CD_FollowPunch == 0.f) isReady = true;
+            if (pChar->m_CD_FollowPunch == 0.f) 
+                isReady = true;
             break;
         case 5: // BossTentacle
-            if (pChar->m_CD_Tentacle == 0.f) isReady = true;
+            if (pChar->m_CD_Tentacle == 0.f)
+                isReady = true;
             break;
         }
 
         if (isReady)
         {
-            // 연속 사용 패턴에 대한 가중치 감소
             if (idx == lastPatternIndex)
             {
                 if (consecutiveCount >= 2)
-                    weight *= 0.3f;  // 3번 연속 사용시 가중치 대폭 감소
+                    weight *= 0.3f;  // 3번 연속 사용시 많이 감소
                 else if (consecutiveCount >= 1)
                     weight *= 0.6f;  // 2번 연속 사용시 가중치 감소
             }
@@ -165,19 +171,19 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
         }
     }
 
-    // 실행할 패턴 선택 (가중치 기반 랜덤 선택)
-    int chosenIdx = -1;
+    // 패턴 가중치 기반 랜덤으로
+    _int chosenIdx = -1;
     if (!readyPatterns.empty())
     {
         // 가중치 기반 랜덤 선택
-        float totalWeight = 0.f;
+        _float totalWeight = 0.f;
         for (auto& pattern : readyPatterns)
         {
             totalWeight += pattern.second;
         }
 
-        float randomValue = static_cast<float>(rand()) / RAND_MAX * totalWeight;
-        float currentWeight = 0.f;
+        _float randomValue = static_cast<_float>(rand()) / RAND_MAX * totalWeight;
+        _float currentWeight = 0.f;
 
         for (auto& pattern : readyPatterns)
         {
@@ -202,7 +208,7 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
     }
     else
     {
-        // 쿨타임이 완료된 패턴이 없으면 대기
+        // 쿨타임이 완료된 패턴이 없다면 다시 대기
         m_fTimeElapsed = 0.f;
         return;
     }
@@ -235,8 +241,6 @@ void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
         pChar->m_CD_Tentacle = 4.f;
         break;
     }
-
-    cout << "[BossIdle] Chosen Pattern Index: " << chosenIdx << " (Weight-based selection)" << endl;
     m_fTimeElapsed = 0.f;
 }
 //void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)

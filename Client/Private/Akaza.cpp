@@ -1465,7 +1465,7 @@ void CAkaza::HandleInput()
 			if (m_fSkill0Cooldown <= 0.f)
 			{
 				m_pInputBuffer->AddCommand({ ECommand::Skill0, m_fTotalTime });
-				m_fSkill0Cooldown = 10.f;
+				m_fSkill0Cooldown = 15.f;
 			}
 			else
 			{
