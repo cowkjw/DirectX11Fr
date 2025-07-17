@@ -49,6 +49,7 @@ HRESULT CLevel_Editor::Initialize()
 	if(pCamera)
 		pCamera->GetTransform()->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, -10.f, 1.f));
 
+	m_pGameInstance->SetActivePicking(true);
 	return S_OK;
 }
 

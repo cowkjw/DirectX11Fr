@@ -12,6 +12,7 @@
 #include "SoundMag.h"
 #include "Animator.h"
 #include "Texture.h"
+#include "Shadow.h"
 #include "Shader.h"
 #include "Model.h"
 #include "Bone.h"

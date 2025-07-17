@@ -249,6 +249,8 @@ void CEnmuBody::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
 		if (auto pAttacker = dynamic_cast<CBaseCharacter*>(other->GetOwner()))
 		{
 			CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("TanjiroHitParticle"), hitPos);
+			CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
+			CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitShockParticle"), hitPos);
 		}
 	}
 	else if (other->GetType() == ColliderType::HITBOX)

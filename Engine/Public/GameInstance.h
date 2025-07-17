@@ -64,6 +64,10 @@ public:
 
 #pragma region RENDERER
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
+	void Set_FogColor(const _float4& vColor);
+	void SetFogDistance(_float fStart, _float fEnd);
+	void Active_Fog(_bool bActive);
+
 #pragma endregion
 
 #pragma region TIMER_MANAGER
@@ -167,10 +171,11 @@ public:
 #endif
 #pragma endregion
 
-#pragma region SOUND
-	CSoundMag* GetSoundMag();
+#pragma region SHADOW
+	HRESULT Ready_Light_For_Shadow(const CShadow::SHADOW_DESC& Desc);
+	const _float4x4* Get_Light_ViewMatrix();
+	const _float4x4* Get_Light_ProjMatrix();
 #pragma endregion
-
 
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
@@ -189,6 +194,7 @@ private:
 	class CLight_Manager* m_pLight_Manager = { nullptr };
 	class CFontMag* m_pFont_Manager = { nullptr };
 	class CTarget_Manager* m_pTarget_Manager = { nullptr };
+	class CShadow* m_pShadow = { nullptr };
 
 
 	_bool m_bActivePicking = { false }; // 피킹 활성화 여부

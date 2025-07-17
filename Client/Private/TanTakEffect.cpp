@@ -5,6 +5,8 @@
 #include "WaterWaveParticle.h"
 #include "EffectManager.h"
 #include "JsonLoader.h"
+#include <EnmuParts.h>
+#include <BaseCharacter.h>
 
 CTanTakEffect::CTanTakEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMeshEffect(pDevice, pContext)
@@ -28,8 +30,6 @@ HRESULT CTanTakEffect::Initialize_Prototype()
 	m_iShaderPass = 10;
 	m_fDuration = 1.5f;
 
-	
-
 	return S_OK;
 }
 
@@ -38,7 +38,7 @@ HRESULT CTanTakEffect::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Scaling(_float3(11.f,15.f,11.f));
+	m_pTransformCom->Scaling(_float3(14.f,15.f,14.f));
 	m_pTransformCom->Set_SpeedPerSec(30.f);
 	CJsonLoader jsonLoader(m_pDevice, m_pContext);
 	CParticleSystem* pWaveParticleSystem = nullptr;
@@ -63,6 +63,18 @@ HRESULT CTanTakEffect::Initialize(void* pArg)
 
 
 	jsonLoader.Free();
+
+	m_pColliderCom = CSphereCollider::Create(m_pDevice, m_pContext, 3.f);
+
+	if (!m_pColliderCom)
+		return E_FAIL;
+
+	Add_Component(TEXT("Com_Collider"), CSphereCollider::Create(m_pDevice, m_pContext, 3.f), reinterpret_cast<CComponent**>(&m_pColliderCom));
+
+	m_pColliderCom->Initialize(nullptr);
+	m_pColliderCom->SetListener(this);
+	m_pColliderCom->SetColliderType(ColliderType::HITBOX);
+	m_pColliderCom->SetActive(false);
 	return S_OK;
 }
 
@@ -209,7 +221,11 @@ void CTanTakEffect::OnDisable()
 	m_vUVScale = _float2(1.f, 1.f); 
 	m_vUVOffset = _float2(0.f, 0.f); 
 	m_fElapsed = 0.f; 
-
+	if (m_pColliderCom)
+	{
+		m_pColliderCom->SetActive(false);
+		m_pColliderCom->SetDrawDebug(false);
+	}
 }
 
 void CTanTakEffect::OnEnable()
@@ -220,6 +236,12 @@ void CTanTakEffect::OnEnable()
 	m_vUVScale = _float2(1.f,1.f); 
 	m_vUVOffset = _float2(0.f, 0.f); 
 	m_fElapsed = 0.f; 
+
+	if (m_pColliderCom)
+	{
+		m_pColliderCom->SetActive(true);
+		m_pColliderCom->SetDrawDebug(true);
+	}
 }
 
 CTanTakEffect* CTanTakEffect::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -247,4 +269,42 @@ CGameObject* CTanTakEffect::Clone(void* pArg)
 void CTanTakEffect::Free()
 {
 	__super::Free();
+}
+
+void CTanTakEffect::OnCollisionEnter(CCollider* other)
+{
+}
+
+void CTanTakEffect::OnCollisionEnter(CCollider* other, const _float3& hitPos)
+{
+	if (other->GetOwner() == m_pParent)
+		return;
+	if (other->GetType() != ColliderType::HITBOX)
+	{
+		auto pTarget = other->GetOwner();
+		if (auto pChar = dynamic_cast<CEnmuParts*>(pTarget))
+		{
+			auto pCharParent = dynamic_cast<CEnmuMeat*>(pChar->GetParent());
+			if (!pCharParent)
+				return;
+			pCharParent->Hit(10.f);
+			pCharParent->Hit(5.f);
+			pCharParent->Hit(3.5f);
+			m_pGameInstance->SetHitStop(true,0.35f);
+			m_pColliderCom->SetActive(false);
+			m_pColliderCom->SetDrawDebug(false);
+			CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
+			CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitShockParticle"), hitPos);
+			CSoundMag::Get_Instance()->PlayEffect("event:/Common/SlashHit");
+			/*CEffectManager::Get_Instance->SpawnParticleEffect(TEXT("WaterWave"), hitPos);*/
+		}
+	}
+}
+
+void CTanTakEffect::OnCollisionStay(CCollider* other, float fTimeDelta)
+{
+}
+
+void CTanTakEffect::OnCollisionExit(CCollider* other)
+{
 }

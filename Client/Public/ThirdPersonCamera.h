@@ -38,6 +38,8 @@ public:
 		m_fShakeTimeLeft = fDuration;
 		m_fShakeAmplitude = fAmplitude;
 	}
+
+	void   OnHit(CGameObject* attacker, CGameObject* target, _vector offset, _float fDuration = 0.2f);
 private:
 	void InitializeCameraPosition();
 
@@ -64,13 +66,27 @@ private:
 	_float m_cameraMinDist = 30.f;                       // 플레이어와 최소 거리
 	_float m_cameraMaxDist = 70.f;                       // 플레이어와 최대 거리
 	_float m_cameraSmooth = 7.f;                        // 보간 속도
-	_float m_cameraLookHeight =50.f;                        // 바라볼 때 플레이어 기준 높이
+	_float m_cameraLookDistance =80.f;                   
 
 	// 카메라 쉐이킹
 	_bool   m_bShaking = false;    // 쉐이크 중 플래그
 	_float  m_fShakeDuration = 0.f;      // 전체 지속 시간
 	_float  m_fShakeTimeLeft = 0.f;      // 남은 시간
 	_float  m_fShakeAmplitude = 0.f;      // 최대 흔들림 크기
+
+
+	// 전투할 때 타격감을 좀 살려보기
+	_bool    m_bHitCam = false;          // 타격 모드 활성화 플래그
+	_float   m_fHitTime = 0.f;           // 타격 모드 경과 시간
+	_float   m_fHitDuration = 0.2f;      // 타격 모드 지속 시간 (예: 0.2초)
+	_vector m_vHitOffset;              // 타격 시 카메라 오프셋
+	CGameObject* m_pHitAttacker = nullptr;
+	CGameObject* m_pHitTarget = nullptr;
+	_vector m_vSingleOrginPos{};
+
+
+	_vector m_vLastPlayerPos;     // 이전 프레임 플레이어 위치
+	_vector m_vMoveDir = XMVectorSet(0, 0, 1, 0); // 초기 뒤쪽 방향
 
 public:
 	static CThirdPersonCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

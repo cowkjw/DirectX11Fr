@@ -9,11 +9,12 @@
 #include "EnmuTentacle.h"
 #include "BaseCharacter.h"
 #include "UIProgressBar.h"
+#include <ThirdPersonCamera.h>
 
 CEnmuMeat::CEnmuMeat(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
-	, m_fHp(800.f)
-	, m_fMaxHp(800.f)
+	, m_fHp(350.f)
+	, m_fMaxHp(350.f)
 	, m_CD_Punch(0.f)
 	, m_CD_Swing(0.f)
 	, m_CD_Hand(0.f)
@@ -84,9 +85,15 @@ HRESULT CEnmuMeat::Initialize(void* pArg)
 
 void CEnmuMeat::Priority_Update(_float fTimeDelta)
 {
-	if (m_fHp <= 0.f)
+	if (m_fHp <= 0.f&& m_eState!=EnmuState::DIE)
 	{
 		ChangeState(new BossDeath);
+		m_eState = EnmuState::DIE;
+		return;
+	}
+	if (m_fHp <= 0.f && m_eState != EnmuState::DIE && m_pBossState->GetStateName() != L"Death")
+	{
+		ChangeState(new BossDeath());
 		return;
 	}
 	if (!m_pTarget)
@@ -253,12 +260,22 @@ _float CEnmuMeat::GetDistanceToTarget() const
 
 _float CEnmuMeat::Hit(_float fDamage)
 {
-	StartHitStop(0.25f);
+	if (m_fHp <= 0.f)
+	{
+		return m_fHp;
+	}
+
+	if (auto pCamera = dynamic_cast<CThirdPersonCamera*>(CGameInstance::Get_Instance()->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("ThirdPersonCamera"))))
+	{
+		pCamera->TriggerShake(0.3f, 3.f);
+	}
+	StartHitStop(0.35f);
+	if (m_eState == EnmuState::OPEN)
+		fDamage *= 1.5f;
 	m_fHp -= fDamage;
 	if (m_fHp <= 0.f)
 	{
 		m_fHp = 0.f;
-		SetState(EnmuState::DIE);
 	}
 	auto pBody = GetPart(Parts::BODY);
 	if (pBody)
@@ -269,7 +286,7 @@ _float CEnmuMeat::Hit(_float fDamage)
 	if (pBar)
 	{
 		CUIProgressBar* pRightBar = static_cast<CUIProgressBar*>(pBar);
-		pRightBar->ApplyDamage(fDamage / m_fMaxHp * 100.f);
+		pRightBar->ApplyDamage(fDamage / m_fMaxHp*100.f );
 	}
 	return m_fHp;
 }
@@ -285,12 +302,12 @@ void CEnmuMeat::OnAttackHit(CGameObject* pTarget)
 		{
 		case EnmuState::PUNCH:
 			pChar->Blow(this, 40.f);
-			pChar->TakeDamage(15.f);
+			pChar->TakeDamage(5.f);
 			StartHitStop(0.3f);
 			break;
 		case EnmuState::FOLLOWPUNCH:
 			pChar->HurtDown();
-			pChar->TakeDamage(15.f);
+			pChar->TakeDamage(10.f);
 			break;
 		case EnmuState::HANDATTACK:
 			//pChar->HurtDown();

@@ -1,3 +1,4 @@
+#include "TrainSmokeParticle.h"
 #include "ThirdPersonCamera.h"
 #include "Level_EnmuBoss.h"
 #include "CutSceneCamera.h"
@@ -13,6 +14,7 @@
 #include "UIImage.h"
 #include "Weapon.h"
 #include <HitShockParticle.h>
+#include <HitSlashCrossParticle.h>
 
 CLevel_EnmuBoss::CLevel_EnmuBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -44,10 +46,22 @@ HRESULT CLevel_EnmuBoss::Initialize()
 	if (FAILED(Ready_Layer_Characters()))
 		return E_FAIL;
 
-	//if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_Camera_Free"),
-	//	ToIndex(LEVEL::ENMU_BOSS), TEXT("Layer_Camera")))
-	//	return E_FAIL;
+	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_GameObject_TrainLight"),
+		ToIndex(LEVEL::ENMU_BOSS), TEXT("TrainPointLight")))
+		return E_FAIL;
 
+	CGameObject* pEnvWind = nullptr;
+	if (!(pEnvWind= m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Effect_EnvWind"),
+		ToIndex(LEVEL::ENMU_BOSS), TEXT("EnvWind"))))
+		return E_FAIL;
+
+	pEnvWind->GetTransform()->Set_State(STATE::POSITION, XMVectorSet(-126.143f, 41.156f, 0.f, 1.f));
+
+
+	if (!(pEnvWind = m_pGameInstance->Add_GameObject(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Effect_EnvWind"),
+		ToIndex(LEVEL::ENMU_BOSS), TEXT("EnvWind"))))
+		return E_FAIL;
+	pEnvWind->GetTransform()->Set_State(STATE::POSITION, XMVectorSet(132.143f, 41.156f, 0.f, 1.f));
 
 
 
@@ -87,18 +101,30 @@ HRESULT CLevel_EnmuBoss::Initialize()
 
 
 
-
-	//pEffect = CParticleEffect::Create(m_pDevice, m_pContext);
-	//if (pEffect == nullptr)
-	//	return E_FAIL;
-	//pEffect->Initialize(nullptr);
-	//jsonLoader.Load_Particle("../Asset/Json/Particle/Water_Particle.json", &pParticleSystem);
-	//static_cast<CParticleEffect*>(pEffect)->AddParticleSystem(L"SpreadWater", pParticleSystem);
-	//CEffectManager::Get_Instance()->RegisterEffect(TEXT("SpreadWater"), pEffect);
-	//pEffect->SetShaderPass(1);
-	//static_cast<CParticleEffect*>(pEffect)->SetTexture(m_pGameInstance->GetTexture(TEXT("ParticleMask"), true), 9, L"SpreadWater");
-	//static_cast<CParticleEffect*>(pEffect)->SetUseParentTexture(true);
+	pEffect = CHitSlashCrossParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect->Initialize(nullptr);
+	jsonLoader.Load_Particle("../Asset/Json/Particle/HitCross_Particle.json", &pParticleSystem);
+	static_cast<CHitSlashCrossParticle*>(pEffect)->AddParticleSystem(L"HitCross", pParticleSystem);
+	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitCrossParticle"), pEffect);
+	pEffect = CHitShockParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect = CHitShockParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect->Initialize(nullptr);
+	jsonLoader.Load_Particle("../Asset/Json/Particle/HitShock_Particle.json", &pParticleSystem);
+	static_cast<CHitShockParticle*>(pEffect)->SetInitParticleUV(3, 3, 0.0085f);
+	pEffect->SetTextureIndex(8);
+	static_cast<CHitShockParticle*>(pEffect)->AddParticleSystem(L"HitShock", pParticleSystem);
+	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitShockParticle"), pEffect);
 	jsonLoader.Free();
+
+	m_pGameInstance->Active_Fog(true);
+	m_pGameInstance->SetFogDistance(550.f, 600.f);
+	m_pGameInstance->Set_FogColor(_float4(0.5f, 0.5f, 0.5f,0.4f));
 	return S_OK;
 }
 
@@ -151,25 +177,26 @@ HRESULT CLevel_EnmuBoss::Ready_Lights()
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection = _float4(1.f, 1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(0.8f, 0.85f, 0.8f, 1.f);
-	LightDesc.fAmbient = 0.6f;
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDiffuse = _float4(0.7f, 0.9f, 0.7f, 1.f);
+	LightDesc.fAmbient = 0.4f;
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
 
 
-	//LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	//LightDesc.vDirection = _float4(1.f, 1.f, 1.f, 0.f);
-	//LightDesc.vDiffuse = _float4(0.4f, 0.4f, 0.4f, 1.f);
-	//LightDesc.fAmbient = 0.4;
-	//LightDesc.vSpecular = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	LightDesc.vPosition = _float4(0, 20.f, -150.f, 1.f);
+	LightDesc.fRange = 1.f;
+	LightDesc.vDiffuse = _float4(1.0f, 0.75f, 0.4f, 1.f);
+	LightDesc.fAmbient = 0.5f;
+	LightDesc.vSpecular = _float4(0.f, 1.f, 0.f, 1.f);
 
-	//if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
 	CSoundMag::Get_Instance()->PlayBGM("event:/BGM/EnmuBgm");
-	CSoundMag::Get_Instance()->PlayEffect("event:/BGM/TrainAmb");
+	CSoundMag::Get_Instance()->PlayEffect("event:/BGM/TrainAmb","TrainAmb");
 	return S_OK;
 }
 
@@ -259,7 +286,7 @@ void CLevel_EnmuBoss::UpdateGameFlow(_float fTimeDelta)
 
 	if (m_pTanjiro)
 	{
-		if (m_pTanjiro->GetState() == CBaseCharacter::CSTATE::DIE)
+		if (!m_bEndGame && m_pTanjiro->GetState() == CBaseCharacter::CSTATE::DIE)
 		{
 			m_bEndGame = true;
 			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StopImage"));
@@ -267,12 +294,14 @@ void CLevel_EnmuBoss::UpdateGameFlow(_float fTimeDelta)
 			{
 				pUiImage->SetActive(true);
 			}
-
+			CSoundMag::Get_Instance()->StopBGM();
+			CSoundMag::Get_Instance()->StopEffect("TrainAmb");
 		}
 	}
 	if (m_pEnmu)
 	{
-		if (m_pEnmu->GetState() == EnmuState::DIE)
+		static _bool shotSound = false;
+		if (!m_bEndGame && m_pEnmu->GetState() == EnmuState::DIE)
 		{
 			m_bEndGame = true;
 			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StopImage"));
@@ -280,6 +309,14 @@ void CLevel_EnmuBoss::UpdateGameFlow(_float fTimeDelta)
 			{
 				pUiImage->SetActive(true);
 			}
+			CSoundMag::Get_Instance()->StopBGM();
+			CSoundMag::Get_Instance()->StopEffect("TrainAmb");
+		}
+		if (m_pEnmu->GetHp() <= 0.f&&!shotSound)
+		{
+			shotSound = true;
+			CSoundMag::Get_Instance()->PlayOneShot("event:/UI/Shobu");
+			CSoundMag::Get_Instance()->PlayOneShot("event:/Enmu/Death");
 		}
 	}
 

@@ -33,6 +33,11 @@ private:
 	CTanMigRingEffect* m_pMigRingEffect = { nullptr }; 
 	_float m_fElpasedTime = 0.f; // 경과 시간
 	_float m_fDuration = 0.f; // 지속 시간
+
+
+	static constexpr _int PARTICLE_COUNT = 2;
+	_bool  m_bSpawnedParticle[PARTICLE_COUNT] = { false, false, };
+	const _float m_fParticleTriggers[PARTICLE_COUNT] = { 0.1f, 0.3f };
 public:
 	virtual void Free() override;
 	virtual CGameObject* Clone(void* pArg) override;

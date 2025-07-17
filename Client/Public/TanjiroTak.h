@@ -3,6 +3,9 @@
 #include "Client_Defines.h"
 #include "TanTakEffect.h"
 
+BEGIN_NAMESPACE(Engine)
+class CSphereCollider;
+END_NAMESPACE
 
 BEGIN_NAMESPACE(Client)
 class CTanjiroTak : public CGameObject, public ICollisionListener
@@ -31,6 +34,7 @@ private:
 	CTanTakEffect* m_pTakEffect = { nullptr }; 
 	_float m_fElpasedTime = 0.f; // 경과 시간
 	_float m_fDuration = 0.f; // 지속 시간
+	CSphereCollider* m_pColliderCom = { nullptr };
 public:
 	virtual void Free() override;
 	virtual CGameObject* Clone(void* pArg) override;

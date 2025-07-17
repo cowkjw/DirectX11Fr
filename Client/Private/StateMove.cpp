@@ -18,6 +18,7 @@ void StateMove::Enter(CBaseCharacter* pChar)
 	}
 	pChar->SetState(CBaseCharacter::CSTATE::MOVE);
 	pChar->GetInputBuffer()->PopCommand(ECommand::Move);
+
 	CSoundMag::Get_Instance()->PlayEffect("event:/Common/FootGrass","FootGrass");
 }
 

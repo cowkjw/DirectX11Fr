@@ -13,7 +13,12 @@
         {
             "clipName": "A_P1011_V19_C00_AtkSkl01_0",
             "duration": 40.0,
-            "events": []
+          "events": [
+            {
+              "name": "ReadyAttackSound",
+              "time": 24.0
+            }
+          ]
         },
         {
             "clipName": "A_P1011_V19_C00_AtkSkl01_1",
@@ -31,7 +36,15 @@
                 {
                     "name": "StrecthRadius",
                     "time": 2.5
-                }
+                },
+              {
+                "name": "PunchLeft",
+                "time": 8.970000267028809
+              },
+              {
+                "name": "PunchWindSound",
+                "time": 10.0
+              }
             ]
         },
         {
@@ -101,16 +114,25 @@
         {
             "clipName": "A_P1011_V19_C00_AtkSkl03_1",
             "duration": 30.0,
-            "events": []
+          "events": [
+            {
+              "name": "DeactiveHitbox",
+              "time": 1.0
+            }
+          ]
         },
         {
             "clipName": "A_P1011_V19_C00_AtkSkl03_2",
             "duration": 20.0,
             "events": [
-                {
-                    "name": "CameraShake",
-                    "time": 18.0
-                }
+              {
+                "name": "CameraShake",
+                "time": 18.0
+              },
+              {
+                "name": "HandAttackSound",
+                "time": 15.0
+              }
             ]
         },
         {
@@ -126,16 +148,21 @@
         {
             "clipName": "A_P1011_V19_C00_AtkSkl04_0",
             "duration": 35.0,
-            "events": []
+          "events": [
+            {
+              "name": "ReadyAttackSound",
+              "time": 2.0
+            }
+          ]
         },
         {
             "clipName": "A_P1011_V19_C00_AtkSkl04_1",
             "duration": 32.0,
             "events": [
-                {
-                    "name": "ActiveHitbox",
-                    "time": 1.0
-                }
+              {
+                "name": "ActiveHitbox",
+                "time": 1.0
+              }
             ]
         },
         {
@@ -146,20 +173,24 @@
                     "name": "ActiveHitbox",
                     "time": 1.0
                 },
-                {
-                    "name": "CameraShake",
-                    "time": 16.001934051513672
-                }
+              {
+                "name": "CameraShake",
+                "time": 16.001934051513672
+              },
+              {
+                "name": "FollowPunchSound",
+                "time": 18.0
+              }
             ]
         },
         {
             "clipName": "A_P1011_V19_C00_AtkSkl04_3",
             "duration": 53.0,
             "events": [
-                {
-                    "name": "ActiveHitbox",
-                    "time": 1.0
-                }
+              {
+                "name": "DeactiveHitbox",
+                "time": 1.0
+              }
             ]
         },
         {
@@ -176,10 +207,14 @@
             "clipName": "A_P1011_V19_C00_AtkSkl05_0",
             "duration": 32.0,
             "events": [
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 0.0
-                }
+              {
+                "name": "DeactiveHitbox",
+                "time": 0.0
+              },
+              {
+                "name": "FollowPunchSound",
+                "time": 28.503992080688477
+              }
             ]
         },
         {
@@ -215,7 +250,12 @@
         {
             "clipName": "A_P1011_V19_C00_AtkSkl07_0",
             "duration": 47.0,
-            "events": []
+          "events": [
+            {
+              "name": "ReadyAttackSound",
+              "time": 2.0
+            }
+          ]
         },
         {
             "clipName": "A_P1011_V19_C00_AtkSkl07_1",
@@ -261,10 +301,14 @@
             "clipName": "A_P1011_V19_C00_AtkSkl09_0",
             "duration": 54.0,
             "events": [
-                {
-                    "name": "DeactiveHitbox",
-                    "time": 5.0
-                }
+              {
+                "name": "DeactiveHitbox",
+                "time": 5.0
+              },
+              {
+                "name": "ReadyAttackSound",
+                "time": 2.0
+              }
             ]
         },
         {
@@ -279,7 +323,15 @@
                 {
                     "name": "CameraShake",
                     "time": 24.002960205078125
-                }
+                },
+              {
+                "name": "SwingLeft",
+                "time": 27.219999313354492
+              },
+              {
+                "name": "SwingWindSound",
+                "time": 40.003948211669922
+              }
             ]
         },
         {

@@ -14,6 +14,7 @@ CEnvironment::CEnvironment(const CEnvironment& Prototype)
 	, m_pModelCom{ Prototype.m_pModelCom }
 	, m_iShaderPass{ Prototype.m_iShaderPass }
 	, m_strModelTag{ Prototype.m_strModelTag }
+	, m_InitPos{Prototype.m_InitPos }
 {
 }
 
@@ -31,7 +32,9 @@ HRESULT CEnvironment::Initialize(void* pArg)
 	{
 		ENVIRONMENT_DESC* pDesc = static_cast<ENVIRONMENT_DESC*>(pArg);
 
+		m_strName = pDesc->strName;
 		m_strModelTag = pDesc->strModelTag;
+		pDesc->fSpeedPerSec = 40.f;
 		if (FAILED(__super::Initialize(pDesc)))
 			return E_FAIL;
 		if (FAILED(__super::Add_Component(TEXT("Com_Model"), m_pGameInstance->GetModel(m_strModelTag, true), reinterpret_cast<CComponent**>(&m_pModelCom))))
@@ -52,10 +55,7 @@ HRESULT CEnvironment::Initialize(void* pArg)
 	//	return E_FAIL;
 	m_pTransformCom->Scaling(_float3(0.2f, 0.2f, 0.2f));
 
-	if (m_strModelTag.find(L"Sky") != _wstring::npos)
-		m_iShaderPass = 0;
-	else
-		m_iShaderPass = 1;
+
 
 	return S_OK;
 }
@@ -63,12 +63,41 @@ HRESULT CEnvironment::Initialize(void* pArg)
 void CEnvironment::Update(_float fTimeDelta)
 {
 
+	if (m_strName == L"EnmuInfiEnv")
+	{
+		_vector vCurPos = m_pTransformCom->Get_State(STATE::POSITION);
+		_float fZ = XMVectorGetZ(vCurPos);
+
+		if (fZ <= -800.f)
+		{
+			m_pTransformCom->Set_State(STATE::POSITION, m_InitPos);
+		}
+		else
+		{
+			_float fDeltaZ = fTimeDelta * 300.f;
+			vCurPos = XMVectorSetZ(vCurPos, fZ - fDeltaZ);
+			m_pTransformCom->Set_State(STATE::POSITION, vCurPos);
+		}
+	}
+
 }
 
 void CEnvironment::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
+	//if (m_strModelTag.find(L"Sky") != _wstring::npos)
+	//	m_pGameInstance->Add_RenderGroup(RENDERGROUP::EFFECT, this);
+	//else
 
+	//if (m_strName == L"EnmuInfiEnv")
+	//{
+	//	m_pGameInstance->Add_RenderGroup(RENDERGROUP::BLEND, this);
+	//}
+	//else
+	//{
+	//	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
+
+	//}
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
 }
 
@@ -106,7 +135,22 @@ void CEnvironment::Deserialize(const json& j)
 {
 	CGameObject::Deserialize(j);
 	if (j.contains("modelTag"))
+	{
 		m_strModelTag = StringToWString(j["modelTag"].get<string>());
+		if (m_strModelTag.find(L"Sky") != _wstring::npos)
+		{
+			m_iShaderPass = 0;
+
+		}
+		else if (m_strName == L"EnmuInfiEnv")
+		{
+			m_iShaderPass = 20;
+		}
+		else
+		{
+			m_iShaderPass = 1;
+		}
+	}
 	if (FAILED(__super::Add_Component(TEXT("Com_Model"), m_pGameInstance->GetModel(m_strModelTag, true), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return;
 //	m_pTransformCom->Scaling(_float3(0.2f, 0.2f, 0.2f));*/
@@ -135,6 +179,14 @@ HRESULT CEnvironment::Bind_Shaders()
 	_float fCamFar = m_pGameInstance->Get_CameraFar();
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCameraFar", &fCamFar, sizeof(_float))))
 		return E_FAIL;
+
+	// 무한 배경용으로는 값 던져주기
+	if (m_strName == L"EnmuInfiEnv")
+	{
+	_float fDistFade =550.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_DistFade", &fDistFade, sizeof(_float))))
+		return E_FAIL;
+	}
 
 	return S_OK;
 }

@@ -26,13 +26,13 @@ HRESULT CWindSlashEffect::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-	m_iShaderPass = 3; // 일단 2번으로 테스트
-	m_pTransformCom->Scaling(_float3(1.f, 1.f, 1.f));
-	// 테스트용 컬러
-	m_vColor = _float4(1.f,1.f,1.f,1.f); 
+	m_iShaderPass = 11;
+	m_pTransformCom->Scaling(_float3(40.f, 40.f, 40.f));
+	m_vUVScale = _float2(1.f, 1.f); // UV 스케일 설정
+	m_vUVOffset = _float2(0.f, 0.f); // UV 오프셋 초기화
+	m_vColor = _float4(0.3f, 0.3f, 0.3f,1.f);
 	m_bUseOffset = true;
-
-
+	m_bRenderMesh = true;
 	return S_OK;
 }
 
@@ -58,10 +58,8 @@ void CWindSlashEffect::Update(_float fTimeDelta)
 		//m_fUVOffset.y += fTimeDelta * 0.5f; // UV 애니메이션 속도 조절
 		if (m_vUVOffset.x >= 1.f)
 		{
-		/*	m_bRenderMesh = false;
-			m_bUseOffset = false;*/
-			//SetActive(false);
 			m_vUVOffset.x = 0.f;
+			SetActive(false);
 		}
 		if (m_vUVOffset.y > 1.f)
 			m_vUVOffset.y = 0.f;
@@ -79,22 +77,7 @@ void CWindSlashEffect::Late_Update(_float fTimeDelta)
 {
 	if (m_pBoneSocket)
 	{
-		_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
-		_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
 
-		// 본 매트릭스를 그대로 사용 (정규화하지 않음)
-		_matrix matBoneLocal = XMLoadFloat4x4(&boneLocal);
-		_matrix matParentWorld = XMLoadFloat4x4(&parentWorld);
-
-		// 올바른 매트릭스 곱셈 순서: ParentWorld * BoneLocal
-		_matrix world = XMMatrixMultiply(matBoneLocal, matParentWorld);
-
-		//// 파티클 이펙트의 로컬 오프셋이 있다면 적용
-		//_matrix localOffset = XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix());
-		//world = XMMatrixMultiply(localOffset, world);
-
-		XMStoreFloat4x4(&m_CombinedWorldMatrix, world);
-		//	m_pTransformCom->Set_WorldMatrix(m_CombinedWorldMatrix);
 	}
 	else
 	{
@@ -103,7 +86,8 @@ void CWindSlashEffect::Late_Update(_float fTimeDelta)
 	}
 	if (m_bRenderMesh)
 	{
-		__super::Late_Update(fTimeDelta);
+	//	__super::Late_Update(fTimeDelta);
+		m_pGameInstance->Add_RenderGroup(RENDERGROUP::BLUR_EFFECT, this);
 	}
 	for (auto& particle : m_ParticleEffects)
 	{
@@ -116,10 +100,73 @@ void CWindSlashEffect::Late_Update(_float fTimeDelta)
 
 HRESULT CWindSlashEffect::Render()
 {
+	if (m_Textures[TEX_EMISSION])
+	{
+		if (FAILED(m_Textures[TEX_EMISSION]->Bind_ShaderResource(m_pShaderCom, "g_SmokeTexture", 0)))
+			return E_FAIL;
+	}
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CWindSlashEffect::UpdateTransform()
+{
+	if (m_pBoneSocket)
+	{
+		//_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
+		//_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
+
+		//_matrix matBoneLocal = XMLoadFloat4x4(&boneLocal);
+		//_matrix matParentWorld = XMLoadFloat4x4(&parentWorld);
+		//_matrix matLocal = XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix());
+
+		//// 본+부모 매트릭스에서 회전/위치만 추출
+		//_matrix matBoneWorld = XMMatrixMultiply(matBoneLocal, matParentWorld);
+
+		//// 로컬에서 스케일 추출
+		//_vector vLocalScale, vLocalRotation, vLocalTranslation;
+		//XMMatrixDecompose(&vLocalScale, &vLocalRotation, &vLocalTranslation, matLocal);
+
+		//// 본+부모에서 회전/위치 추출
+		//_vector vBoneScale, vBoneRotation, vBoneTranslation;
+		//XMMatrixDecompose(&vBoneScale, &vBoneRotation, &vBoneTranslation, matBoneWorld);
+
+		//// 로컬 스케일 + 본 회전/위치 조합
+		//_matrix world = XMMatrixScalingFromVector(vLocalScale) *
+		//	XMMatrixRotationQuaternion(vBoneRotation) *
+		//	XMMatrixTranslationFromVector(vBoneTranslation);
+
+		//XMStoreFloat4x4(&m_CombinedWorldMatrix, world);
+
+		_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
+		_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
+
+		_matrix matBoneLocal = XMLoadFloat4x4(&boneLocal);
+		_matrix matParentWorld = XMLoadFloat4x4(&parentWorld);
+		_matrix matLocal = XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix());
+
+		// 본+부모 매트릭스에서 회전/위치만 추출
+		_matrix matBoneWorld = XMMatrixMultiply(matBoneLocal, matParentWorld);
+
+		// 로컬에서 스케일 추출
+		_vector vLocalScale, vLocalRotation, vLocalTranslation;
+		XMMatrixDecompose(&vLocalScale, &vLocalRotation, &vLocalTranslation, matLocal);
+
+		// 본+부모에서 회전/위치 추출
+		_vector vBoneScale, vBoneRotation, vBoneTranslation;
+		XMMatrixDecompose(&vBoneScale, &vBoneRotation, &vBoneTranslation, matBoneWorld);
+
+		// X축 90도 기본 회전 + 본 회전 조합
+		_matrix baseRotation = XMMatrixRotationZ(XMConvertToRadians(90.0f));
+		_matrix world = XMMatrixScalingFromVector(vLocalScale) *
+			baseRotation *
+			XMMatrixRotationQuaternion(vBoneRotation) *
+			XMMatrixTranslationFromVector(vBoneTranslation);
+
+		XMStoreFloat4x4(&m_CombinedWorldMatrix, world);
+	}
 }
 
 HRESULT CWindSlashEffect::Ready_Components()
@@ -135,6 +182,8 @@ HRESULT CWindSlashEffect::Ready_Components()
 		return E_FAIL;
 	}
 
+	m_Textures[TEX_EMISSION] = m_pGameInstance->GetTexture(L"WindSlashSmoke",true);
+
 	
 	return S_OK;
 }
@@ -143,6 +192,8 @@ HRESULT CWindSlashEffect::Bind_Shader()
 {
 	__super::Bind_Shader();
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVOffset", &m_vUVOffset, sizeof(_float2))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVScale", &m_vUVScale, sizeof(_float2))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4))))
 		return E_FAIL;

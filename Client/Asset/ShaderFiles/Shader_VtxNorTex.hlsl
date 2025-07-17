@@ -15,6 +15,7 @@ float4 g_vMtrlSpecular = float4(1.f, 1.f, 1.f, 1.f);
 
 float g_fCameraFar;
 
+float4 g_vColor;
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -68,58 +69,10 @@ struct PS_OUT
 
 PS_OUT PS_MAIN(PS_IN In)
 {
-    //PS_OUT Out;
-
-    //vector      vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord * 15.f);
-
-    //float4 vShade = max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f) +
-    //    (g_vLightAmbient * g_vMtrlAmibient);
-
-    //float4 vLook = In.vWorldPos - g_vCamPosition;
-
-    //float4 vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-
-
-    //float4 vSpecular = pow(max(dot(normalize(vLook) * -1.f, vReflect), 0.f), 50.f);
-
-
-    //Out.vColor = g_vLightDiffuse * vMtrlDiffuse * vShade;// +(g_vLightSpecular * g_vMtrlSpecular) * vSpecular;
-
     PS_OUT Out;
     // 디퓨즈 텍스처 샘플링
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord*15.f);
 
-    //// 노말과 라이트 방향
-    //float3 normal = normalize(In.vNormal.xyz);
-    //float3 lightDir = normalize(-g_vLightDir.xyz);
-
-    //float NdotL = max(0.0f, dot(normal, lightDir));
-
-    //float isLit = step(g_fShadowThreshold, NdotL);
-
-    //// 기본 색상
-    //float4 baseColor = vMtrlDiffuse;
-
-    //// 2단계 색상 정의
-    //float4 litColor = baseColor * g_vLightDiffuse;      // 밝은 부분
-    //float4 shadowColor = baseColor * g_vShadowColor;  // 그림자 부분
-
-    //// 하드 컷 적용
-    //float4 toonColor = lerp(shadowColor, litColor, isLit);
-
-    //// 최소한의 앰비언트만 추가
-    //float4 ambientColor = g_vLightAmbient * g_vMtrlAmibient * vMtrlDiffuse * g_fAmbientStrength;
-
-    //// 최종 색상
-    //float4 finalColor = toonColor + ambientColor;
-
-    //// 채도 부스트
-    //finalColor = AdjustSaturation(finalColor, g_fSaturationBoost);
-
-    //Out.vColor = saturate(finalColor);
-    //Out.vColor.a = vMtrlDiffuse.a;
-    //if (vMtrlDiffuse.a < 0.3f)
-    //	discard;
    
 	if (vMtrlDiffuse.a < 0.3f)
 		discard;
@@ -130,6 +83,25 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCameraFar, 0.f, 0.f);
 
+    return Out;
+}
+
+PS_OUT PS_MAIN_Radial(PS_IN In)
+{
+    PS_OUT Out;
+
+    float2 uv = In.vTexcoord;
+
+    float mask = g_DiffuseTexture.Sample(DefaultSampler, uv).r;
+
+    if (mask < 0.1f)
+        discard;
+
+
+    Out.vDiffuse = g_vColor;
+    Out.vDiffuse.a = mask * g_vColor.a;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCameraFar, 0.f, 0.f);
     return Out;
 }
 
@@ -146,6 +118,15 @@ technique11 DefaultTechnique
 
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+     pass Radial
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_Radial();
     }
 
 }

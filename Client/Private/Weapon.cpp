@@ -335,8 +335,9 @@ void CWeapon::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
 		//if (m_DamagedTargets.find(pBossParts) != m_DamagedTargets.end())
 		//	return; // 이미 데미지를 입힌 대상이면 무시
 		//m_DamagedTargets.insert(pBossParts); // 데미지를 입힌 대상에 추가
-		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
-	//	CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitShockParticle"), hitPos);
+		CSoundMag::Get_Instance()->PlayEffect("event:/Enmu/Hited");
 		m_pColliderCom->SetActive(false);
 		m_pColliderCom1->SetActive(false);
 		m_pColliderCom2->SetActive(false);
@@ -355,8 +356,9 @@ void CWeapon::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
 		m_pColliderCom->SetDrawDebug(false);
 		m_pColliderCom1->SetDrawDebug(false);
 		m_pColliderCom2->SetDrawDebug(false);
-		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
-		//CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
+		CSoundMag::Get_Instance()->PlayEffect("event:/Enmu/Hited");
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitShockParticle"), hitPos);
 	}
 }
 

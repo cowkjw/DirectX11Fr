@@ -1,8 +1,10 @@
 #pragma once
 #include "MeshEffect.h"
-
+BEGIN_NAMESPACE(Engine)
+class CSphereCollider;
+END_NAMESPACE
 BEGIN_NAMESPACE(Client)
-class CTanTakEffect : public CMeshEffect
+class CTanTakEffect : public CMeshEffect, public ICollisionListener
 {
 private:
 	CTanTakEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -42,11 +44,21 @@ private:
 	_float m_fScale = 15.f; // 크기
 	_float m_fDestScale =20.f; // 크기
 	_float m_fDuration = 1.0f; // 지속 시간
+	CSphereCollider* m_pColliderCom = { nullptr };
 
 public:
 	static CTanTakEffect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
+
+
+	// ICollisionListener을(를) 통해 상속됨
+	void OnCollisionEnter(CCollider* other) override;
+	void OnCollisionEnter(CCollider* other, const _float3& hitPos) override;
+
+	void OnCollisionStay(CCollider* other, float fTimeDelta) override;
+
+	void OnCollisionExit(CCollider* other) override;
 };
 END_NAMESPACE
 

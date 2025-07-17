@@ -150,6 +150,12 @@ struct PS_OUT
     vector vColor : SV_TARGET0;
 };
 
+struct PS_OUT_DISTORTION
+{
+	vector vColor : SV_TARGET0;
+    vector vDistortion : SV_TARGET01;
+};
+
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
@@ -377,6 +383,32 @@ PS_OUT PS_DistNoiseMask(PS_IN In)
 
 }
 
+//Nej 파티클
+PS_OUT PS_DistMask(PS_IN In)
+{
+    PS_OUT Out;
+    float2 uv = In.vTexcoord;
+    float2 uv1 = uv * float2(0.5, 0.5);
+    float2 uv2 = uv * float2(2, 2);
+
+    float2 d1 = g_DistortionTexture.Sample(DefaultSampler, uv1).rg - 0.5f;
+    float2 d2 = g_DistortionTexture.Sample(DefaultSampler, uv2).rg - 0.5f;
+
+    float2 dist = (d1 + d2) * 0.8;
+    float mask = g_MaskTexture.Sample(DefaultSampler, dist).r;
+	if (mask < 0.7f)
+		discard;
+    Out.vColor = (In.vStartColor.xyz, mask);
+
+	float t = saturate(In.vLifeTime.y / In.vLifeTime.x);
+    // 알파 보간
+    Out.vColor.a*= t;
+
+    //Out.vDistortion = float4(dist, 0, 0);
+
+    return Out;
+}
+
 
 
 
@@ -425,8 +457,6 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_MASK_UV();
     }
 
-
-
     pass MaskWave
     {
         SetRasterizerState(RS_Default);
@@ -456,5 +486,15 @@ technique11 DefaultTechnique
         GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_DistNoiseMask();
     }
+
+	pass DistMask //7
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_None, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		PixelShader = compile ps_5_0 PS_DistMask();
+	}
 
 }

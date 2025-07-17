@@ -91,6 +91,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	m_pFont_Manager = CFontMag::Create(*ppDeviceOut, *ppContextOut);
 	if (nullptr == m_pFont_Manager)
 		return E_FAIL;
+
+	m_pShadow = CShadow::Create(*ppDeviceOut, *ppContextOut);
+	if (nullptr == m_pShadow)
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -270,6 +274,21 @@ CGameObject* CGameInstance::Find_GameObjectByName(_uint iLevelIndex, const _wstr
 HRESULT CGameInstance::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pRenderObject)
 {
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
+}
+
+void CGameInstance::Set_FogColor(const _float4& vColor)
+{
+	m_pRenderer->Set_Color(vColor);
+}
+
+void CGameInstance::SetFogDistance(_float fStart, _float fEnd)
+{
+	m_pRenderer->SetFogDistance(fStart, fEnd);
+}
+
+void CGameInstance::Active_Fog(_bool bActive)
+{
+	m_pRenderer->Active_Fog(bActive);
 }
 
 #pragma endregion
@@ -683,6 +702,22 @@ HRESULT CGameInstance::Render_MRT_Debug(const _wstring& strMRTTag, CShader* pSha
 	if (nullptr == m_pTarget_Manager)
 		return E_FAIL;
 	return m_pTarget_Manager->Render_Debug(strMRTTag, pShader, pVIBuffer);
+}
+#pragma endregion
+
+#pragma region SHADOW
+HRESULT CGameInstance::Ready_Light_For_Shadow(const CShadow::SHADOW_DESC& Desc)
+{
+	return m_pShadow->Ready_Light_For_Shadow(Desc);
+}
+
+const _float4x4* CGameInstance::Get_Light_ViewMatrix()
+{
+	return m_pShadow->Get_Light_ViewMatrix();
+}
+const _float4x4* CGameInstance::Get_Light_ProjMatrix()
+{
+	return m_pShadow->Get_Light_ProjMatrix();
 }
 
 #pragma endregion

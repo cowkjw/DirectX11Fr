@@ -159,12 +159,12 @@ void CCollisionMag::Update(_float fTimeDelta)
 
 void CCollisionMag::DebugDraw()
 {
-	for (auto& collider : m_vColliders)
-	{
-		if (!collider->IsActive())
-			continue;
-		collider->DebugDraw();
-	}
+	//for (auto& collider : m_vColliders)
+	//{
+	//	if (!collider->IsActive())
+	//		continue;
+	//	collider->DebugDraw();
+	//}
 }
 
 void CCollisionMag::Clear()

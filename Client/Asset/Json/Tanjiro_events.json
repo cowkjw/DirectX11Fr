@@ -222,7 +222,7 @@
                 },
                 {
                     "name": "SlashEffectOn",
-                    "time": 8.0002129077911377
+                    "time": 8.000212669372559
                 },
                 {
                     "name": "SlashEffectOff",
@@ -254,15 +254,14 @@
                     "name": "ActiveHitbox",
                     "time": 4.0
                 },
-              {
-                "name": "SlashEffectOn",
-                "time": 5.39999847412109
-              },
-              {
-                "name": "SlashEffectOn",
-                "time": 15.050000190734863
-              },
-
+                {
+                    "name": "SlashEffectOn",
+                    "time": 5.399998664855957
+                },
+                {
+                    "name": "SlashEffectOn",
+                    "time": 15.050000190734863
+                },
                 {
                     "name": "AttackSound",
                     "time": 4.570000171661377
@@ -281,11 +280,10 @@
                     "name": "DeactiveHitbox",
                     "time": 27.086610794067383
                 },
-              {
-                "name": "SlashEffectOn",
-                "time": 19.350000381469727
-              },
-  
+                {
+                    "name": "SlashEffectOn",
+                    "time": 19.350000381469727
+                },
                 {
                     "name": "AttackSound",
                     "time": 10.899999618530273
@@ -320,14 +318,16 @@
                 },
                 {
                     "name": "SlashEffectOn",
-                    "time":13.5
+                    "time": 13.5
                 },
-         
                 {
                     "name": "FinalAttackSound",
                     "time": 10.00114631652832
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 36.0
                 }
-       
             ]
         },
         {
@@ -342,10 +342,10 @@
                     "name": "DeactiveHitbox",
                     "time": 18.50190544128418
                 },
-              {
-                "name": "SlashEffectOn",
-                "time":9
-              },
+                {
+                    "name": "SlashEffectOn",
+                    "time": 9.0
+                },
                 {
                     "name": "SlashEffectOff",
                     "time": 16.501731872558594
@@ -476,6 +476,10 @@
                 },
                 {
                     "name": "NejSkillSound",
+                    "time": 2.0
+                },
+                {
+                    "name": "ActiveNejSkill",
                     "time": 2.0
                 }
             ]
@@ -706,6 +710,10 @@
             "clipName": "A_P0001_V00_C00_BaseNut01_1",
             "duration": 69.0,
             "events": [
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 0.0
+                },
                 {
                     "name": "DeactiveHitbox",
                     "time": 0.0

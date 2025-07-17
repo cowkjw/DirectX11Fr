@@ -77,6 +77,7 @@ void CMeshEffect::SetModel(CModel* pModel)
 
 void CMeshEffect::SetBone(CBone* pBone)
 {
+	m_pBoneSocket = pBone;
 }
 
 void CMeshEffect::SetRenderMesh(_bool bRenderMesh)

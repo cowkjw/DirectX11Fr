@@ -68,9 +68,10 @@ HRESULT CLevel_GamePlay::Initialize()
 		CameraDesc.fFov = XMConvertToRadians(60.0f);
 		CameraDesc.fNear = 0.1f;
 		CameraDesc.fFar = 1000.f;
+		CameraDesc.strName = TEXT("ThirdPersonCamera");
 
 		if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::STATIC), TEXT("Prototype_GameObject_ThirdPersonCamera"),
-			ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_Camera"),&CameraDesc))
+			ToIndex(LEVEL::GAMEPLAY), TEXT("ThirdPersonCamera"),&CameraDesc))
 			return E_FAIL;
 	}
 
@@ -173,8 +174,8 @@ HRESULT CLevel_GamePlay::Initialize()
 
 
 
-
 	jsonLoader.Free();
+	m_pGameInstance->Active_Fog(false);
 	return S_OK;
 }
 
@@ -248,12 +249,31 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection = _float4(1.f, 1.f, 1.f, 0.f);
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
 	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
 	LightDesc.fAmbient = 0.2f;
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	LightDesc.vPosition = _float4(80.f, 0.f, 50.f, 1.f);
+	LightDesc.fRange = 15.f;
+	LightDesc.vDiffuse = _float4(0.7f, 0.8f, 1.0f, 1.f);
+	LightDesc.fAmbient = 0.3f;
+	LightDesc.vSpecular = _float4(0.f, 1.f, 0.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	CShadow::SHADOW_DESC Desc{};
+	Desc.vEye = _float4(60.f, 20.f, 30.f, 1.f);   
+	Desc.vAt = _float4(80.f, 0.f, 50.f, 1.f);      // 캐릭터 위치
+	Desc.fFovy = XMConvertToRadians(60.0f);         
+	Desc.fNear = 0.1f;
+	Desc.fFar = 500.f;
+	if (FAILED(m_pGameInstance->Ready_Light_For_Shadow(Desc)))
 		return E_FAIL;
 
 	return S_OK;

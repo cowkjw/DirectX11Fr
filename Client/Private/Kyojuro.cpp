@@ -7,6 +7,7 @@
 #include "EffectManager.h"
 #include "UIProgressBar.h"
 #include "GameInstance.h"
+#include "GuardEffect.h"
 #include "InputBuffer.h"
 #include <SlashEffect.h>
 #include <JsonLoader.h>
@@ -154,6 +155,7 @@ void CKyojuro::Priority_Update(_float fTimeDelta)
 
 void CKyojuro::Update(_float fTimeDelta)
 {
+	cout << "현재 위치 " << m_pTransformCom->Get_State(STATE::POSITION).m128_f32[0] << ", " << m_pTransformCom->Get_State(STATE::POSITION).m128_f32[1] << ", " << m_pTransformCom->Get_State(STATE::POSITION).m128_f32[2] << endl;
 	__super::Update(fTimeDelta);
 	for (auto& child : m_vecChildren)
 	{
@@ -232,11 +234,12 @@ void CKyojuro::TakeDamage(_float fDamage)
 	if (m_eState == CSTATE::SKILL2)
 		return;
 	__super::TakeDamage(fDamage);
-	auto pLeftBar = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("LeftLifeBar"));
+
 	if (!m_bAirborne && !m_bIsBound&& m_eState != CSTATE::GUARD)
 	{
 		ChangeState(new StateHurt());
 	}
+	auto pLeftBar = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("LeftLifeBar"));
 	if (pLeftBar)
 	{
 		CUIProgressBar* pLifeBar = static_cast<CUIProgressBar*>(pLeftBar);
@@ -419,6 +422,10 @@ HRESULT CKyojuro::Ready_Effects()
 	}
 	m_pDashSmokeEffect->Initialize(nullptr);
 	m_pDashSmokeEffect->SetActive(false);
+
+
+	
+
 	return S_OK;
 }
 

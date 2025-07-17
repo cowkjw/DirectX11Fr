@@ -7,6 +7,8 @@
 #include <BaseCharacter.h>
 #include "EffectManager.h"
 #include <ThirdPersonCamera.h>
+#include "EnmuSwingWindEffect.h"
+#include "EnmuPunchWindEffect.h"
 
 
 
@@ -63,6 +65,9 @@ HRESULT CEnmuArm::Initialize(void* pArg)
 	}
 
 
+	if (FAILED(Ready_Effect()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -103,6 +108,15 @@ void CEnmuArm::Update(_float fTimeDelta)
 		// 보간 중에는 나머지 로직 스킵
 		return;
 	}
+
+	if (m_pSwingWindEffect && m_pSwingWindEffect->IsActive())
+	{
+		m_pSwingWindEffect->Update(fTimeDelta);
+	}
+	if (m_pPunchWindEffect && m_pPunchWindEffect->IsActive())
+	{
+		m_pPunchWindEffect->Update(fTimeDelta);
+	}
 }
 
 void CEnmuArm::Late_Update(_float fTimeDelta)
@@ -111,6 +125,15 @@ void CEnmuArm::Late_Update(_float fTimeDelta)
 	for (auto& child : m_vecChildren)
 	{
 		child->Late_Update(fTimeDelta);
+	}
+
+	if (m_pSwingWindEffect && m_pSwingWindEffect->IsActive())
+	{
+		m_pSwingWindEffect->Late_Update(fTimeDelta);
+	}
+	if (m_pPunchWindEffect && m_pPunchWindEffect->IsActive())
+	{
+		m_pPunchWindEffect->Late_Update(fTimeDelta);
 	}
 }
 
@@ -158,8 +181,71 @@ HRESULT CEnmuArm::Ready_Components()
 	m_pAnimatorCom->RegisterEventListener("CameraShake", [&](const string& eventName) {
 		if (auto pCamera = dynamic_cast<CThirdPersonCamera*>(CGameInstance::Get_Instance()->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("ThirdPersonCamera"))))
 		{
-			pCamera->TriggerShake(0.6f, 2.5f);
+			pCamera->TriggerShake(1.f, 10.f);
 		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("SwingLeft", [&](const string& eventName) {
+		auto pEffect = m_pSwingWindEffect;
+		if (pEffect)
+		{
+			pEffect->SetActive(true);
+		}
+		});
+	m_pAnimatorCom->RegisterEventListener("SwingRight", [&](const string& eventName) {
+		auto pEffect = m_pSwingWindEffect;
+		if (pEffect)
+		{
+			pEffect->SetDirection(false);
+			pEffect->SetActive(true);
+		}
+		});
+
+	//L_TentaclesArmA_9 R_TentaclesArmA_9
+
+	m_pAnimatorCom->RegisterEventListener("PunchLeft", [&](const string& eventName) {
+		auto pEffect = m_pPunchWindEffect;
+		auto pBone = m_pModelCom->Get_Bone("L_Hand");
+		if (pBone)
+		{
+			if (pEffect)
+			{
+				pEffect->Set_BoneSocket(pBone);
+				pEffect->UpdateTransform();
+				pEffect->SetActive(true);
+			}
+		}
+		});
+	m_pAnimatorCom->RegisterEventListener("PunchRight", [&](const string& eventName) {
+		auto pEffect = m_pPunchWindEffect;
+		auto pBone = m_pModelCom->Get_Bone("R_Hand");
+		if (pBone)
+		{
+			if (pEffect)
+			{
+				pEffect->SetActive(true);
+				pEffect->Set_BoneSocket(pBone);
+				pEffect->UpdateTransform();
+			}
+		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("SwingWindSound", [&](const string& eventName) {
+		CSoundMag::Get_Instance()->PlayEffect("event:/Enmu/Swing");
+		});
+	m_pAnimatorCom->RegisterEventListener("HandAttackSound", [&](const string& eventName) {
+		CSoundMag::Get_Instance()->PlayEffect("event:/Enmu/HandAttack");
+		});
+	m_pAnimatorCom->RegisterEventListener("FollowPunchSound", [&](const string& eventName) {
+		CSoundMag::Get_Instance()->PlayEffect("event:/Enmu/FollowPunch");
+		});
+
+	m_pAnimatorCom->RegisterEventListener("PunchWindSound", [&](const string& eventName) {
+		CSoundMag::Get_Instance()->PlayEffect("event:/Enmu/Punch");
+		});
+
+	m_pAnimatorCom->RegisterEventListener("ReadyAttackSound", [&](const string& eventName) {
+		CSoundMag::Get_Instance()->PlayEffect("event:/Enmu/ReadyAttack");
 		});
 
 
@@ -399,6 +485,41 @@ void CEnmuArm::Ready_AnimationForRight()
 	ctrl->AddTransition(openIdx2, idleIdx, cFinished, 0.1f); // 열리는거
 
 
+}
+HRESULT CEnmuArm::Ready_Effect()
+{
+	if (m_bIsLeftArm)
+	{
+		m_pSwingWindEffect = CEnmuSwingWindEffect::Create(m_pDevice, m_pContext);
+		if (m_pSwingWindEffect == nullptr)
+			return E_FAIL;
+		m_pSwingWindEffect->SetDirection(true);
+		m_pSwingWindEffect->Initialize(nullptr);
+		m_pSwingWindEffect->SetActive(false);
+
+		m_pPunchWindEffect = CEnmuPunchWindEffect::Create(m_pDevice, m_pContext);
+		if (m_pPunchWindEffect == nullptr)
+			return E_FAIL;
+		m_pPunchWindEffect->Initialize(nullptr);
+		m_pPunchWindEffect->SetActive(false);
+		m_pPunchWindEffect->SetParent(this);
+	}
+	else
+	{
+		m_pSwingWindEffect = CEnmuSwingWindEffect::Create(m_pDevice, m_pContext);
+		if (m_pSwingWindEffect == nullptr)
+			return E_FAIL;
+		m_pSwingWindEffect->SetDirection(false);
+		m_pSwingWindEffect->Initialize(nullptr);
+		m_pSwingWindEffect->SetActive(false);
+		m_pPunchWindEffect = CEnmuPunchWindEffect::Create(m_pDevice, m_pContext);
+		if (m_pPunchWindEffect == nullptr)
+			return E_FAIL;
+		m_pPunchWindEffect->Initialize(nullptr);
+		m_pPunchWindEffect->SetActive(false);
+		m_pPunchWindEffect->SetParent(this);
+	}
+	return S_OK;
 }
 void CEnmuArm::Ready_AnimationForLeft()
 {
@@ -704,6 +825,8 @@ void CEnmuArm::Free()
 {
 	CEnmuParts::Free();
 	Safe_Release(m_pBodyColliderCom);
+	Safe_Release(m_pSwingWindEffect);
+	Safe_Release(m_pPunchWindEffect);
 }
 
 void CEnmuArm::OnCollisionEnter(CCollider* other)

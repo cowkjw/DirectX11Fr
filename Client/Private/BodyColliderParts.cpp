@@ -234,8 +234,11 @@ void CBodyColliderParts::Free()
 
 void CBodyColliderParts::OnCollisionEnter(CCollider* other)
 {
+
 	if (auto pTarget = dynamic_cast<CBaseCharacter*>(other->GetOwner()))
 	{
+		if (pTarget == m_pParent)
+			return;
 		if (m_DamagedTargets.find(pTarget) != m_DamagedTargets.end())
 			return; // 이미 데미지를 입힌 대상이면 무시
 		m_DamagedTargets.insert(pTarget); // 데미지를 입힌 대상에 추가
@@ -323,6 +326,7 @@ void CBodyColliderParts::OnCollisionStay(CCollider* other, float fTimeDelta)
 			auto pBoss = static_cast<CEnmuMeat*>(pBossParts->GetParent());
 			if (pBoss)
 			{
+				CSoundMag::Get_Instance()->PlayEffect("event:/Enmu/Hited");
 				pBoss->OnAttackHit(pTarget);
 			}
 		}

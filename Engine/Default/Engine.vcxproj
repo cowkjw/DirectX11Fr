@@ -206,6 +206,7 @@ CALL $(SolutionDir)\UpdateLib.bat</Command>
     <ClInclude Include="..\public\ResourceMag.h" />
     <ClInclude Include="..\public\Serializable.h" />
     <ClInclude Include="..\Public\Shader.h" />
+    <ClInclude Include="..\Public\Shadow.h" />
     <ClInclude Include="..\public\SoundMag.h" />
     <ClInclude Include="..\Public\SphereCollider.h" />
     <ClInclude Include="..\Public\Target_Manager.h" />
@@ -267,6 +268,7 @@ CALL $(SolutionDir)\UpdateLib.bat</Command>
     <ClCompile Include="..\private\ResourceMag.cpp" />
     <ClCompile Include="..\private\Serializable.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
+    <ClCompile Include="..\Private\Shadow.cpp" />
     <ClCompile Include="..\private\SoundMag.cpp" />
     <ClCompile Include="..\Private\SphereCollider.cpp" />
     <ClCompile Include="..\Private\Target_Manager.cpp" />

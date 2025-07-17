@@ -192,6 +192,7 @@ void CEnmuHead::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
 	if (other->GetType() == ColliderType::HITBOX)
 	{
 		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("TanjiroHitParticle"), hitPos);
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitBodyShockParticle"), hitPos);
 	}
 
 }

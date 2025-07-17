@@ -1,0 +1,324 @@
+Parent = Material3'/APK/Content/art/Effect/Skl/Wa/6Nej/Materials/M_e_Skl_Wa_6Nej_Vortex004.M_e_Skl_Wa_6Nej_Vortex004'
+ScalarParameterValues[38] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=00------Texture_LineParam }
+        ParameterValue = 0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=00--00--Texture_Color_Ceil }
+        ParameterValue = 0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=00--01--Texture_Color_Ceil Threshold }
+        ParameterValue = 18
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=01------Texture_Alpha_Param }
+        ParameterValue = 4
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=01------Scale_U_Line }
+        ParameterValue = 12
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=01------Scale_V_Line }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=01------Offset_U }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=01------Offset_U_Line }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=01------Offset_U_RGB }
+        ParameterValue = -0.02
+        ParameterName = None
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=01------Offset_V }
+        ParameterValue = 0.175
+        ParameterName = None
+    }
+    ScalarParameterValues[10] =
+    {
+        ParameterInfo = { Name=01------Offset_V_Line }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[11] =
+    {
+        ParameterInfo = { Name=01------Offset_V_RGB }
+        ParameterValue = 0.175
+        ParameterName = None
+    }
+    ScalarParameterValues[12] =
+    {
+        ParameterInfo = { Name=01------Rotate }
+        ParameterValue = 0.25
+        ParameterName = None
+    }
+    ScalarParameterValues[13] =
+    {
+        ParameterInfo = { Name=01------Rotate_RGB }
+        ParameterValue = 0.25
+        ParameterName = None
+    }
+    ScalarParameterValues[14] =
+    {
+        ParameterInfo = { Name=01------Scale_U }
+        ParameterValue = 18
+        ParameterName = None
+    }
+    ScalarParameterValues[15] =
+    {
+        ParameterInfo = { Name=01------Scale_U_RGB }
+        ParameterValue = 18
+        ParameterName = None
+    }
+    ScalarParameterValues[16] =
+    {
+        ParameterInfo = { Name=01------Scale_V }
+        ParameterValue = 0.75
+        ParameterName = None
+    }
+    ScalarParameterValues[17] =
+    {
+        ParameterInfo = { Name=01------Scale_V_RGB }
+        ParameterValue = 0.75
+        ParameterName = None
+    }
+    ScalarParameterValues[18] =
+    {
+        ParameterInfo = { Name=01------Speed_U }
+        ParameterValue = -10
+        ParameterName = None
+    }
+    ScalarParameterValues[19] =
+    {
+        ParameterInfo = { Name=01------Speed_U_RGB }
+        ParameterValue = -10
+        ParameterName = None
+    }
+    ScalarParameterValues[20] =
+    {
+        ParameterInfo = { Name=01------Speed_V }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[21] =
+    {
+        ParameterInfo = { Name=01------Speed_V_RGB }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[22] =
+    {
+        ParameterInfo = { Name=02------Offset_U_2 }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[23] =
+    {
+        ParameterInfo = { Name=07--00--Rotate }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[24] =
+    {
+        ParameterInfo = { Name=05------FadeDistabce }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[25] =
+    {
+        ParameterInfo = { Name=06--03--FresnelPower }
+        ParameterValue = 0.7
+        ParameterName = None
+    }
+    ScalarParameterValues[26] =
+    {
+        ParameterInfo = { Name=07--01--DistortionMulti }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[27] =
+    {
+        ParameterInfo = { Name=07--00--Scale_U_1 }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[28] =
+    {
+        ParameterInfo = { Name=07--00--Scale_V_1 }
+        ParameterValue = 4
+        ParameterName = None
+    }
+    ScalarParameterValues[29] =
+    {
+        ParameterInfo = { Name=07--00--Speed_U_1 }
+        ParameterValue = -0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[30] =
+    {
+        ParameterInfo = { Name=07--00--Speed_V_1 }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[31] =
+    {
+        ParameterInfo = { Name=SP--00--WPO Multiply }
+        ParameterValue = -2
+        ParameterName = None
+    }
+    ScalarParameterValues[32] =
+    {
+        ParameterInfo = { Name=SP--02--Scale_U }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[33] =
+    {
+        ParameterInfo = { Name=SP--02--Scale_V }
+        ParameterValue = 5
+        ParameterName = None
+    }
+    ScalarParameterValues[34] =
+    {
+        ParameterInfo = { Name=SP--02--Speed_U }
+        ParameterValue = -15
+        ParameterName = None
+    }
+    ScalarParameterValues[35] =
+    {
+        ParameterInfo = { Name=SP--02--Speed_V }
+        ParameterValue = -0.2
+        ParameterName = None
+    }
+    ScalarParameterValues[36] =
+    {
+        ParameterInfo = { Name=SP--02--TimeScale }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[37] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[7] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=00------Texture_Line }
+        ParameterValue = Texture2D'/APK/Content/art/Effect/Cmn/Textures/T_e_cmn_Line006.T_e_cmn_Line006'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=01------Texture_Alfa_2 }
+        ParameterValue = Texture2D'/APK/Content/art/Effect/Skl/Wa/Scmn/Textures/T_e_Skl_Wa_Scmn_Trail002.T_e_Skl_Wa_Scmn_Trail002'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=01------Texture_Alpha }
+        ParameterValue = Texture2D'/APK/Content/art/Effect/Skl/Wa/6Nej/Textures/T_e_Skl_Wa_6Nej_Vortex001.T_e_Skl_Wa_6Nej_Vortex001'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=01------Texture_Color }
+        ParameterValue = Texture2D'/APK/Content/art/Effect/Skl/Wa/6Nej/Textures/T_e_Skl_Wa_6Nej_Vortex001C.T_e_Skl_Wa_6Nej_Vortex001C'
+        ParameterName = None
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=06--00--FresnelTexture }
+        ParameterValue = Texture2D'/APK/Content/art/Effect/Cmn/Textures/T_e_cmn_Falloff003.T_e_cmn_Falloff003'
+        ParameterName = None
+    }
+    TextureParameterValues[5] =
+    {
+        ParameterInfo = { Name=07--00--Texture_Dist }
+        ParameterValue = Texture2D'/APK/Content/art/Effect/Cmn/Textures/T_e_Cmn_Wave007.T_e_Cmn_Wave007'
+        ParameterName = None
+    }
+    TextureParameterValues[6] =
+    {
+        ParameterInfo = { Name=SP--01--WPO Texture }
+        ParameterValue = Texture2D'/APK/Content/art/Effect/Cmn/Textures/T_e_cmn_WaveNormal002.T_e_cmn_WaveNormal002'
+        ParameterName = None
+    }
+}
+VectorParameterValues[3] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=04------Emissive }
+        ParameterValue = { R=1, G=1, B=1, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=Param }
+        ParameterValue = { R=0.9, G=0.9, B=0.9, A=0 }
+        ParameterName = None
+    }
+    VectorParameterValues[2] =
+    {
+        ParameterInfo = { Name=Param1 }
+        ParameterValue = { R=0.65, G=0.65, B=0.65, A=0 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = true
+    BlendMode = BLEND_Translucent (2)
+    bOverride_TwoSided = false
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

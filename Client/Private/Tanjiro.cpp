@@ -15,6 +15,7 @@
 #include "StateHurtAir.h"
 #include "StateHurtBlow.h"
 #include "DashSmokeEffect.h"
+#include "TanjiroNej.h"
 #include <SlashEffect.h>
 #include "EffectManager.h"
 #include "TanTakEffect.h"
@@ -159,6 +160,11 @@ void CTanjiro::Update(_float fTimeDelta)
 	{
 		m_pTakEffect->Update(fTimeDelta);
 	}
+
+	if (m_pNej && m_pNej->IsActive())
+	{
+		m_pNej->Update(fTimeDelta);
+	}
 }
 
 void CTanjiro::Late_Update(_float fTimeDelta)
@@ -201,6 +207,11 @@ void CTanjiro::Late_Update(_float fTimeDelta)
 	if (m_pTakEffect && m_pTakEffect->IsActive())
 	{
 		m_pTakEffect->Late_Update(fTimeDelta);
+	}
+
+	if (m_pNej && m_pNej->IsActive())
+	{
+		m_pNej->Late_Update(fTimeDelta);
 	}
 }
 
@@ -280,10 +291,11 @@ void CTanjiro::OnAttackHit(CGameObject* pTarget)
 			break;
 		case CSTATE::SKILL1:
 			StartHitStop(0.25f);
-			pBoss->Hit(20.f);
+			pBoss->Hit(5.f);
 			break;
 		case CSTATE::SKILL2:
 			StartHitStop(0.5f);
+			CSoundMag::Get_Instance()->PlayEffect("event:/Common/SlashHit");
 			m_bCanRangeAttack = true; // 스킬 사용 후 다음 공격 가능
 			//pBoss->Hit(30.f);
 			break;
@@ -309,9 +321,9 @@ HRESULT CTanjiro::Ready_Components()
 	CNavigation::NAVIGATION_DESC		NaviDesc{};
 	NaviDesc.iIndex = 4;
 
-	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Navigation"),
-	//	TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
-	//	return E_FAIL;
+	if (FAILED(__super::Add_Component(ToIndex(LEVEL::ENMU_BOSS), TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
 
 
 	return S_OK;
@@ -343,6 +355,16 @@ HRESULT CTanjiro::Ready_Effects()
 	}
 	m_pTakEffect->Initialize(nullptr);
 	m_pTakEffect->SetActive(false);
+
+	m_pNej = CTanjiroNej::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pNej)
+	{
+		return E_FAIL;
+	}
+	m_pNej->Initialize(nullptr);
+	m_pNej->SetActive(false);
+
+
 	return S_OK;
 }
 
@@ -1055,7 +1077,7 @@ void CTanjiro::ReadyAnimEvents()
 			m_Velocity.x = vDir.m128_f32[0] *10.f;
 		}
 	
-		m_Velocity.y = 50.f;
+		m_Velocity.y = 15.f;
 		m_bAirborne = true;
 		});
 
@@ -1161,6 +1183,15 @@ void CTanjiro::ReadyAnimEvents()
 	m_pAnimatorCom->RegisterEventListener("NejSkillSound", [&](const string& eventName) {
 
 		CSoundMag::Get_Instance()->PlayEffect("event:/Tanjiro/Nej");
+		});
+
+	m_pAnimatorCom->RegisterEventListener("ActiveNejSkill", [&](const string& eventName) {
+		if (m_pNej)
+		{
+			_vector nejPos = m_pTransformCom->Get_State(STATE::POSITION);
+			m_pNej->SetPosition(XMVectorSetW(nejPos, 1.f));
+			m_pNej->SetActive(true);
+		}
 		});
 }
 

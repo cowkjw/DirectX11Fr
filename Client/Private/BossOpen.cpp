@@ -1,5 +1,6 @@
 #include "BossOpen.h"
 #include "BossIdle.h"
+#include <ThirdPersonCamera.h>
 
 void BossOpen::Enter(CEnmuMeat* pChar)
 {
@@ -15,6 +16,19 @@ void BossOpen::Enter(CEnmuMeat* pChar)
 	auto head = pChar->GetPart(CEnmuMeat::Parts::HEAD);
 	head->ActiveCollider();
 	pChar->SetState(EnmuState::OPEN);
+
+	if (auto pCamera = dynamic_cast<CThirdPersonCamera*>(CGameInstance::Get_Instance()->Find_GameObjectByName(ToIndex(LEVEL::ENMU_BOSS), TEXT("ThirdPersonCamera"))))
+	{
+
+		auto pTan = pChar->GetTarget();
+
+		if (pTan)
+		{
+			// 오프셋 계산
+			_vector vCamPos{ 60.604f,15.f,-80.332f,1.f };
+			pCamera->OnHit(pTan, pChar, vCamPos, m_fOpenDuration);
+		}
+	}
 }
 
 void BossOpen::Update(CEnmuMeat* pChar, _float fTimeDelta)

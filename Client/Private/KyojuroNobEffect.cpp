@@ -80,7 +80,8 @@ void CKyojuroNobEffect::Late_Update(_float fTimeDelta)
 {
 	if (m_bRenderMesh)
 	{
-		__super::Late_Update(fTimeDelta);
+		//__super::Late_Update(fTimeDelta);
+		m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
 		m_pGameInstance->Add_RenderGroup(RENDERGROUP::BLOOM_EFFECT, this);
 	}
 
