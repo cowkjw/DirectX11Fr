@@ -331,7 +331,7 @@
             "events": [
                 {
                     "name": "ActiveHitbox",
-                    "time": 4.000475883483887
+                    "time": 3.4600000381469727
                 },
                 {
                     "name": "DeactiveHitbox",
@@ -339,11 +339,15 @@
                 },
                 {
                     "name": "DeactiveFootHitbox",
-                    "time": 1.0
+                    "time": 2.0
                 },
                 {
                     "name": "AttackSound1",
                     "time": 1.649999976158142
+                },
+                {
+                    "name": "ActiveFist",
+                    "time": 1.600000023841858
                 }
             ]
         },
@@ -362,6 +366,10 @@
                 {
                     "name": "AttackSound2",
                     "time": 5.00061559677124
+                },
+                {
+                    "name": "DeactiveHitbox",
+                    "time": 2.0
                 }
             ]
         },
@@ -371,7 +379,7 @@
             "events": [
                 {
                     "name": "DeactiveHitbox",
-                    "time": 1.0
+                    "time": 1.2400000095367432
                 },
                 {
                     "name": "ActiveHitbox",
@@ -390,12 +398,8 @@
                     "time": 13.0
                 },
                 {
-                    "name": "WindLeftHandSlashEffectOn",
-                    "time": 20.0
-                },
-                {
-                    "name": "WindLeftHandSlashEffectOff",
-                    "time": 35.0
+                    "name": "WindRightHandSlashEffectOn",
+                    "time": 3.2100000381469727
                 },
                 {
                     "name": "AttackSound3",
@@ -426,6 +430,10 @@
                 {
                     "name": "AttackSound1",
                     "time": 0.550000011920929
+                },
+                {
+                    "name": "WindRightHandSlashEffectOn",
+                    "time": 3.109999895095825
                 }
             ]
         },
@@ -456,6 +464,10 @@
                 {
                     "name": "AttackSound2",
                     "time": 1.0
+                },
+                {
+                    "name": "WindRightHandSlashEffectOn",
+                    "time": 4.849999904632568
                 }
             ]
         },
@@ -486,6 +498,38 @@
                 {
                     "name": "AttackSound4",
                     "time": 2.500241756439209
+                },
+                {
+                    "name": "ActiveLastFist",
+                    "time": 18.50295066833496
+                },
+                {
+                    "name": "ActiveFist",
+                    "time": 1.6200000047683716
+                },
+                {
+                    "name": "ActiveFist",
+                    "time": 4.980000019073486
+                },
+                {
+                    "name": "ActiveFist",
+                    "time": 6.0
+                },
+                {
+                    "name": "ActiveFist",
+                    "time": 5.440000057220459
+                },
+                {
+                    "name": "ActiveFist",
+                    "time": 6.820000171661377
+                },
+                {
+                    "name": "ActiveFist",
+                    "time": 3.009999990463257
+                },
+                {
+                    "name": "ActiveFist",
+                    "time": 3.990000009536743
                 }
             ]
         },
@@ -511,6 +555,26 @@
                 {
                     "name": "DeactiveHitbox",
                     "time": 0.0
+                },
+                {
+                    "name": "KuSkillSound",
+                    "time": 1.350000023841858
+                },
+                {
+                    "name": "ActiveKuSkill",
+                    "time": 10.0
+                },
+                {
+                    "name": "ActiveKuSkill",
+                    "time": 18.0
+                },
+                {
+                    "name": "ActiveKuSkill",
+                    "time": 35.0
+                },
+                {
+                    "name": "EndAttack",
+                    "time": 55.215999603271484
                 }
             ]
         },

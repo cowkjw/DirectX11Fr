@@ -1,0 +1,1310 @@
+[
+    {
+        "CreateLevel": 4,
+        "ID": 27,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    167.25,
+                    -6.15,
+                    -117.55
+                ],
+                "Rotation": [
+                    0.0,
+                    -117.98,
+                    0.0
+                ],
+                "Scale": [
+                    8.0,
+                    8.0,
+                    8.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_01b",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 28,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -111.44,
+                    -13.42,
+                    5.09
+                ],
+                "Rotation": [
+                    -0.0,
+                    119.33,
+                    0.0
+                ],
+                "Scale": [
+                    7.69,
+                    5.0,
+                    8.72
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_02a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 29,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    175.83,
+                    0.0,
+                    -151.58
+                ],
+                "Rotation": [
+                    0.0,
+                    -128.22,
+                    0.0
+                ],
+                "Scale": [
+                    5.98,
+                    6.0,
+                    5.98
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_02b",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 30,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -103.94,
+                    0.0,
+                    -104.48
+                ],
+                "Rotation": [
+                    -0.0,
+                    -119.36,
+                    180.0
+                ],
+                "Scale": [
+                    7.98,
+                    8.0,
+                    7.98
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_03a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 31,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    141.58,
+                    3.64,
+                    -65.33
+                ],
+                "Rotation": [
+                    -0.0,
+                    80.51,
+                    180.0
+                ],
+                "Scale": [
+                    6.92,
+                    15.72,
+                    6.92
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_03b",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 32,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -14.93,
+                    -3.5,
+                    29.69
+                ],
+                "Rotation": [
+                    16.70,
+                    7.05,
+                    2.74
+                ],
+                "Scale": [
+                    28.25,
+                    14.47,
+                    14.97
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_03c",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 33,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -121.62,
+                    -8.72,
+                    -168.41
+                ],
+                "Rotation": [
+                    -0.0,
+                    -97.86,
+                    180.0
+                ],
+                "Scale": [
+                    7.87,
+                    8.0,
+                    7.87
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_04a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 34,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    158.36,
+                    -9.02,
+                    -176.72
+                ],
+                "Rotation": [
+                    0.0,
+                    121.75,
+                    180.0
+                ],
+                "Scale": [
+                    5.98,
+                    6.0,
+                    5.98
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_05a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 35,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -112.33,
+                    -6.86,
+                    -144.94
+                ],
+                "Rotation": [
+                    -0.0,
+                    -73.58,
+                    0.0
+                ],
+                "Scale": [
+                    5.98,
+                    6.0,
+                    5.98
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_05a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 36,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -97.05,
+                    0.0,
+                    -230.92
+                ],
+                "Rotation": [
+                    -0.0,
+                    70.93,
+                    180.0
+                ],
+                "Scale": [
+                    19.60,
+                    8.0,
+                    7.89
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_05a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 38,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    125.54,
+                    3.71,
+                    -6.42
+                ],
+                "Rotation": [
+                    -0.0,
+                    55.34,
+                    180.0
+                ],
+                "Scale": [
+                    9.32,
+                    11.18,
+                    10.06
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_02a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 39,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -119.08,
+                    -8.42,
+                    -60.5
+                ],
+                "Rotation": [
+                    0.0,
+                    -95.94,
+                    0.0
+                ],
+                "Scale": [
+                    12.0,
+                    12.0,
+                    12.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_02a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 40,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    160.19,
+                    0.93,
+                    -236.97
+                ],
+                "Rotation": [
+                    -0.0,
+                    -97.37,
+                    180.0
+                ],
+                "Scale": [
+                    13.89,
+                    8.0,
+                    8.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "SM_e_202_DemonMeatParts_03a",
+        "name": "Prototype_GameObject_Envirnoment",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 44,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    -76.51,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.30,
+                    0.5,
+                    0.30
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "Sky",
+        "name": "Sky",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 60,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Collider0": {
+                "CollisionType": 5,
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "HalfExtents": [
+                    100.87,
+                    136.77,
+                    3.77
+                ],
+                "IsActive": true,
+                "IsTrigger": false,
+                "Offset": [
+                    6.40,
+                    -13.92,
+                    3.29
+                ],
+                "Priority": 0,
+                "Type": "BoxCollider"
+            },
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    -18.0,
+                    -88.54
+                ],
+                "Rotation": [
+                    90.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.05,
+                    0.03,
+                    0.01
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuGround",
+        "name": "EnmuGround",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 45,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -262.60,
+                    14.85,
+                    -68.37
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    3.0,
+                    3.0,
+                    3.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuFar1",
+        "name": "EnumFar",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 46,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -301.10,
+                    0.0,
+                    -167.13
+                ],
+                "Rotation": [
+                    -0.0,
+                    -90.0,
+                    0.0
+                ],
+                "Scale": [
+                    4.94,
+                    5.0,
+                    4.94
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuFar2",
+        "name": "EnmuFar2",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 47,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -119.41,
+                    -27.28,
+                    95.51
+                ],
+                "Rotation": [
+                    0.0,
+                    64.05,
+                    -0.0
+                ],
+                "Scale": [
+                    3.99,
+                    4.0,
+                    3.49
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuTrees",
+        "name": "EnmuTrees",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 48,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    403.23,
+                    -5.32,
+                    149.33
+                ],
+                "Rotation": [
+                    0.0,
+                    90.0,
+                    0.0
+                ],
+                "Scale": [
+                    3.44,
+                    3.5,
+                    3.44
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuFarHill",
+        "name": "EnmuFarHill1",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 49,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -342.47,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    -90.0,
+                    0.0
+                ],
+                "Scale": [
+                    3.44,
+                    3.5,
+                    3.44
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuFarHill",
+        "name": "EnmuFarHill2",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 50,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    0.0,
+                    -150.24,
+                    156.25
+                ],
+                "Rotation": [
+                    0.0,
+                    90.0,
+                    -0.0
+                ],
+                "Scale": [
+                    19.94,
+                    20.0,
+                    19.94
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuTrainBody",
+        "name": "TrainBody",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 51,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    1.75,
+                    -150.25,
+                    -395.57
+                ],
+                "Rotation": [
+                    0.0,
+                    90.0,
+                    -0.0
+                ],
+                "Scale": [
+                    19.95,
+                    20.0,
+                    19.95
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuTrainBody",
+        "name": "TrainBody2",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 88,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    270.16,
+                    12.61,
+                    377.60
+                ],
+                "Rotation": [
+                    0.0,
+                    180.0,
+                    0.0
+                ],
+                "Scale": [
+                    2.99,
+                    3.0,
+                    2.99
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuFar1",
+        "name": "EnmuInfiEnv",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 89,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    243.34,
+                    0.0,
+                    -324.72
+                ],
+                "Rotation": [
+                    0.0,
+                    90.0,
+                    0.0
+                ],
+                "Scale": [
+                    5.0,
+                    5.0,
+                    5.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuFar2",
+        "name": "EnmuInfiEnv",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 90,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    388.96,
+                    0.0,
+                    968.40
+                ],
+                "Rotation": [
+                    0.0,
+                    90.0,
+                    0.0
+                ],
+                "Scale": [
+                    3.49,
+                    3.5,
+                    3.49
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuFarHill",
+        "name": "EnmuInfiEnv",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 91,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    -325.72,
+                    0.0,
+                    549.00
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    3.99,
+                    4.0,
+                    3.99
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuFar1",
+        "name": "EnmuInfiEnv",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 92,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    62.00,
+                    -24.94,
+                    -472.07
+                ],
+                "Rotation": [
+                    0.0,
+                    -90.0,
+                    0.0
+                ],
+                "Scale": [
+                    4.0,
+                    4.0,
+                    4.0
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuTrees",
+        "name": "EnmuInfiEnv",
+        "parentId": 0,
+        "tag": ""
+    },
+    {
+        "CreateLevel": 4,
+        "ID": 93,
+        "ProtoLevel": 4,
+        "ProtoTypeTag": "Prototype_GameObject_Envirnoment",
+        "components": {
+            "Com_Model": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Shader": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true
+            },
+            "Com_Transform": {
+                "ComponentCreateLevel": 0,
+                "ComponentLevel": 0,
+                "ComponentTag": "",
+                "IsActive": true,
+                "Position": [
+                    261.80,
+                    13.90,
+                    -98.18
+                ],
+                "Rotation": [
+                    0.0,
+                    180.0,
+                    0.0
+                ],
+                "Scale": [
+                    3.99,
+                    4.0,
+                    3.99
+                ]
+            }
+        },
+        "isActive": true,
+        "modelTag": "EnmuFar1",
+        "name": "EnmuInfiEnv",
+        "parentId": 0,
+        "tag": ""
+    }
+]

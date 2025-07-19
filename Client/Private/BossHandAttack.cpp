@@ -2,6 +2,7 @@
 #include "BossIdle.h"
 #include <EnmuArm.h>
 #include "ThirdPersonCamera.h"
+#include "EffectManager.h"
 
 void BossHandAttack::Enter(CEnmuMeat* pChar)
 {
@@ -94,7 +95,9 @@ void BossHandAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
 					pChar->GetTarget()->TakeDamage(7.f);
 					pChar->GetTarget()->StartHitStop(0.3f); // 히트스톱 시작
 					pChar->StartHitStop(0.3f); // 캐릭터도 히트스톱 시작
-
+					_float3 vPos{ };
+					XMStoreFloat3(&vPos, vTargetPos);
+					CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitBodyShockParticle"), vPos);
 				}
 			}
 		}
@@ -131,6 +134,9 @@ void BossHandAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
 				{
 					pChar->GetTarget()->HurtDown();
 					pChar->GetTarget()->TakeDamage(7.f);
+					_float3 vPos{ };
+					XMStoreFloat3(&vPos, vTargetPos);
+					CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitBodyShockParticle"), vPos);
 				}
 			}
 		}

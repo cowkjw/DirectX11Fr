@@ -74,6 +74,11 @@ private:
 	mt19937 m_RandGen;
 	uniform_real_distribution<_float> m_Distribution{ 0.f, 1.f };
 
+	vector<class CAkaFistEffect*> m_pAkaFistEffects = { nullptr }; // æ∆ƒ´¿⁄ ¡÷∏‘ ¿Ã∆Â∆Æ
+	vector<class CAkaKuBulletEffect*> m_pAkaKuBulletEffects;
+	_uint m_iBulletIndex = 0;
+	_uint m_iFistIndex = 0; // «ˆ¿Á ¡÷∏‘ ¿Ã∆Â∆Æ ¿Œµ¶Ω∫
+
 public:
 	static CAkaza* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;

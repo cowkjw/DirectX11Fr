@@ -15,6 +15,8 @@
 #include "DashSmokeEffect.h"
 #include "BodyColliderParts.h"
 #include "UIProgressBar.h"
+#include "AkaKuBulletEffect.h"
+#include "AkaFistEffect.h"
 #include "WindSlashEffect.h"
 #include <JsonLoader.h>
 #include "Navigation.h"
@@ -31,7 +33,17 @@ CAkaza::CAkaza(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CAkaza::CAkaza(const CAkaza& Prototype)
 	: CBaseCharacter(Prototype)
+	, m_pAkaFistEffects(Prototype.m_pAkaFistEffects)
+	, m_pAkaKuBulletEffects(Prototype.m_pAkaKuBulletEffects)
 {
+	for (auto& pFist : m_pAkaFistEffects)
+	{
+		Safe_AddRef(pFist);
+	}
+	for (auto& pBullet : m_pAkaKuBulletEffects)
+	{
+		Safe_AddRef(pBullet);
+	}
 }
 HRESULT CAkaza::Initialize_Prototype()
 {
@@ -111,13 +123,14 @@ HRESULT CAkaza::Initialize(void* pArg)
 	}
 
 	//// 왼발이랑 오른 팔에 붙이기
-	//CWindSlashEffect* pSlashEffect = dynamic_cast<CWindSlashEffect*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_WindSlash"),
-	//	ToIndex(LEVEL::GAMEPLAY), TEXT("WindSlash")));
-	//if (pSlashEffect)
-	//{
-	//	pSlashEffect->SetActive(false);
-	//CEffectManager::Get_Instance()->RegisterEffect(TEXT("WindSlash"), pSlashEffect);
-	//}
+	CWindSlashEffect* pSlashEffect = dynamic_cast<CWindSlashEffect*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Effect_WindSlash"),
+		ToIndex(LEVEL::GAMEPLAY), TEXT("WindSlash")));
+	if (pSlashEffect)
+	{
+		pSlashEffect->SetActive(false);
+		pSlashEffect->SetParent(this);
+		CEffectManager::Get_Instance()->RegisterEffect(TEXT("WindSlash"), pSlashEffect);
+	}
 	//if (pSlashEffect)
 	//{
 	//	pSlashEffect->SetActive(true);
@@ -131,11 +144,12 @@ HRESULT CAkaza::Initialize(void* pArg)
 		m_pNavigationCom->FindIndexCell(m_pTransformCom->Get_State(STATE::POSITION));
 	}
 
-	m_fMaxHP = 250.f;
+	m_fMaxHP = 150.f;
 	m_fCurrentHP = m_fMaxHP;
 
 	if (FAILED(Ready_Effects()))
 		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -171,6 +185,21 @@ void CAkaza::Priority_Update(_float fTimeDelta)
 	//		ChangeState(new StateDie());
 	//	}
 	//}
+	for (const auto& fist : m_pAkaFistEffects)
+	{
+		if (fist && fist->IsActive())
+		{
+			fist->Update(fTimeDelta);
+		}
+	}
+
+	for (const auto& bullet : m_pAkaKuBulletEffects)
+	{
+		if (bullet && bullet->IsActive())
+		{
+			bullet->Update(fTimeDelta);
+		}
+	}
 
 }
 
@@ -187,12 +216,30 @@ void CAkaza::Update(_float fTimeDelta)
 		child->Update(fTimeDelta);
 	}
 
+
+
 }
 
 void CAkaza::Late_Update(_float fTimeDelta)
 {
+	for (const auto& fist : m_pAkaFistEffects)
+	{
+		if (fist && fist->IsActive())
+		{
+			fist->Late_Update(fTimeDelta);
+		}
+	}
+
+	for (const auto& bullet : m_pAkaKuBulletEffects)
+	{
+		if (bullet && bullet->IsActive())
+		{
+			bullet->Late_Update(fTimeDelta);
+		}
+	}
 	__super::Update(fTimeDelta);
 	__super::Late_Update(fTimeDelta);
+
 
 
 	for (auto& child : m_vecChildren)
@@ -234,10 +281,12 @@ void CAkaza::TakeDamage(_float fDamage)
 		return;
 	if (m_eState == CSTATE::GUARD)
 	{
-		fDamage *= 0.5f; // 가드 중에는 피해량 감소
+		fDamage *= 0.3f; // 가드 중에는 피해량 감소
 	}
+	if (m_eState == CSTATE::SKILL2)
+		return;
 	__super::TakeDamage(fDamage);
-	if(!m_bAirborne&&!m_bIsBound)
+	if(!m_bAirborne&&!m_bIsBound && m_eState != CSTATE::GUARD)
 	{
 		ChangeState(new StateHurt());
 	}
@@ -259,7 +308,7 @@ void CAkaza::OnAttackHit(CGameObject* pTarget)
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
 				StartHitStop(0.2f);
-				pCharacter->TakeDamage(3.f);
+				pCharacter->TakeDamage(2.f);
 				auto pState = pCharacter->GetState();
 				if (pCharacter->IsAirborne())
 				{
@@ -272,7 +321,7 @@ void CAkaza::OnAttackHit(CGameObject* pTarget)
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
 				StartHitStop(0.2f);
-				pCharacter->TakeDamage(5.f);
+				pCharacter->TakeDamage(4.f);
 				if (pCharacter->IsAirborne())
 				{
 					pCharacter->LaunchAirborne(40.f);
@@ -284,7 +333,7 @@ void CAkaza::OnAttackHit(CGameObject* pTarget)
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
 				StartHitStop(0.2f);
-				pCharacter->TakeDamage(8.f);
+				pCharacter->TakeDamage(4.f);
 				if (pCharacter->IsAirborne())
 				{
 					pCharacter->LaunchAirborne(40.f);
@@ -307,7 +356,7 @@ void CAkaza::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::ATTACK_DOWN:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
-				pCharacter->TakeDamage(30.f);
+				pCharacter->TakeDamage(8.f);
 			}
 			break;
 		case CSTATE::ATTACK_UP:
@@ -394,6 +443,31 @@ HRESULT CAkaza::Ready_Effects()
 	m_pDashSmokeEffect->Initialize(nullptr);
 	m_pDashSmokeEffect->SetActive(false);
 	m_pDashSmokeEffect->SetColor(_float4(0.247f, 0.572f, 0.88f, 1.f));
+
+	for (_int i = 0; i < 10; ++i)
+	{
+		auto pAkaFistEffect = CAkaFistEffect::Create(m_pDevice, m_pContext);
+		if (nullptr == pAkaFistEffect)
+		{
+			return E_FAIL;
+		}
+		pAkaFistEffect->Initialize(nullptr);
+		pAkaFistEffect->SetActive(false);
+		m_pAkaFistEffects.push_back(pAkaFistEffect);
+	}
+
+	for (_int i = 0; i < 3; i++)
+	{
+		auto pAkaBullet = CAkaKuBulletEffect::Create(m_pDevice, m_pContext);
+		if (nullptr == pAkaBullet)
+		{
+			return E_FAIL;
+		}
+		pAkaBullet->Initialize(nullptr);
+		pAkaBullet->SetActive(false);
+		pAkaBullet->SetParent(this);
+		m_pAkaKuBulletEffects.push_back(pAkaBullet);
+	}
 	return S_OK;
 }
 
@@ -777,16 +851,16 @@ void CAkaza::Ready_Animation()
 	}
 
 	// 공식
-	CAnimController::Condition cFlameTiger{ "Skill0", CAnimController::EOp::Trigger, 0.f };
+	CAnimController::Condition cKuu{ "Skill0", CAnimController::EOp::Trigger, 0.f };
 
-	ctrl->AddTransition(attack0Idx, skillDefaultIdx, cFlameTiger);
-	ctrl->AddTransition(attack1Idx, skillDefaultIdx, cFlameTiger);
-	ctrl->AddTransition(attack2Idx, skillDefaultIdx, cFlameTiger);
-	ctrl->AddTransition(attack3Idx, skillDefaultIdx, cFlameTiger);
-	ctrl->AddTransition(attack4Idx, skillDefaultIdx, cFlameTiger);
-	ctrl->AddTransition(attack5Idx, skillDefaultIdx, cFlameTiger);
+	ctrl->AddTransition(attack0Idx, skillDefaultIdx, cKuu);
+	ctrl->AddTransition(attack1Idx, skillDefaultIdx, cKuu);
+	ctrl->AddTransition(attack2Idx, skillDefaultIdx, cKuu);
+	ctrl->AddTransition(attack3Idx, skillDefaultIdx, cKuu);
+	ctrl->AddTransition(attack4Idx, skillDefaultIdx, cKuu);
+	ctrl->AddTransition(attack5Idx, skillDefaultIdx, cKuu);
 	ctrl->AddTransition(skillDefaultIdx, runIdx, cSpeedUp);
-	ctrl->AddTransition(idleIdx, skillDefaultIdx, cFlameTiger, 0.2f);
+	ctrl->AddTransition(idleIdx, skillDefaultIdx, cKuu, 0.2f);
 	ctrl->AddTransition(skillDefaultIdx, idleIdx, cFin);
 
 	// 난식
@@ -1018,45 +1092,20 @@ void CAkaza::ReadyAnimEvents()
 		DeactiveFootCollider();
 		});
 
-	m_pAnimatorCom->RegisterEventListener("WindLeftHandSlashEffectOn", [&](const string& eventName) {
+	
+
+	m_pAnimatorCom->RegisterEventListener("WindRightHandSlashEffectOn", [&](const string& eventName) {
 
 		auto pSlashEffect = CEffectManager::Get_Instance()->GetEffect(TEXT("WindSlash"));
 		if (pSlashEffect)
 		{
-			CBone* pBone = m_pModelCom->Get_Bone("R_Hand_1");
+			auto pBone = m_pModelCom->Get_Bone("R_Hand_1");
 			if (!pBone)
 				return;
-			// 본의 로컬을 월드로 
-
-			static_cast<CMeshEffect*>(pSlashEffect)->SetRenderMesh(true);
-			_float4x4 parentWorld = GetTransform()->Get_WorldMatrix();
-			_float4x4 boneLocal = *pBone->Get_CombinedTransformationMatrix();
-
-			// 본 매트릭스를 그대로 사용 (정규화하지 않음)
-			_matrix matBoneLocal = XMLoadFloat4x4(&boneLocal);
-			_matrix matParentWorld = XMLoadFloat4x4(&parentWorld);
-
-			// 올바른 매트릭스 곱셈 순서: ParentWorld * BoneLocal
-			_matrix world = XMMatrixMultiply(matBoneLocal, matParentWorld);
-
-			//// 파티클 이펙트의 로컬 오프셋이 있다면 적용
-			//_matrix localOffset = XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix());
-			//world = XMMatrixMultiply(localOffset, world);
-
-			XMStoreFloat4x4(&m_pTransformCom->Get_WorldMatrix(), world);
-			pSlashEffect->GetTransform()->Set_WorldMatrix(m_pTransformCom->Get_WorldMatrix());
-	
-		//	pSlashEffect->GetTransform()->Set_State(STATE::POSITION, GetTransform()->Get_State(STATE::POSITION));
-			pSlashEffect->SetActive(true);
-		}
-		});
-
-	m_pAnimatorCom->RegisterEventListener("WindLeftHandSlashEffectOff", [&](const string& eventName) {
-
-		auto pSlashEffect = CEffectManager::Get_Instance()->GetEffect(TEXT("WindSlash"));
-		if (pSlashEffect)
-		{
-			static_cast<CMeshEffect*>(pSlashEffect)->SetRenderMesh(false);
+			pSlashEffect->Set_BoneSocket(pBone);
+			static_cast<CWindSlashEffect*>(pSlashEffect)->SetRenderMesh(true);
+			static_cast<CWindSlashEffect*>(pSlashEffect)->UpdateTransform();
+			static_cast<CWindSlashEffect*>(pSlashEffect)->SetActive(true);
 		}
 		});
 
@@ -1075,6 +1124,126 @@ void CAkaza::ReadyAnimEvents()
 	m_pAnimatorCom->RegisterEventListener("AttackSound4", [&](const string& eventName) {
 		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/Attack");
 		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/AttackSlash4");
+		});
+
+	m_pAnimatorCom->RegisterEventListener("AttackSound4", [&](const string& eventName) {
+		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/Attack");
+		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/AttackSlash4");
+		});
+
+	m_pAnimatorCom->RegisterEventListener("ActiveFist", [&](const string& eventName) {
+
+
+		if (m_iFistIndex >= m_pAkaFistEffects.size())
+			m_iFistIndex = 0; // 인덱스 초기화
+		auto pFist = m_pAkaFistEffects[m_iFistIndex++];
+
+		if (pFist&& pFist->IsActive()== false)
+		{
+			
+			_vector vForward = XMVector3Normalize(
+				m_pTransformCom->Get_State(STATE::LOOK)
+			);
+			_vector fistPos = m_pTransformCom->Get_State(STATE::POSITION);
+			_vector offsetForward = XMVectorScale(vForward, 20.f);
+			_vector offsetLR = XMVectorSet(
+				m_pGameInstance->Compute_Random(1.f,6.f)  //너무 붙어버리는 경우가 있어서 1 더하기
+				* ((rand() % 2 == 0) ? -1.f : 1.f),           
+				0.f, 0.f, 0.f
+			);
+			_vector offsetUp = XMVectorSet(0.f, 10.f, 0.f, 0.f);
+			fistPos = XMVectorAdd(fistPos, offsetForward);
+			fistPos = XMVectorAdd(fistPos, offsetLR);
+			fistPos = XMVectorAdd(fistPos, offsetUp);
+
+			pFist->GetTransform()->RotateToDirection(vForward);
+
+			pFist->GetTransform()->Set_State(STATE::POSITION, fistPos);
+			pFist->GetTransform()->Scaling(_float3(11.f, 11.f, 11.f));
+			//_float3 vPos{};
+			//_vector vMyPos = m_pTransformCom->Get_State(STATE::POSITION);
+			pFist->SetActive(true);
+			//vMyPos = XMVectorAdd(vMyPos, offsetUp);
+			//XMStoreFloat3(&vPos, vMyPos);
+			//CEffectManager::Get_Instance()->SpawnParticleEffect(L"FireSpread", vPos);
+			//CEffectManager::Get_Instance()->SpawnParticleEffect(L"Fire", vPos, _float3(1.5f, 1.5f, 1.5f));
+
+		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("ActiveLastFist", [&](const string& eventName) {
+
+		
+		if (m_iFistIndex >= m_pAkaFistEffects.size())
+			m_iFistIndex = 0; // 인덱스 초기화
+		auto pFist = m_pAkaFistEffects[m_iFistIndex++];
+
+		if (pFist && pFist->IsActive() == false)
+		{
+		
+			_vector vForward = XMVector3Normalize(
+				m_pTransformCom->Get_State(STATE::LOOK)
+			);
+			_vector fistPos = m_pTransformCom->Get_State(STATE::POSITION);
+			_vector offsetForward = XMVectorScale(vForward, 40.f);
+			_vector offsetUp = XMVectorSet(0.f, 10.f, 0.f, 0.f);
+			fistPos = XMVectorAdd(fistPos, offsetForward);
+			fistPos = XMVectorAdd(fistPos, offsetUp);
+
+			pFist->GetTransform()->RotateToDirection(vForward);
+
+			pFist->GetTransform()->Set_State(STATE::POSITION, fistPos);
+			pFist->GetTransform()->Scaling(_float3(40.f, 40.f, 40.f));
+			pFist->SetActive(true);
+			//_float3 vPos{};
+			//_vector vMyPos = m_pTransformCom->Get_State(STATE::POSITION);
+
+			//vMyPos = XMVectorAdd(vMyPos, offsetUp);
+			//XMStoreFloat3(&vPos, vMyPos);
+			//CEffectManager::Get_Instance()->SpawnParticleEffect(L"FireSpread", vPos);
+			//CEffectManager::Get_Instance()->SpawnParticleEffect(L"Fire", vPos, _float3(1.5f, 1.5f, 1.5f));
+
+		}
+		});
+
+	m_pAnimatorCom->RegisterEventListener("KuSkillSound", [&](const string& eventName) {
+
+		CSoundMag::Get_Instance()->PlayEffect("event:/Akaza/Ku");
+	
+		});
+
+	m_pAnimatorCom->RegisterEventListener("ActiveKuSkill", [&](const string& eventName) {
+
+
+		if (m_iBulletIndex >= m_pAkaKuBulletEffects.size())
+			m_iBulletIndex = 0; // 인덱스 초기화
+		auto pBullet = m_pAkaKuBulletEffects[m_iBulletIndex++];
+
+		if (pBullet && pBullet->IsActive() == false)
+		{
+
+			_vector vForward = XMVector3Normalize(
+				m_pTransformCom->Get_State(STATE::LOOK)
+			);
+			_vector bulletPos = m_pTransformCom->Get_State(STATE::POSITION);
+			_vector offsetForward = XMVectorScale(vForward, 15.f);
+			_vector offsetUp = XMVectorSet(0.f, 10.f, 0.f, 0.f);
+			bulletPos = XMVectorAdd(bulletPos, offsetForward);
+			bulletPos = XMVectorAdd(bulletPos, offsetUp);
+
+			pBullet->GetTransform()->RotateToDirection(vForward);
+
+			pBullet->GetTransform()->Set_State(STATE::POSITION, bulletPos);
+			pBullet->SetActive(true);
+			//_float3 vPos{};
+			//_vector vMyPos = m_pTransformCom->Get_State(STATE::POSITION);
+
+			//vMyPos = XMVectorAdd(vMyPos, offsetUp);
+			//XMStoreFloat3(&vPos, vMyPos);
+			//CEffectManager::Get_Instance()->SpawnParticleEffect(L"FireSpread", vPos);
+			//CEffectManager::Get_Instance()->SpawnParticleEffect(L"Fire", vPos, _float3(1.5f, 1.5f, 1.5f));
+
+		}
 		});
 }
 
@@ -1203,7 +1372,8 @@ void CAkaza::FillInput(InputData& outInput)
 			outInput.moveDir = dirToPlayer; // 이동 방향 설정
 			break;
 		case ECommand::Skill0:
-			_bool bMoving = !XMVector3Equal(outInput.moveDir, XMVectorZero());
+			outInput.doSkill0 = true;
+			/*_bool bMoving = !XMVector3Equal(outInput.moveDir, XMVectorZero());
 			if (bMoving)
 			{
 				outInput.doSkill1 = true;
@@ -1211,7 +1381,7 @@ void CAkaza::FillInput(InputData& outInput)
 			else
 			{
 				outInput.doSkill0 = true;
-			}
+			}*/
 			break;
 		}
 	}
@@ -1236,6 +1406,8 @@ void CAkaza::HandleInput()
 		m_fStepCooldown -= dt;
 	if (m_fJumpCooldown > 0.f)
 		m_fJumpCooldown -= dt;
+	if (m_fSkill0Cooldown > 0.f)
+		m_fSkill0Cooldown -= dt;
 
 	//거리/방향 계산 (XZ 평면)
 	_vector myPos = GetTransform()->Get_State(STATE::POSITION);
@@ -1288,6 +1460,23 @@ void CAkaza::HandleInput()
 			}
 			return;
 		}
+		else if (dist > 25.f && dist < 40.f)
+		{
+			if (m_fSkill0Cooldown <= 0.f)
+			{
+				m_pInputBuffer->AddCommand({ ECommand::Skill0, m_fTotalTime });
+				m_fSkill0Cooldown = 15.f;
+			}
+			else
+			{
+				if (m_fStepCooldown <= 0.f)
+				{
+					m_pInputBuffer->AddCommand({ ECommand::Dash, m_fTotalTime });
+					m_fStepCooldown = 2.0f; // 대시 쿨다운 예시
+				}
+			}
+			return;
+		}
 
 		//멀리 있으면 자동 추격
 		if (dist >= 40.f&&dist<60.f)
@@ -1300,7 +1489,7 @@ void CAkaza::HandleInput()
 			if (m_fStepCooldown <= 0.f)
 			{
 				m_pInputBuffer->AddCommand({ ECommand::Dash, m_fTotalTime });
-				m_fStepCooldown = 3.0f; // 대시 쿨다운 예시
+				m_fStepCooldown = 2.0f; // 대시 쿨다운 예시
 			}
 		}
 
@@ -1326,7 +1515,7 @@ void CAkaza::HandleInput()
 			if (m_fGuardCooldown <= 0.f)
 			{
 				m_pInputBuffer->AddCommand({ ECommand::Guard, m_fTotalTime });
-				m_fGuardCooldown = 3.f;
+				m_fGuardCooldown = 5.f;
 			}
 			if (dist >= 30.f)
 			{
@@ -1382,7 +1571,7 @@ void CAkaza::HandleInput()
 					m_pInputBuffer->AddCommand({ ECommand::Skill2, m_fTotalTime });
 				if (m_fGuardCooldown <= 0.f)
 				{
-					//m_fGuardCooldown = 1.0f;
+					m_fGuardCooldown = 3.0f;
 				}
 
 			}
@@ -1512,4 +1701,13 @@ CGameObject* CAkaza::Clone(void* pArg)
 void CAkaza::Free()
 {
 	__super::Free();
+	for (auto& pFist : m_pAkaFistEffects)
+	{
+		Safe_Release(pFist);
+	}
+
+	for (auto& pBullet : m_pAkaKuBulletEffects)
+	{
+		Safe_Release(pBullet);
+	}
 }

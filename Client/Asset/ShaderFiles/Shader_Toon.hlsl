@@ -214,6 +214,58 @@ PS_OUT PS_MAIN_CLAMP(PS_IN In)
 	return Out;
 }
 
+struct VS_OUT_SHADOW
+{
+	float4 vPosition : SV_POSITION;
+	float4 vProjPos : TEXCOORD0;
+};
+
+
+VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
+{
+	VS_OUT_SHADOW Out;
+
+	float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
+
+	matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
+		g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+		g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+		g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+
+	vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+
+	matrix matWV, matWVP;
+
+	/* mul : 모든 행렬의 곱하기를 수행한다. /w연산을 수행하지 않는다. */
+	matWV = mul(g_WorldMatrix, g_ViewMatrix);
+	matWVP = mul(matWV, g_ProjMatrix);
+
+	Out.vPosition = mul(vPosition, matWVP);
+	Out.vProjPos = Out.vPosition;
+
+	return Out;
+}
+
+struct PS_IN_SHADOW
+{
+	float4 vPosition : SV_POSITION;
+	float4 vProjPos : TEXCOORD0;
+};
+
+struct PS_OUT_SHADOW
+{
+	vector vShadow : SV_TARGET0;
+};
+
+PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
+{
+	PS_OUT_SHADOW Out;
+
+	Out.vShadow = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w /g_fCameraFar, 0.f, 0.f);
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default
@@ -251,5 +303,14 @@ technique11 DefaultTechnique
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN_WrapTOON();
+	}
+
+	pass Shadow
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Default, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_SHADOW();
+		PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
 	}
 }

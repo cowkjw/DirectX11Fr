@@ -73,3 +73,18 @@ BlendState BS_AlphaBlend
     DestBlend = Inv_Src_Alpha;
     BlendOp = Add;
 };
+
+BlendState BS_Additive
+{
+    // 첫 번째 렌더 타겟에만 적용
+    BlendEnable[0] = true;
+    // RGB, Alpha 모두 가산
+    SrcBlend = One;
+    DestBlend = One;
+    BlendOp = Add;
+    SrcBlendAlpha = One;
+    DestBlendAlpha = One;
+    BlendOpAlpha = Add;
+    // RGBA 모두 출력
+    RenderTargetWriteMask[0] = 0x0F;
+};

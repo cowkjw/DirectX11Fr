@@ -1,0 +1,53 @@
+{
+    "3DSize": [
+        4.0,
+        4.0,
+        1.0
+    ],
+    "AlphaVariation": 1.0,
+    "Center": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "EndColor": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "Gravity": 0.0,
+    "IsLoop": true,
+    "LifeTime": [
+        0.0,
+        6.900000095367432
+    ],
+    "NumInstance": 200,
+    "ParticleType": 0,
+    "PlayAwake": true,
+    "Range": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "Size": [
+        0.0,
+        0.0
+    ],
+    "Speed": [
+        8.100000381469727,
+        27.5
+    ],
+    "SpreadAngle": 37.0,
+    "StartColor": [
+        0.5882352590560913,
+        0.5536332130432129,
+        0.5536332130432129
+    ],
+    "Use3DRotation": false,
+    "Use3DSize": true,
+    "Velocity": [
+        0.0,
+        1.0,
+        -1.0
+    ]
+}

@@ -30,6 +30,8 @@ public:
 public:
 	virtual json Serialize() override;
 	virtual void Deserialize(const json& j) override;
+
+	void SetInitPos() { m_InitPos = m_pTransformCom->Get_State(STATE::POSITION); }
 private:
 	HRESULT Ready_Components();
 	virtual HRESULT Bind_Shaders();
@@ -38,6 +40,7 @@ private:
 	CModel* m_pModelCom = { nullptr };
 	_wstring m_strModelTag = L"";
 	_uint m_iShaderPass{ 0 };
+	_vector m_InitPos{};
 public:
 	static CEnvironment* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;

@@ -47,6 +47,7 @@ private:
 	virtual HRESULT Ready_Components();
 	virtual HRESULT Bind_Shaders();
 
+
 private:
 	unordered_set<CGameObject*> m_DamagedTargets;
 

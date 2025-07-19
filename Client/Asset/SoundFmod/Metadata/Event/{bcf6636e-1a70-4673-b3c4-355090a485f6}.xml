@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{bcf6636e-1a70-4673-b3c4-355090a485f6}">
 		<property name="name">
-			<value>Slash</value>
+			<value>SlashHit</value>
 		</property>
 		<property name="outputFormat">
 			<value>0</value>
@@ -64,6 +64,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{69d62d48-dad9-4aa2-8d11-5e3f499b624d}">
+		<property name="volume">
+			<value>-7.5</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{b603218e-0fec-415b-9fc2-9d6a7a84c157}</destination>
 		</relationship>

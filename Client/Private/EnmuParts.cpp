@@ -48,7 +48,6 @@ void CEnmuParts::Update(_float fTimeDelta)
 void CEnmuParts::Late_Update(_float fTimeDelta)
 {
 	CGameObject::Late_Update(fTimeDelta);
-
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
 }
 

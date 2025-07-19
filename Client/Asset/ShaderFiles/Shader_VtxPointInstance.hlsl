@@ -3,6 +3,9 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_Texture : register(t0);
 texture2D g_MaskTexture : register(t1);
+texture2D g_DistortionTexture;
+texture2D g_NoiseTexture;
+
 vector g_vCamPosition;
 
 cbuffer CB_UV : register(b0)
@@ -16,6 +19,7 @@ struct VS_IN
     float3 vPosition : POSITION;
 
     row_major float4x4 TransformMatrix : WORLD;
+
 
     float2 vLifeTime : TEXCOORD0;
     float3 vStartColor : TEXCOORD1;
@@ -146,6 +150,12 @@ struct PS_OUT
     vector vColor : SV_TARGET0;
 };
 
+struct PS_OUT_DISTORTION
+{
+	vector vColor : SV_TARGET0;
+    vector vDistortion : SV_TARGET01;
+};
+
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
@@ -232,6 +242,8 @@ PS_OUT PS_MAIN_MASK2(PS_IN In)
 
 PS_OUT PS_MAIN_MASK_UV(PS_IN In)
 {
+    if (In.vLifeTime.y >= In.vLifeTime.x)
+        discard;
     PS_OUT Out;
     float2 uv;
     uv.x = In.vTexcoord.x * g_uvScale.x + g_uvOffset.x;
@@ -255,6 +267,149 @@ PS_OUT PS_MAIN_MASK_UV(PS_IN In)
 
     return Out;
 }
+
+PS_OUT PS_MAIN_MASK4(PS_IN In)
+{
+    PS_OUT Out;
+
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+
+    // r로 마스크 처리
+    if (Out.vColor.r < 0.3f)
+        discard;
+
+    // 시간 비율 계산
+    float t = saturate(In.vLifeTime.y / In.vLifeTime.x);
+
+    // 색상 보간
+    float3 interpColor = lerp(In.vStartColor, In.vEndColor, t);
+    Out.vColor.r = interpColor.r;
+    Out.vColor.gb += interpColor.gb;
+
+    // 알파 보간 + alpha variation 적용
+    float alpha = (1.f - t) * lerp(1.0f, In.fAlphaVar, t);
+    Out.vColor.a *= alpha;
+
+    // 최종 생명 종료 조건
+    if (In.vLifeTime.y >= In.vLifeTime.x)
+        discard;
+
+    return Out;
+}
+float2 g_DistortSpeed = { 0.3, 0.2 };
+float2 g_NoiseSpeed = { 0.5, 0.5 };
+
+PS_OUT PS_DistDiffNoiseMask(PS_IN In)
+{
+    PS_OUT Out;
+	float2 uv = (In.vTexcoord*g_uvScale) + g_uvOffset;
+
+	vector mask = g_MaskTexture.Sample(DefaultSampler, uv);
+	if (mask.r < 0.3f)
+		discard;
+    float2 distUV = In.vTexcoord * 4.0f
+        + In.vLifeTime.y * g_DistortSpeed;
+    float2 distortion = g_DistortionTexture
+        .Sample(DefaultSampler, distUV)
+        .rg * 2.0f - 1.0f;
+
+	uv.x += distortion.r * 0.2f; // distortion을 이용해 UV를 변형
+	uv.y += distortion.g * 0.2f; // distortion을 이용해 UV를 변형
+
+    float2 noiseUV = In.vTexcoord * 2.0f
+        + In.vLifeTime.y * g_NoiseSpeed;
+    float2 noise = g_NoiseTexture
+        .Sample(DefaultSampler, noiseUV)
+        .rg * 2.0f - 1.0f;
+	uv += noise * 0.1f; 
+
+	Out.vColor = g_Texture.Sample(DefaultSampler, uv);
+    // 시간 비율 계산
+    float t = saturate(In.vLifeTime.y / In.vLifeTime.x);
+    float alpha = (1.f - t) * lerp(1.0f, In.fAlphaVar, t);
+   Out.vColor.rgb += alpha;
+
+    // 최종 생명 종료 조건
+    if (In.vLifeTime.y >= In.vLifeTime.x)
+        discard;
+
+    return Out;
+
+}
+
+
+PS_OUT PS_DistNoiseMask(PS_IN In)
+{
+    PS_OUT Out;
+    float2 uv = (In.vTexcoord * g_uvScale) + g_uvOffset;
+
+    vector mask = g_MaskTexture.Sample(DefaultSampler, uv);
+    if (mask.r < 0.3f)
+        discard;
+    float2 distUV = In.vTexcoord * 4.0f
+        + In.vLifeTime.y * g_DistortSpeed;
+    float2 distortion = g_DistortionTexture
+        .Sample(DefaultSampler, distUV)
+        .rg * 2.0f - 1.0f;
+
+    uv.x += distortion.r * 0.2f; // distortion을 이용해 UV를 변형
+    uv.y += distortion.g * 0.2f; // distortion을 이용해 UV를 변형
+
+    float2 noiseUV = In.vTexcoord * 2.0f
+        + In.vLifeTime.y * g_NoiseSpeed;
+    float2 noise = g_NoiseTexture
+        .Sample(DefaultSampler, noiseUV)
+        .rg * 2.0f - 1.0f;
+    uv += noise * 0.1f;
+
+	mask = g_MaskTexture.Sample(DefaultSampler, uv);
+    Out.vColor = mask;
+    float t = saturate(In.vLifeTime.y / In.vLifeTime.x);
+
+    // 색상 보간
+    float3 interpColor = lerp(In.vStartColor, In.vEndColor, t);
+    Out.vColor.r = interpColor.r;
+    Out.vColor.gb += interpColor.gb;
+
+    // 알파 보간 + alpha variation 적용
+    float alpha = (1.f - t) * lerp(1.0f, In.fAlphaVar, t);
+    Out.vColor.a *= alpha;
+
+    // 최종 생명 종료 조건
+    if (In.vLifeTime.y >= In.vLifeTime.x)
+        discard;
+
+    return Out;
+
+}
+
+//Nej 파티클
+PS_OUT PS_DistMask(PS_IN In)
+{
+    PS_OUT Out;
+    float2 uv = In.vTexcoord;
+    float2 uv1 = uv * float2(0.5, 0.5);
+    float2 uv2 = uv * float2(2, 2);
+
+    float2 d1 = g_DistortionTexture.Sample(DefaultSampler, uv1).rg - 0.5f;
+    float2 d2 = g_DistortionTexture.Sample(DefaultSampler, uv2).rg - 0.5f;
+
+    float2 dist = (d1 + d2) * 0.8;
+    float mask = g_MaskTexture.Sample(DefaultSampler, dist).r;
+	if (mask < 0.7f)
+		discard;
+    Out.vColor = (In.vStartColor.xyz, mask);
+
+	float t = saturate(In.vLifeTime.y / In.vLifeTime.x);
+    // 알파 보간
+    Out.vColor.a*= t;
+
+    //Out.vDistortion = float4(dist, 0, 0);
+
+    return Out;
+}
+
+
 
 
 
@@ -302,5 +457,44 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_MASK_UV();
     }
 
+    pass MaskWave
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_MASK4();
+    }
+
+	pass DistortionNoiseDiffuse
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_None, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		PixelShader = compile ps_5_0 PS_DistDiffNoiseMask();
+	}
+
+    pass DistortionNoise
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_DistNoiseMask();
+    }
+
+	pass DistMask //7
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_None, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		PixelShader = compile ps_5_0 PS_DistMask();
+	}
 
 }

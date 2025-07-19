@@ -395,6 +395,61 @@
       "path": "../Asset/Resources/Textures/Effect/Train/T_e_Env_e_201_Radial001.dds",
       "numTextures": 1,
       "static": true
+    },
+    {
+      "key": "WaveWater1",
+      "path": "../Asset/Resources/Models/Effect/Tan/Tak/WaveWater1_%d.dds",
+      "numTextures": 2,
+      "static": true
+    },
+    {
+      "key": "WaveWater2",
+      "path": "../Asset/Resources/Models/Effect/Tan/Tak/WaveWater2_%d.dds",
+      "numTextures": 2,
+      "static": true
+    },
+    {
+      "key": "TakNoise",
+      "path": "../Asset/Resources/Models/Effect/Tan/Tak/T_e_Skl_Wa_8Tak_Water007.dds",
+      "numTextures": 2,
+      "static": true
+    },
+    {
+      "key": "TakDiss",
+      "path": "../Asset/Resources/Models/Effect/Tan/Tak/T_e_Skl_Wa_8Tak_Water004.dds",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "TakDissEdge",
+      "path": "../Asset/Resources/Models/Effect/Tan/Tak/T_e_Skl_Wa_8Tak_Water008.dds",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "WindSlash",
+      "path": "../Asset/Resources/Models/Effect/Akaza/T_e_Useful_Wind005.dds",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "WindSlashSmoke",
+      "path": "../Asset/Resources/Models/Effect/Akaza/T_e_cmn_Smoke006.dds",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "TrainPointLight",
+      "path": "../Asset/Resources/Textures/Effect/Train/T_e_Env_e_201_Radial001.dds",
+      "numTextures": 1,
+      "static": true
+    },
+    {
+      "key": "TrainPointLightDist",
+      "path": "../Asset/Resources/Textures/Effect/Train/T_e_cmn_FireDist001N.dds",
+      "numTextures": 1,
+      "static": true
     }
+
   ]
 }

@@ -35,7 +35,6 @@ void CWarningZoneDecal::Update(_float fTimeDelta)
 void CWarningZoneDecal::Late_Update(_float fTimeDelta)
 {
 	CDecal::Late_Update(fTimeDelta);
-
 }
 
 HRESULT CWarningZoneDecal::Render()

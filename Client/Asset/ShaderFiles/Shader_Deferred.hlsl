@@ -2,12 +2,34 @@
 
 /* 상수테이블 ConstantTable */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+matrix g_LightViewMatrix, g_LightProjMatrix;
 matrix g_ViewMatrixInv, g_ProjMatrixInv;
-texture2D g_RenderTargetTexture;
-texture2D g_NormalTexture;
-texture2D g_DiffuseTexture;
-texture2D g_ShadeTexture;
-texture2D g_DepthTexture;
+
+
+
+Texture2D g_RenderTargetTexture;
+Texture2D g_NormalTexture;
+Texture2D g_DiffuseTexture;
+Texture2D g_ShadeTexture;
+Texture2D g_DepthTexture;
+Texture2D g_DistortionTexture;
+Texture2D g_DistortionObjTexture;
+Texture2D g_DistortionFinalTexture;
+Texture2D g_BlurEffectTexture;
+Texture2D g_BloomBlurXTexture;
+Texture2D g_BloomBlurYTexture;
+Texture2D g_BloomEffectTexture;
+Texture2D g_EffectTexture;
+Texture2D g_BrightTexture;
+Texture2D g_BloomTexture;
+Texture2D g_FinalTexture;
+Texture2D g_BlurXTexture;
+Texture2D g_BlurYTexture;
+Texture2D g_RimLightTexture;
+Texture2D g_ShadowTexture;
+Texture2D g_FogTexture;
+
+
 
 float g_fCameraFar;
 
@@ -19,7 +41,11 @@ float  g_fLightAmbient;
 vector g_vLightSpecular;
 vector g_vCamPosition;
 
+float g_fLightRange;
+vector g_vLightPos;
+
 float  g_fMtrlAmbient = 0.4f;
+vector g_vMtrlSpecular = 1.f;
 
 float g_fShadowThreshold = 0.65f;      // 그림자 임계값
 float g_fSaturationBoost = 1.6f;      // 채도 부스트
@@ -31,11 +57,16 @@ float4 g_vShadowColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
 
 float g_fOutlineThreshold = 1.2f;      // 외곽선 감지 임계값
 float g_fNormalEdgeStrength = 1.2f;    // 노말 엣지 강도
-float g_fOutlineStrength = 0.6f;       // 외곽선 최종 강도
+float g_fOutlineStrength = 0.8f;       // 외곽선 최종 강도
 float4 g_vOutlineColor = float4(0.0f, 0.0f, 0.0f, 1.0f); // 외곽선 색상
 int g_iWinSizeX = 1280;                // 화면 너비
 int g_iWinSizeY = 720;                // 화면 높이
 float g_fOutlineEnable = 1.0f;         // 외곽선 활성화 (0.0 = 비활성화, 1.0 = 활성화)
+
+
+float4 g_FogColor;
+float  g_FogStart, g_FogEnd;
+bool g_bFogEnabled;
 
 struct VS_IN
 {
@@ -88,7 +119,7 @@ PS_OUT PS_MAIN_DEBUG(PS_IN In)
 struct PS_OUT_LIGHT
 {
     vector vShade : SV_TARGET0;
-    
+    vector vSpecular : SV_TARGET1;
 };
 
 PS_OUT_LIGHT PS_MAIN_LIGHT_DIRECTIONAL(PS_IN In)
@@ -122,6 +153,49 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_DIRECTIONAL(PS_IN In)
     //vector vLook = vWorldPos - g_vCamPosition;
 
     //Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 50.f);
+
+    return Out;
+}
+
+PS_OUT_LIGHT PS_MAIN_LIGHT_POINT(PS_IN In)
+{
+    PS_OUT_LIGHT Out;
+
+    vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
+
+    float4 vNormal = float4(vNormalDesc.xyz * 2.f - 1.f, 0.f);
+
+
+    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
+    float fViewZ = vDepthDesc.y * 500.f;
+
+    vector vWorldPos;
+
+    /* 로컬위치 * 월드 *뷰 * 투영 / w : 투영공간상의 위치. */
+    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
+    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
+    vWorldPos.z = vDepthDesc.x;
+    vWorldPos.w = 1.f;
+
+    /* 로컬위치 * 월드 *뷰 * 투영  */
+    vWorldPos = vWorldPos * fViewZ;
+
+    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+
+    vector vLightDir = vWorldPos - g_vLightPos;
+
+    float fAtt = (g_fLightRange - length(vLightDir)) / g_fLightRange;
+
+    float fShade = max(dot(normalize(vLightDir) * -1.f, vNormal), 0.f) + (g_fLightAmbient * g_fMtrlAmbient);
+
+    Out.vShade = g_vLightDiffuse * saturate(fShade) * fAtt;
+
+    vector vReflect = reflect(normalize(vLightDir), vNormal);
+    vector vLook = vWorldPos - g_vCamPosition;
+
+    Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 50.f) * fAtt;
+
 
     return Out;
 }
@@ -221,32 +295,48 @@ PS_OUT PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE(PS_IN In)
 
  //   vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
  //   vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-	float4 vNormalSample = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
+    float2 uv = In.vTexcoord;
 
- //   float3 normal = normalize(vNormalSample.xyz * 2.f - 1.f);
- //   float3 lightDir = normalize(-g_vLightDir.xyz);
- //   float  NdotL = all(max(dot(normal, lightDir), 0.f));
- //   float  isLit = step(g_fShadowThreshold, NdotL);
- //   float4 baseColor = vMtrlDiffuse;
- //   float4 litColor = baseColor * g_vLightDiffuse;
- //   float4 shad = vMtrlDiffuse * g_vShadowColor;
- //   float4 toonColor = lerp(shad, litColor, isLit);
+    //float2 distortion = g_DistortionTexture.Sample(DefaultSampler, uv).rg;
+    //distortion = (distortion * 2.0f - 1.0f) *5.f; // Strength 조절
 
- //   float4 amb = vMtrlDiffuse * (g_fLightAmbient * g_fMtrlAmbient) * g_fAmbientStrength;
+    //uv += distortion;
+	float4 vNormalSample = g_NormalTexture.Sample(DefaultSampler, uv);
+    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
+	float fViewZ = vDepthDesc.y * g_fCameraFar;
 
- //   // 최종 및 채도 보정
- //   float4 finalColor = toonColor + amb;
- //   finalColor = AdjustSaturation(finalColor, g_fSaturationBoost);
+    vector vPosition;
 
+    vPosition.x = In.vTexcoord.x * 2.f - 1.f;
+    vPosition.y = In.vTexcoord.y * -2.f + 1.f;
+    vPosition.z = vDepthDesc.x;
+    vPosition.w = 1.f;
+
+    vPosition = vPosition * fViewZ;
+
+    vPosition = mul(vPosition, g_ProjMatrixInv);
+    vPosition = mul(vPosition, g_ViewMatrixInv);
+
+    vPosition = mul(vPosition, g_LightViewMatrix);
+    vPosition = mul(vPosition, g_LightProjMatrix);
+
+    float2 vTexcoord;
+
+    /* (-1, 1 ~ 1, -1) -> (0, 0 ~ 1, 1) */
+    vTexcoord.x = vPosition.x / vPosition.w * 0.5f + 0.5f;
+    vTexcoord.y = vPosition.y / vPosition.w * -0.5f + 0.5f;
+
+    float4  vOldDepthDesc = g_ShadowTexture.Sample(DefaultSampler, vTexcoord);
+    float fOldViewZ = vOldDepthDesc.y * g_fCameraFar;
     // 툰으로 그리기
     if (vNormalSample.w > 0.0f)
     {
-        vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
-        vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-        float4 vNormalSample = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
+        vector vShade = g_ShadeTexture.Sample(DefaultSampler, uv);
+        vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+        float4 vNormalSample = g_NormalTexture.Sample(DefaultSampler, uv);
 
         float3 normal = normalize(vNormalSample.xyz * 2.f - 1.f);
-        float3 lightDir = normalize(-g_vLightDir.xyz);
+        float3 lightDir = normalize(g_vLightDir.xyz);
         float  NdotL = all(max(dot(normal, lightDir), 0.f));
         float  isLit = step(g_fShadowThreshold, NdotL);
         float4 baseColor = vMtrlDiffuse;
@@ -254,7 +344,7 @@ PS_OUT PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE(PS_IN In)
         float4 shad = vMtrlDiffuse * g_vShadowColor;
         //float4 toonColor = lerp(shad, litColor, isLit);
 
-        float levels = 3;                                 // 단계 수
+        float levels = 2;                                 // 단계 수
         float d = floor(NdotL * levels) / (levels - 1);   // 0.0, 0.33, 0.66, 1.0 등
         float4 toonColor = lerp(shad, litColor, d);
 
@@ -269,36 +359,267 @@ PS_OUT PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE(PS_IN In)
         {
             float2 texelSize = 1.0 / float2(g_iWinSizeX, g_iWinSizeY);
 
-             float edge = DetectEdge(In.vTexcoord, texelSize);
+             float edge = DetectEdge(uv, texelSize);
              finalColor = lerp(saturate(finalColor), g_vOutlineColor, edge * g_fOutlineStrength);
              Out.vBackBuffer = finalColor;
+            
         }
         else
         {
             finalColor = AdjustSaturation(finalColor, 0.5f);
 			Out.vBackBuffer = saturate(finalColor);
         }
-        return Out;
     }
     else
     {
 
-        vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+        vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
         //if (all(vDiffuse.rgb == 0.f))
         if (vDiffuse.a == 0.f)
             discard;
 
-        vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
+        vector vShade = g_ShadeTexture.Sample(DefaultSampler, uv);
 
         Out.vBackBuffer = vDiffuse * vShade;
 
     }
-
-  //  Out.vBackBuffer = finalColor;
+ /*  
+    if (fOldViewZ + 0.1f < vPosition.w)
+    {
+        Out.vBackBuffer = Out.vBackBuffer * 0.5f;
+    }*/
     return Out;
 }
 
 
+
+float g_fWeights[13] =
+{
+    0.0561, 0.1353, 0.278, 0.4868, 0.7261, 0.9231, 1.f, 0.9231, 0.7261, 0.4868, 0.278, 0.1353, 0.0561
+};
+
+
+
+struct PS_OUT_BLUR
+{
+    vector vColor : SV_TARGET0;
+};
+
+PS_OUT_BLUR PS_MAIN_BLURX(PS_IN In)
+{
+    PS_OUT_BLUR Out;
+
+    float2 vTexcoord;
+
+    vector vColor;
+    float sum = 0;
+    for (int i = -6; i < 7; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x + i / 1280.f;
+        vTexcoord.y = In.vTexcoord.y;
+		sum += g_fWeights[i + 6];
+        Out.vColor += g_fWeights[i + 6] * g_BlurEffectTexture.Sample(LinearClampSampler, vTexcoord);
+    }
+
+    Out.vColor /= sum;
+
+    return Out;
+}
+
+PS_OUT PS_MAIN_BLURY(PS_IN In)
+{
+    PS_OUT Out;
+
+    float2 vTexcoord;
+
+    vector vColor;
+    float sum = 0;
+    for (int i = -6; i < 7; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x;
+        vTexcoord.y = In.vTexcoord.y + i / 720.f;
+        sum += g_fWeights[i + 6];
+        Out.vBackBuffer += g_fWeights[i + 6] * g_BlurXTexture.Sample(LinearClampSampler, vTexcoord);
+    }
+
+    Out.vBackBuffer /= sum;
+
+    return Out;
+}
+
+
+PS_OUT PS_MAIN_BRIGHT_EFFECT(PS_IN In)
+{
+    PS_OUT Out;
+    float4 c = g_BloomEffectTexture.Sample(LinearClampSampler, In.vTexcoord);
+    // Luminance 계산
+    float lum = dot(c.rgb, float3(0.299, 0.587, 0.114));
+
+    // 1) Threshold(임계치)와 Knee(부드럼 영역 폭) 정의
+    float threshold = 0.8f;
+    float knee = 0.2f;   // 0.0 ~ 1.0  작을 수록 값자기 클수록 좀 부드럽게
+
+   //Soft threshold: knee 구간 안에서는 0 → 1로 선형 보간
+    float soft = saturate((lum - threshold + knee) / knee);
+    // 추출 계수: 임계치 아래에서는 0, knee 구간 안에서는 soft, 그 이상은 1
+    float extract = saturate((lum - threshold) / knee + 0.5f) * soft;
+
+    // 4) 추출 값으로 원본 컬러 스케일
+    Out.vBackBuffer = c * extract;
+
+    return Out;
+}
+
+PS_OUT PS_MAIN_BLOOM(PS_IN In)
+{
+    PS_OUT Out;
+
+	vector vBlur = g_BloomBlurYTexture.Sample(DefaultSampler, In.vTexcoord);
+	vector vBright = g_BrightTexture.Sample(DefaultSampler, In.vTexcoord);
+
+
+	Out.vBackBuffer = vBlur*3.f  + vBright*0.5f;
+    return Out;
+}
+
+PS_OUT_BLUR PS_MAIN_BLOOM_BLURX(PS_IN In)
+{
+    PS_OUT_BLUR Out;
+
+    float2 vTexcoord;
+
+    vector vColor;
+    float sum = 0;
+    for (int i = -6; i < 7; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x + i / 1280.f;
+        vTexcoord.y = In.vTexcoord.y;
+        sum += g_fWeights[i + 6];
+        Out.vColor += g_fWeights[i + 6] * g_BrightTexture.Sample(LinearClampSampler, vTexcoord);
+    }
+
+    Out.vColor /= sum;
+
+    return Out;
+}
+
+PS_OUT PS_MAIN_BLOOM_BLURY(PS_IN In)
+{
+    PS_OUT Out;
+
+    float2 vTexcoord;
+
+    vector vColor;
+    float sum = 0;
+    for (int i = -6; i < 7; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x;
+        vTexcoord.y = In.vTexcoord.y + i / 720.f;
+        sum += g_fWeights[i + 6];
+        Out.vBackBuffer += g_fWeights[i + 6] * g_BloomBlurXTexture.Sample(LinearClampSampler, vTexcoord);
+    }
+
+    Out.vBackBuffer /= sum;
+
+    return Out;
+}
+
+float g_fRimPower = 2.0f;              // 림라이트 강도 (높을수록 가장자리만)
+float g_fRimIntensity = 0.8f;          // 림라이트 밝기
+float4 g_vRimColor = float4(0.5f, 0.8f, 1.0f, 1.0f);  // 림라이트 색상 (연한 파란색)
+float g_fRimThreshold = 0.1f;          // 림라이트 임계값
+PS_OUT PS_MAIN_RIMLIGHT(PS_IN In)
+{
+	PS_OUT Out;
+    float2 uv = In.vTexcoord;
+
+    // 0) 알베도 알파가 0인 배경은 건너뛰기
+    float4 albedo = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (albedo.a == 0) discard;
+
+    // 1) 화면 → 월드 좌표 역변환
+    vector vDepth = g_DepthTexture.Sample(DefaultSampler, uv);
+    float fViewZ = vDepth.y * g_fCameraFar;
+    vector vWorldPos;
+    vWorldPos.x = uv.x * 2 - 1;
+    vWorldPos.y = uv.y * -2 + 1;
+    vWorldPos.z = vDepth.x;
+    vWorldPos.w = 1;
+    vWorldPos = vWorldPos * fViewZ;
+    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+
+    // 2) 노말 & 시선 벡터
+    float3 normal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2 - 1);
+    float3 viewDir = normalize(g_vCamPosition.xyz - vWorldPos.xyz);
+
+    float NdotV = dot(normal, viewDir);
+    float rimFactor = 1.0 - saturate(NdotV);
+
+    // 파워 적용으로 가장자리만 강조
+    float rim = pow(rimFactor, g_fRimPower);
+
+    // 임계값 적용 (너무 약한 림라이트는 제거)
+    rim = rim * step(g_fRimThreshold, rim);
+
+    // 강도 조절
+    rim *= g_fRimIntensity;
+
+    // 4) 최종 색상 출력 (설정한 림라이트 색상 사용)
+    Out.vBackBuffer = g_vRimColor * rim;
+    return Out;
+}
+
+
+PS_OUT PS_MAIN_FinalRender(PS_IN In)
+{
+    PS_OUT Out;
+
+//
+//    vector vFinal = g_FinalTexture.Sample(DefaultSampler, In.vTexcoord);
+//	vector vBloom = g_BloomTexture.Sample(DefaultSampler, In.vTexcoord);
+//	vector vBlurY = g_BlurYTexture.Sample(DefaultSampler, In.vTexcoord);
+//	vector vRawEffect = g_EffectTexture.Sample(DefaultSampler, In.vTexcoord);
+//	vector vRimLight = g_RimLightTexture.Sample(DefaultSampler, In.vTexcoord);
+//
+//    float2 d = g_DistortionTexture.Sample(DefaultSampler, In.vTexcoord).rg;     // 0~1
+//    float2 offset = (d * 2.0f - 1.0f) * 0.5f;                        // -1~1 * strength(0.5)
+//    float2 uvDist = In.vTexcoord + offset;
+//
+//    float4 objCol = g_DistortionObjTexture.Sample(DefaultSampler, uvDist);
+//
+//    Out.vBackBuffer = vFinal + vRawEffect + vBloom + vBlurY*2.5f + vRimLight;
+////    if (objCol.a > 0.01f)
+//        Out.vBackBuffer += objCol;
+
+    float2 d = g_DistortionTexture.Sample(DefaultSampler, In.vTexcoord).rg;
+    float2 offset = (d * 2.0f - 1.0f) * 0.5f;
+    float2 uvDist = In.vTexcoord + offset;
+
+    // 모든 샘플링에 디스토션 적용 (필요에 따라)
+    vector vFinal = g_FinalTexture.Sample(DefaultSampler, uvDist);
+    vector vRawEffect = g_EffectTexture.Sample(DefaultSampler, uvDist);
+    vector vBloom = g_BloomTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vBlurY = g_BlurYTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vRimLight = g_RimLightTexture.Sample(DefaultSampler, In.vTexcoord);
+
+    float4 objCol = g_DistortionObjTexture.Sample(DefaultSampler, uvDist);
+
+  //  Out.vBackBuffer = vFinal + vRawEffect + vBloom + vBlurY * 2.5f + vRimLight + objCol;
+    float4 finalColor = vFinal + vRawEffect + vBloom + vBlurY * 2.5f + vRimLight + objCol;
+
+    // 안개 처리
+    if (g_bFogEnabled)
+    {
+        float depth = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord).y * g_fCameraFar;
+        float fogFactor = saturate((depth - g_FogStart) / (g_FogEnd - g_FogStart));
+        float finalFogFactor = fogFactor * g_FogColor.a;
+        finalColor.rgb = lerp(finalColor.rgb, g_FogColor.rgb, finalFogFactor);
+    }
+
+    Out.vBackBuffer = finalColor;
+    return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -332,8 +653,7 @@ technique11 DefaultTechnique
         
 
         VertexShader = compile vs_5_0 VS_MAIN();
- 
-        PixelShader = compile ps_5_0 PS_MAIN_LIGHT_DIRECTIONAL();
+        PixelShader = compile ps_5_0 PS_MAIN_LIGHT_POINT();
     }
 
     pass Deferred
@@ -359,15 +679,90 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE();
     }
 
-    //pass Deferred_ToonClamp
-    //{
-    //    SetRasterizerState(RS_Default);
-    //    SetDepthStencilState(DSS_None, 0);
-    //    SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+    pass BlurX
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLURX();
+    }
+
+    pass BlurY
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLURY();
+    }
+
+    pass FinalRender
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_FinalRender();
+    }
+
+    pass BrightPass
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0,0,0,0), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_BRIGHT_EFFECT();
+    }
 
 
-    //    VertexShader = compile vs_5_0 VS_MAIN();
-    //    PixelShader = compile ps_5_0 PS_MAIN_DEFERRED_TOON_WRAP();
-    //}
-  
+    pass Bloom
+    {   SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLOOM();
+    }
+
+
+    pass BloomBlurX
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLOOM_BLURX();
+    }
+
+    pass BloomBlurY
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLOOM_BLURY();
+    }
+
+	pass RimLight
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_None, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_RIMLIGHT();
+	}
 }

@@ -1,6 +1,7 @@
 #include "Level_Editor.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "EffectManager.h"
 #include "GameObject.h"
 
 CLevel_Editor::CLevel_Editor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -48,6 +49,7 @@ HRESULT CLevel_Editor::Initialize()
 	if(pCamera)
 		pCamera->GetTransform()->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, -10.f, 1.f));
 
+	m_pGameInstance->SetActivePicking(true);
 	return S_OK;
 }
 
@@ -64,6 +66,7 @@ void CLevel_Editor::Update(_float fTimeDelta)
 	//	return;
 	//}
 	m_pIMGUIMag->Update(fTimeDelta);
+	CEffectManager::Get_Instance()->Update_ActivedParticle(fTimeDelta);
 }
 
 HRESULT CLevel_Editor::Render()

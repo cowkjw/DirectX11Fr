@@ -22,7 +22,11 @@ public:
 		TEX_DISTORT,        // 화면 왜곡 전용 (Screen UV로)
 		TEX_ALPHA,          // 별도 알파 조절 텍스처
 		TEX_EMISSION,       // 발광용 텍스처 (자체 발광 영역)
-		TEX_FLOWMAP,        // 흐름 애니메이션용 플로우맵
+		TEX_DISSOLVE,        // 디졸브	효과용 텍스처
+		TEX_ALPHA2,       // 추가 알파 조절용 텍스처
+		TEX_FRESNEAL,       // 프레넬 효과용 텍스처
+		TEX_WPOSITION,      // 월드 포지션 텍스처 (월드 좌표 기반)
+		TEX_NORMAL,        // 노말 맵 텍스처
 		TEX_MAX
 	};
 protected:
@@ -50,19 +54,23 @@ public:
 		m_iTextureIndex = iTextureIndex;
 	}
 
+	void SetShaderPass(_uint iShaderPass) {
+		m_iShaderPass = iShaderPass;
+	}
 protected:
 	virtual HRESULT Bind_Shader();
 protected:
-	_float4x4				m_CombinedWorldMatrix{};
-	array<CTexture*, TEX_MAX> m_Textures{};
-	CShader* m_pShaderCom = { nullptr };
+	
+	_bool m_bLoop = false;
 	_uint m_iShaderPass = { 0 };
 	_uint m_iTextureIndex = { 0 };
 	_float m_fDuration = 0.f;
 	_float m_fElapsed = 0.f;
-	_bool m_bLoop = false;
+	_float4x4				m_CombinedWorldMatrix{};
+	
+	array<CTexture*, TEX_MAX> m_Textures{};
+	CShader* m_pShaderCom = { nullptr };
 	CBone* m_pBoneSocket = { nullptr };
-
 
 public:
 	virtual void Free();

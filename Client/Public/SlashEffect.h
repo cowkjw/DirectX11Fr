@@ -23,6 +23,8 @@ public:
 		m_vColor = vColor;
 	}
 
+	void UpdateTransform();
+
 private:
 	HRESULT Ready_Components();
 	virtual HRESULT Bind_Shader() override;

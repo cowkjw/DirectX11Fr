@@ -8,6 +8,7 @@
 #include "Animation.h"
 #include "ParticleSystem.h"
 #include "UIProgressBar.h"
+#include <Environment.h>
 
 CJsonLoader::CJsonLoader()
 	: m_pGameInstance{ CGameInstance::Get_Instance() }
@@ -220,13 +221,12 @@ HRESULT CJsonLoader::Load_Objects(const string& filePath, function<void()> onEnt
 	//m_pGameInstance->ClearUI();
 
 
-	// 3) ID → 객체 매핑 준비
+    //ID 객체 매핑 준비
 	unordered_map<_uint, CGameObject*> idMap;
 	idMap.reserve(j.size());
 	vector<CGameObject*> allObjs;
 	allObjs.reserve(j.size());
 
-	// 4) JSON 각 엔트리별로 '클론' 생성
 	for (const auto& entry : j)
 	{
 		_uint createLevel = entry["CreateLevel"].get<_uint>();
@@ -576,7 +576,13 @@ void CJsonLoader::FactoryComponent(CGameObject* pObj, const json& j)
 			}
 		}
 		if (pComp)
+		{
 			pComp->Deserialize(compData);
+			if (auto pEnv = dynamic_cast<CEnvironment*>(pComp->GetOwner()))
+			{
+				pEnv->SetInitPos();
+			}
+		}
 	}
 }
 

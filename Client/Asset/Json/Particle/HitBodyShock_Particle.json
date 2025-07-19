@@ -19,11 +19,11 @@
     "IsLoop": false,
     "LifeTime": [
         0.0,
-        0.8
+        0.5
     ],
     "NumInstance": 1,
     "ParticleType": 0,
-    "PlayAwake": true,
+    "PlayAwake": false,
     "Range": [
         0.0,
         0.0,

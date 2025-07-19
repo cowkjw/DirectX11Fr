@@ -1,11 +1,15 @@
 #include "Level_GamePlay.h"
 
 #include "HitSlashCrossParticle.h"
+#include "EnkFireSpreadParticle.h"
+#include "HitBodyShockParticle.h"
+#include "FireSpreadParticle.h"
 #include "ThirdPersonCamera.h"
 #include "HitShockParticle.h"
 #include "EffectManager.h"
 #include "Level_Loading.h"
 #include "BaseCharacter.h"
+#include "FireParticle.h"
 #include "UIProgressBar.h"
 #include "GameInstance.h"
 #include "HitParticle.h"
@@ -64,9 +68,10 @@ HRESULT CLevel_GamePlay::Initialize()
 		CameraDesc.fFov = XMConvertToRadians(60.0f);
 		CameraDesc.fNear = 0.1f;
 		CameraDesc.fFar = 1000.f;
+		CameraDesc.strName = TEXT("ThirdPersonCamera");
 
 		if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::STATIC), TEXT("Prototype_GameObject_ThirdPersonCamera"),
-			ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_Camera"),&CameraDesc))
+			ToIndex(LEVEL::GAMEPLAY), TEXT("ThirdPersonCamera"),&CameraDesc))
 			return E_FAIL;
 	}
 
@@ -115,26 +120,62 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 	pEffect->Initialize(nullptr);
 	jsonLoader.Load_Particle("../Asset/Json/Particle/HitShock_Particle.json", &pParticleSystem);
-	static_cast<CHitShockParticle*>(pEffect)->SetInitParticleUV(3, 3, 0.005f);
+	static_cast<CHitShockParticle*>(pEffect)->SetInitParticleUV(3, 3, 0.0085f);
 	pEffect->SetTextureIndex(8);
 	static_cast<CHitShockParticle*>(pEffect)->AddParticleSystem(L"HitShock", pParticleSystem);
 	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitShockParticle"), pEffect);
 
 
+
+	pEffect = CFireParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect->Initialize(nullptr);
+	jsonLoader.Load_Particle("../Asset/Json/Particle/Fire_Particle.json", &pParticleSystem);
+	static_cast<CFireParticle*>(pEffect)->AddParticleSystem(L"Fire", pParticleSystem);
+	CEffectManager::Get_Instance()->RegisterEffect(TEXT("Fire"), pEffect);
+
+
+	pEffect = CFireSpreadParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect->Initialize(nullptr);
+	jsonLoader.Load_Particle("../Asset/Json/Particle/FireSpread_Particle.json", &pParticleSystem);
+	static_cast<CFireSpreadParticle*>(pEffect)->AddParticleSystem(L"FireSpread", pParticleSystem);
+	CEffectManager::Get_Instance()->RegisterEffect(TEXT("FireSpread"), pEffect);
+
+
+	pEffect = CEnkFireSpreadParticle::Create(m_pDevice, m_pContext);
+	if (pEffect == nullptr)
+		return E_FAIL;
+	pEffect->Initialize(nullptr);
+	jsonLoader.Load_Particle("../Asset/Json/Particle/KyojuroEnk_Particle.json", &pParticleSystem);
+	static_cast<CEnkFireSpreadParticle*>(pEffect)->AddParticleSystem(L"EnkFireSpread", pParticleSystem);
+	CEffectManager::Get_Instance()->RegisterEffect(TEXT("EnkFireSpread"), pEffect);
+
+
 	// 아카자용
-	pEffect = CHitShockParticle::Create(m_pDevice, m_pContext);
+	pEffect = CHitBodyShockParticle::Create(m_pDevice, m_pContext);
 	if (pEffect == nullptr)
 		return E_FAIL;
 	pEffect->Initialize(nullptr);
 	jsonLoader.Load_Particle("../Asset/Json/Particle/HitBodyShock_Particle.json", &pParticleSystem);
-	static_cast<CHitShockParticle*>(pEffect)->AddParticleSystem(L"HitShock", pParticleSystem);
-	static_cast<CHitShockParticle*>(pEffect)->SetInitParticleUV(4, 4, 0.0001f);
+	static_cast<CHitBodyShockParticle*>(pEffect)->AddParticleSystem(L"HitShock", pParticleSystem);
+	static_cast<CHitBodyShockParticle*>(pEffect)->SetInitParticleUV(4, 4, 0.0085f);
 	pEffect->SetTextureIndex(1);
 	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitBodyShockParticle"), pEffect);
-	jsonLoader.Free();
+	CEffectManager::Get_Instance()->EnableConsole();
+
+
+
 
 	CSoundMag::Get_Instance()->PlayBGM("event:/BGM/RengokuBGM");
 	CSoundMag::Get_Instance()->PlayEffect("event:/Map/BattlStartAkKyo");
+
+
+
+	jsonLoader.Free();
+	m_pGameInstance->Active_Fog(false);
 	return S_OK;
 }
 
@@ -148,13 +189,14 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	}
 	UpdateGameFlow(fTimeDelta);
 	CEffectManager::Get_Instance()->Update_ActivedParticle(fTimeDelta);
+	CEffectManager::Get_Instance()->ClenUpPendingParticleEffects();
 
 }
 
 HRESULT CLevel_GamePlay::Render()
 {
 	//SetWindowText(g_hWnd, TEXT("게임플레이 레벨입니다."));
-	CEffectManager::Get_Instance()->ClenUpPendingParticleEffects();
+//	CEffectManager::Get_Instance()->ClenUpPendingParticleEffects();
 	return S_OK;
 }
 
@@ -207,12 +249,31 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection = _float4(1.f, 1.f, 1.f, 0.f);
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
 	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
 	LightDesc.fAmbient = 0.2f;
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	LightDesc.vPosition = _float4(80.f, 0.f, 50.f, 1.f);
+	LightDesc.fRange = 15.f;
+	LightDesc.vDiffuse = _float4(0.7f, 0.8f, 1.0f, 1.f);
+	LightDesc.fAmbient = 0.3f;
+	LightDesc.vSpecular = _float4(0.f, 1.f, 0.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	CShadow::SHADOW_DESC Desc{};
+	Desc.vEye = _float4(60.f, 20.f, 30.f, 1.f);   
+	Desc.vAt = _float4(80.f, 0.f, 50.f, 1.f);      // 캐릭터 위치
+	Desc.fFovy = XMConvertToRadians(60.0f);         
+	Desc.fNear = 0.1f;
+	Desc.fFar = 500.f;
+	if (FAILED(m_pGameInstance->Ready_Light_For_Shadow(Desc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -328,5 +389,4 @@ void CLevel_GamePlay::Free()
 {
 	__super::Free();
 	CEffectManager::Get_Instance()->Free();
-
 }

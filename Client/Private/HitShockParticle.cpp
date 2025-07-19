@@ -67,11 +67,19 @@ void CHitShockParticle::Update(_float fTimeDelta)
 		m_UseParticleUV.vUVOffset.x = col * m_UseParticleUV.vUVScale.x;
 		m_UseParticleUV.vUVOffset.y = row * m_UseParticleUV.vUVScale.y;
 	}
+
+	if (m_UseParticleUV.iTotalFrames <= m_UseParticleUV.iCurrentFrame)
+	{
+
+			SetActive(false); // 비활성화
+	}
 }
 
 void CHitShockParticle::Late_Update(_float fTimeDelta)
 {
-	__super::Late_Update(fTimeDelta);
+	//__super::Late_Update(fTimeDelta);
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::EFFECT, this);
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::BLOOM_EFFECT, this);
 }
 
 HRESULT CHitShockParticle::Render()
@@ -86,8 +94,8 @@ HRESULT CHitShockParticle::Render()
 
 void CHitShockParticle::SpwanParticle()
 {
-	__super::SpwanParticle();
 	m_UseParticleUV = m_InitParticleUV; // 파티클 초기화
+	__super::SpwanParticle();
 }
 
 void CHitShockParticle::DespwanParticle()

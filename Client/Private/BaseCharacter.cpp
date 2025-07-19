@@ -7,6 +7,7 @@
 #include "StateHurtAir.h"
 #include "GameInstance.h"
 #include "InputBuffer.h"
+#include "GuardEffect.h"
 #include "Environment.h"
 #include "StateDeath.h"
 #include "Navigation.h"
@@ -14,6 +15,7 @@
 #include "StateIdle.h"
 #include "Animation.h"
 #include "Weapon.h"	
+#include <ThirdPersonCamera.h>
 
 
 
@@ -63,6 +65,14 @@ HRESULT CBaseCharacter::Initialize(void* pArg)
 
 	m_fTotalTime = 0.f;
 
+
+	m_pGuardEffect = static_cast<CGuardEffect*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::STATIC), TEXT("Prototype_Effect_Guard"), ToIndex(LEVEL::GAMEPLAY), TEXT("Guard")));
+
+	if (m_pGuardEffect)
+	{
+		m_pGuardEffect->SetParent(this);
+		m_pGuardEffect->SetActive(false);
+	}
 
 
 	m_pAnimatorCom->RegisterEventListener("EndHurt", [&](const string& eventName) {
@@ -195,6 +205,7 @@ void CBaseCharacter::Update(_float fTimeDelta)
 void CBaseCharacter::Late_Update(_float fTimeDelta)
 {
 	CGameObject::Late_Update(fTimeDelta);
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::SHADOW, this);
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
 }
 
@@ -217,6 +228,37 @@ HRESULT CBaseCharacter::Render()
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}
+
+	return S_OK;
+}
+
+HRESULT CBaseCharacter::Render_Shadow()
+{
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTransformCom->Get_WorldMatrix())))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Light_ViewMatrix())))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Light_ProjMatrix())))
+		return E_FAIL;
+	_float fCamFar = m_pGameInstance->Get_CameraFar();
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCameraFar", &fCamFar, sizeof _float)))
+		return E_FAIL;
+
+	_uint		iNumMesh = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMesh; i++)
+	{
+		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
+
+		if (FAILED(m_pShaderCom->Begin(4)))
+			return E_FAIL;
+
+		if (FAILED(m_pModelCom->Render(i)))
+			return E_FAIL;
+	}
+
 
 	return S_OK;
 }
@@ -631,14 +673,99 @@ void CBaseCharacter::HurtDown()
 	ChangeState(new StateHurtDown());
 }
 
+void CBaseCharacter::TakeDamage(_float fDamage)
+{
+	if (m_fCurrentHP <= 0.f)
+		return;
+
+	if (auto pCamera = dynamic_cast<CThirdPersonCamera*>(CGameInstance::Get_Instance()->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("ThirdPersonCamera"))))
+	{
+	
+		auto pKyo =CGameInstance::Get_Instance()
+			->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("Kyojuro"));
+		auto pAka = CGameInstance::Get_Instance()
+			->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("Akaza"));
+		if (!pKyo || !pAka)
+			return;
+
+		static _float currentSide = 1.f;    // 방향은 -1~1 사이
+		const _float fThreshold = 0.3f;      
+		const _float fBaseSide = 50.f;
+		const _float fOffsetUp = 15.f;
+
+		const _vector up = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+		_vector kyoPos = pKyo->GetTransform()->Get_State(STATE::POSITION);
+		_vector kyoRight = pKyo->GetTransform()->Get_State(STATE::RIGHT);
+		kyoRight = XMVectorSetY(kyoRight, 0.f);  
+		kyoRight = XMVector3Normalize(kyoRight);  
+		// 적의 상대 위치
+		_vector akaPos = pAka->GetTransform()->Get_State(STATE::POSITION);
+		akaPos = XMVectorSetY(akaPos, 0.f);
+		_vector toAka = XMVector3Normalize(akaPos - kyoPos);
+
+		// 좌우 판단
+		_float dotSide = XMVectorGetX(XMVector3Dot(toAka, kyoRight));
+
+		// 현재 오른쪽인지 왼쪽인지 판단
+		// -1이면 왼쪽, 1이면 오른쪽
+		if (currentSide > 0.f && dotSide < -fThreshold)
+			currentSide = -1.f;
+		else if (currentSide < 0.f && dotSide > fThreshold)
+			currentSide = 1.f;
+
+		// 오프셋 계산
+		_vector offset = kyoRight * (currentSide * fBaseSide) + up * fOffsetUp;
+		pCamera->TriggerShake(0.13f, 0.23f);
+		pCamera->OnHit(pKyo, pAka, offset, 0.4f);
+	}
+	m_pGameInstance->SetHitStop(true, 0.25f);
+	if (m_eState == CSTATE::GUARD)
+	{
+		SpawnGurad();
+	}
+	m_fCurrentHP -= fDamage;
+	if (m_fCurrentHP <= 0.f)
+	{
+		m_fCurrentHP = 0.f;
+	}
+}
+
 void CBaseCharacter::StartHitStop(_float duration)
 {
-	m_fHitStopTime = duration;
+	m_pGameInstance->SetHitStop(true, 0.25f);
+	//m_fHitStopTime = duration;
 }
 
 void CBaseCharacter::Ready_Animation()
 {
 
+}
+
+void CBaseCharacter::SpawnGurad()
+{
+	if (m_pGuardEffect)
+	{
+		if (m_pGuardEffect->IsActive())
+		{
+			m_pGuardEffect->SetActive(false); // 이미 활성화된 경우 비활성화
+		}
+	
+
+		// 내 앞에 바라보면서 
+		_vector vForward = XMVector3Normalize(
+			m_pTransformCom->Get_State(STATE::LOOK)
+		);
+		_vector guardPos = m_pTransformCom->Get_State(STATE::POSITION);
+		_vector offsetForward = XMVectorScale(vForward, 3.f);
+		_vector offsetUp = XMVectorSet(0.f, 10.f, 0.f, 0.f);
+		guardPos = XMVectorAdd(guardPos, offsetForward);
+		guardPos = XMVectorAdd(guardPos, offsetUp);
+
+		m_pGuardEffect->GetTransform()->RotateToDirection(vForward);
+		m_pGuardEffect->GetTransform()->Set_State(STATE::POSITION, guardPos);
+
+		m_pGuardEffect->SetActive(true);
+	}
 }
 
 HRESULT CBaseCharacter::Ready_Components()
@@ -706,6 +833,7 @@ void CBaseCharacter::Free()
 	Safe_Release(m_pModelCom);
 
 	Safe_Release(m_pAnimatorCom);
+	Safe_Release(m_pGuardEffect);
 	Safe_Release(m_pColliderCom);
 	Safe_Delete(m_pState);
 	Safe_Release(m_pInputBuffer);

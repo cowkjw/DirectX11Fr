@@ -1,6 +1,7 @@
 #include "TanjiroMig.h"
 #include "GameInstance.h"
 #include "BaseCharacter.h"
+#include "EffectManager.h"
 
 CTanjiroMig::CTanjiroMig(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -70,6 +71,24 @@ void CTanjiroMig::Update(_float fTimeDelta)
 		if(m_pParent)
 			RotationDirection(XMVector4Normalize(m_pParent->GetTransform()->Get_State(STATE::LOOK)));
 	}
+
+
+	_float t = m_fElpasedTime / m_fDuration;
+	t = (t > 1.f) ? 1.f : t;
+
+	_vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
+	_float3 vSpawnPos{};
+	XMStoreFloat3(&vSpawnPos, vPos);
+
+	for (int i = 0; i < PARTICLE_COUNT; ++i)
+	{
+		if (!m_bSpawnedParticle[i] && t >= m_fParticleTriggers[i])
+		{
+			CEffectManager::Get_Instance()
+				->SpawnParticleEffect(L"SpreadWater", vSpawnPos, _float3(2.f, 1.5f, 1.f));
+			m_bSpawnedParticle[i] = true;
+		}
+	}
 }
 
 void CTanjiroMig::Late_Update(_float fTimeDelta)
@@ -134,6 +153,10 @@ void CTanjiroMig::OnDisable()
 	if (m_pMigEffect)
 	{
 		m_pMigEffect->SetActive(false);
+	}
+	for (int i = 0; i < PARTICLE_COUNT; ++i)
+	{
+		m_bSpawnedParticle[i] = false;
 	}
 }
 

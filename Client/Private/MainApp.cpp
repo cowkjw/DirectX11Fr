@@ -5,6 +5,8 @@
 #include <JsonLoader.h>
 #include "ThirdPersonCamera.h"
 #include "DashSmokeEffect.h"
+#include "EffectManager.h"
+#include "GuardEffect.h"
 #include "SoundMag.h"
 CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::Get_Instance() }
@@ -40,8 +42,9 @@ HRESULT CMainApp::Initialize()
 
 void CMainApp::Update(_float fTimeDelta)
 {
-	m_pGameInstance->Fixed_Update(fTimeDelta);
+	//m_pGameInstance->Fixed_Update(fTimeDelta);
 	m_pGameInstance->Update_Engine(fTimeDelta);
+	CEffectManager::Get_Instance()->Late_Update(fTimeDelta);
 	CSoundMag::Get_Instance()->Update();
 }
 
@@ -69,9 +72,9 @@ HRESULT CMainApp::Ready_Prototype_Component()
 {	
 	
 	///* For.Prototype_Component_VIBuffer_Rect*/
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
-	//	CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
+		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	//m_pGameInstance->LoadShader(TEXT("Shader_VtxPosTex"), TEXT("../Asset/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements,true);
 	//m_pGameInstance->LoadShader(TEXT("Shader_VtxNorTex"), TEXT("../Asset/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements,true);
@@ -137,6 +140,16 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Particle"),
 		CParticleSystem::Create(m_pDevice, m_pContext, ParticleDesc))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Model_Gurad"),
+		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/Common/Guard/Gurad.bin"))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Effect_Guard"),
+		CGuardEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

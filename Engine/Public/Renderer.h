@@ -14,6 +14,20 @@ public:
 	HRESULT Draw();
 	void Clear();
 
+	void Set_Color(const _float4& vColor)
+	{
+		m_vColor = vColor;
+	}
+	void SetFogDistance(_float fStart,_float fEnd)
+	{
+		m_fFogStart = fStart;
+		m_fFogEnd = fEnd;
+	}
+	void Active_Fog(_bool bActive)
+	{
+		m_bRenderFog = bActive;
+	}
+
 private:
 	HRESULT Initialize();
 
@@ -31,19 +45,43 @@ private:
 	ID3D11DeviceContext* m_pContext = { nullptr };
 	class CGameInstance* m_pGameInstance = { nullptr };
 
+
+	ID3D11DepthStencilView* m_pShadowDSV = { nullptr };
+	_uint					m_iOriginalViewportWidth{}, m_iOriginalViewportHeight{};
+
 private:
 	HRESULT Render_Priority();
 	HRESULT Render_NonBlend();
+	HRESULT Render_Fog();
 	HRESULT Render_Blend();
 	HRESULT Render_Lights();
 	HRESULT Render_BackBuffer();
+	HRESULT Render_Shadow();
+	HRESULT Render_Distortion();
+	HRESULT Render_Bloom();
+	HRESULT Render_BlurEffect();
+	HRESULT Render_BloomEffect();
+	HRESULT Render_RawEffect();
 	HRESULT Render_ToonBackBuffer();
+	HRESULT Render_RimLight();
+	HRESULT Render_Bright();
+	HRESULT Render_Blur();
+	HRESULT Render_Final();
 	HRESULT Render_NonLight();
 	HRESULT Render_UI();
 #ifdef _DEBUG
 	HRESULT Render_Debug();
 #endif
 
+	HRESULT Ready_RenderTargets(const D3D11_VIEWPORT& viewPort);
+	HRESULT Ready_DepthStencilView(_uint iWidth, _uint iHeight);
+	HRESULT Change_ViewportDesc(_uint iWidth, _uint iHeight);
+
+private:
+	_float m_fFogStart{}; // 안개 시작 거리
+	_float m_fFogEnd{};
+	_float4 m_vColor;
+	_bool m_bRenderFog = false;
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

@@ -25,6 +25,7 @@ public:
 	virtual HRESULT Ready_Components() override;
 	void Ready_AnimationForLeft() ;
 	void Ready_AnimationForRight() ;
+	HRESULT Ready_Effect();
 	virtual void Ready_Collider() override;
 
 	void ActiveCollider() override;
@@ -40,7 +41,9 @@ private:
 	_float  m_fStartYaw = 0.f;     // 시작 Y각
 	_float  m_fTargetYaw = 0.f;     // 목표 Y각
 	class CBodyColliderParts* m_pBodyColliderCom{nullptr};
-
+	class CEnmuSwingWindEffect* m_pSwingWindEffect{ nullptr }; 
+	class CEnmuPunchWindEffect* m_pPunchWindEffect{ nullptr }; 
+	
 	_float m_fDefaultRadius = 30.f; // 콜라이더의 반지름
 	
 

@@ -32,6 +32,7 @@ public:
 	virtual void Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual HRESULT Render_Shadow();
 	
 public:
 	void Set_Weapon(const char* boneName, class CWeapon* pWeapon);
@@ -76,16 +77,7 @@ public:
 	void HurtDown();
 	virtual void ActiveCollider() {};
 	virtual void DeactiveCollider() {};
-	virtual void TakeDamage(_float fDamage) {
-		if (m_fCurrentHP <= 0.f) 
-			return;
-		StartHitStop(0.25f); // 히트 스탑 시작
-		m_fCurrentHP -= fDamage;
-		if (m_fCurrentHP <= 0.f)
-		{
-			m_fCurrentHP = 0.f;
-		}
-	}
+	virtual void TakeDamage(_float fDamage);
 
 	virtual void OnAttackHit(CGameObject* pTarget) {};
 
@@ -96,6 +88,7 @@ public:
 	virtual HRESULT Ready_Effects() { return S_OK; }
 protected:
 	virtual void Ready_Animation();
+	void SpawnGurad();
 
 protected:
 	CShader* m_pShaderCom = { nullptr };
@@ -133,6 +126,7 @@ protected:
 	CGameObject* m_pTarget{ nullptr };
 
 	CSphereCollider* m_pRangeColliderCom{ nullptr }; // 추가 충돌체
+	class CGuardEffect* m_pGuardEffect = { nullptr }; // 가드 이펙트
 
 
 	class CDashSmokeEffect* m_pDashSmokeEffect = { nullptr };

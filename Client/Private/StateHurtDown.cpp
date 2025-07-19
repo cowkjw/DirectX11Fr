@@ -9,6 +9,26 @@ void StateHurtDown::Enter(CBaseCharacter* pChar)
 	pAnim->SetTrigger("HurtDown");
 	pAnim->SetBool("Move", false);
 	pChar->SetState(CBaseCharacter::CSTATE::DOWN);
+
+	if (pChar->Get_Name() == TEXT("Kyojuro"))
+	{
+		CSoundMag::Get_Instance()->StopEffect("event:/Kyojuro/Nob");
+		CSoundMag::Get_Instance()->StopEffect("event:/Kyojuro/Enk");
+		CSoundMag::Get_Instance()->StopEffect("event:/Kyojuro/Kie");
+		CSoundMag::Get_Instance()->PlayOneShot("event:/Kyojuro/Hited");
+	}
+	else if (pChar->Get_Name() == TEXT("Akaza"))
+	{
+		CSoundMag::Get_Instance()->PlayOneShot("event:/Akaza/Hited");
+	}
+	else
+	{
+		CSoundMag::Get_Instance()->PlayOneShot("event:/Common/BodyAttack");
+		CSoundMag::Get_Instance()->StopEffect("event:/Tanjiro/Tak");
+		CSoundMag::Get_Instance()->StopEffect("event:/Tanjiro/Nej");
+		CSoundMag::Get_Instance()->StopEffect("event:/Tanjiro/Mig");
+		CSoundMag::Get_Instance()->PlayOneShot("event:/Tanjiro/Hited");
+	}
 }
 
 void StateHurtDown::Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta)

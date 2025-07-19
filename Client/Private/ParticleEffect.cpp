@@ -11,13 +11,26 @@ CParticleEffect::CParticleEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 CParticleEffect::CParticleEffect(const CParticleEffect& Prototype)
 	: CEffect(Prototype)
-	, m_ParticleSystems(Prototype.m_ParticleSystems)
+	, m_ParticleTextureIndices(Prototype.m_ParticleTextureIndices)
+	, m_bUseParentTexture(Prototype.m_bUseParentTexture)
+	, m_ParticleUVs(Prototype.m_ParticleUVs)
+
 {
-	for (auto& Pair : m_ParticleSystems)
+	for (const auto& Pair : Prototype.m_ParticleSystems)
 	{
-		Safe_AddRef(Pair.second);
+		if (Pair.second)
+		{
+			CParticleSystem* pCloned = static_cast<CParticleSystem*>(Pair.second->Clone(nullptr));
+			m_ParticleSystems.insert({ Pair.first, pCloned });
+		}
 	}
 
+	// 셰이더 맵 깊은 복사
+	for (const auto& Pair : Prototype.m_ParticleShaders)
+	{
+		m_ParticleShaders.insert({ Pair.first, Pair.second });
+		Safe_AddRef(Pair.second);
+	}
 }
 
 HRESULT CParticleEffect::Initialize_Prototype()
@@ -93,6 +106,10 @@ void CParticleEffect::Update(_float fTimeDelta)
 			iActiveParticleCount++;
 			Pair.second->UpdateVertexInstances(fTimeDelta);
 		}
+		else
+		{
+			Pair.second->SetActive(false);
+		}
 	}
 	if (iActiveParticleCount == 0)
 	{
@@ -102,6 +119,7 @@ void CParticleEffect::Update(_float fTimeDelta)
 
 void CParticleEffect::Late_Update(_float fTimeDelta)
 {
+	//m_pGameInstance->Add_RenderGroup(RENDERGROUP::BLUR_EFFECT, this);
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONLIGHT, this);
 }
 
@@ -140,15 +158,30 @@ HRESULT CParticleEffect::Render()
 	{
 		if (particle.second && particle.second->IsActive())
 		{
-			if (m_ParticleSystems.size() == 1)
+			if (m_bUseParentTexture==false)
 			{
 				if (FAILED(m_pShaderCom->Begin(m_iShaderPass)))
 					return E_FAIL;
 			}
 			else
 			{
-				if (FAILED(m_pShaderCom->Begin(m_ParticleShaderPasses[particle.first])))
-					return E_FAIL;
+				if (m_iShaderPass != 0)
+				{
+					if (FAILED(m_pShaderCom->Begin(m_iShaderPass)))
+						return E_FAIL;
+				}
+				else
+				{
+					if (FAILED(m_pShaderCom->Begin(m_ParticleShaderPasses[particle.first])))
+						return E_FAIL;
+				}
+				if (m_ParticleTextures.find(particle.first) != m_ParticleTextures.end())
+				{
+					if (m_ParticleTextures[particle.first] == nullptr)
+						return E_FAIL;
+					if (m_ParticleTextureIndices.find(particle.first) == m_ParticleTextureIndices.end())
+						return E_FAIL;
+				}
 				if (FAILED(m_ParticleTextures[particle.first]->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_ParticleTextureIndices[particle.first])))
 					return E_FAIL;
 			}
@@ -181,7 +214,7 @@ HRESULT CParticleEffect::Render()
 
 HRESULT CParticleEffect::Ready_Components()
 {
-	///* For.Com_Shader */
+	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxPointInstance"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
@@ -268,6 +301,36 @@ void CParticleEffect::RemoveParticleSystem(const _wstring& particleName)
 	}
 }
 
+void CParticleEffect::EnableUVAnim(const _wstring& tag, _float cols, _float rows, _float frameSec)
+{
+	if (m_ParticleUVs.find(tag) != m_ParticleUVs.end())
+	{
+	
+		PARTICLE_UV& uv = m_ParticleUVs[tag];
+		uv.fCols = cols;
+		uv.fRows = rows;
+		uv.iTotalFrames = cols * rows; // 총 프레임 수 계산
+		uv.fFrameTime = frameSec;
+		uv.fCurrentTime = 0.f; // 현재 시간 초기화
+		uv.vUVScale = _float2(1.f / uv.fCols, 1.f / uv.fRows); // UV 스케일 계산
+		uv.vUVOffset = _float2(0.f, 0.f); // UV 오프셋 초기화
+		uv.iCurrentFrame = 0; // 현재 프레임 초기화
+	}
+	else
+	{
+		PARTICLE_UV uv;
+		uv.fCols = cols;
+		uv.fRows = rows;
+		uv.iTotalFrames = cols * rows; // 총 프레임 수 계산
+		uv.fFrameTime = frameSec;
+		uv.fCurrentTime = 0.f;
+		uv.vUVScale = _float2(1.f / uv.fCols, 1.f / uv.fRows); // UV 스케일 계산
+		uv.vUVOffset = _float2(0.f, 0.f); // UV 오프셋 초기화
+		uv.iCurrentFrame = 0; // 현재 프레임 초기화
+		m_ParticleUVs[tag] = uv;
+	}
+}
+
 void CParticleEffect::ClearParticleSystems()
 {
 	for (auto& pair : m_ParticleSystems)
@@ -295,6 +358,7 @@ void CParticleEffect::DespwanParticle()
 	{
 		if (Pair.second)
 		{
+			//Pair.second->StopParticle();
 			Pair.second->SetActive(false);
 		}
 	}
@@ -303,6 +367,53 @@ void CParticleEffect::DespwanParticle()
 void CParticleEffect::OnEnable()
 {
 	SpwanParticle();
+}
+
+void CParticleEffect::SetTexture(CTexture* pTexture, _uint iTextureIndex, const _wstring& tag)
+{
+	if (nullptr == pTexture)
+		return;
+	auto it = m_ParticleTextures.find(tag); // 찾아보고
+	if (it != m_ParticleTextures.end()) // 있으면 삭제하고
+	{
+		Safe_Release(it->second);
+	}
+	if (tag.empty()) // 태그가 비어있으면 기본 텍스쳐로 설정
+	{
+		m_ParticleTextures[L"Default"] = pTexture; // 기본 텍스쳐 설정
+		m_ParticleShaderPasses[L"Default"] = iTextureIndex; // 기본 셰이더 패스 설정
+	}
+	else // 태그가 있으면
+	{
+		m_ParticleTextures[tag] = pTexture; // 텍스쳐 저장
+		m_ParticleTextureIndices[tag] = iTextureIndex; // 특정 태그에 대한 셰이더 패스 설정
+	}
+	
+	Safe_AddRef(pTexture); // 텍스쳐 참조 카운트 증가
+}
+
+void CParticleEffect::SetShader(CShader* pShader, _uint iShaderPass, const _wstring& tag)
+{
+	if (nullptr == pShader)
+		return;
+	auto it = m_ParticleShaders.find(tag); // 찾아보고
+	if (it != m_ParticleShaders.end()) // 있으면 삭제하고
+	{
+		Safe_Release(it->second);
+	}
+	if (tag.empty()) // 태그가 비어있으면 기본 셰이더로 설정
+	{
+		m_ParticleShaders[L"Default"] = pShader; // 기본 셰이더 설정
+		m_iShaderPass = iShaderPass; // 기본 셰이더 패스 설정
+		m_ParticleShaderPasses[L"Default"] = iShaderPass; // 기본 셰이더 패스 설정
+	}
+	// 태그가 있으면
+	else
+	{
+		m_ParticleShaders[tag] = pShader; // 셰이더 저장
+		m_ParticleShaderPasses[tag] = iShaderPass; // 특정 태그에 대한 셰이더 패스 설정
+	}
+	Safe_AddRef(pShader); // 셰이더 참조 카운트 증가
 }
 
 void CParticleEffect::AddParticleSystem_ForEditor(const _wstring& particleName, CParticleSystem* pParticleSystem, CTexture* pTexture, PARTICLE_UV particleUV,

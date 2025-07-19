@@ -81,6 +81,20 @@ void CWeapon::Priority_Update(_float fTimeDelta)
 
 void CWeapon::Update(_float fTimeDelta)
 {
+	if (m_pBoneSocket)
+	{
+		_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
+		_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
+		_matrix wepaonLocal = m_pTransformCom->Get_WorldMatrix_Inverse();
+		_matrix world = XMMatrixMultiply(XMLoadFloat4x4(&boneLocal), XMLoadFloat4x4(&parentWorld));
+		_matrix weaponWorld = XMMatrixMultiply(wepaonLocal, world);
+		//_matrix World = XMMatrixMultiply(XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix()),XMLoadFloat4x4(m_pBoneSocket->Get_CombinedTransformationMatrix()) );
+		_float4x4 WorldMatrix{};
+		XMStoreFloat4x4(&WorldMatrix, world);
+		m_pTransformCom->Set_WorldMatrix(WorldMatrix);
+		//	m_pTransformCom->Set_WorldMatrix();
+
+	}
 	if (auto pCharacter = static_cast<CBaseCharacter*>(m_pParent))
 	{
 	/*	_bool bCanAttack = pCharacter->GetState() == CBaseCharacter::CSTATE::ATTACK || pCharacter->GetState() == CBaseCharacter::CSTATE::SKILL;
@@ -99,20 +113,7 @@ void CWeapon::Update(_float fTimeDelta)
 void CWeapon::Late_Update(_float fTimeDelta)
 {
 	CGameObject::Late_Update(fTimeDelta);
-	if (m_pBoneSocket)
-	{
-		_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
-		_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
-		_matrix wepaonLocal = m_pTransformCom->Get_WorldMatrix_Inverse();
-		_matrix world = XMMatrixMultiply(XMLoadFloat4x4(&boneLocal), XMLoadFloat4x4(&parentWorld));
-		_matrix weaponWorld = XMMatrixMultiply(wepaonLocal, world);
-		//_matrix World = XMMatrixMultiply(XMLoadFloat4x4(&m_pTransformCom->Get_WorldMatrix()),XMLoadFloat4x4(m_pBoneSocket->Get_CombinedTransformationMatrix()) );
-		_float4x4 WorldMatrix{};
-		XMStoreFloat4x4(&WorldMatrix, world);
-		m_pTransformCom->Set_WorldMatrix(WorldMatrix);
-		//	m_pTransformCom->Set_WorldMatrix();
 
-	}
 
 	//if (m_pBoneSocket)
 	//{
@@ -172,6 +173,7 @@ HRESULT CWeapon::Ready_Components()
 	///* For.Com_Shader */
 	if (FAILED(__super::Add_Component(TEXT("Com_Shader"), m_pGameInstance->GetShader(TEXT("Shader_VtxMesh"), true), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
+
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_KoujuroWeapon"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
@@ -316,6 +318,12 @@ void CWeapon::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
 		//if (m_DamagedTargets.find(pTarget) != m_DamagedTargets.end())
 		//	return; // 이미 데미지를 입힌 대상이면 무시
 		//m_DamagedTargets.insert(pTarget); // 데미지를 입힌 대상에 추가
+		m_pColliderCom->SetActive(false);
+		m_pColliderCom1->SetActive(false);
+		m_pColliderCom2->SetActive(false);
+		m_pColliderCom->SetDrawDebug(false);
+		m_pColliderCom1->SetDrawDebug(false);
+		m_pColliderCom2->SetDrawDebug(false);
 		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
 		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
 		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitShockParticle"), hitPos);
@@ -327,16 +335,30 @@ void CWeapon::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
 		//if (m_DamagedTargets.find(pBossParts) != m_DamagedTargets.end())
 		//	return; // 이미 데미지를 입힌 대상이면 무시
 		//m_DamagedTargets.insert(pBossParts); // 데미지를 입힌 대상에 추가
-		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
-	//	CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitShockParticle"), hitPos);
+		CSoundMag::Get_Instance()->PlayEffect("event:/Enmu/Hited");
+		m_pColliderCom->SetActive(false);
+		m_pColliderCom1->SetActive(false);
+		m_pColliderCom2->SetActive(false);
+		m_pColliderCom->SetDrawDebug(false);
+		m_pColliderCom1->SetDrawDebug(false);
+		m_pColliderCom2->SetDrawDebug(false);
 	}
 	else if (auto pBossParts = dynamic_cast<CEnmuParts*>(other->GetOwner()->GetParent()))
 	{
 		//if (m_DamagedTargets.find(pBossParts) != m_DamagedTargets.end())
 		//	return; // 이미 데미지를 입힌 대상이면 무시
 		//m_DamagedTargets.insert(pBossParts); // 데미지를 입힌 대상에 추가
-		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("SlashHitParticle"), hitPos);
-		//CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
+		m_pColliderCom->SetActive(false);
+		m_pColliderCom1->SetActive(false);
+		m_pColliderCom2->SetActive(false);
+		m_pColliderCom->SetDrawDebug(false);
+		m_pColliderCom1->SetDrawDebug(false);
+		m_pColliderCom2->SetDrawDebug(false);
+		CSoundMag::Get_Instance()->PlayEffect("event:/Enmu/Hited");
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitCrossParticle"), hitPos);
+		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitShockParticle"), hitPos);
 	}
 }
 

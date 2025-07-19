@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 #include <JsonLoader.h>
 #include "ParticleSystem.h"
+#include "EffectManager.h"
 #include "HitParticle.h"
 
 CKyojuroEnkSpiralEffect::CKyojuroEnkSpiralEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -73,6 +74,8 @@ void CKyojuroEnkSpiralEffect::Late_Update(_float fTimeDelta)
 	if (m_bRenderMesh)
 	{
 		__super::Late_Update(fTimeDelta);
+	//	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
+		m_pGameInstance->Add_RenderGroup(RENDERGROUP::BLOOM_EFFECT, this);
 	}
 	for (auto& particle : m_ParticleEffects)
 	{

@@ -18,7 +18,7 @@ public:
 	HRESULT Remove_RenderTargetGroup(const _wstring& strMRTTag);
 	ID3D11ShaderResourceView* Get_RenderTargetSRV(const _wstring& strTargetTag);
 
-	HRESULT Begin_MRT(const _wstring& strMRTTag);
+	HRESULT Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV, _bool isTargetClear, _bool isDepthClear);
 	HRESULT End_MRT();
 	HRESULT Bind_ShaderResource(const _wstring& strTargetTag, class CShader* pShader, const _char* pContantName);
 

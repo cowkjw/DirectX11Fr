@@ -82,7 +82,7 @@ void CEffect::Late_Update(_float fTimeDelta)
 	//	XMStoreFloat4x4(&WorldMatrix, world);
 	//	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 	//}
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONLIGHT, this);
+//	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONLIGHT, this);
 }
 
 HRESULT CEffect::Render()

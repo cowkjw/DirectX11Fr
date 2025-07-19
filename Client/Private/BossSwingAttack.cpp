@@ -13,7 +13,7 @@ void BossSwingAttack::Enter(CEnmuMeat* pChar)
 
 	pAnimatorLeft->SetTrigger("SwingAttackStart");
 	pAnimatorRight->SetTrigger("SwingAttackStart");
-
+	CSoundMag::Get_Instance()->PlayEffect("event:/Enmu/ReadyAttack");
 	pChar->SetState(EnmuState::SWINGATTACK);
 
 	if (!pWarning)
@@ -63,7 +63,7 @@ void BossSwingAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
 
 			if (fDistSq <= radiusSq)
 			{
-				pChar->GetTarget()->TakeDamage(20.f);
+				pChar->GetTarget()->TakeDamage(10.f);
 				pChar->GetTarget()->StartHitStop(0.65f);
 				pChar->GetTarget()->Blow(pChar, 40.f);
 				pChar->StartHitStop(0.65f);

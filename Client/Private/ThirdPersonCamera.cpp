@@ -77,33 +77,107 @@ void CThirdPersonCamera::Late_Update(_float fTimeDelta)
     if (!m_pTargetTransform )
         return;
 
+    if (m_bHitCam && m_pHitAttacker && m_pHitTarget)
+    {
+     
+        m_fHitTime += fTimeDelta;
+        // 두 캐릭터 중간 위치 계산
+        _vector posA = m_pHitAttacker->GetTransform()->Get_State(STATE::POSITION);
+        _vector posB = m_pHitTarget->GetTransform()->Get_State(STATE::POSITION);
+        _vector mid = XMVectorLerp(posA, posB, 0.5f);
+
+        // 카메라 위치는 중간 위치 + 지정된 오프셋
+        _vector desired = mid + m_vHitOffset;
+        // 고정 높이 사용하기
+        desired = XMVectorSetY(desired, m_fFixedHeight);
+
+        _vector curr = m_pTransformCom->Get_State(STATE::POSITION);
+        _float t = min(1.f, m_cameraSmooth * fTimeDelta);
+        _vector lerpPos = XMVectorLerp(curr, desired, t);
 
 
-    XMVECTOR currentCamPos = m_pTransformCom->Get_State(STATE::POSITION);
+        if (m_bShaking)
+        {
+            _float t = m_fShakeTimeLeft / m_fShakeDuration;
+
+            // 진폭을 시간이 지날수록 점점 줄이기
+            _float currentAmp = m_fShakeAmplitude * t;
+
+            // 랜덤 단위 벡터에 진폭 곱하기
+            _float offX = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
+            _float offY = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
+            _float offZ = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
+            if (m_pLockOnTarget && m_pLockOnTarget != m_pTarget)
+            {
+                lerpPos = XMVectorAdd(lerpPos,
+                    XMVectorSet(offX, offY, offZ, 0.f));
+            }
+            else
+            {
+
+                lerpPos = XMVectorAdd(m_vHitOffset,
+                    XMVectorSet(offX, offY, offZ, 0.f));
+            }
+
+            // 타이머 감소
+            m_fShakeTimeLeft -= fTimeDelta;
+            if (m_fShakeTimeLeft <= 0.f)
+                m_bShaking = false;
+
+        }
+        m_pTransformCom->Set_State(STATE::POSITION, lerpPos);
+
+        // 바라볼 지점도 중간으로
+        _vector lookAt = XMVectorSetY(mid, XMVectorGetY(mid) + 3.f);
+        if (m_pLockOnTarget && m_pLockOnTarget != m_pTarget)
+             m_pTransformCom->LookAtXZ(lookAt);
+        else
+        {
+			auto vCurPos = m_pTransformCom->Get_State(STATE::POSITION);
+			_float fLength = XMVectorGetX(XMVector3Length(m_vHitOffset - vCurPos));
+
+            if (fLength >= 1.f)
+            {
+                lerpPos = XMVectorLerp(vCurPos, m_vHitOffset, 0.2f);
+            }
+            // 위치는 오프셋으로 두고 중앙 지점 바라보기
+            m_pTransformCom->Set_State(STATE::POSITION, lerpPos/* m_bShaking ? lerpPos : m_vHitOffset*/);
+			m_pTransformCom->LookAt(mid);
+        }
+        if (m_fHitTime >= m_fHitDuration)
+        {
+            m_bHitCam = false;
+            Safe_Release(m_pHitAttacker);
+            Safe_Release(m_pHitTarget);
+        }
+        return; 
+    }
+
+    _vector currentCamPos = m_pTransformCom->Get_State(STATE::POSITION);
     if (m_pLockOnTarget && m_pLockOnTarget != m_pTarget)
     {
-        XMVECTOR playerPos = m_pTargetTransform->Get_State(STATE::POSITION);
-        XMVECTOR enemyPos = m_pLockOnTarget->GetTransform()->Get_State(STATE::POSITION);
+        _vector playerPos = m_pTargetTransform->Get_State(STATE::POSITION);
+        _vector enemyPos = m_pLockOnTarget->GetTransform()->Get_State(STATE::POSITION);
 
         // 1. 두 캐릭터의 중점과 거리 계산
-        XMVECTOR midPoint = XMVectorLerp(playerPos, enemyPos, 0.5f);
-        float distance = XMVectorGetX(XMVector3Length(enemyPos - playerPos));
+        _vector midPoint = XMVectorLerp(playerPos, enemyPos, 0.5f);
+        _float distance = XMVectorGetX(XMVector3Length(enemyPos - playerPos));
 
         // 고정된 카메라 높이와 기본 거리 설정
-        //float fixedCameraHeight = 15.0f;  // 고정된 Y 위치
-        float baseCameraDistance = max(m_fMinCameraDistance, distance * m_fDistanceMultiplier); // 거리에 따른 기본 카메라 거리
+        //_float fixedCameraHeight = 15.0f;  // 고정된 Y 위치
+        _float baseCameraDistance = max(m_fMinCameraDistance, distance * m_fDistanceMultiplier); // 거리에 따른 기본 카메라 거리
 
         // 현재 카메라 위치
-        XMVECTOR currentCamPos = m_pTransformCom->Get_State(STATE::POSITION);
+        _vector currentCamPos = m_pTransformCom->Get_State(STATE::POSITION);
 
         //데드존 설정 (화면상의 영역)
-        float deadZoneWidth = 80.f;   // 좌우 데드존
-        float deadZoneHeight = 10.0f;  // 상하 데드존
+        _float deadZoneWidth = 100.f;   // 좌우 데드존
+        _float deadZoneHeight = 10.0f;  // 상하 데드존
 
         // 두 캐릭터를 모두 포함하는 바운딩 박스 계산
-        XMVECTOR boundsMin = XMVectorMin(playerPos, enemyPos);
-        XMVECTOR boundsMax = XMVectorMax(playerPos, enemyPos);
-        XMVECTOR boundsCenter = (boundsMin + boundsMax) * 0.5f;
+        _vector boundsMin = XMVectorMin(playerPos, enemyPos);
+        _vector boundsMax = XMVectorMax(playerPos, enemyPos);
+        _vector boundsCenter = (boundsMin + boundsMax) * 0.5f;
 
         // Y는 고정
         boundsCenter = XMVectorSetY(boundsCenter, XMVectorGetY(midPoint));
@@ -114,27 +188,27 @@ void CThirdPersonCamera::Late_Update(_float fTimeDelta)
         _float requiredDistance = max(boundsWidth, boundsDepth) * 0.3f + baseCameraDistance;
 
         // 7. 원하는 카메라 위치 계산 (바운딩 박스 중심에서 뒤쪽으로)
-        XMVECTOR forwardDir = XMVector3Normalize(boundsCenter - currentCamPos);
+        _vector forwardDir = XMVector3Normalize(boundsCenter - currentCamPos);
         forwardDir = XMVectorSetY(forwardDir, 0); // Y축 제거 (수평 방향만)
 
-        XMVECTOR desiredCamPos = boundsCenter - XMVector3Normalize(forwardDir) * requiredDistance;
+        _vector desiredCamPos = boundsCenter - XMVector3Normalize(forwardDir) * requiredDistance;
         desiredCamPos = XMVectorSetY(desiredCamPos, m_fFixedHeight); // Y 고정
 
         // 8. 데드존 체크 - 현재 카메라에서 바운딩 박스가 화면 밖으로 나가는지 확인
-        XMVECTOR camToBounds = boundsCenter - currentCamPos;
+        _vector camToBounds = boundsCenter - currentCamPos;
         _float camToBoundsX = XMVectorGetX(camToBounds);
         _float camToBoundsZ = XMVectorGetZ(camToBounds);
 
         // 데드존을 벗어났을 때만 카메라 이동
-        XMVECTOR moveOffset = XMVectorZero();
+        _vector moveOffset = XMVectorZero();
 
         if (abs(camToBoundsX) > deadZoneWidth) {
-            float moveX = (abs(camToBoundsX) - deadZoneWidth) * (camToBoundsX > 0 ? 1 : -1);
+            _float moveX = (abs(camToBoundsX) - deadZoneWidth) * (camToBoundsX > 0 ? 1 : -1);
             moveOffset = XMVectorSetX(moveOffset, moveX);
         }
 
         if (abs(camToBoundsZ) > deadZoneWidth) {
-            float moveZ = (abs(camToBoundsZ) - deadZoneWidth) * (camToBoundsZ > 0 ? 1 : -1);
+            _float moveZ = (abs(camToBoundsZ) - deadZoneWidth) * (camToBoundsZ > 0 ? 1 : -1);
             moveOffset = XMVectorSetZ(moveOffset, moveZ);
         }
 
@@ -148,21 +222,21 @@ void CThirdPersonCamera::Late_Update(_float fTimeDelta)
         }
 
         // 10. 거리 체크 - 너무 가까우면 뒤로 이동
-        float currentDistance = XMVectorGetX(XMVector3Length(boundsCenter - desiredCamPos));
+        _float currentDistance = XMVectorGetX(XMVector3Length(boundsCenter - desiredCamPos));
         if (currentDistance < requiredDistance) {
-            XMVECTOR toCam = XMVector3Normalize(desiredCamPos - boundsCenter);
+            _vector toCam = XMVector3Normalize(desiredCamPos - boundsCenter);
             toCam = XMVectorSetY(toCam, 0); // Y축 제거
             desiredCamPos = boundsCenter + XMVector3Normalize(toCam) * requiredDistance;
             desiredCamPos = XMVectorSetY(desiredCamPos, m_fFixedHeight);
         }
 
         _float t = min(m_cameraSmooth * fTimeDelta, 1.0f);
-        XMVECTOR lerpPos = XMVectorLerp(currentCamPos, desiredCamPos, t);
+        _vector lerpPos = XMVectorLerp(currentCamPos, desiredCamPos, t);
 
         m_pTransformCom->Set_State(STATE::POSITION, lerpPos);
 
         // 12. 카메라가 바라볼 지점 (두 캐릭터의 중점, 약간 높이 조정)
-        XMVECTOR lookAtPoint = boundsCenter;
+        _vector lookAtPoint = boundsCenter;
         lookAtPoint = XMVectorSetY(lookAtPoint, XMVectorGetY(boundsCenter) + 3.0f);
 
         m_pTransformCom->LookAtXZ(lookAtPoint);
@@ -170,48 +244,116 @@ void CThirdPersonCamera::Late_Update(_float fTimeDelta)
     else
     {
      
-		const _float fMaxDistance = 80.f; // 최대 거리 제한
-		_vector vDir = XMVectorSet(0.f, 0.f, 1.f, 0.f); // 기본 뒤쪽 방향
-        _vector playerPos = m_pTargetTransform->Get_State(STATE::POSITION);
-		_vector idealCamPos = playerPos - vDir *60.f;
+		//const _float fMaxDistance = 80.f; // 최대 거리 제한
+		//_vector vDir = XMVectorSet(0.f, 0.f, 1.f, 0.f); // 기본 뒤쪽 방향
+  //      _vector playerPos = m_pTargetTransform->Get_State(STATE::POSITION);
+		//_vector idealCamPos = playerPos - vDir *60.f;
 	
-		_vector currentCamPos = m_pTransformCom->Get_State(STATE::POSITION);
-		_float currentDistance = XMVectorGetZ(XMVector3Length(playerPos - currentCamPos));
-		if (currentDistance > fMaxDistance)
-		{
-			idealCamPos = playerPos - vDir * fMaxDistance;
-		}
-	   
-        idealCamPos = XMVector3TransformCoord(idealCamPos, XMMatrixRotationX(m_cameraPitch));
-        idealCamPos = XMVectorSetY(idealCamPos, m_fSingleCameraFixedHeight); // Y축 고정
+		//_vector currentCamPos = m_pTransformCom->Get_State(STATE::POSITION);
+		//_float currentDistance = XMVectorGetZ(XMVector3Length(playerPos - currentCamPos));
+		//if (currentDistance > fMaxDistance)
+		//{
+		//	idealCamPos = playerPos - vDir * fMaxDistance;
+		//}
+	 //  
+  //      idealCamPos = XMVector3TransformCoord(idealCamPos, XMMatrixRotationX(m_cameraPitch));
+  //      idealCamPos = XMVectorSetY(idealCamPos, m_fSingleCameraFixedHeight); // Y축 고정
 
-		XMVECTOR currentCameraPos = m_pTransformCom->Get_State(STATE::POSITION);
-		_float t = min(1.f, m_cameraSmooth * fTimeDelta);
-		idealCamPos = XMVectorLerp(currentCameraPos, idealCamPos, t);
+		//XMVECTOR currentCameraPos = m_pTransformCom->Get_State(STATE::POSITION);
+		//_float t = min(1.f, m_cameraSmooth * fTimeDelta);
+		//idealCamPos = XMVectorLerp(currentCameraPos, idealCamPos, t);
 
-        if (m_bShaking)
-        {
-            float t = m_fShakeTimeLeft / m_fShakeDuration;
+  //      if (m_bShaking)
+  //      {
+  //          _float t = m_fShakeTimeLeft / m_fShakeDuration;
 
-            // 진폭을 시간이 지날수록 점점 줄이기
-            float currentAmp = m_fShakeAmplitude * t;
+  //          // 진폭을 시간이 지날수록 점점 줄이기
+  //          _float currentAmp = m_fShakeAmplitude * t;
 
-            // 랜덤 단위 벡터에 진폭 곱하기
-            _float offX = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
-            _float offY = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
-            _float offZ = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
+  //          // 랜덤 단위 벡터에 진폭 곱하기
+  //          _float offX = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
+  //          _float offY = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
+  //          _float offZ = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
 
-            idealCamPos = XMVectorAdd(idealCamPos,
-                XMVectorSet(offX, offY, offZ, 0.f));
+  //          idealCamPos = XMVectorAdd(idealCamPos,
+  //              XMVectorSet(offX, offY, offZ, 0.f));
 
-            // 타이머 감소
-            m_fShakeTimeLeft -= fTimeDelta;
-            if (m_fShakeTimeLeft <= 0.f)
-                m_bShaking = false;
-        }
+  //          // 타이머 감소
+  //          m_fShakeTimeLeft -= fTimeDelta;
+  //          if (m_fShakeTimeLeft <= 0.f)
+  //              m_bShaking = false;
+  //      }
 
-		m_pTransformCom->Set_State(STATE::POSITION, idealCamPos);
+		//m_pTransformCom->Set_State(STATE::POSITION, idealCamPos);
+
+        m_vLastPlayerPos = m_pTargetTransform->Get_State(STATE::POSITION);
+
+            const float fixedHeight = 15.f;
+
+            // 1) 플레이어 현재 위치 & 이동량
+            _vector currPos = m_pTargetTransform->Get_State(STATE::POSITION);
+            _vector delta = currPos - m_vLastPlayerPos;
+            delta = XMVectorSetY(delta, 0.f);
+
+            // 2) 이동량이 충분하면 방향 업데이트
+            float dist = XMVectorGetX(XMVector3Length(delta));
+            if (dist > 0.01f)
+                m_vMoveDir = XMVector3Normalize(delta);
+
+            m_vLastPlayerPos = currPos;
+
+            _vector idealCamPos = currPos - m_vMoveDir * m_cameraLookDistance;
+            idealCamPos = XMVectorSetY(idealCamPos, fixedHeight);
+
+            if (m_bShaking)
+            {
+                _float t = m_fShakeTimeLeft / m_fShakeDuration;
+
+                // 진폭을 시간이 지날수록 점점 줄이기
+                _float currentAmp = m_fShakeAmplitude * t;
+
+                // 랜덤 단위 벡터에 진폭 곱하기
+                _float offX = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
+                _float offY = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
+                _float offZ = m_pGameInstance->Compute_Random(-1.f, 1.f) * currentAmp;
+
+                idealCamPos = XMVectorAdd(idealCamPos,
+                    XMVectorSet(offX, offY, offZ, 0.f));
+
+                // 타이머 감소
+                m_fShakeTimeLeft -= fTimeDelta;
+                if (m_fShakeTimeLeft <= 0.f)
+                    m_bShaking = false;
+            }
+            _vector currCamPos = m_pTransformCom->Get_State(STATE::POSITION);
+            float t = min(1.f, m_cameraSmooth * fTimeDelta);
+            
+            _vector lerpPos = XMVectorLerp(currCamPos, idealCamPos, t);
+            
+            m_pTransformCom->Set_State(STATE::POSITION, lerpPos);
+            _vector lookAt = currPos + XMVectorSet(0, 3, 0, 0);
+            m_pTransformCom->LookAtXZ(lookAt);
     }
+}
+
+void CThirdPersonCamera::OnHit(CGameObject* attacker, CGameObject* target, _vector offset, _float fDuration)
+{
+    if (m_bHitCam)
+        return;
+    m_pHitAttacker = attacker; 
+    m_pHitTarget = target;  
+    m_vHitOffset = offset;           
+    m_fHitDuration = fDuration;
+    m_fHitTime = 0.f;
+    m_bHitCam = true;
+	Safe_AddRef(m_pHitAttacker);
+	Safe_AddRef(m_pHitTarget);
+
+ /*   if ((m_pLockOnTarget && m_pLockOnTarget != m_pTarget) == false)
+    {
+        m_vSingleOrginPos = m_pTransformCom->Get_State(STATE::POSITION);
+   
+    }*/
 }
 
 void CThirdPersonCamera::InitializeCameraPosition()
@@ -219,14 +361,15 @@ void CThirdPersonCamera::InitializeCameraPosition()
     if (!m_pTargetTransform)
         return;
 
-    XMVECTOR playerPos = m_pTargetTransform->Get_State(STATE::POSITION);
-    XMVECTOR playerForward = m_pTargetTransform->Get_State(STATE::LOOK);
+    _vector playerPos = m_pTargetTransform->Get_State(STATE::POSITION);
+    _vector playerForward = m_pTargetTransform->Get_State(STATE::LOOK);
     playerForward = XMVectorSetY(playerForward, 0.0f);
 
-    XMVECTOR initialCamPos = playerPos - playerForward * 700.f;
-    initialCamPos = XMVectorSetY(initialCamPos, 18.f);
+    _vector initialCamPos = playerPos - playerForward * 700.f;
+    initialCamPos = XMVectorSetY(initialCamPos, 17.f);
 
     m_pTransformCom->Set_State(STATE::POSITION, initialCamPos);
+
 }
 
 CThirdPersonCamera* CThirdPersonCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

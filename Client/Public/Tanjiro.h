@@ -30,6 +30,8 @@ private:
 
 private:
 	class CTanjiroMig* m_pMig{ nullptr }; 
+	class CTanTakEffect* m_pTakEffect{ nullptr }; 
+	class CTanjiroNej* m_pNej{ nullptr };
 
 
 public:

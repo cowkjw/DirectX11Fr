@@ -39,7 +39,8 @@ void CMeshEffect::Update(_float fTimeDelta)
 
 void CMeshEffect::Late_Update(_float fTimeDelta)
 {
-	__super::Late_Update(fTimeDelta);
+	// 조명 연산을 빼기 위해서 일단 이펙트 렌더링 그룹
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::EFFECT, this);
 }
 
 HRESULT CMeshEffect::Render()
@@ -76,6 +77,7 @@ void CMeshEffect::SetModel(CModel* pModel)
 
 void CMeshEffect::SetBone(CBone* pBone)
 {
+	m_pBoneSocket = pBone;
 }
 
 void CMeshEffect::SetRenderMesh(_bool bRenderMesh)

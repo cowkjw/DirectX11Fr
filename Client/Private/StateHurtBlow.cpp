@@ -20,6 +20,7 @@ void StateHurtBlow::Enter(CBaseCharacter* pChar)
 	}
 	else
 	{
+		CSoundMag::Get_Instance()->PlayOneShot("event:/Common/BodyAttack");
 		CSoundMag::Get_Instance()->PlayOneShot("event:/Tanjiro/Blow");
 	}
 }
