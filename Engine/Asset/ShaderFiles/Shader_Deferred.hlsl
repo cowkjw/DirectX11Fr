@@ -149,10 +149,10 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_DIRECTIONAL(PS_IN In)
 	vWorldPos = mul(vWorldPos, g_ViewMatrixInv); 
 
     // 이건 스페큘러 계산할 때 사용
-    //vector vReflect = reflect(normalize(g_vLightDir), vNormal);
-    //vector vLook = vWorldPos - g_vCamPosition;
+    vector vReflect = reflect(normalize(g_vLightDir), vNormal);
+    vector vLook = vWorldPos - g_vCamPosition;
 
-    //Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 50.f);
+    Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 50.f);
 
     return Out;
 }
@@ -229,7 +229,6 @@ float DetectEdge(float2 uv, float2 texelSize)
 {
 
     // 주변 픽셀들 검사하기 노말이랑 똑같이 x,y,z 다시 되돌려서 계산
-    // 주변 4개의 픽셀로만 8개 하니까 너무 좀 이상해 보임
     float3 normalUp = normalize(g_NormalTexture.Sample(DefaultSampler, uv + float2(0, texelSize.y)).xyz * 2.0 - 1.0);
     float3 normalDown = normalize(g_NormalTexture.Sample(DefaultSampler, uv - float2(0, texelSize.y)).xyz * 2.0 - 1.0);
     float3 normalLeft = normalize(g_NormalTexture.Sample(DefaultSampler, uv - float2(texelSize.x, 0)).xyz * 2.0 - 1.0);
@@ -257,36 +256,6 @@ float DetectEdge(float2 uv, float2 texelSize)
 	// edgeThreshold보다 edgeValue가 크면 1.0, 작으면 0.0을 반환
     // g_fOutlineThreshold은 어느정도부터 엣지로 판별할건지
     return step(g_fOutlineThreshold, edge);
-}
-
-PS_OUT PS_MAIN_DEFERRED_TOON_WRAP(PS_IN In)
-{
-    PS_OUT Out;
-
-    vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
-
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    //if (vMtrlDiffuse.a == 0.f)
-    //    discard;
-
-
-    float3 normal = normalize(g_NormalTexture.Sample(DefaultSampler, In.vTexcoord).xyz * 2.f - 1.f);
-    float3 lightDir = normalize(-g_vLightDir.xyz);
-    float  NdotL = max(dot(normal, lightDir), 0.f);
-    float  isLit = step(g_fShadowThreshold, NdotL);
-	float4 baseColor = vMtrlDiffuse;
-	float4 litColor = baseColor * g_vLightDiffuse;      // 그림자 아닌 곳에 그릴 색상
-    float4 shad = vMtrlDiffuse * g_vShadowColor; // 그림자
-    float4 toonColor = lerp(shad, litColor, isLit); 
-
-    // 앰비언트
-    float4 amb = vMtrlDiffuse * (g_fLightAmbient);// *g_fMtrlAmbient);
-
-    float4 finalColor = toonColor +amb;
-    finalColor = AdjustSaturation(finalColor, g_fSaturationBoost);
-	Out.vBackBuffer = saturate(finalColor);
-  
-    return Out;
 }
 
 PS_OUT PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE(PS_IN In)
@@ -455,16 +424,16 @@ PS_OUT PS_MAIN_BRIGHT_EFFECT(PS_IN In)
     // Luminance 계산
     float lum = dot(c.rgb, float3(0.299, 0.587, 0.114));
 
-    // 1) Threshold(임계치)와 Knee(부드럼 영역 폭) 정의
+    // Threshold(임계치)와 Knee(부드럼 영역 폭) 정의
     float threshold = 0.8f;
     float knee = 0.2f;   // 0.0 ~ 1.0  작을 수록 값자기 클수록 좀 부드럽게
 
    //Soft threshold: knee 구간 안에서는 0 → 1로 선형 보간
     float soft = saturate((lum - threshold + knee) / knee);
-    // 추출 계수: 임계치 아래에서는 0, knee 구간 안에서는 soft, 그 이상은 1
+    // 임계치 아래에서는 0, knee 구간 안에서는 soft, 그 이상은 1
     float extract = saturate((lum - threshold) / knee + 0.5f) * soft;
 
-    // 4) 추출 값으로 원본 컬러 스케일
+    // 추출 값으로 원본 컬러 스케일
     Out.vBackBuffer = c * extract;
 
     return Out;
@@ -524,73 +493,10 @@ PS_OUT PS_MAIN_BLOOM_BLURY(PS_IN In)
     return Out;
 }
 
-float g_fRimPower = 2.0f;              // 림라이트 강도 (높을수록 가장자리만)
-float g_fRimIntensity = 0.8f;          // 림라이트 밝기
-float4 g_vRimColor = float4(0.5f, 0.8f, 1.0f, 1.0f);  // 림라이트 색상 (연한 파란색)
-float g_fRimThreshold = 0.1f;          // 림라이트 임계값
-PS_OUT PS_MAIN_RIMLIGHT(PS_IN In)
-{
-	PS_OUT Out;
-    float2 uv = In.vTexcoord;
-
-    // 0) 알베도 알파가 0인 배경은 건너뛰기
-    float4 albedo = g_DiffuseTexture.Sample(DefaultSampler, uv);
-    if (albedo.a == 0) discard;
-
-    // 1) 화면 → 월드 좌표 역변환
-    vector vDepth = g_DepthTexture.Sample(DefaultSampler, uv);
-    float fViewZ = vDepth.y * g_fCameraFar;
-    vector vWorldPos;
-    vWorldPos.x = uv.x * 2 - 1;
-    vWorldPos.y = uv.y * -2 + 1;
-    vWorldPos.z = vDepth.x;
-    vWorldPos.w = 1;
-    vWorldPos = vWorldPos * fViewZ;
-    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
-
-    // 2) 노말 & 시선 벡터
-    float3 normal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2 - 1);
-    float3 viewDir = normalize(g_vCamPosition.xyz - vWorldPos.xyz);
-
-    float NdotV = dot(normal, viewDir);
-    float rimFactor = 1.0 - saturate(NdotV);
-
-    // 파워 적용으로 가장자리만 강조
-    float rim = pow(rimFactor, g_fRimPower);
-
-    // 임계값 적용 (너무 약한 림라이트는 제거)
-    rim = rim * step(g_fRimThreshold, rim);
-
-    // 강도 조절
-    rim *= g_fRimIntensity;
-
-    // 4) 최종 색상 출력 (설정한 림라이트 색상 사용)
-    Out.vBackBuffer = g_vRimColor * rim;
-    return Out;
-}
-
 
 PS_OUT PS_MAIN_FinalRender(PS_IN In)
 {
     PS_OUT Out;
-
-//
-//    vector vFinal = g_FinalTexture.Sample(DefaultSampler, In.vTexcoord);
-//	vector vBloom = g_BloomTexture.Sample(DefaultSampler, In.vTexcoord);
-//	vector vBlurY = g_BlurYTexture.Sample(DefaultSampler, In.vTexcoord);
-//	vector vRawEffect = g_EffectTexture.Sample(DefaultSampler, In.vTexcoord);
-//	vector vRimLight = g_RimLightTexture.Sample(DefaultSampler, In.vTexcoord);
-//
-//    float2 d = g_DistortionTexture.Sample(DefaultSampler, In.vTexcoord).rg;     // 0~1
-//    float2 offset = (d * 2.0f - 1.0f) * 0.5f;                        // -1~1 * strength(0.5)
-//    float2 uvDist = In.vTexcoord + offset;
-//
-//    float4 objCol = g_DistortionObjTexture.Sample(DefaultSampler, uvDist);
-//
-//    Out.vBackBuffer = vFinal + vRawEffect + vBloom + vBlurY*2.5f + vRimLight;
-////    if (objCol.a > 0.01f)
-//        Out.vBackBuffer += objCol;
 
     float2 d = g_DistortionTexture.Sample(DefaultSampler, In.vTexcoord).rg;
     float2 offset = (d * 2.0f - 1.0f) * 0.5f;
@@ -605,7 +511,6 @@ PS_OUT PS_MAIN_FinalRender(PS_IN In)
 
     float4 objCol = g_DistortionObjTexture.Sample(DefaultSampler, uvDist);
 
-  //  Out.vBackBuffer = vFinal + vRawEffect + vBloom + vBlurY * 2.5f + vRimLight + objCol;
     float4 finalColor = vFinal + vRawEffect + vBloom + vBlurY * 2.5f + vRimLight + objCol;
 
     // 안개 처리
@@ -755,14 +660,4 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_BLOOM_BLURY();
     }
-
-	pass RimLight
-	{
-		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DSS_None, 0);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_RIMLIGHT();
-	}
 }

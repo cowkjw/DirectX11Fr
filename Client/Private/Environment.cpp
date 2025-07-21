@@ -50,12 +50,7 @@ HRESULT CEnvironment::Initialize(void* pArg)
 			return E_FAIL;
 	}
 	
-	//if (FAILED(__super::Add_Component(ToIndex(LEVEL::GAMEPLAY), m_strModelTag,
-	//	TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-	//	return E_FAIL;
 	m_pTransformCom->Scaling(_float3(0.2f, 0.2f, 0.2f));
-
-
 
 	return S_OK;
 }
@@ -85,19 +80,6 @@ void CEnvironment::Update(_float fTimeDelta)
 void CEnvironment::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
-	//if (m_strModelTag.find(L"Sky") != _wstring::npos)
-	//	m_pGameInstance->Add_RenderGroup(RENDERGROUP::EFFECT, this);
-	//else
-
-	//if (m_strName == L"EnmuInfiEnv")
-	//{
-	//	m_pGameInstance->Add_RenderGroup(RENDERGROUP::BLEND, this);
-	//}
-	//else
-	//{
-	//	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
-
-	//}
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
 }
 
@@ -118,7 +100,6 @@ HRESULT CEnvironment::Render()
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}
-
 
 	return S_OK;
 }
@@ -153,7 +134,6 @@ void CEnvironment::Deserialize(const json& j)
 	}
 	if (FAILED(__super::Add_Component(TEXT("Com_Model"), m_pGameInstance->GetModel(m_strModelTag, true), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return;
-//	m_pTransformCom->Scaling(_float3(0.2f, 0.2f, 0.2f));*/
 }
 
 HRESULT CEnvironment::Ready_Components()
@@ -180,12 +160,12 @@ HRESULT CEnvironment::Bind_Shaders()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCameraFar", &fCamFar, sizeof(_float))))
 		return E_FAIL;
 
-	// 무한 배경용으로는 값 던져주기
+	// 무한 배경용으로는 값 던져주기 카메라와의 거리에 따른 알파 값 설정에서 사용
 	if (m_strName == L"EnmuInfiEnv")
 	{
-	_float fDistFade =550.f;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_DistFade", &fDistFade, sizeof(_float))))
-		return E_FAIL;
+		_float fDistFade = 550.f;
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_DistFade", &fDistFade, sizeof(_float))))
+			return E_FAIL;
 	}
 
 	return S_OK;

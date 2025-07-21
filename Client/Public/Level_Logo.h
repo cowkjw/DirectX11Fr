@@ -16,11 +16,12 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-	HRESULT Ready_Layer_BackGround(const _wstring strLayerTag);
-
 	void Ready_UI_Setup();
 
 	void StartGamePlay();
+private:
+	void UpdateLogoImage(_float fTimeDelta);
+	void UpdateLogoButtonFont();
 private:
 	_bool m_bIsEndInk = false;
 	_float m_fMaxScale = 430.0f; // 최대 스케일

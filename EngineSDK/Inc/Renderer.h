@@ -55,7 +55,6 @@ private:
 	HRESULT Render_Fog();
 	HRESULT Render_Blend();
 	HRESULT Render_Lights();
-	HRESULT Render_BackBuffer();
 	HRESULT Render_Shadow();
 	HRESULT Render_Distortion();
 	HRESULT Render_Bloom();
@@ -63,7 +62,6 @@ private:
 	HRESULT Render_BloomEffect();
 	HRESULT Render_RawEffect();
 	HRESULT Render_ToonBackBuffer();
-	HRESULT Render_RimLight();
 	HRESULT Render_Bright();
 	HRESULT Render_Blur();
 	HRESULT Render_Final();

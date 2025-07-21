@@ -20,7 +20,6 @@ public:
 
 	void ExportBinary(ofstream& ofs);
 
-	/* 애니메이션의 이름을 반환. */
 	const char* Get_Name() { return m_Name; }
 
 	void SetLoop(_bool isLoop) { m_isLoop = isLoop; }

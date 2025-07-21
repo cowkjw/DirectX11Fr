@@ -22,11 +22,11 @@ public:
 	virtual HRESULT Render() override;
 
 public:
+	virtual void Ready_Collider() override;
 	virtual HRESULT Ready_Components() override;
+	HRESULT Ready_Effect();
 	void Ready_AnimationForLeft() ;
 	void Ready_AnimationForRight() ;
-	HRESULT Ready_Effect();
-	virtual void Ready_Collider() override;
 
 	void ActiveCollider() override;
 	void DeactiveCollider() override;

@@ -66,46 +66,10 @@ void CBodyColliderParts::Priority_Update(_float fTimeDelta)
 
 void CBodyColliderParts::Update(_float fTimeDelta)
 {
-	//if (auto pCharacter = dynamic_cast<CBaseCharacter*>(m_pParent))
-	//{
-	//	_bool bCanAttack = pCharacter->GetState() == CBaseCharacter::CSTATE::ATTACK || pCharacter->GetState() == CBaseCharacter::CSTATE::SKILL;
-
-	//	for (auto& pCollider : m_pColliderComs)
-	//	{
-	//		if (bCanAttack)
-	//		{
-	//			pCollider->SetActive(true);
-	//			pCollider->SetDrawDebug(true);
-	//		}
-	//		else
-	//		{
-	//			pCollider->SetDrawDebug(false);
-	//			pCollider->SetActive(false);
-	//		}
-	//	}
-	//}
-	//else
-	//{
-	//	/*for (auto& pCollider : m_pColliderComs)
-	//	{
-	//		_bool bCanAttack = true;
-	//		if (bCanAttack)
-	//		{
-	//			pCollider->SetActive(true);
-	//			pCollider->SetDrawDebug(true);
-	//		}
-	//		else
-	//		{
-	//			pCollider->SetDrawDebug(false);
-	//			pCollider->SetActive(false);
-	//		}
-	//	}*/
-	//}
 }
 
 void CBodyColliderParts::Late_Update(_float fTimeDelta)
 {
-	//CGameObject::Late_Update(fTimeDelta);
 	if (m_pBoneSocket)
 	{
 		_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
@@ -120,29 +84,6 @@ void CBodyColliderParts::Late_Update(_float fTimeDelta)
 		//	m_pTransformCom->Set_WorldMatrix();
 
 	}
-
-	//if (m_pBoneSocket)
-	//{
-	//	// 캐릭터 루트(부모)의 월드 행렬
-	//	_float4x4 parentWorld = m_pParent->GetTransform()->Get_WorldMatrix();
-
-	//	// 손 본의 로컬 행렬 (애니메이션에서 나온 CombinedTransformation)
-	//	_float4x4 boneLocal = *m_pBoneSocket->Get_CombinedTransformationMatrix();
-
-	//	// 무기의 로컬 오프셋 (초기 배치 조정용, 일반적으로 회전+위치)
-	//	//_matrix weaponLocal = m_pTransformCom->Get_LocalMatrix(); // ← 새로 만들어야 함
-
-	//	// 손 본의 월드 행렬 = 손 본 로컬 × 캐릭터 월드
-	//	_matrix handWorld = XMLoadFloat4x4(&boneLocal) * XMLoadFloat4x4(&parentWorld);
-
-	//	// 무기 월드 = 무기 로컬 × 손 본의 월드
-	////	_matrix weaponWorld = weaponLocal * handWorld;
-
-	//	// 적용
-	//	_float4x4 finalMat{};
-	//	XMStoreFloat4x4(&finalMat, weaponWorld);
-	//	m_pTransformCom->Set_WorldMatrix(finalMat);
-	//}
 
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this);
 }

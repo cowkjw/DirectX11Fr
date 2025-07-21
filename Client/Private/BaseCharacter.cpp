@@ -248,7 +248,7 @@ HRESULT CBaseCharacter::Render_Shadow()
 
 	_uint		iNumMesh = m_pModelCom->Get_NumMeshes();
 
-	for (size_t i = 0; i < iNumMesh; i++)
+	for (_uint i = 0; i < iNumMesh; i++)
 	{
 		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
 

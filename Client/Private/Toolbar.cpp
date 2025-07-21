@@ -1427,7 +1427,7 @@ void CToolbar::MultiParticleEditorBySqeuence()
 	if (m_bIsPlaying)
 	{
 		static _float lastTime = 0.0f;
-		_float currentTime = ImGui::GetTime();
+		_float currentTime = static_cast<_float>(ImGui::GetTime());
 
 		if (currentTime - lastTime >= (1.0f / (60.0f * playSpeed))) // 60fps ±‚¡ÿ
 		{

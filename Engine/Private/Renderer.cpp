@@ -201,23 +201,14 @@ HRESULT CRenderer::Draw()
 {
 	if (FAILED(Render_Priority()))
 		return E_FAIL;
-	/*if (FAILED(Render_Shadow()))
-		return E_FAIL;*/
-
 	if (FAILED(Render_NonBlend())) // 맵, 캐릭터 그리고
 		return E_FAIL;
 	if (FAILED(Render_Lights())) // 조명 계산함
 		return E_FAIL;
 	if (FAILED(Render_Distortion()))
 		return E_FAIL;
-	//if (FAILED(Render_BackBuffer()))
-	//	return E_FAIL;
 	if (FAILED(Render_ToonBackBuffer())) // 조명 계산하고 잠깐 그려두고
 		return E_FAIL;
-
-	//if (FAILED(Render_RimLight())) // 림라이트 따로 그림
-	//	return E_FAIL;
-
 	if (FAILED(Render_RawEffect())) // 이펙트들 따로 그리고
 		return E_FAIL;
 	if (FAILED(Render_BloomEffect())) // 블룸 이펙트들 따로 그리고
@@ -340,27 +331,6 @@ HRESULT CRenderer::Render_Lights()
 	if (FAILED(m_pGameInstance->End_MRT()))
 		return E_FAIL;
 
-	return S_OK;
-}
-
-HRESULT CRenderer::Render_BackBuffer()
-{
-	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_Diffuse"), m_pShader, "g_DiffuseTexture")))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_Shade"), m_pShader, "g_ShadeTexture")))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-		return E_FAIL;
-
-	m_pShader->Begin(3);
-
-	m_pVIBuffer->Bind_Buffers();
-	m_pVIBuffer->Render();
 	return S_OK;
 }
 
@@ -498,41 +468,6 @@ HRESULT CRenderer::Render_ToonBackBuffer()
 	m_pVIBuffer->Render();
 
 	m_pGameInstance->End_MRT();
-	return S_OK;
-}
-
-HRESULT CRenderer::Render_RimLight()
-{
-	m_pGameInstance->Begin_MRT(TEXT("MRT_RimLight"));
-
-	for (auto& pGameObject : m_RenderObjects[ToIndex(RENDERGROUP::RIMLIGHT)])
-	{
-		if (nullptr != pGameObject)
-			pGameObject->Render();
-
-	}
-	m_RenderObjects[ToIndex(RENDERGROUP::RIMLIGHT)].clear();
-	m_pGameInstance->End_MRT();
-
-	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrixInv", m_pGameInstance->Get_Transform_Float4x4_Inv(TRANSFORM::VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrixInv", m_pGameInstance->Get_Transform_Float4x4_Inv(TRANSFORM::PROJECTION))))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
-		return E_FAIL;
-	_float fCameraFar = m_pGameInstance->Get_CameraFar();
-	if (FAILED(m_pShader->Bind_RawValue("g_fCameraFar", &fCameraFar, sizeof(_float))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
-		return E_FAIL;
-	m_pShader->Begin(12);
-
-	// 풀스크린 쿼드
-	m_pVIBuffer->Bind_Buffers();
-	m_pVIBuffer->Render();
-
-
 	return S_OK;
 }
 

@@ -28,19 +28,6 @@ public:
 		SetWindowText(g_hWnd, m_szLoadingText);
 	}
 
-
-private:
-	ID3D11Device* m_pDevice = { nullptr };
-	ID3D11DeviceContext* m_pContext = { nullptr };
-	LEVEL						m_eNextLevelID = { LEVEL::END };
-	_bool						m_isFinished = { false };
-	CGameInstance* m_pGameInstance = { nullptr };
-
-private:
-	HANDLE						m_hThread = {};
-	CRITICAL_SECTION			m_CriticalSection = {};
-	_tchar						m_szLoadingText[MAX_PATH] = {};
-
 public:
 	HRESULT Loading_For_Logo();
 	HRESULT Loading_For_GamePlay();
@@ -49,6 +36,16 @@ public:
 	HRESULT Loading_For_Battle();
 	HRESULT Loading_For_Mode();
 
+private:
+	_bool						m_isFinished = { false };
+	ID3D11Device*				m_pDevice = { nullptr };
+	ID3D11DeviceContext*		m_pContext = { nullptr };
+	CGameInstance*				m_pGameInstance = { nullptr };
+	LEVEL						m_eNextLevelID = { LEVEL::END };
+
+	HANDLE						m_hThread = {};
+	CRITICAL_SECTION			m_CriticalSection = {};
+	_tchar						m_szLoadingText[MAX_PATH] = {};
 
 public:
 	static CLoader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);

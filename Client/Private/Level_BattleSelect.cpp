@@ -15,17 +15,10 @@ CLevel_BattleSelect::CLevel_BattleSelect(ID3D11Device* pDevice, ID3D11DeviceCont
 
 HRESULT CLevel_BattleSelect::Initialize()
 {
-
-
-
 	CJsonLoader jsonLoader(m_pDevice,m_pContext);
-	jsonLoader.Load_Objects("../Asset/Json/BattleSelectCanvas.json", [&]() {
-		// 이곳에 로드 후 처리할 작업을 추가합니다.
-		});
+	jsonLoader.Load_Objects("../Asset/Json/BattleSelectCanvas.json", [&]() {});
 	jsonLoader.Free();
-	
 	SetUpUI();
-
 
 	CSoundMag::Get_Instance()->PlayBGM("event:/BGM/SelectLevel");
 	return S_OK;
@@ -151,5 +144,4 @@ CLevel_BattleSelect* CLevel_BattleSelect::Create(ID3D11Device* pDevice, ID3D11De
 void CLevel_BattleSelect::Free()
 {
 	__super::Free();
-
 }

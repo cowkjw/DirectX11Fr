@@ -10,10 +10,10 @@ CFrustumCull::CFrustumCull()
 
 HRESULT CFrustumCull::Initialize_Prototype()
 {
-	// 1) 평면 초기화
+	//  평면 초기화
 	for (_int i = 0; i < 6; ++i)
 		m_Planes[i] = XMPlaneNormalize(XMVectorZero());
-	// 2) 뷰·투영 행렬 초기화
+	//  뷰·투영 행렬 초기화
 	m_ViewProj = XMMatrixIdentity();
 
     return S_OK;
@@ -22,7 +22,7 @@ HRESULT CFrustumCull::Initialize_Prototype()
 void CFrustumCull::Update(_float4x4 const& viewF, _float4x4 const& projF)
 {
 
-    // 1) XMMATRIX 로 변환
+    //  XMMATRIX 로 변환
     _matrix view = XMLoadFloat4x4(&viewF);
     _matrix proj = XMLoadFloat4x4(&projF);
     m_ViewProj = XMMatrixMultiply(view, proj);

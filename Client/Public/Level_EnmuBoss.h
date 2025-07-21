@@ -8,6 +8,7 @@ class CGameObject;
 END_NAMESPACE
 
 BEGIN_NAMESPACE(Client)
+class CJsonLoader;
 class CLevel_EnmuBoss final : public CLevel
 {
 private:
@@ -21,10 +22,13 @@ public:
 
 	HRESULT Ready_Layer_Characters();
 	HRESULT Ready_Lights();
+	HRESULT Ready_Effects(CJsonLoader& jsonLoader);
 	HRESULT Ready_Camera(CGameObject* pTarget);
 private:
 	void UpdateGameFlow(_float fTimeDelta);
-
+	void CheckCharacterDeath();
+	void UpdateStartState(_float fTimeDelta);
+	void UpdateEndState(_float fTimeDelta);
 private:
 	_bool m_bStartGame = false;
 	_bool m_bEndGame = false;
