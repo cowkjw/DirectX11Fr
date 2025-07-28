@@ -1271,22 +1271,19 @@ void CAkaza::FillInput(InputData& outInput)
 	float dt = CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
 	auto anim = m_pAnimatorCom; // 예: 애니메이터 컴포넌트 포인터
 
-	// 3) 거리/방향 계산 (XZ 평면)
-	XMVECTOR myPos = GetTransform()->Get_State(STATE::POSITION);
-	XMVECTOR tgtPos = pTarget->GetTransform()->Get_State(STATE::POSITION);
+	_vector myPos = GetTransform()->Get_State(STATE::POSITION);
+	_vector tgtPos = pTarget->GetTransform()->Get_State(STATE::POSITION);
 	myPos = XMVectorSetY(myPos, 0.f);
 	tgtPos = XMVectorSetY(tgtPos, 0.f);
-	XMVECTOR diff = tgtPos - myPos;
-	float dist = XMVectorGetX(XMVector3Length(diff));
-	XMVECTOR dirToPlayer = (dist > 0.001f) ? XMVector3Normalize(diff) : XMVectorZero();
+	_vector diff = tgtPos - myPos;
+	_float dist = XMVectorGetX(XMVector3Length(diff));
+	_vector dirToPlayer = (dist > 0.001f) ? XMVector3Normalize(diff) : XMVectorZero();
 
-	// 4) 플레이어 상태 한 번에 확인 → 즉시 액션 결정
+	// 플레이어 상태 확인
 	CBaseCharacter::CSTATE playerState = pTarget->GetState();
 
 	outInput = InputData();  // 기본값
 
-	//if (!XMVector3Equal(dirToPlayer, XMVectorZero()))
-	//	outInput.moveDir = XMVector3Normalize(dirToPlayer);
 	auto commands = m_pInputBuffer->GetCommands();
 
 	if (m_pInputBuffer->CheckCombo(commands,
@@ -1310,7 +1307,6 @@ void CAkaza::FillInput(InputData& outInput)
 		outInput.doAttack = true;
 
 	}
-	// 3타: LightAttack×3 + 위/아래 판정 (시간 제한 1초)
 	else if (m_pInputBuffer->CheckCombo(commands,
 		{ ECommand::LightAttack, ECommand::LightAttack,
 		  ECommand::LightAttack },

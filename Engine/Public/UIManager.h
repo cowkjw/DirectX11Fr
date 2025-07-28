@@ -23,6 +23,7 @@ public:
 	void RemoveCanvasUI(const _wstring& canvasName);
 	void RemoveUI(const _wstring& canvasName, const _wstring& uiName);
 	void ClearCanvas();
+
 	CUIObject* GetUI(const _wstring& canvasName,const _wstring& uiName);
 	CGameObject* CreateUI(CUIObject::UIOBJECT_DESC* pDesc, UI_TYPE eUIType);
 	CGameObject* GetCanvasUI(const _wstring& canvasName);

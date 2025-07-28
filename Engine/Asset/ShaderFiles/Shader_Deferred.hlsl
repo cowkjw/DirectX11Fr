@@ -262,14 +262,8 @@ PS_OUT PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE(PS_IN In)
 {
     PS_OUT Out;
 
- //   vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
- //   vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float2 uv = In.vTexcoord;
 
-    //float2 distortion = g_DistortionTexture.Sample(DefaultSampler, uv).rg;
-    //distortion = (distortion * 2.0f - 1.0f) *5.f; // Strength 조절
-
-    //uv += distortion;
 	float4 vNormalSample = g_NormalTexture.Sample(DefaultSampler, uv);
     vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
 	float fViewZ = vDepthDesc.y * g_fCameraFar;
@@ -295,8 +289,6 @@ PS_OUT PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE(PS_IN In)
     vTexcoord.x = vPosition.x / vPosition.w * 0.5f + 0.5f;
     vTexcoord.y = vPosition.y / vPosition.w * -0.5f + 0.5f;
 
-    float4  vOldDepthDesc = g_ShadowTexture.Sample(DefaultSampler, vTexcoord);
-    float fOldViewZ = vOldDepthDesc.y * g_fCameraFar;
     // 툰으로 그리기
     if (vNormalSample.w > 0.0f)
     {
@@ -311,10 +303,9 @@ PS_OUT PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE(PS_IN In)
         float4 baseColor = vMtrlDiffuse;
         float4 litColor = baseColor * g_vLightDiffuse;
         float4 shad = vMtrlDiffuse * g_vShadowColor;
-        //float4 toonColor = lerp(shad, litColor, isLit);
 
         float levels = 2;                                 // 단계 수
-        float d = floor(NdotL * levels) / (levels - 1);   // 0.0, 0.33, 0.66, 1.0 등
+        float d = floor(NdotL * levels) / (levels - 1); 
         float4 toonColor = lerp(shad, litColor, d);
 
         float4 amb = vMtrlDiffuse * (g_fLightAmbient) * g_fAmbientStrength;
@@ -352,11 +343,6 @@ PS_OUT PS_MAIN_DEFERRED_TOON_WRAP_OUTLINE(PS_IN In)
         Out.vBackBuffer = vDiffuse * vShade;
 
     }
- /*  
-    if (fOldViewZ + 0.1f < vPosition.w)
-    {
-        Out.vBackBuffer = Out.vBackBuffer * 0.5f;
-    }*/
     return Out;
 }
 

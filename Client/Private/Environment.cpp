@@ -63,13 +63,13 @@ void CEnvironment::Update(_float fTimeDelta)
 		_vector vCurPos = m_pTransformCom->Get_State(STATE::POSITION);
 		_float fZ = XMVectorGetZ(vCurPos);
 
-		if (fZ <= -800.f)
+		if (fZ <= m_fLimitZ)
 		{
 			m_pTransformCom->Set_State(STATE::POSITION, m_InitPos);
 		}
 		else
 		{
-			_float fDeltaZ = fTimeDelta * 300.f;
+			_float fDeltaZ = fTimeDelta * m_fTilingSpeed;
 			vCurPos = XMVectorSetZ(vCurPos, fZ - fDeltaZ);
 			m_pTransformCom->Set_State(STATE::POSITION, vCurPos);
 		}

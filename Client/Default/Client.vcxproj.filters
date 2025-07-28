@@ -1153,5 +1153,6 @@
     <None Include="..\Asset\Json\GamePlayBackgroundObj.json">
       <Filter>96.Json\JsonFiles</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

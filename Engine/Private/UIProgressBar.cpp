@@ -120,24 +120,19 @@ void CUIProgressBar::Late_Update(_float fTimeDelta)
 	if (m_pBGImage)
 		m_pBGImage->Late_Update(fTimeDelta);
 
-	_float curRatio = m_fCurValue / m_fMaxValue; // 현재 HP 비율 (0~1)
+	_float curRatio = m_fCurValue / m_fMaxValue; // 현재 비율 (0~1)
 	_float prevRatio = m_fPrevValue;
-	//if (m_bReverse)
-	//{
-	//	curRatio = 1.f - curRatio;
-	//	prevRatio = 1.f - prevRatio;
-	//}
 
-	// FillImage: 손실된 HP 부분을 지연 후 표시 (빨간색 부분)
+	// FillImage: 손실된 부분을 지연 후 표시 (빨간색 부분)
 	if (m_pFillImage)
 	{
-		m_pFillImage->SetRatio(prevRatio); // 이전 HP 비율을 셰이더에 전달
+		m_pFillImage->SetRatio(prevRatio); // 이전 비율을 셰이더에 전달
 		m_pFillImage->Late_Update(fTimeDelta);
 	}
 
 	if (m_pDamageImage)
 	{
-		m_pDamageImage->SetRatio(curRatio); // 현재 HP 비율을 셰이더에 전달
+		m_pDamageImage->SetRatio(curRatio); // 현재 비율을 셰이더에 전달
 		m_pDamageImage->Late_Update(fTimeDelta);
 	}
 }

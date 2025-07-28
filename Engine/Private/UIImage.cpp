@@ -1,9 +1,9 @@
-#include "UIImage.h"
-#include "UIImage.h"
 #include "GameInstance.h"
+#include "VIBuffer_Rect.h"
+#include "UIImage.h"
 #include "Texture.h"
 #include "Shader.h"
-#include "VIBuffer_Rect.h"
+
 CUIImage::CUIImage(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUIObject{ pDevice, pContext }
 {

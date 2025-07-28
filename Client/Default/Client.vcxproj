@@ -447,6 +447,7 @@
     <None Include="..\Asset\Json\Object_PrototypeTag.json" />
     <None Include="..\Asset\Json\Shaders.json" />
     <None Include="..\Asset\Json\Textures.json" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -50,24 +50,28 @@ void BossSwingAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
 	{
 		pWarning->SetActive(false); // 경고존 비활성화
 
-		if (pChar->GetTarget())
+		auto pTarget = pChar->GetTarget();
+		if (pTarget)
 		{
 			// 원 안에 있었는지 
-			_vector vTargetPos = pChar->GetTarget()->GetTransform()->Get_State(STATE::POSITION);
+			_vector vTargetPos = pTarget->GetTransform()->Get_State(STATE::POSITION);
 			_vector vMyPos = pWarning->GetTransform()->Get_State(STATE::POSITION);
 			_vector vDelta = vTargetPos - vMyPos;
 
 			// 거리 제곱 계산
 			_float fDistSq = XMVectorGetX(XMVector3LengthSq(vDelta));
-			_float radiusSq = 176.f * 176.f;
+			constexpr _float radius = 176.f;
+			constexpr _float radiusSq = radius * radius;
 
 			if (fDistSq <= radiusSq)
 			{
-				pChar->GetTarget()->TakeDamage(10.f);
-				pChar->GetTarget()->StartHitStop(0.65f);
-				pChar->GetTarget()->Blow(pChar, 40.f);
+				if (pTarget)
+				{
+					pTarget->TakeDamage(10.f);
+					pTarget->StartHitStop(0.65f);
+					pTarget->Blow(pChar, 40.f);
+				}
 				pChar->StartHitStop(0.65f);
-
 			}
 		}
 		m_bDected = true; // 경고존 활성화 후 한 번만

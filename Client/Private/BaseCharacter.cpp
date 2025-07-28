@@ -344,7 +344,7 @@ void CBaseCharacter::FillInput(InputData& outInput)
 	if (!XMVector3Equal(dir, XMVectorZero()))
 		outInput.moveDir = XMVector3Normalize(dir);
 	auto commands = m_pInputBuffer->GetCommands();
-	// 2) 4→3→2→1 순서로 else if 검사
+	//  4→3→2→1 순서로 else if 검사
 	if (m_pInputBuffer->CheckCombo(commands,
 		{ ECommand::LightAttack, ECommand::LightAttack,
 		  ECommand::LightAttack, ECommand::LightAttack },
@@ -366,7 +366,7 @@ void CBaseCharacter::FillInput(InputData& outInput)
 		outInput.doAttack = true;
 
 	}
-	// 3타: LightAttack×3 + 위/아래 판정 (시간 제한 1초)
+	// 3타, 위/아래 판정 (시간 제한 1초)
 	else if (m_pInputBuffer->CheckCombo(commands,
 		{ ECommand::LightAttack, ECommand::LightAttack,
 		  ECommand::LightAttack },
@@ -733,7 +733,6 @@ void CBaseCharacter::TakeDamage(_float fDamage)
 void CBaseCharacter::StartHitStop(_float duration)
 {
 	m_pGameInstance->SetHitStop(true, 0.25f);
-	//m_fHitStopTime = duration;
 }
 
 void CBaseCharacter::Ready_Animation()

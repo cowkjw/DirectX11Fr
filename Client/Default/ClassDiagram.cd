@@ -1,0 +1,522 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Alphabetical">
+  <Class Name="CBase" Collapsed="true">
+    <Position X="8.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACBAAAAAAAAABAACAAAAAAAAAAABAAAAI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\Base.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGameObject" Collapsed="true">
+    <Position X="2.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QEQRASIJAAIAERQJkBBEsAAwACLAQAIIQFJACIQASFI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\GameObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CComponent" Collapsed="true">
+    <Position X="24.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAARACAIAIIIAVQBEAAEAAAAASBAAAIIAAAACIAASBI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\Component.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCollider" Collapsed="true">
+    <Position X="18.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAATAAQIAgAAEIAMAICBJIEGwgACMBIEBAII=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\Collider.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCapsuleCollider" Collapsed="true">
+    <Position X="17" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAUAAAAAAAAAAQAAAAAEIEAAICRCAEgQAAAAAAAIAJI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\CapsuleCollider.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CAnimator" Collapsed="true">
+    <Position X="28.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EBRAAAsIOCAghwBICCANAgAAAAiTAkAAhAAABASJABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\Animator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShader" Collapsed="true">
+    <Position X="21.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABIAAAAAAQAAAAAEBAAAEAAIkEAAAEAAAAAEABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\Shader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ISerializable" Collapsed="true">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEACAAAAAAAAAAAAAAAAACBAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\Serializable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CUIObject" Collapsed="true">
+    <Position X="2" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAQAAAAQQAACAEAACACCAACACBQHBABARAARI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\UIObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CUIImage" Collapsed="true">
+    <Position X="0.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACbCCAYAAAIMIYWAAAFEAAAQQKJHAkAAwFBQhAAGQ5M=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\UIImage.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CUIButton" Collapsed="true">
+    <Position X="2.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAQDIAAAAAAAEQQNAABEAAAEACAAAEJAABFAMAAAABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\UIButton.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CUIProgressBar" Collapsed="true">
+    <Position X="4" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAADIIAAYQIAIAEAIAAAGkCAFAAABBAAgAAgBI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\UIProgressBar.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSphereCollider" Collapsed="true">
+    <Position X="18.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAQAAAAAAAAAAQAAAQQEIBAAACDAAEAQAAAAAACAAJI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\SphereCollider.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CBoxCollider" Collapsed="true">
+    <Position X="20.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAABAAAAQAAAACEIAAgACJAQEAQAAAAAAAAAJI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\BoxCollider.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CModel" Collapsed="true">
+    <Position X="28.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MCEEIAAEACBAgQABKoQEAAJASUIEBERAJhAhCAARABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\Model.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTransform" Collapsed="true">
+    <Position X="23.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gIQAACGAAREKjWoBACAGaBACAjBAgFBAEBBBAgAAEBI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\Transform.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CVIBuffer_Instance" Collapsed="true">
+    <Position X="25.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKgAAAAgAAAACQAAgAAEAACAAAAAAAAAABBAAAAAABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\VIBuffer_Instance.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CParticleSystem" Collapsed="true">
+    <Position X="25.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAGAAUAFAIAQAAEAEEAAAAFCwBAUAAE4AACQCACBI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\ParticleSystem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CVIBuffer" Collapsed="true">
+    <Position X="27" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBQqBAAAAQAQAAAAAECACAAAAAAAIAAhhAAABAAJI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\VIBuffer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CVIBuffer_Rect" Collapsed="true">
+    <Position X="23.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAEAAAAAAAAAEAAAAAAAIAAgBI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\VIBuffer_Rect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CVIBuffer_Terrain" Collapsed="true">
+    <Position X="27.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAQAEIACAAAAAAEAAAAAAAAAAABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\VIBuffer_Terrain.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTexture" Collapsed="true">
+    <Position X="26.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAUAAAAQKAAAAEAIAAAAAAAEAAAAAAAAAAABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\Texture.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CBaseCharacter" Collapsed="true">
+    <Position X="3.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KFQKPV6EgEIQxZwQUBCOAACwAZUBAEwMQThYhDQDQDI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\BaseCharacter.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CAkaza" Collapsed="true">
+    <Position X="1" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ALwACJmAAEgAgQwAiBgEAACEACMIIFEICFBAgAACADI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\Akaza.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CKyojuro" Collapsed="true">
+    <Position X="3.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQACAgAAAAAgQwAABAEAAAABACAAEEIABBAgAQCABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\Public\Kyojuro.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEffect" Collapsed="true">
+    <Position X="14.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAAAggAAAEQQQACAAEAgBAIAIEAEAIgBBQAAAACAo=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\Effect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CParticleEffect" Collapsed="true">
+    <Position X="12.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQwCAIAAIgAAcQAAIQkAAAAICAAEkAABBRKAAACChI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\Public\ParticleEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMeshEffect" Collapsed="true">
+    <Position X="16" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAQCAAEEQQAAAAEAAAAQABAAEAAADBOAAAGABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\MeshEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CKyojuroNobEffect" Collapsed="true">
+    <Position X="16.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQEAQAAAAAASQQgAAAEAAAAIAIAAEAIgBjAAAACCBI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\Public\KyojuroNobEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CKyojuroKienEffect" Collapsed="true">
+    <Position X="14.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQEAAAAAAQASQQgAACEAAAAAAIAAEAIgBjAAAACCBI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\Public\KyojuroKienEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CKyojuroEnkEffect" Collapsed="true">
+    <Position X="18.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQEAAAAAAAAQQQAAAAEAAAEAEAAAGAAgBhAQAACABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\Public\KyojuroEnkEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CHitShockParticle" Collapsed="true">
+    <Position X="7.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAYQAAAAAAAAAQQAAAAEAAAAAAACAkAAABBEACACABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\Public\HitShockParticle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CHitBodyShockParticle" Collapsed="true">
+    <Position X="9.75" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CBQQAAAAAAAAAQQAgAAEAAAAAAACAkAAABBEAAACABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\Public\HitBodyShockParticle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CHitParticle" Collapsed="true">
+    <Position X="11.75" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAQQQAAAAEAAAAAAAAAEAAEBBABAACABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\HitParticle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGuardEffect" Collapsed="true">
+    <Position X="20.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQEAAAAgAgASQQgAAAEAAAAIAIAAEAIgBjAAAACCRI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\Public\GuardEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEnmuMeat" Collapsed="true">
+    <Position X="9.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IASCVFJIQAAARQQRABIGECAABAAQgGEASFBEBRDAABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\EnmuMeat.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEnmuParts" Collapsed="true">
+    <Position X="7.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQACBwAAAAAxYwAAAAAAEAABBAAAEAMQBBYAAACABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\EnmuParts.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEnmuHead" Collapsed="true">
+    <Position X="4.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARACAwAAAAAAQwAAAAEAEAAAAAAAEAMABBAAAACAJI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\Public\EnmuHead.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEnmuBody" Collapsed="true">
+    <Position X="7.25" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQACAwAAEIAAQwAAAAAAEAAAAAAAEAMABBAAAACABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\Public\EnmuBody.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEnmuArm" Collapsed="true">
+    <Position X="9.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAKB6AACAAARSCAAAAAEAACAAAAkAMABBAAACCQJM=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\EnmuArm.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTanjiro" Collapsed="true">
+    <Position X="5.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQACAgAAAAQAQwAABAEAAAAAAAACEFAABBAgAACBJI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\Tanjiro.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPannel" Collapsed="true">
+    <Position X="11" Y="15.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBAAAAAAAAIQAAAAAAAAAAAAAACEIAABAACAAAAAI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\Pannel.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CToolbar" Collapsed="true">
+    <Position X="9" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SBQBKoygAZGGIw6JABwZICAEwGJUAmgKEBCgDQQDkAo=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\Toolbar.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CHierarchy" Collapsed="true">
+    <Position X="11" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAQAAAAAAAAAAQAABAAAAAAAACAAAEBAABAAAAAAAAI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\Hierarchy.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CInspectorPannel" Collapsed="true">
+    <Position X="13" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQEAIAEAAAAARAAAABBAhAAAACAhEAgABABAACAAAI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\InspectorPannel.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IState" Collapsed="true">
+    <Position X="21.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAABAAAAAAAAgAAAAAgAAEAAAAIAAAAAAAAQA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\State.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateAttack1" Collapsed="true">
+    <Position X="15.25" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAEEAAAJBAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateAttack1.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateAttackUp" Collapsed="true">
+    <Position X="19.5" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAABAAAAAAAAAAAAAAAAAAAAAEAAABJAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateAttackUp.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateJump" Collapsed="true">
+    <Position X="26.25" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CEQAAEAAAAAAAAAQACAAAAAAAAMEAAQAIBAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateJump.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateIdle" Collapsed="true">
+    <Position X="30.5" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAEAAAAABAAAAAAAAAEAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateIdle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateHurt" Collapsed="true">
+    <Position X="17.5" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAACAAAAAAAAAAAAACEAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateHurt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateHurtAir" Collapsed="true">
+    <Position X="21.75" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAACAAAAAAAAAAAAAAAEAAAAIAAAAAAAAEA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateHurtAir.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateSkill0" Collapsed="true">
+    <Position X="28.5" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAQAAAAAAAAAAAAAAAAAAABEAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateSkill0.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateSkill1" Collapsed="true">
+    <Position X="32.5" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAQAAAAAAAAAAAAAAAAAAAAEAACAIAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateSkill1.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateMove" Collapsed="true">
+    <Position X="12.75" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAEAAAAIAAIAAACAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateMove.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateStep" Collapsed="true">
+    <Position X="24" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAJAAIAAAAAAAAAAAAAAAAAAEAAABIAAAABAAIBA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateStep.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BossState" Collapsed="true">
+    <Position X="22.5" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAABAAAAAAAAAAAAAEAEAEAAAAIAAAAAAAAQA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\BossState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BossDeath" Collapsed="true">
+    <Position X="15.25" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAACAAAAgAAAEAAAAIAAEAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\BossDeath.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BossFollowPunch" Collapsed="true">
+    <Position X="22" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQABACQEQIAAAAACAAICAIEAAEFAMgGIACBCAIAAAQ=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\BossFollowPunch.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BossFreezeAttack" Collapsed="true">
+    <Position X="28.75" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQABAAAAQIAAAAAAEAAAQMAAAAEAAAAIEAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\BossFreezeAttack.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BossHandAttack" Collapsed="true">
+    <Position X="17.5" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAACAAQIAAAAAAAAIAAAFAAgEAEAAIACAAACAAAQ=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\BossHandAttack.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BossHurt" Collapsed="true">
+    <Position X="24.25" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAACAAAAAAAAAAAAAAAAAAAAAEEAAAIAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\BossHurt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BossIdle" Collapsed="true">
+    <Position X="31" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAAAAIAAAAAAABAAAAAAAAEQAAAIAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\BossIdle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BossOpen" Collapsed="true">
+    <Position X="19.75" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEQAAAAAAAAACAAAAAAAAAAgAAAEAAAAIAAIAQAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\BossOpen.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BossPunch" Collapsed="true">
+    <Position X="26.5" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQAAAAAAQIAAAAAAAIIAAAAAAgEAEAAIBKAAAAAAAQ=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\BossPunch.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCamera" Collapsed="true">
+    <Position X="2.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQABAAAAAIAAQYAAAAkAAAAAAAAAABAIABAAAACABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\Camera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CAnimation" Collapsed="true">
+    <Position X="32.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAUAAAgACAACyBAgCgAAAISIAAAAEACBgBBgAwFCBY=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\Animation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CAnimController" Collapsed="true">
+    <Position X="30.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>kEQABMEAAAACAQAAAACEBABAAAICAEIECAAAAAAACBI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\AnimController.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CBone" Collapsed="true">
+    <Position X="31" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAggQMQAAQQAAAQEAAAAAAAAAAGAAHkIRAAGAgBI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\Bone.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMesh" Collapsed="true">
+    <Position X="30" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQEAAAAAIAMAAQAAAAAEAAIAAAIACEAAAgERABCQABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\Mesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNavigation" Collapsed="true">
+    <Position X="33" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IARFBAAQVAgAAUAUAQUEoggAAAAAAEBAARCAAAEAABI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\EngineSDK\Inc\Navigation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CThirdPersonCamera" Collapsed="true">
+    <Position X="2.5" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>oBQCQEAQCAIAAQRACAQECABAAAgAAkhAWIhQCACRQHI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\ThirdPersonCamera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFreeCamera" Collapsed="true">
+    <Position X="0.5" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAACAQQABAAEAABAABAAAEEAAAFQAAAAEBI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\FreeCamera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCutSceneCamera" Collapsed="true">
+    <Position X="4.75" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>iIQCAIAgAAA0ASAAEAAEAABQICfAEEkJAQFQAIAAEBI=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\CutSceneCamera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

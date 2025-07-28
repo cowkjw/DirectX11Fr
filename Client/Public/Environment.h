@@ -41,6 +41,8 @@ private:
 	_wstring m_strModelTag = L"";
 	_uint m_iShaderPass{ 0 };
 	_vector m_InitPos{};
+	_float m_fLimitZ{ -800.f }; // Z축 제한 위치
+	_float m_fTilingSpeed{ 300.f }; // 타일링 속도 (무한 배경용)
 public:
 	static CEnvironment* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;

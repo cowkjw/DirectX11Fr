@@ -862,8 +862,6 @@ void CToolbar::ParticleEditor()
 	if (!ImGui::Begin("Particle Editor"))
 		return;
 	static _bool bActive = true;
-	//static _wstring shaderKey;
-	//static _wstring textureKey;
 	_bool isShaderKeySet = false;
 	_bool isTextureKeySet = false;
 	_bool isChangeValue = false;
@@ -1048,47 +1046,12 @@ void CToolbar::ParticleEditor()
 		ofn.nMaxFile = sizeof(m_ParticleFilePathBuf);
 		ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
 
-		// 열기 대화상자 표시
 		if (GetOpenFileNameA(&ofn))
 		{
 			// m_ParticleFilePathBuf가 선택된 파일 경로로 업데이트
 		}
 	}
 
-	//if (ImGui::Button("Add Particle Files")) {
-	//	OPENFILENAMEA ofn{};
-	//	ofn.lStructSize = sizeof(ofn);
-	//	ofn.hwndOwner = GetActiveWindow();
-	//	ofn.lpstrFilter = "JSON Files\0*.json\0All Files\0*.*\0";
-	//	ofn.lpstrFile = m_ParticleFilePathBuf;
-	//	ofn.nMaxFile = sizeof(m_ParticleFilePathBuf);
-	//	ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
-	//	if (GetOpenFileNameA(&ofn)) {
-	//		m_ParticleFilePaths.clear();
-	//		char* ptr = m_ParticleFilePathBuf;
-	//		string dir = ptr;
-	//		ptr += dir.size() + 1;
-	//		if (*ptr == L'\0') {
-	//			// 단일 파일 선택
-	//			m_ParticleFilePaths.push_back(dir);
-	//		}
-	//		else {
-	//			// 다중 파일 선택
-	//			while (*ptr)
-	//			{
-	//				string file = ptr;
-	//				ptr += file.size() + 1;
-	//				m_ParticleFilePaths.push_back(dir + "\\" + file);
-	//			}
-	//		}
-	//	}
-	//}
-
-	//if (ImGui::CollapsingHeader("Selected Particle Files")) {
-	//	for (const auto& path : m_ParticleFilePaths) {
-	//		ImGui::TextUnformatted(path.c_str());
-	//	}
-	//}
 	ImGui::Separator();
 	if (ImGui::Button("Load Particle JSON"))
 	{
@@ -1141,8 +1104,6 @@ void CToolbar::ParticleEditor()
 
 	if (isChangeValue && m_pParticleSystem)
 	{
-		//Safe_Release(m_pParticleSystem);  // 기존 삭제
-	//	m_pParticleSystem = CParticleSystem::Create(m_pDevice, m_pContext, desc);
 		m_pParticleSystem->ResetDesc(desc);  // 기존 파티클 시스템의 설정을 변경
 		if (m_pParticleSystem)
 			m_pParticleSystem->Initialize(nullptr);  // GPU 버퍼 생성
@@ -1468,10 +1429,6 @@ void CToolbar::MultiParticleEditorBySqeuence()
 			it.pPS->StopParticle();
 			it.pPS->SetActive(false);
 		}
-		//if (currentFrame >= it.start && currentFrame <= it.end)
-		//{
-
-		//}
 	}
 	if(m_vecSequenceItems.empty() == false)
 		DrawMultiParticlePreview();
