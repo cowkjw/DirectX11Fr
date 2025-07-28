@@ -6,11 +6,11 @@
 #include "FireSpreadParticle.h"
 #include "ThirdPersonCamera.h"
 #include "HitShockParticle.h"
+#include "UIProgressBar.h"
+#include "BaseCharacter.h"
 #include "EffectManager.h"
 #include "Level_Loading.h"
-#include "BaseCharacter.h"
 #include "FireParticle.h"
-#include "UIProgressBar.h"
 #include "GameInstance.h"
 #include "HitParticle.h"
 #include "JsonLoader.h"
@@ -27,54 +27,22 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 HRESULT CLevel_GamePlay::Initialize()
 {
 	CJsonLoader jsonLoader(m_pDevice,m_pContext);
-	jsonLoader.Load_Objects("../Asset/Json/GamePlayCanvas.json", [&]() {
-		// 이곳에 로드 후 처리할 작업을 추가합니다.
-		});
-	jsonLoader.Load_Objects("../Asset/Json/GamePlayBackgroundObj.json", [&]() {
-		// 이곳에 로드 후 처리할 작업을 추가합니다.
-		});
+
+	jsonLoader.Load_Objects("../Asset/Json/GamePlayCanvas.json", [&]() {});
+	jsonLoader.Load_Objects("../Asset/Json/GamePlayBackgroundObj.json", [&]() {});
 
 	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Terrain"),
 		ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_BackGround")))
 		return E_FAIL;
+
 	if(FAILED(Ready_Lights()))
 		return E_FAIL;
-	/*if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sky"),
-		ToIndex(LEVEL::GAMEPLAY), TEXT("Sky")))
-		return E_FAIL;*/
 
-
-
-
-	//if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
-	//	ToIndex(LEVEL::GAMEPLAY), TEXT("Layer_Camera")))
-	//	return E_FAIL;
-
-
-	if (FAILED(Ready_Layer_TestCharacter(TEXT("Kyojuro"))))
+	if (FAILED(Ready_Layer_Character(TEXT("Kyojuro"))))
 		return E_FAIL;
 
-	CGameObject* pCharacter = m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("Kyojuro"));
-
-	if (pCharacter)
-	{
-		CThirdPersonCamera::THRIDCAMERA_DESC CameraDesc{};
-		CameraDesc.fSmoth = 0.1f;
-		CameraDesc.pTarget = pCharacter;
-		CameraDesc.fSpeedPerSec = 50.f;
-		CameraDesc.fRotationPerSec = XMConvertToRadians(180.f);
-		CameraDesc.vEye = _float3(0.f, 20.f, -50.f);
-		CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
-		CameraDesc.fFov = XMConvertToRadians(60.0f);
-		CameraDesc.fNear = 0.1f;
-		CameraDesc.fFar = 1000.f;
-		CameraDesc.strName = TEXT("ThirdPersonCamera");
-
-		if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::STATIC), TEXT("Prototype_GameObject_ThirdPersonCamera"),
-			ToIndex(LEVEL::GAMEPLAY), TEXT("ThirdPersonCamera"),&CameraDesc))
-			return E_FAIL;
-	}
-
+	if (FAILED(Ready_Camera()))
+		return E_FAIL;
 
 	auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StartImage"));
 	if (pUiImage)
@@ -86,6 +54,92 @@ HRESULT CLevel_GamePlay::Initialize()
 	m_pKyojuro = static_cast<CBaseCharacter*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("Kyojuro")));
 	m_pAkaza = static_cast<CBaseCharacter*>(m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("Akaza")));
 
+	if (FAILED(Ready_Effects(jsonLoader)))
+		return E_FAIL;
+
+
+	CSoundMag::Get_Instance()->PlayBGM("event:/BGM/RengokuBGM");
+	CSoundMag::Get_Instance()->PlayEffect("event:/Map/BattlStartAkKyo");
+
+	jsonLoader.Free();
+	m_pGameInstance->Active_Fog(false);
+	return S_OK;
+}
+
+void CLevel_GamePlay::Update(_float fTimeDelta)
+{
+	if (m_pGameInstance->IsKeyPressed(VK_TAB))
+	{
+		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
+			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::BATTLE))))
+			return;
+	}
+
+	UpdateGameFlow(fTimeDelta);
+	CEffectManager::Get_Instance()->Update_ActivedParticle(fTimeDelta);
+	CEffectManager::Get_Instance()->ClenUpPendingParticleEffects();
+
+}
+
+HRESULT CLevel_GamePlay::Render()
+{
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Character(const _wstring& strLayerTag)
+{
+ 	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_KoujuroWeapon"),
+		ToIndex(LEVEL::GAMEPLAY), TEXT("Weapon")))
+		return E_FAIL;
+	// Prototype_GameObject_Akaza
+	CBaseCharacter* pAkaza = static_cast<CBaseCharacter*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Akaza"),
+		ToIndex(LEVEL::GAMEPLAY), TEXT("Akaza")));
+
+	if (!pAkaza)
+		return E_FAIL;
+
+	// Prototype_GameObject_Kyojuro
+	CBaseCharacter* pKyojuro = static_cast<CBaseCharacter*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Kyojuro"),
+		ToIndex(LEVEL::GAMEPLAY), strLayerTag));
+
+	if (!pKyojuro)
+		return E_FAIL;
+
+	pAkaza->Set_Target(TEXT("Kyojuro"), LEVEL::GAMEPLAY);
+	pKyojuro->Set_Target(TEXT("Akaza"), LEVEL::GAMEPLAY);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Lights()
+{
+
+	LIGHT_DESC			LightDesc{};
+
+	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.fAmbient = 0.2f;
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	LightDesc.vPosition = _float4(80.f, 0.f, 50.f, 1.f);
+	LightDesc.fRange = 15.f;
+	LightDesc.vDiffuse = _float4(0.7f, 0.8f, 1.0f, 1.f);
+	LightDesc.fAmbient = 0.3f;
+	LightDesc.vSpecular = _float4(0.f, 1.f, 0.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Effects(CJsonLoader& jsonLoader)
+{
 	CParticleSystem* pParticleSystem = nullptr;
 	CEffect* pEffect = CHitParticle::Create(m_pDevice, m_pContext);
 	if (pEffect == nullptr)
@@ -102,9 +156,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	pEffect->Initialize(nullptr);
 	jsonLoader.Load_Particle("../Asset/Json/Particle/AkazaHit_Particle.json", &pParticleSystem);
 
-	static_cast<CHitParticle*>(pEffect)->AddParticleSystem(L"BodyHit",pParticleSystem);
+	static_cast<CHitParticle*>(pEffect)->AddParticleSystem(L"BodyHit", pParticleSystem);
 	CEffectManager::Get_Instance()->RegisterEffect(TEXT("AkazaHitParticle"), pEffect);
-	///////////
 
 	// 슬래시용
 	pEffect = CHitSlashCrossParticle::Create(m_pDevice, m_pContext);
@@ -165,123 +218,64 @@ HRESULT CLevel_GamePlay::Initialize()
 	pEffect->SetTextureIndex(1);
 	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitBodyShockParticle"), pEffect);
 	CEffectManager::Get_Instance()->EnableConsole();
-
-
-
-
-	CSoundMag::Get_Instance()->PlayBGM("event:/BGM/RengokuBGM");
-	CSoundMag::Get_Instance()->PlayEffect("event:/Map/BattlStartAkKyo");
-
-
-
-	jsonLoader.Free();
-	m_pGameInstance->Active_Fog(false);
 	return S_OK;
 }
 
-void CLevel_GamePlay::Update(_float fTimeDelta)
+HRESULT CLevel_GamePlay::Ready_Camera()
 {
-	if (m_pGameInstance->IsKeyPressed(VK_TAB))
+	CGameObject* pCharacter = m_pGameInstance->Find_GameObjectByName(ToIndex(LEVEL::GAMEPLAY), TEXT("Kyojuro"));
+
+	if (pCharacter)
 	{
-		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
-			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::BATTLE))))
-			return;
+		CThirdPersonCamera::THRIDCAMERA_DESC CameraDesc{};
+		CameraDesc.fSmoth = 0.1f;
+		CameraDesc.pTarget = pCharacter;
+		CameraDesc.fSpeedPerSec = 50.f;
+		CameraDesc.fRotationPerSec = XMConvertToRadians(180.f);
+		CameraDesc.vEye = _float3(0.f, 20.f, -50.f);
+		CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+		CameraDesc.fFov = XMConvertToRadians(60.0f);
+		CameraDesc.fNear = 0.1f;
+		CameraDesc.fFar = 1000.f;
+		CameraDesc.strName = TEXT("ThirdPersonCamera");
+
+		if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::STATIC), TEXT("Prototype_GameObject_ThirdPersonCamera"),
+			ToIndex(LEVEL::GAMEPLAY), TEXT("ThirdPersonCamera"), &CameraDesc))
+			return E_FAIL;
 	}
-	UpdateGameFlow(fTimeDelta);
-	CEffectManager::Get_Instance()->Update_ActivedParticle(fTimeDelta);
-	CEffectManager::Get_Instance()->ClenUpPendingParticleEffects();
-
-}
-
-HRESULT CLevel_GamePlay::Render()
-{
-	//SetWindowText(g_hWnd, TEXT("게임플레이 레벨입니다."));
-//	CEffectManager::Get_Instance()->ClenUpPendingParticleEffects();
-	return S_OK;
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_TestCharacter(const _wstring strLayerTag)
-{
-
- 	if (!m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_KoujuroWeapon"),
-		ToIndex(LEVEL::GAMEPLAY), TEXT("Weapon")))
-		return E_FAIL;
-	// Prototype_GameObject_Akaza
-	CBaseCharacter* pAkaza = static_cast<CBaseCharacter*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Akaza"),
-		ToIndex(LEVEL::GAMEPLAY), TEXT("Akaza")));
-
-	if (!pAkaza)
-		return E_FAIL;
-
-	// Prototype_GameObject_Kyojuro
-	CBaseCharacter* pKyojuro = static_cast<CBaseCharacter*>(m_pGameInstance->Add_GameObject(ToIndex(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Kyojuro"),
-		ToIndex(LEVEL::GAMEPLAY), strLayerTag));
-
-	if (!pKyojuro)
-		return E_FAIL;
-
-	pAkaza->Set_Target(TEXT("Kyojuro"), LEVEL::GAMEPLAY);
-	pKyojuro->Set_Target(TEXT("Akaza"), LEVEL::GAMEPLAY);
-
-	return S_OK;
-}
-
-HRESULT CLevel_GamePlay::Ready_Lights()
-{
-
-	LIGHT_DESC			LightDesc{};
-
-	//LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	//LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	//LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	//LightDesc.fAmbient = 0.4f;
-	//LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
-	//if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-	//	return E_FAIL;
-
-
-	//LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	//LightDesc.vDirection = _float4(1.f, 1.f, 1.f, 0.f);
-	//LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	//LightDesc.fAmbient = 1.f;
-	//LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
-
-	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
-	LightDesc.fAmbient = 0.2f;
-	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
-
-	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-	LightDesc.vPosition = _float4(80.f, 0.f, 50.f, 1.f);
-	LightDesc.fRange = 15.f;
-	LightDesc.vDiffuse = _float4(0.7f, 0.8f, 1.0f, 1.f);
-	LightDesc.fAmbient = 0.3f;
-	LightDesc.vSpecular = _float4(0.f, 1.f, 0.f, 1.f);
-
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
-
-	CShadow::SHADOW_DESC Desc{};
-	Desc.vEye = _float4(60.f, 20.f, 30.f, 1.f);   
-	Desc.vAt = _float4(80.f, 0.f, 50.f, 1.f);      // 캐릭터 위치
-	Desc.fFovy = XMConvertToRadians(60.0f);         
-	Desc.fNear = 0.1f;
-	Desc.fFar = 500.f;
-	if (FAILED(m_pGameInstance->Ready_Light_For_Shadow(Desc)))
-		return E_FAIL;
-
 	return S_OK;
 }
 
 void CLevel_GamePlay::UpdateGameFlow(_float fTimeDelta)
 {
+
+	UpdateStartState(fTimeDelta);
+
+	CheckCharacterDeath(m_pKyojuro);
+	CheckCharacterDeath(m_pAkaza);
 	
+	UpdateEndState(fTimeDelta);
+}
+
+void CLevel_GamePlay::CheckCharacterDeath(CBaseCharacter* pChar)
+{
+	if (pChar)
+	{
+		if (!m_bEndGame && pChar->GetState() == CBaseCharacter::CSTATE::DIE)
+		{
+			m_bEndGame = true;
+			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StopImage"));
+			if (pUiImage)
+			{
+				pUiImage->SetActive(true);
+			}
+			CSoundMag::Get_Instance()->StopBGM();
+		}
+	}
+}
+
+void CLevel_GamePlay::UpdateStartState(_float fTimeDelta)
+{
 	if (m_bStartGame)
 	{
 		m_fStartImageElapsedTime += fTimeDelta;
@@ -294,6 +288,7 @@ void CLevel_GamePlay::UpdateGameFlow(_float fTimeDelta)
 
 			}
 			m_bStartGame = false;
+
 			if (m_pKyojuro)
 			{
 				m_pKyojuro->SetGameStarted(true);
@@ -304,35 +299,10 @@ void CLevel_GamePlay::UpdateGameFlow(_float fTimeDelta)
 			}
 		}
 	}
+}
 
-	if (m_pKyojuro)
-	{
-		if (!m_bEndGame&&m_pKyojuro->GetState() == CBaseCharacter::CSTATE::DIE)
-		{
-			m_bEndGame = true;
-			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StopImage"));
-			if (pUiImage)
-			{
-				pUiImage->SetActive(true);
-			}
-			CSoundMag::Get_Instance()->StopBGM();
-		}
-	}
-	 if (m_pAkaza)
-	{
-		if (!m_bEndGame&&m_pAkaza->GetState() == CBaseCharacter::CSTATE::DIE)
-		{
-			m_bEndGame = true;
-			auto pUiImage = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("StopImage"));
-			if (pUiImage)
-			{
-				pUiImage->SetActive(true);
-			}
-			CSoundMag::Get_Instance()->StopBGM();
-
-		}
-	}
-
+void CLevel_GamePlay::UpdateEndState(_float fTimeDelta)
+{
 	if (m_bEndGame)
 	{
 		m_fStopImageElapsedTime += fTimeDelta;
@@ -354,7 +324,6 @@ void CLevel_GamePlay::UpdateGameFlow(_float fTimeDelta)
 
 	if (m_bIsGameOver)
 	{
-
 		m_fFinalImageElapsedTime += fTimeDelta;
 		if (m_fFinalImageElapsedTime >= m_fFinalImageTime)
 		{

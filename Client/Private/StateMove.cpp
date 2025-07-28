@@ -47,7 +47,6 @@ void StateMove::Update(CBaseCharacter* pChar, const InputData& input, float fTim
 	// 1타 공격 입력
 	if (input.doAttack)
 	{
-	//	buf->PopFront(1);
 		pChar->ChangeState(new StateAttack1(TEXT("Attack1")));
 		return;
 	}

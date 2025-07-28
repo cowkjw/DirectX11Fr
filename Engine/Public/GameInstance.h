@@ -126,12 +126,10 @@ public:
 #pragma region RESOURCE_MANAGER
 	class CShader* GetShader(const _wstring& key, _bool bIsStatic);
 	class CTexture* GetTexture(const _wstring& key, _bool bIsStatic);
-	class CVIBuffer* GetBuffer(const _wstring& key, _bool bIsStatic);
 	class CModel* GetModel(const _wstring& key, _bool bIsStatic = true);
 
 	class CShader* LoadShader(const _wstring& key, const _wstring& vsPath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements, _bool bIsStatic);
 	class CTexture* LoadTexture(const _wstring& key, const _wstring& filePath, _bool bIsStatic, _uint iNumTextrues = 1);
-	class CVIBuffer* LoadBuffer(const _wstring& key, BUFFER_TYPE eType, _bool bIsStatic);
 	class CModel* LoadModel(const _wstring& key, const _wstring& filePath, MODEL eType, _matrix preMatrix, _bool bIsStatic = true);
 
 	const vector<_wstring>& GetShaderKeys(_bool bIsStatic = true) const;

@@ -1,17 +1,15 @@
+#include "Level_BattleSelect.h"
 #include "Level_Loading.h"
-
-
 #include "Level_EnmuBoss.h"
 #include "Level_GamePlay.h"
-#include "Level_BattleSelect.h"
+#include "GameInstance.h"
 #include "Level_Editor.h"
 #include "Level_Logo.h"
 #include "Level_Mode.h"
 #include "GameObject.h"
 #include "JsonLoader.h"
-#include "Loader.h"
-#include "GameInstance.h"
 #include "UIImage.h"
+#include "Loader.h"
 
 _float4 CLevel_Loading::m_vInitShojiOrigin[2]{};
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -27,9 +25,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 	{
 		bIsLoading = false;
 		CJsonLoader jsonLoader;
-		jsonLoader.Load_Objects("../Asset/Json/LodingCanvas.json", [&]() {
-			// 이곳에 로드 후 처리할 작업을 추가합니다.
-			});
+		jsonLoader.Load_Objects("../Asset/Json/LodingCanvas.json", [&]() {});
 		jsonLoader.Free();
 		auto pLoadAnim = m_pGameInstance->Get_UI(TEXT("LodingCanvas"), TEXT("LodingAnim"));
 		if (pLoadAnim)
@@ -40,11 +36,6 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 	}
 	m_eNextLevelID = eNextLevelID;
 
-	/* 로딩레벨 자체에 필요한 객체를 생성한다. */
-	/* 배경, 로딩바, 버튼, font */
-
-	/* 로딩의 역할(다음레벨에 필요한 자원(Resource)(텍스쳐, 모델, 사운드 등등등 )을 생성하는)을
-	수행할 로더객체를 생성한다. */
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, m_eNextLevelID);
 	if (nullptr == m_pLoader)
 		return E_FAIL;
@@ -56,10 +47,8 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 	{
 		firstLoad = false;
 	}
-
 	SetUpUI();
 	m_fShojiTime = 0.f;
-	
 	return S_OK;
 }
 
@@ -138,17 +127,17 @@ void CLevel_Loading::MoveCloud(_float fTimeDelta)
 {
 	m_fCloudTime += fTimeDelta;
 
-	// 파라미터: 진폭(amplitude)과 속도(speed)
+	// 진폭과 속도
 	const _float ampDark = 5.f;            // 다크 구름 진폭
-	const _float ampNormal = 10.f;            // 일반 구름 진폭
-	const _float speed = 0.2f;            // 주기 조절 (Hz)
+	const _float ampNormal = 10.f;         // 일반 구름 진폭
+	const _float speed = 0.2f;            // 주기 조절 
 
-	// 0~2π 속도로 시간에 따라 변화
+	// 0~2파이 속도로 시간에 따라 변화
 	_float phase = m_fCloudTime * XM_2PI * speed;
 
-	// Dark 구름 offset: sin(phase) * ampDark
+	// Dark 구름 offset: sin * ampDark
 	_float offsetDark = sinf(phase) * ampDark;
-	// 일반 구름은 180°(π) 위상차
+	// 일반 구름은 180도 위상차
 	_float offsetNormal = sinf(phase + XM_PI) * ampNormal;
 
 	auto apply = [&](CUIImage* cloud, const _vector& origin, _float offsetX)

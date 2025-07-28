@@ -43,20 +43,6 @@ void CResourceMag::RegisterDynamicTexture(const _wstring& key, CTexture* pTextur
 	}
 }
 
-void CResourceMag::RegisterDynamicBuffer(const _wstring& key, CVIBuffer* pBuffer)
-{
-	auto iter = m_dynamicBuffers.find(key);
-	if (iter == m_dynamicBuffers.end())
-	{
-		m_dynamicBuffers.emplace(key, pBuffer);
-	}
-	else
-	{
-		Safe_Release(iter->second);
-		iter->second = pBuffer;
-	}
-}
-
 void CResourceMag::RegisterDynamicModel(const _wstring& key, CModel* pModel)
 {
 	auto iter = m_dynamicModels.find(key);
@@ -76,61 +62,51 @@ void CResourceMag::RegisterDynamicModel(const _wstring& key, CModel* pModel)
 
 void CResourceMag::RegisterStaticShader(const _wstring& key, CShader* pShader)
 {
-	auto iter = m_staticShaders.find(key);
-	if (iter == m_staticShaders.end())
-	{
-		m_staticShaders.emplace(key, pShader);
-		m_StaticShaderKeyList.push_back(key);
-	}
-	else
-	{
-		Safe_Release(iter->second);
-		iter->second = pShader;
-	}
+	RegisterResource(key, pShader, m_staticShaders, m_StaticShaderKeyList);
+	//auto iter = m_staticShaders.find(key);
+	//if (iter == m_staticShaders.end())
+	//{
+	//	m_staticShaders.emplace(key, pShader);
+	//	m_StaticShaderKeyList.push_back(key);
+	//}
+	//else
+	//{
+	//	Safe_Release(iter->second);
+	//	iter->second = pShader;
+	//}
 }
 
 void CResourceMag::RegisterStaticTexture(const _wstring& key, CTexture* pTexture)
 {
-	auto iter = m_staticTextures.find(key);
-	if (iter == m_staticTextures.end())
-	{
-		m_staticTextures.emplace(key, pTexture);
-		m_StaticTextureKeyList.push_back(key);
-	}
-	else
-	{
-		Safe_Release(iter->second);
-		iter->second = pTexture;
-	}
+	RegisterResource(key, pTexture, m_staticTextures, m_StaticTextureKeyList);
+	//auto iter = m_staticTextures.find(key);
+	//if (iter == m_staticTextures.end())
+	//{
+	//	m_staticTextures.emplace(key, pTexture);
+	//	m_StaticTextureKeyList.push_back(key);
+	//}
+	//else
+	//{
+	//	Safe_Release(iter->second);
+	//	iter->second = pTexture;
+	//}
 }
 
-void CResourceMag::RegisterStaticBuffer(const _wstring& key, CVIBuffer* pBuffer)
-{
-	auto iter = m_staticBuffers.find(key);
-	if (iter == m_staticBuffers.end())
-	{
-		m_staticBuffers.emplace(key, pBuffer);
-	}
-	else
-	{
-		Safe_Release(iter->second);
-		iter->second = pBuffer;
-	}
-}
 
 void CResourceMag::RegisterStaticModel(const _wstring& key, CModel* pModel)
 {
-	auto iter = m_staticModels.find(key);
-	if (iter == m_staticModels.end())
-	{
-		m_staticModels.emplace(key, pModel);
-		m_StaticModelKeyList.push_back(key);
-	}
-	else
-	{
-		Safe_Release(iter->second);
-		iter->second = pModel;
-	}
+	RegisterResource(key, pModel, m_staticModels, m_StaticModelKeyList);
+	//auto iter = m_staticModels.find(key);
+	//if (iter == m_staticModels.end())
+	//{
+	//	m_staticModels.emplace(key, pModel);
+	//	m_StaticModelKeyList.push_back(key);
+	//}
+	//else
+	//{
+	//	Safe_Release(iter->second);
+	//	iter->second = pModel;
+	//}
 }
 
 CShader* CResourceMag::LoadShader(const _wstring& key, const _wstring& vsPath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
@@ -162,32 +138,6 @@ CTexture* CResourceMag::LoadTexture(const _wstring& key, const _wstring& filePat
 	return pTexture;
 }
 
-CVIBuffer* CResourceMag::LoadBuffer(const _wstring& key, BUFFER_TYPE eType)
-{
-	auto iter = m_staticBuffers.find(key);
-	if (iter != m_staticBuffers.end())
-	{
-		return iter->second;
-	}
-	CVIBuffer* pBuffer = nullptr;
-	switch (eType)
-	{
-	case BUFFER_TYPE::RECT:
-		pBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
-		if (nullptr == pBuffer)
-			return nullptr;
-		RegisterStaticBuffer(key, pBuffer);
-		return pBuffer;
-		break;
-	//case BUFFER_TYPE::CUBE:
-	//	pBuffer = CVIBuffer_Cube::Create(m_pDevice, m_pContext);
-	//	break;
-		
-	}
-   
-	return nullptr;
-}
-
 CModel* CResourceMag::LoadModel(const _wstring& key, const _wstring& filePath,MODEL eType, _matrix preMatrix)
 {
 	auto iter = m_staticModels.find(key);
@@ -204,7 +154,6 @@ CModel* CResourceMag::LoadModel(const _wstring& key, const _wstring& filePath,MO
 
 CShader* CResourceMag::LoadDynamicShader(const _wstring& key, const _wstring& vsPath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {
-
 	auto iter = m_dynamicShaders.find(key);
 	if (iter != m_dynamicShaders.end())
 	{
@@ -231,28 +180,6 @@ CTexture* CResourceMag::LoadDynamicTexture(const _wstring& key, const _wstring& 
 	return pTexture;
 }
 
-CVIBuffer* CResourceMag::LoadDynamicBuffer(const _wstring& key, BUFFER_TYPE eType)
-{
-	auto iter = m_dynamicBuffers.find(key);
-	if (iter != m_dynamicBuffers.end())
-	{
-		return iter->second;
-	}
-	CVIBuffer* pBuffer = nullptr;
-	switch (eType)
-	{
-	case BUFFER_TYPE::RECT:
-		pBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
-		if (nullptr == pBuffer)
-			return nullptr;
-		RegisterDynamicBuffer(key, pBuffer);
-		return pBuffer;
-		//case BUFFER_TYPE::CUBE:
-		//	pBuffer = CVIBuffer_Cube::Create(m_pDevice, m_pContext);
-		//	break;
-	}
-	return nullptr;
-}
 
 CModel* CResourceMag::LoadDynamicModel(const _wstring& key, const _wstring& filePath, MODEL eType, _matrix preMatrix)
 {
@@ -290,16 +217,6 @@ CTexture* CResourceMag::GetTexture(const _wstring& key)
 	return nullptr;
 }
 
-CVIBuffer* CResourceMag::GetBuffer(const _wstring& key)
-{
-	auto iter = m_staticBuffers.find(key);
-	if (iter != m_staticBuffers.end())
-	{
-		Safe_AddRef(iter->second);
-		return iter->second;
-	}
-    return nullptr;
-}
 
 CModel* CResourceMag::GetModel(const _wstring& key)
 {
@@ -334,16 +251,6 @@ CTexture* CResourceMag::GetDynamicTexture(const _wstring& key)
 	return nullptr;
 }
 
-CVIBuffer* CResourceMag::GetDynamicBuffer(const _wstring& key)
-{
-	auto iter = m_dynamicBuffers.find(key);
-	if (iter != m_dynamicBuffers.end())
-	{
-		Safe_AddRef(iter->second);
-		return iter->second;
-	}
-	return nullptr;
-}
 
 CModel* CResourceMag::GetDynamicModel(const _wstring& key)
 {
@@ -368,11 +275,6 @@ void CResourceMag::Clear()
 		Safe_Release(Pair.second);
 	}
 	m_dynamicTextures.clear();
-	for (auto& Pair : m_dynamicBuffers)
-	{
-		Safe_Release(Pair.second);
-	}
-	m_dynamicBuffers.clear();
 }
 
 HRESULT CResourceMag::Initialize()
@@ -404,11 +306,6 @@ void CResourceMag::Free()
 		Safe_Release(Pair.second);
 	}
 	m_staticTextures.clear();
-	for (auto& Pair : m_staticBuffers)
-	{
-		Safe_Release(Pair.second);
-	}
-	m_staticBuffers.clear();
 
 	for (auto& Pair : m_dynamicShaders)
 	{
@@ -420,11 +317,6 @@ void CResourceMag::Free()
 		Safe_Release(Pair.second);
 	}
 	m_dynamicTextures.clear();
-	for (auto& Pair : m_dynamicBuffers)
-	{
-		Safe_Release(Pair.second);
-	}
-	m_dynamicBuffers.clear();
 
 	for (auto& Pair : m_staticModels)
 	{

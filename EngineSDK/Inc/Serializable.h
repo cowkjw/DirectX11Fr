@@ -1,5 +1,7 @@
 #pragma once
 #include "Engine_Defines.h"
+
+// 직렬화를 위한 인터페이스
 BEGIN_NAMESPACE(Engine)
 class ENGINE_DLL ISerializable
 {

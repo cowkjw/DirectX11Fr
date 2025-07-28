@@ -30,13 +30,13 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(m_pGameInstance->Add_Font(TEXT("Demonslayer"), TEXT("../Asset/Resources/Fonts/Demonslayer.spritefont"))))
 		return E_FAIL;
 
-
-	Ready_Prototype_Component();
+	Ready_Static_Prototype();
 	if (FAILED(Start_Level(LEVEL::LOGO)))
 		return E_FAIL;
 	CSoundMag::Get_Instance()->Initialize();
 	CSoundMag::Get_Instance()->LoadBanks("../Asset/SoundFmod/Build/Desktop/Master.bank", "../Asset/SoundFmod/Build/Desktop/Master.strings.bank");
 	CSoundMag::Get_Instance()->LoadAllBanks("../Asset/SoundFmod/Build/Desktop/");
+
 	return S_OK;
 }
 
@@ -50,7 +50,6 @@ void CMainApp::Update(_float fTimeDelta)
 
 HRESULT CMainApp::Render()
 {
-	// 1) 백버퍼 클리어
 	m_pGameInstance->Begin_Draw();
 	m_pGameInstance->Draw();
 
@@ -68,7 +67,7 @@ HRESULT CMainApp::Start_Level(LEVEL eStartLevel)
 	return S_OK;
 }
 
-HRESULT CMainApp::Ready_Prototype_Component()
+HRESULT CMainApp::Ready_Static_Prototype()
 {	
 	
 	///* For.Prototype_Component_VIBuffer_Rect*/
@@ -76,23 +75,12 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	//m_pGameInstance->LoadShader(TEXT("Shader_VtxPosTex"), TEXT("../Asset/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements,true);
-	//m_pGameInstance->LoadShader(TEXT("Shader_VtxNorTex"), TEXT("../Asset/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements,true);
-
 	CJsonLoader jsonLoader;
-	jsonLoader.Load_Shaders("../Asset/Json/Shaders.json", [&]() {
-		// 이곳에 로드 후 처리할 작업을 추가합니다.
-		});
+	jsonLoader.Load_Shaders("../Asset/Json/Shaders.json", [&]() {});
 
-	jsonLoader.Load_Textures("../Asset/Json/Textures.json", [&]() {
-		// 이곳에 로드 후 처리할 작업을 추가합니다.
-		});
+	jsonLoader.Load_Textures("../Asset/Json/Textures.json", [&]() {});
 
 	jsonLoader.Free();
-
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
-	//	CShader::Create(m_pDevice, m_pContext, TEXT("../Asset/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements))))
-	//	return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_BoxCollider"),
 		CBoxCollider::Create(m_pDevice, m_pContext, _float3(1.f,1.f,1.f)))))
@@ -119,9 +107,6 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Component_Model_Dash"),
 		CModel::CreateByBinary(m_pDevice, m_pContext, MODEL::NONANIM, "../Asset/Resources/Models/Effect/DashSmoke/DashSmoke.bin"))))
 		return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_Prototype(ToIndex(LEVEL::STATIC), TEXT("Prototype_Effect_Dash"),
-	//	CDashSmokeEffect::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
 
 	CParticleSystem::PARTICLE_DESC ParticleDesc{};
 	ParticleDesc.iNumInstance = 5000;

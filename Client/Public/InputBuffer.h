@@ -67,7 +67,7 @@ public:
 		if (commands.size() < seq.size())
 			return false;
 
-		// “앞에서부터” 연속된 구간을 길이 seq.size()만큼 검사
+		// 앞에서부터 연속된 구간을 길이 seq.size()만큼 검사
 		// start가 0부터 commands.size() - seq.size() 까지 순방향으로 증가
 		size_t nCmd = commands.size();
 		size_t nSeq = seq.size();

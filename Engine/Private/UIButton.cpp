@@ -98,8 +98,6 @@ void CUIButton::Late_Update(_float fTimeDelta)
 		m_pButtonImageHover->Late_Update(fTimeDelta);
 	}
 
-
-
 	if (m_bHovered)
 	{
 		if (m_pGameInstance->IsMousePressed(0))

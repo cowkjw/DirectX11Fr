@@ -42,31 +42,29 @@ public:
 	void   OnHit(CGameObject* attacker, CGameObject* target, _vector offset, _float fDuration = 0.2f);
 private:
 	void InitializeCameraPosition();
+	void UpdateShake(_float fTimeDelta,_vector& beginPos, _vector& outShakePos);
+	void UpateTargetsCam(_float fTimeDelta);
+	void UpateSingleTargetCam(_float fTimeDelta);
+	void HitActionCamera(_float fTimeDelta);
 
 private:
 	_float			m_fSmooth = { }; // 카메라 움직임 스무스정도
 	_float3 		m_vOffset = { 0.f, 0.f, 0.f };
-	CGameObject* m_pTarget = nullptr; // Target
-	CGameObject* m_pLockOnTarget = nullptr; // Target
-	CTransform* m_pTargetTransform = nullptr; // Target Transform
+	CGameObject*	m_pTarget = nullptr; // Target
+	CGameObject*	m_pLockOnTarget = nullptr; // Target
+	CTransform*		m_pTargetTransform = nullptr; // Target Transform
 
 
 	_float m_fFixedHeight = 15.f;      // 카메라 고정 높이
-	_float m_fSingleCameraFixedHeight = 35.f;      // 카메라 고정 높이
-	_float m_fDeadZoneWidth = 30.f;    // 좌우 데드존 크기
-	_float m_fDeadZoneHeight = 10.0f;   // 상하 데드존 크기
+	_float m_fDeadZoneWidth = 100.f;    // 좌우 데드존 크기
 	_float m_fMinCameraDistance = 20.0f; // 최소 카메라 거리
 	_float m_fDistanceMultiplier = 0.4f; // 거리 배수
 
 	_vector  m_lastMoveDir = XMVectorSet(0, 0, 1, 0);    // 초기 뒤로보기 기준: +Z 방향
 	_vector  m_lastPlayerPos = XMVectorZero();          // 이전 프레임 플레이어 위치
 
-	_float m_cameraYaw = XMConvertToRadians(0.f);   // 카메라를 바라보는 수평 각도 (세계 축 기준)
-	_float m_cameraPitch = XMConvertToRadians(20.f);  // 카메라를 내려다보는 각도 (음수 = 아래)
-	_float m_cameraMinDist = 30.f;                       // 플레이어와 최소 거리
-	_float m_cameraMaxDist = 70.f;                       // 플레이어와 최대 거리
 	_float m_cameraSmooth = 7.f;                        // 보간 속도
-	_float m_cameraLookDistance =80.f;                   
+	_float m_cameraLookDistance = 80.f;                   
 
 	// 카메라 쉐이킹
 	_bool   m_bShaking = false;    // 쉐이크 중 플래그
@@ -75,17 +73,16 @@ private:
 	_float  m_fShakeAmplitude = 0.f;      // 최대 흔들림 크기
 
 
-	// 전투할 때 타격감을 좀 살려보기
+	// 전투할 때 타격감
 	_bool    m_bHitCam = false;          // 타격 모드 활성화 플래그
 	_float   m_fHitTime = 0.f;           // 타격 모드 경과 시간
-	_float   m_fHitDuration = 0.2f;      // 타격 모드 지속 시간 (예: 0.2초)
-	_vector m_vHitOffset;              // 타격 시 카메라 오프셋
+	_float   m_fHitDuration = 0.2f;      // 타격 모드 지속 시간 
+	_vector m_vHitOffset{};              // 타격 시 카메라 오프셋
 	CGameObject* m_pHitAttacker = nullptr;
 	CGameObject* m_pHitTarget = nullptr;
-	_vector m_vSingleOrginPos{};
 
 
-	_vector m_vLastPlayerPos;     // 이전 프레임 플레이어 위치
+	_vector m_vLastPlayerPos{};     // 이전 프레임 플레이어 위치
 	_vector m_vMoveDir = XMVectorSet(0, 0, 1, 0); // 초기 뒤쪽 방향
 
 public:

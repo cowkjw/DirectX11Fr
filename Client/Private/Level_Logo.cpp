@@ -4,7 +4,6 @@
 #include "Level_Loading.h"
 #include "BackGround.h"
 #include "JsonLoader.h"
-#include "GameplayCanvas.h"
 #include <UIButton.h>
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		: CLevel { pDevice, pContext }
@@ -14,46 +13,27 @@ CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_Logo::Initialize()
 {
-	//if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-	//	return E_FAIL;
-
-
- //auto pStartButton = dynamic_cast<CUIButton*>(m_pGameInstance->Get_UI(TEXT("TitleCanvas"), TEXT("StartButton")));
-
- //if (pStartButton)
- //{
-	// pStartButton->Set_OnClick([this]() {
-	//	 StartGamePlay();
-	//	 });
- //}
 
 	CJsonLoader jsonLoader;
-	jsonLoader.Load_Objects("../Asset/Json/LogoObjects.json", [&]() {
-		// 이곳에 로드 후 처리할 작업을 추가합니다.
-		});
+	jsonLoader.Load_Objects("../Asset/Json/LogoObjects.json", [&]() {});
 
-
-	//jsonLoader.Load_Objects("../Asset/Json/StaticCanvas.json", [&]() {
-	//	// 이곳에 로드 후 처리할 작업을 추가합니다.
-	//	});
-	//
 	Ready_UI_Setup();
 	CSoundMag::Get_Instance()->PlayBGM("event:/BGM/TitleBGM");
 	CSoundMag::Get_Instance()->PlayEffect("event:/UI/TtitleLogo");
-
 	return S_OK;
 }
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
 
-	if (m_pGameInstance->IsKeyPressed(VK_SPACE))
-	{
-		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
-			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY))))
-			return;
-	}
+	//if (m_pGameInstance->IsKeyPressed(VK_SPACE))
+	//{
+	//	if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
+	//		CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY))))
+	//		return;
+	//}
 
+	// 에디터로 넘기기
 	if (m_pGameInstance->IsKeyPressed('E'))
 	{
 		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
@@ -61,95 +41,23 @@ void CLevel_Logo::Update(_float fTimeDelta)
 			return;
 	}
 
-	if (m_pGameInstance->IsKeyPressed('F'))
-	{
-		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
-			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::ENMU_BOSS))))
-			return;
-	}
-
-
-	POINT pt = m_pGameInstance->GetMousePos();
-
-	{
-		char buf[64];
-		// 포맷팅: 변수 pt.x, pt.y를 문자열에 삽입
-		sprintf_s(buf, "MousePos: %d, %d", pt.x, pt.y);
-		// 윈도우 타이틀(또는 컨트롤)에 출력
-		SetWindowTextA(g_hWnd, buf);
-	}
-
-	auto logoImage = static_cast<CUIImage*>(m_pGameInstance->Get_UI(TEXT("TitleCanvas"), TEXT("Logo")));
-	if (logoImage)
-	{
-		_float3 scale = logoImage->GetTransform()->Get_Scaled();
-		static _bool bScaleUp = true;
-		if (m_fMaxScale > scale.x&& bScaleUp)
-		{
-			scale.x += 500.f*fTimeDelta;
-			scale.y += 500.f * fTimeDelta;
-			logoImage->GetTransform()->Scaling(scale);
-		}
-		else
-		{
-			bScaleUp = false;
-		}
-		if (!bScaleUp)
-		{
-			if (m_fFinalScale < scale.x)
-			{
-				scale.x -= 300.f * fTimeDelta;
-				scale.y -= 300.f * fTimeDelta;
-				logoImage->GetTransform()->Scaling(scale);
-			}
-		}
-	}
+	//if (m_pGameInstance->IsKeyPressed('F'))
+	//{
+	//	if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
+	//		CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::ENMU_BOSS))))
+	//		return;
+	//}
+	UpdateLogoImage(fTimeDelta);
 
 }
 
 HRESULT CLevel_Logo::Render()
 {
-//	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
-	auto pButton = m_pGameInstance->Get_UI(TEXT("TitleCanvas"), TEXT("StartButton"));
-	if (pButton)
-	{
-		auto pStartBt = dynamic_cast<CUIButton*>(pButton);
-		if (pStartBt && pStartBt->IsHovered())
-		{
-			m_pGameInstance->Draw_Font(TEXT("Demonslayer"), TEXT("게임 시작"), _float2(990.f, 440.f), XMVectorSet(0.f,0.f,0.f, 1.f));
-		}
-		else
-		{
-			m_pGameInstance->Draw_Font(TEXT("Demonslayer"), TEXT("게임 시작"), _float2(990.f, 440.f), XMVectorSet(1.f, 1.f, 1.f, 1.f));
-		}
-	}
+	UpdateLogoButtonFont();
 	
 	return S_OK;
 }
 
-HRESULT CLevel_Logo::Ready_Layer_BackGround(const _wstring strLayerTag)
-{
-
-    CUICanvas::UIOBJECT_DESC CanvasDesc{};
-    CanvasDesc.fX = g_iWinSizeX * 0.5f;
-    CanvasDesc.fY = g_iWinSizeY * 0.5f;
-    CanvasDesc.fSizeX = g_iWinSizeX;
-    CanvasDesc.fSizeY = g_iWinSizeY;
-    CanvasDesc.strName = L"TitleCanvas";
-
-    auto pUICanvas = CGameplayCanvas::Create(m_pDevice, m_pContext);
-    if (!pUICanvas)
-        return E_FAIL;
-
-    if (FAILED(pUICanvas->Initialize(&CanvasDesc)))
-    {
-        Safe_Release(pUICanvas);
-        return E_FAIL;
-    }
-    m_pGameInstance->AddCanvasUI(pUICanvas);
-
-    return S_OK;
-}
 
 void CLevel_Logo::Ready_UI_Setup()
 {
@@ -187,10 +95,55 @@ void CLevel_Logo::Ready_UI_Setup()
 
 void CLevel_Logo::StartGamePlay()
 {
-
 	if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
 		CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::MODE))))
 		return;
+}
+
+void CLevel_Logo::UpdateLogoImage(_float fTimeDelta)
+{
+	auto logoImage = static_cast<CUIImage*>(m_pGameInstance->Get_UI(TEXT("TitleCanvas"), TEXT("Logo")));
+	if (logoImage)
+	{
+		_float3 scale = logoImage->GetTransform()->Get_Scaled();
+		static _bool bScaleUp = true;
+		if (m_fMaxScale > scale.x && bScaleUp)
+		{
+			scale.x += 500.f * fTimeDelta;
+			scale.y += 500.f * fTimeDelta;
+			logoImage->GetTransform()->Scaling(scale);
+		}
+		else
+		{
+			bScaleUp = false;
+		}
+		if (!bScaleUp)
+		{
+			if (m_fFinalScale < scale.x)
+			{
+				scale.x -= 300.f * fTimeDelta;
+				scale.y -= 300.f * fTimeDelta;
+				logoImage->GetTransform()->Scaling(scale);
+			}
+		}
+	}
+}
+
+void CLevel_Logo::UpdateLogoButtonFont()
+{
+	auto pButton = m_pGameInstance->Get_UI(TEXT("TitleCanvas"), TEXT("StartButton"));
+	if (pButton)
+	{
+		auto pStartBt = dynamic_cast<CUIButton*>(pButton);
+		if (pStartBt && pStartBt->IsHovered())
+		{
+			m_pGameInstance->Draw_Font(TEXT("Demonslayer"), TEXT("게임 시작"), _float2(990.f, 440.f), XMVectorSet(0.f, 0.f, 0.f, 1.f));
+		}
+		else
+		{
+			m_pGameInstance->Draw_Font(TEXT("Demonslayer"), TEXT("게임 시작"), _float2(990.f, 440.f), XMVectorSet(1.f, 1.f, 1.f, 1.f));
+		}
+	}
 }
 
 

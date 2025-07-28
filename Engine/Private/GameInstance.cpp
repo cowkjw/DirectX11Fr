@@ -510,18 +510,6 @@ CTexture* CGameInstance::GetTexture(const _wstring& key, _bool bIsStatic)
 	}
 }
 
-CVIBuffer* CGameInstance::GetBuffer(const _wstring& key, _bool bIsStatic)
-{
-	if (bIsStatic)
-	{
-		return m_pResourceMag->GetBuffer(key);
-	}
-	else
-	{
-		return m_pResourceMag->GetDynamicBuffer(key);
-	}
-}
-
 CModel* CGameInstance::GetModel(const _wstring& key, _bool bIsStatic)
 {
 	if (bIsStatic)
@@ -557,17 +545,7 @@ CTexture* CGameInstance::LoadTexture(const _wstring& key, const _wstring& filePa
 		return m_pResourceMag->LoadDynamicTexture(key, filePath, iNumTextrues);
 	}
 }
-CVIBuffer* CGameInstance::LoadBuffer(const _wstring& key, BUFFER_TYPE eType, _bool bIsStatic)
-{
-	if (bIsStatic)
-	{
-		return m_pResourceMag->LoadBuffer(key, eType);
-	}
-	else
-	{
-		return m_pResourceMag->LoadDynamicBuffer(key, eType);
-	}
-}
+
 CModel* CGameInstance::LoadModel(const _wstring& key, const _wstring& filePath, MODEL eType, _matrix preMatrix, _bool bIsStatic)
 {
 	if (bIsStatic)

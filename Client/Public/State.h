@@ -15,13 +15,12 @@ public:
 		: m_stateName(stateName) {
 	}
     virtual ~IState() = default;
-    // 상태 진입 시: 애니메이션 세팅, 초기화
+    // 상태 진입 시 
     virtual void Enter(CBaseCharacter* pChar) = 0;
-    // 매 프레임: 입력 체크 · 이동/애니 처리 · 전이 판단
+    // 매 프레임
     virtual void Update(CBaseCharacter* pChar, const InputData& input, float fTimeDelta) = 0;
-    // 상태 종료 시: 후처리
+    // 상태 종료 시
     virtual void Exit(CBaseCharacter* pChar) = 0;
-//	void SetStateName(const _wstring& stateName) { m_stateName = stateName; }
 	const _wstring& GetStateName() const { return m_stateName; }
 protected:
 	_wstring m_stateName; // 상태 이름
