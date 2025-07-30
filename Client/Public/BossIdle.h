@@ -16,7 +16,6 @@ public:
 
 private:
 	_float m_fTimeElapsed = 0.f; // 경과 시간
-	static _bool m_bPatternUsed[6];
 };
 END_NAMESPACE
 

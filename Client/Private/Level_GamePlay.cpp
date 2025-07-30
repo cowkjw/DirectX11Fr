@@ -217,7 +217,7 @@ HRESULT CLevel_GamePlay::Ready_Effects(CJsonLoader& jsonLoader)
 	static_cast<CHitBodyShockParticle*>(pEffect)->SetInitParticleUV(4, 4, 0.0085f);
 	pEffect->SetTextureIndex(1);
 	CEffectManager::Get_Instance()->RegisterEffect(TEXT("HitBodyShockParticle"), pEffect);
-	CEffectManager::Get_Instance()->EnableConsole();
+	//CEffectManager::Get_Instance()->EnableConsole();
 	return S_OK;
 }
 

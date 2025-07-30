@@ -11,24 +11,10 @@
 #include "BossHurt.h"
 #include "BossOpen.h"
 
-_bool BossIdle::m_bPatternUsed[6] = { false, false, false, false, false, false }; // 패턴 사용 여부 초기화
-
 void BossIdle::Enter(CEnmuMeat* pChar)
 {
 	pChar->SetState(EnmuState::IDLE);
 	m_fTimeElapsed = 0.f; // 시간 초기화
-
-//    static bool s_consoleCreated = false;
-//    if (!s_consoleCreated)
-//    {
-//        AllocConsole();
-//        FILE* fpOut = nullptr;
-//        freopen_s(&fpOut, "CONOUT$", "w", stdout);
-//        FILE* fpIn = nullptr;
-//        freopen_s(&fpIn, "CONIN$", "r", stdin);
-//        cout << "=== Debug Console Opened ===" << std::endl;
-//        s_consoleCreated = true;
-//    }
 }
 void BossIdle::Update(CEnmuMeat* pChar, _float fTimeDelta)
 {
