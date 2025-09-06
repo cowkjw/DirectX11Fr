@@ -31,7 +31,7 @@ void BossSwingAttack::Enter(CEnmuMeat* pChar)
 
 void BossSwingAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
 {
-	
+
 	auto leftArm = pChar->GetPart(CEnmuMeat::Parts::LEFTARM);
 	auto rightArm = pChar->GetPart(CEnmuMeat::Parts::RIGHTARM);
 	auto pAnimatorLeft = leftArm->Get_Animator();
@@ -44,9 +44,9 @@ void BossSwingAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
 		m_bAttacked = true;
 		pAnimatorLeft->SetTrigger("SwingAttack");
 		pAnimatorRight->SetTrigger("SwingAttack");
-		
+
 	}
-	if (!m_bDected &&pWarning && m_fTimeElapsed >= CHARGING_TIME + m_fActiveWarningTime)
+	if (!m_bDected && pWarning && m_fTimeElapsed >= CHARGING_TIME + m_fActiveWarningTime)
 	{
 		pWarning->SetActive(false); // 경고존 비활성화
 
@@ -65,12 +65,9 @@ void BossSwingAttack::Update(CEnmuMeat* pChar, _float fTimeDelta)
 
 			if (fDistSq <= radiusSq)
 			{
-				if (pTarget)
-				{
-					pTarget->TakeDamage(10.f);
-					pTarget->StartHitStop(0.65f);
-					pTarget->Blow(pChar, 40.f);
-				}
+				pTarget->TakeDamage(10.f);
+				pTarget->StartHitStop(0.65f);
+				pTarget->Blow(pChar, 40.f);
 				pChar->StartHitStop(0.65f);
 			}
 		}
