@@ -5,13 +5,10 @@
 #include "InputBuffer.h"
 #include "StateMove.h"	
 #include "StateHurt.h"
-#include "StateAttack1.h"	
 #include "StateJump.h"
 #include "StateStep.h"
 #include "StateGuard.h"
-#include "StateSkill0.h"
-#include "StateSkill1.h"
-#include "StateSkill2.h"
+#include "StateSkill.h"
 #include "DashSmokeEffect.h"
 #include "BodyColliderParts.h"
 #include "UIProgressBar.h"
@@ -21,6 +18,7 @@
 #include <JsonLoader.h>
 #include "Navigation.h"
 #include "EffectManager.h"
+#include <StateAttack.h>
 
 
 using AniCon = CAnimController::Condition;
@@ -288,7 +286,7 @@ void CAkaza::TakeDamage(_float fDamage)
 	__super::TakeDamage(fDamage);
 	if(!m_bAirborne&&!m_bIsBound && m_eState != CSTATE::GUARD)
 	{
-		ChangeState(new StateHurt());
+		ChangeState(new StateHurt(StateHurt::EHurtType::Hurt));
 	}
 	auto pBar = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("RightLifeBar"));
 	if (pBar)
@@ -307,64 +305,58 @@ void CAkaza::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::ATTACK:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
-				StartHitStop(0.2f);
-				pCharacter->TakeDamage(2.f);
-				auto pState = pCharacter->GetState();
-				if (pCharacter->IsAirborne())
+				StateAttack::EAttackType phase = StateAttack::EAttackType::Attack1;
+				if (auto pAtk = dynamic_cast<StateAttack*>(m_pState))
+					phase = pAtk->GetAttackType();
+				switch (phase)
 				{
-					pCharacter->LaunchAirborne(40.f);
-					pCharacter->PushBack(this);
+				case StateAttack::EAttackType::Attack1:
+
+						StartHitStop(0.2f);
+						pCharacter->TakeDamage(2.f);
+						if (pCharacter->IsAirborne())
+						{
+							pCharacter->LaunchAirborne(40.f);
+							pCharacter->PushBack(this);
+						}
+					break;
+				case StateAttack::EAttackType::Attack2:
+					StartHitStop(0.2f);
+					pCharacter->TakeDamage(4.f);
+					if (pCharacter->IsAirborne())
+					{
+						pCharacter->LaunchAirborne(40.f);
+						pCharacter->PushBack(this);
+					}
+					break;
+				case StateAttack::EAttackType::Attack3:
+					StartHitStop(0.2f);
+					pCharacter->TakeDamage(4.f);
+					if (pCharacter->IsAirborne())
+					{
+						pCharacter->LaunchAirborne(40.f);
+						pCharacter->PushBack(this);
+					}
+					break;
+				case StateAttack::EAttackType::Attack4:
+					StartHitStop(0.2f);
+					pCharacter->TakeDamage(5.f);
+					if (pCharacter->IsAirborne())
+					{
+						pCharacter->LaunchAirborne(40.f);
+						pCharacter->PushBack(this);
+					}
+					break;
+				case StateAttack::EAttackType::Down:
+					pCharacter->TakeDamage(8.f);
+					break;
+				case StateAttack::EAttackType::Up:
+					pCharacter->TakeDamage(6.f);
+					StartHitStop(0.2f);
+					m_bCanBlowAttack = true;
+					break;
+
 				}
-			}
-			break;
-		case CSTATE::ATTACK2:
-			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
-			{
-				StartHitStop(0.2f);
-				pCharacter->TakeDamage(4.f);
-				if (pCharacter->IsAirborne())
-				{
-					pCharacter->LaunchAirborne(40.f);
-					pCharacter->PushBack(this);
-				}
-			}
-			break;
-		case CSTATE::ATTACK3:
-			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
-			{
-				StartHitStop(0.2f);
-				pCharacter->TakeDamage(4.f);
-				if (pCharacter->IsAirborne())
-				{
-					pCharacter->LaunchAirborne(40.f);
-					pCharacter->PushBack(this);
-				}
-			}
-			break;
-		case CSTATE::ATTACK4:
-			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
-			{
-				StartHitStop(0.2f);
-				pCharacter->TakeDamage(5.f);
-				if (pCharacter->IsAirborne())
-				{
-					pCharacter->LaunchAirborne(40.f);
-					pCharacter->PushBack(this);
-				}
-			}
-			break;
-		case CSTATE::ATTACK_DOWN:
-			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
-			{
-				pCharacter->TakeDamage(8.f);
-			}
-			break;
-		case CSTATE::ATTACK_UP:
-			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
-			{
-				pCharacter->TakeDamage(6.f);
-				StartHitStop(0.2f);
-				m_bCanBlowAttack = true;
 			}
 			break;
 		case CSTATE::SKILL:
@@ -1501,9 +1493,7 @@ void CAkaza::HandleInput()
 	//	//}
 	//	return;
 	//}
-	else if (playerState == CBaseCharacter::CSTATE::ATTACK
-		|| playerState == CBaseCharacter::CSTATE::ATTACK2|| playerState == CBaseCharacter::CSTATE::ATTACK3
-		|| playerState == CBaseCharacter::CSTATE::ATTACK4)
+	else if (playerState == CBaseCharacter::CSTATE::ATTACK)
 	{
 		//  ·£´ý È®·ü·Î °¡µåÇÏ±â
 		if (m_Distribution(m_RandGen) < 0.55f)

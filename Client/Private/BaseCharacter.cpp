@@ -1,10 +1,6 @@
 #include "BaseCharacter.h"
 #include "DashSmokeEffect.h"
-#include "StateBoundHurt.h"
-#include "StateHurtBlow.h"
 #include "EffectManager.h"
-#include "StateHurtDown.h"
-#include "StateHurtAir.h"
 #include "GameInstance.h"
 #include "InputBuffer.h"
 #include "GuardEffect.h"
@@ -496,12 +492,12 @@ void CBaseCharacter::LaunchAirborne(_float fJumpForce, _bool bIsBound)
 
 	if (!bIsBound)
 	{
-		ChangeState(new StateHurtAir());
+		ChangeState(new StateHurt(StateHurt::EHurtType::HurtAir));
 	}
 	else
 	{
 		m_bIsBound = bIsBound; // 바운드 여부 설정
-		ChangeState(new StateBoundHurt());
+		ChangeState(new StateHurt(StateHurt::EHurtType::HurtBound));
 	}
 }
 
@@ -515,7 +511,7 @@ void CBaseCharacter::LaunchAirborneFall(_float fJumpForce)
 		m_Velocity.y = fJumpForce;
 	m_bAirborne = true;
 	m_bIsJumping = true; // 점프 상태로 설정
-	ChangeState(new StateHurtBlow());
+	ChangeState(new StateHurt(StateHurt::EHurtType::HurtBlow));
 }
 
 void CBaseCharacter::Blow(CGameObject* pAttacker, _float fBlowForce)
@@ -542,8 +538,7 @@ void CBaseCharacter::Blow(CGameObject* pAttacker, _float fBlowForce)
 		m_Velocity.y = fBlowForce + 6.f; 
 		m_bAirborne = true; // 공중 상태로 전환
 		m_bIsJumping = true; // 점프 상태로 설정
-
-		ChangeState(new StateHurtBlow());
+		ChangeState(new StateHurt(StateHurt::EHurtType::HurtBlow));
 	}
 	m_bCanBlowAttack = false; // 블로우 공격 후에는 다시 사용할 수 없도록 설정
 }
@@ -670,7 +665,7 @@ void CBaseCharacter::HurtDown()
 {
 	if (m_bAirborne || m_bIsBound)
 		return; // 이미 공중에 있거나 바운드 상태면 무시
-	ChangeState(new StateHurtDown());
+	ChangeState(new StateHurt(StateHurt::EHurtType::HurtDown));
 }
 
 void CBaseCharacter::TakeDamage(_float fDamage)

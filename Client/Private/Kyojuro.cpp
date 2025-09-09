@@ -17,6 +17,7 @@
 #include "KyojuroEnk.h"
 #include "StateHurt.h"
 #include "Weapon.h"	
+#include <StateAttack.h>
 
 using AniCon = CAnimController::Condition;
 CKyojuro::CKyojuro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -237,7 +238,7 @@ void CKyojuro::TakeDamage(_float fDamage)
 
 	if (!m_bAirborne && !m_bIsBound&& m_eState != CSTATE::GUARD)
 	{
-		ChangeState(new StateHurt());
+		ChangeState(new StateHurt(StateHurt::EHurtType::Hurt));
 	}
 	auto pLeftBar = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("LeftLifeBar"));
 	if (pLeftBar)
@@ -256,69 +257,56 @@ void CKyojuro::OnAttackHit(CGameObject* pTarget)
 		case CSTATE::ATTACK:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
 			{
-				pCharacter->TakeDamage(3.f);
-				auto pState = pCharacter->GetState();
-				if (pCharacter->IsAirborne())
+				StateAttack::EAttackType phase = StateAttack::EAttackType::Attack1;
+				if (auto pAtk = dynamic_cast<StateAttack*>(m_pState))
+					phase = pAtk->GetAttackType();
+
+				switch (phase)
 				{
-				//	StartHitStop(0.2f);
-					pCharacter->LaunchAirborne(40.f);
+				case StateAttack::EAttackType::Attack1:
+					pCharacter->TakeDamage(3.f);
+					if (pCharacter->IsAirborne())
+					{
+						pCharacter->LaunchAirborne(40.f);
+						pCharacter->PushBack(this);
+					}
+					break;
+				case StateAttack::EAttackType::Attack2:
+					pCharacter->TakeDamage(3.5f);
+					if (pCharacter->IsAirborne())
+					{
+						pCharacter->LaunchAirborne(40.f);
+						pCharacter->PushBack(this);
+					}
+					break;
+				case StateAttack::EAttackType::Attack3:
+					pCharacter->TakeDamage(3.f);
+					if (pCharacter->IsAirborne())
+					{
+						pCharacter->LaunchAirborne(40.f);
+						pCharacter->PushBack(this);
+					}
+					break;
+				case StateAttack::EAttackType::Attack4:
+					pCharacter->TakeDamage(2.5f);
+					pCharacter->StartHitStop(0.4f);
+					StartHitStop(0.4f);
 					pCharacter->PushBack(this);
+					break;
+				case StateAttack::EAttackType::Up:
+					pCharacter->TakeDamage(6.f);
+					StartHitStop(0.2f);
+					m_bCanBlowAttack = true;
+					break;
+				case StateAttack::EAttackType::Down:
+					pCharacter->TakeDamage(5.f);
+					break;
 				}
-			}
-			break;
-		case CSTATE::ATTACK2:
-			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
-			{
-				pCharacter->TakeDamage(3.5f);
-				if (pCharacter->IsAirborne())
-				{
-					//StartHitStop(0.2f);
-					pCharacter->LaunchAirborne(40.f);
-					pCharacter->PushBack(this);
-				}
-			}
-			break;
-		case CSTATE::ATTACK3:
-			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
-			{
-				pCharacter->TakeDamage(3.f);
-				if (pCharacter->IsAirborne())
-				{
-					//StartHitStop(0.2f);
-					pCharacter->LaunchAirborne(40.f);
-					pCharacter->PushBack(this);
-				}
-			}
-			break;
-		case CSTATE::ATTACK4:
-			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
-			{
-				pCharacter->TakeDamage(2.5f);
-				pCharacter->StartHitStop(0.4f);
-				StartHitStop(0.4f);					
-				pCharacter->PushBack(this);
-			}
-			break;
-		case CSTATE::ATTACK_DOWN:
-			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
-			{
-				pCharacter->TakeDamage(5.f);
-			}
-			break;
-		case CSTATE::ATTACK_UP:
-			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
-			{
-				pCharacter->TakeDamage(6.f);
-				StartHitStop(0.2f);
-				m_bCanBlowAttack = true;
+
+	
 			}
 			break;
 		case CSTATE::SKILL:
-			//if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
-			//{
-			//	pCharacter->TakeDamage(10.f);
-			//	pCharacter->LaunchAirborne(40.f);
-			//}
 			break;
 		case CSTATE::SKILL1:
 			if (auto pCharacter = dynamic_cast<CBaseCharacter*>(pTarget))
@@ -354,7 +342,6 @@ void CKyojuro::OnCollisionEnter(CCollider* other, const XMFLOAT3& hitPos)
 	if (other->GetType() == ColliderType::HITBOX)
 	{
 		CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("AkazaHitParticle"), hitPos);
-	//	CEffectManager::Get_Instance()->SpawnParticleEffect(TEXT("HitBodyShockParticle"), hitPos);
 	}
 }
 

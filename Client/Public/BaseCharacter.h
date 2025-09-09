@@ -17,8 +17,7 @@ static constexpr float     RESTITUTION = 0.5f; // 바닥 반사 계수
 class CBaseCharacter : public CGameObject,  public ICollisionListener
 {
 public:
-	enum class CSTATE { IDLE, MOVE, ATTACK,ATTACK2,
-		ATTACK3, ATTACK4, ATTACK_DOWN,ATTACK_UP,GUARD,JUMP, STEP,
+	enum class CSTATE { IDLE, MOVE, ATTACK,GUARD,JUMP, STEP,
 		KNOCKDOWN,SKILL,SKILL1,SKILL2, HURT,AIR, BOUND,DOWN,DIE };
 protected:
 	CBaseCharacter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

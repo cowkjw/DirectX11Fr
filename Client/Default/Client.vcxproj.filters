@@ -405,18 +405,6 @@
     <ClInclude Include="..\public\InputBuffer.h">
       <Filter>94. Pattern\Command\InputBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\StateAttack3.h">
-      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\StateAttack2.h">
-      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\StateAttack1.h">
-      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\StateSkill0.h">
-      <Filter>94. Pattern\State\DefaultState\Skill</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\StateGuard.h">
       <Filter>94. Pattern\State\DefaultState\Guard</Filter>
     </ClInclude>
@@ -426,26 +414,11 @@
     <ClInclude Include="..\public\StateJump.h">
       <Filter>94. Pattern\State\DefaultState\Jump</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\StateAttack4.h">
-      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\StateAttackUp.h">
-      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\StateAttackDown.h">
-      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\StateMove.h">
       <Filter>94. Pattern\State\DefaultState\Move</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\StateSkill2.h">
-      <Filter>94. Pattern\State\DefaultState\Skill</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\StateJumpAttack.h">
       <Filter>94. Pattern\State\DefaultState\Attack</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\StateSkill1.h">
-      <Filter>94. Pattern\State\DefaultState\Skill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Sky.h">
       <Filter>01.GameObject\Map\Sky</Filter>
@@ -531,9 +504,6 @@
     <ClInclude Include="..\public\EnmuTentacle.h">
       <Filter>01.GameObject\Character\Enmu\EnmuMeat</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\StateHurtAir.h">
-      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Level_Mode.h">
       <Filter>00.Levels\Mode</Filter>
     </ClInclude>
@@ -542,15 +512,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Level_BattleSelect.h">
       <Filter>00.Levels\Enmu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\StateBoundHurt.h">
-      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\StateHurtBlow.h">
-      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\StateHurtDown.h">
-      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Decal.h">
       <Filter>01.GameObject\Decal</Filter>
@@ -690,6 +651,12 @@
     <ClInclude Include="..\Public\RingWindEffect.h">
       <Filter>01.GameObject\Effect\Mesh\Cmm</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\StateAttack.h">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\StateSkill.h">
+      <Filter>94. Pattern\State\DefaultState\Skill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -813,18 +780,6 @@
     <ClCompile Include="..\private\InputBuffer.cpp">
       <Filter>94. Pattern\Command\InputBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\StateAttack3.cpp">
-      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\StateAttack2.cpp">
-      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\StateAttack1.cpp">
-      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\StateSkill0.cpp">
-      <Filter>94. Pattern\State\DefaultState\Skill</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\StateGuard.cpp">
       <Filter>94. Pattern\State\DefaultState\Guard</Filter>
     </ClCompile>
@@ -837,23 +792,8 @@
     <ClCompile Include="..\private\StateMove.cpp">
       <Filter>94. Pattern\State\DefaultState\Move</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\StateAttack4.cpp">
-      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\StateAttackUp.cpp">
-      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\StateAttackDown.cpp">
-      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\StateSkill2.cpp">
-      <Filter>94. Pattern\State\DefaultState\Skill</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\StateJumpAttack.cpp">
       <Filter>94. Pattern\State\DefaultState\Attack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\StateSkill1.cpp">
-      <Filter>94. Pattern\State\DefaultState\Skill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Sky.cpp">
       <Filter>01.GameObject\Map\Sky</Filter>
@@ -936,9 +876,6 @@
     <ClCompile Include="..\private\EnmuTentacle.cpp">
       <Filter>01.GameObject\Character\Enmu\EnmuMeat</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\StateHurtAir.cpp">
-      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Level_Mode.cpp">
       <Filter>00.Levels\Mode</Filter>
     </ClCompile>
@@ -947,15 +884,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_BattleSelect.cpp">
       <Filter>00.Levels\Enmu</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\StateBoundHurt.cpp">
-      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\StateHurtBlow.cpp">
-      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\StateHurtDown.cpp">
-      <Filter>94. Pattern\State\DefaultState\Hurt</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Decal.cpp">
       <Filter>01.GameObject\Decal</Filter>
@@ -1095,6 +1023,12 @@
     <ClCompile Include="..\Private\RingWindEffect.cpp">
       <Filter>01.GameObject\Effect\Mesh\Cmm</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\StateAttack.cpp">
+      <Filter>94. Pattern\State\DefaultState\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\StateSkill.cpp">
+      <Filter>94. Pattern\State\DefaultState\Skill</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\ShaderFiles\Shader_VtxPosTex.hlsl">
@@ -1154,5 +1088,6 @@
       <Filter>96.Json\JsonFiles</Filter>
     </None>
     <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>
