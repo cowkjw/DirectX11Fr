@@ -3,11 +3,11 @@
 #include "GameInstance.h"
 #include "BaseCharacter.h"
 #include "AnimController.h"
-#include "StateAttack1.h"
+#include "StateAttack.h"
 #include "StateJump.h"
 #include "StateMove.h"
 #include "StateGuard.h"
-#include "StateSkill0.h"    
+#include "StateSkill.h"    
 #include "InputBuffer.h"
 #include "Command.h"
 
@@ -49,14 +49,10 @@ void StateIdle::Update(CBaseCharacter* pChar, const InputData& input, float fTim
     if (input.doSkill0)
     {
         buf->PopCommand(ECommand::Skill0, 1);
-        pChar->ChangeState(new StateSkill0(TEXT("Skill0")));
+        pChar->ChangeState(new StateSkill(TEXT("Skill0"), StateSkill::ESkillType::Skill0));
         return;
     }
-    //if (buf->CheckCommand(ECommand::Skill0)) {
-    //    buf->PopFront(1);
-    //    pChar->ChangeState(new StateSkill0(TEXT("Skill0")));
-    //    return;
-    //}
+
     // ÀÌµ¿
     _bool bMoving = !XMVector3Equal(input.moveDir, XMVectorZero());
     if (bMoving &&!anim->CheckBool("Attacking")&&!anim->CheckBool("Jump"))
@@ -67,7 +63,7 @@ void StateIdle::Update(CBaseCharacter* pChar, const InputData& input, float fTim
 
     if (input.doAttack)
     {
-        pChar->ChangeState(new StateAttack1(TEXT("Attack1")));
+        pChar->ChangeState(new StateAttack(TEXT("Attack1"), StateAttack::EAttackType::Attack1));
         return;
     }
 }

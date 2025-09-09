@@ -437,7 +437,7 @@
   <Class Name="BossIdle" Collapsed="true">
     <Position X="31" Y="16.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQAEAAAAAIAAAAAAABAAAAAAAAEQAAAIAAAAAAAAAA=</HashCode>
+      <HashCode>AAQAEAAAAAIAAAAAAABAAAAAAAAEAAAAIAAAAAAAAAA=</HashCode>
       <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\BossIdle.h</FileName>
     </TypeIdentifier>
   </Class>

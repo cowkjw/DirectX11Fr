@@ -5,7 +5,7 @@
 #include "AnimController.h"
 #include "StateIdle.h"
 #include "StateMove.h"
-#include "StateSkill2.h"
+#include "StateSkill.h"
 
 void StateGuard::Enter(CBaseCharacter* pChar)
 {
@@ -23,25 +23,13 @@ void StateGuard::Update(CBaseCharacter* pChar, const InputData& input, float fTi
 	{
 		pChar->GetTransform()->LookAtXZ(pChar->Get_Target()->GetTransform()->Get_State(STATE::POSITION));
 	}
-	//if (pGameInstance->IsKeyDown('I')&& pGameInstance->IsKeyDown('O'))
-	//{
-	//	pChar->ChangeState(new StateSkill2(TEXT("Skill2")));
-	//	return;
-	//}
 
 	if (input.doSkill2)
 	{
 		//buf->PopCommand(ECommand::Skill2, 1);
-		pChar->ChangeState(new StateSkill2(TEXT("Skill2")));
+		pChar->ChangeState(new StateSkill(TEXT("Skill2"), StateSkill::ESkillType::Skill2));
 		return;
 	}
-
-	/*if (!input.doGuard)
-	{
-		buf->PopCommand(ECommand::Guard);
-		pChar->ChangeState(new StateIdle(TEXT("Idle")));
-		return;
-	}*/
 
 	if (!XMVector3Equal(input.moveDir, XMVectorZero()))
 	{

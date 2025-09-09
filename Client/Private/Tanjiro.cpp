@@ -19,6 +19,7 @@
 #include <SlashEffect.h>
 #include "EffectManager.h"
 #include "TanTakEffect.h"
+#include <StateAttack.h>
 
 using AniCon = CAnimController::Condition;
 CTanjiro::CTanjiro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -248,7 +249,7 @@ void CTanjiro::TakeDamage(_float fDamage)
 	__super::TakeDamage(fDamage);
 	if (!m_bAirborne && !m_bIsBound)
 	{
-		ChangeState(new StateHurt());
+		ChangeState(new StateHurt(StateHurt::EHurtType::Hurt));
 	}
 	auto pBar = m_pGameInstance->Get_UI(TEXT("GameplayCanvas"), TEXT("LeftLifeBar"));
 	if (pBar)
@@ -266,25 +267,41 @@ void CTanjiro::OnAttackHit(CGameObject* pTarget)
 		switch (m_eState)
 		{
 		case CSTATE::ATTACK:
-			bIsOpen ? pBoss->Hit(3.f) : pBoss->Hit(4.5f);
-			break;
-		case CSTATE::ATTACK2:
-			StartHitStop(0.2f); // 히트스톱 시작
-			bIsOpen ? pBoss->Hit(4.f) : pBoss->Hit(5.f);
-			break;
-		case CSTATE::ATTACK3:
-			bIsOpen ? pBoss->Hit(3.f) : pBoss->Hit(4.5f);
-			break;
-		case CSTATE::ATTACK4:
-			StartHitStop(0.2f);
-			pBoss->Hit(5.f);
-			break;
-		case CSTATE::ATTACK_DOWN:
-			pBoss->Hit(5.f);
-			break;
-		case CSTATE::ATTACK_UP:
-			pBoss->Hit(5.f);
-			break;
+		{
+			StateAttack::EAttackType phase = StateAttack::EAttackType::Attack1;
+			if (auto pAtk = dynamic_cast<StateAttack*>(m_pState))
+				phase = pAtk->GetAttackType();
+
+			switch (phase)
+			{
+			case StateAttack::EAttackType::Attack1:
+				bIsOpen ? pBoss->Hit(3.f) : pBoss->Hit(4.5f);
+				break;
+
+			case StateAttack::EAttackType::Attack2:
+				StartHitStop(0.2f);
+				bIsOpen ? pBoss->Hit(4.f) : pBoss->Hit(5.f);
+				break;
+
+			case StateAttack::EAttackType::Attack3:
+				bIsOpen ? pBoss->Hit(3.f) : pBoss->Hit(4.5f);
+				break;
+
+			case StateAttack::EAttackType::Attack4:
+				StartHitStop(0.2f);
+				pBoss->Hit(5.f);
+				break;
+
+			case StateAttack::EAttackType::Down:
+				pBoss->Hit(5.f);
+				break;
+
+			case StateAttack::EAttackType::Up:
+				pBoss->Hit(5.f);
+				break;
+			}
+		}
+		break;
 		case CSTATE::SKILL:
 			StartHitStop(0.2f);
 			pBoss->Hit(10.f);
@@ -693,7 +710,6 @@ void CTanjiro::Ready_Animation()
 	CAnimController::Condition cJumpAttack{ "JumpAttack", CAnimController::EOp::Trigger, 0.f };
 	ctrl->AddTransition(jump0Idx, jumpAttackIdx, cJumpAttack, 0.1f);
 	ctrl->AddTransition(jump1Idx, jumpAttackIdx, cJumpAttack, 0.1f);
-	//	ctrl->AddTransition(jump2Idx, jumpAttackIdx, cJumpAttack, 0.1f);
 	ctrl->AddTransition(jump3Idx, jumpAttackIdx, cJumpAttack, 0.1f);
 
 

@@ -1,11 +1,11 @@
 #include "StateMove.h"
 #include "StateIdle.h"
-#include "StateAttack1.h"
+#include "StateAttack.h"
 #include "StateJump.h"
 #include "StateGuard.h"
 #include "Collider.h"
 #include "StateStep.h"
-#include "StateSkill1.h"
+#include "StateSkill.h"
 
 
 void StateMove::Enter(CBaseCharacter* pChar)
@@ -40,14 +40,14 @@ void StateMove::Update(CBaseCharacter* pChar, const InputData& input, float fTim
 
 	if (input.doSkill1) // 이동 스킬
 	{
-		pChar->ChangeState(new StateSkill1(TEXT("Skill1")));
+		pChar->ChangeState(new StateSkill(TEXT("Skill1"), StateSkill::ESkillType::Skill1));
 		return;
 	}
 
 	// 1타 공격 입력
 	if (input.doAttack)
 	{
-		pChar->ChangeState(new StateAttack1(TEXT("Attack1")));
+		pChar->ChangeState(new StateAttack(TEXT("Attack1"),StateAttack::EAttackType::Attack1));
 		return;
 	}
 
