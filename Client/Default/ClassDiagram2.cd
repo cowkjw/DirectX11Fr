@@ -1,2 +1,81 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram /> 
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="StateAttack" Collapsed="true">
+    <Position X="6" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAEACAEEAAALCAAAggAQQA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\Public\StateAttack.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IState" Collapsed="true">
+    <Position X="15.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAABAAAAAAAAgAAAAAgAAEAAAAIAAAAAAAAQA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\State.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateDeath" Collapsed="true">
+    <Position X="12.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAgAAAAAAAEAQAAIAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateDeath.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateGuard" Collapsed="true">
+    <Position X="19.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAUAAAAIAAEAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateGuard.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateHurt" Collapsed="true">
+    <Position X="24" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAQAAAAAAAAACAAAAAAAAAAAACCEAAAEICAAAgAAQQA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateHurt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateIdle" Collapsed="true">
+    <Position X="8.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAEAAAAABAAAAAAAAAEAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateIdle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateJump" Collapsed="true">
+    <Position X="15" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CEQAAEAAAAAAAAAQACAAAAAAAAMEAAQAIBAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateJump.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateJumpAttack" Collapsed="true">
+    <Position X="21.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAABAACAEAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateJumpAttack.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateMove" Collapsed="true">
+    <Position X="26.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAEAAAAIAAIAAACAAA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateMove.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateSkill" Collapsed="true">
+    <Position X="10.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAQAAAAAAAAAAAIAAAAAACAEAAAAICQAAACAQQA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\Public\StateSkill.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateStep" Collapsed="true">
+    <Position X="17.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAJAAIAAAAAAAAAAAAAAAAAAEAAABIAAAABAAIBA=</HashCode>
+      <FileName>C:\Users\c\Desktop\JusinGithub\DirectX11Fr\Client\public\StateStep.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

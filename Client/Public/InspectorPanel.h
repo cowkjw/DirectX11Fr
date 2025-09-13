@@ -1,13 +1,13 @@
 #pragma once
-#include "Pannel.h"
+#include "Panel.h"
 #include "Inspector.h"
 
 BEGIN_NAMESPACE(Client)
-class CInspectorPannel : public CPannel, public IInspector
+class CInspectorPanel : public CPanel, public IInspector
 {
 private:
-	CInspectorPannel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	~CInspectorPannel() = default;
+	CInspectorPanel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	~CInspectorPanel() = default;
 public:
 	HRESULT Initialize();
 	void Update(_float fTimeDelta);
@@ -35,7 +35,7 @@ private:
 	
 
 public:
-	static CInspectorPannel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CInspectorPanel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 };
 END_NAMESPACE

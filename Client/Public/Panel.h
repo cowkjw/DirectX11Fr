@@ -8,11 +8,11 @@ class CGameObject;
 END_NAMESPACE
 
 BEGIN_NAMESPACE(Client)
-class CPannel : public CBase
+class CPanel : public CBase
 {
 protected:
-	CPannel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	~CPannel() = default;
+	CPanel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	~CPanel() = default;
 
 public:
 	virtual HRESULT Initialize();
@@ -25,7 +25,7 @@ protected:
 	class CGameInstance* m_pGameInstance = { nullptr };
 
 public:
-	static CPannel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CPanel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 };
 END_NAMESPACE

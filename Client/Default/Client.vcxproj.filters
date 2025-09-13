@@ -375,13 +375,13 @@
     <ClInclude Include="..\public\Gizmo.h">
       <Filter>97.IMGUI\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Pannel.h">
+    <ClInclude Include="..\public\Panel.h">
       <Filter>97.IMGUI\Pannel</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Hierarchy.h">
       <Filter>97.IMGUI\Pannel\Hierarchy</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\InspectorPannel.h">
+    <ClInclude Include="..\public\InspectorPanel.h">
       <Filter>97.IMGUI\Pannel\Inspector</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Toolbar.h">
@@ -750,13 +750,13 @@
     <ClCompile Include="..\..\External Libraries\ImGuizmo-master\ImSequencer.cpp">
       <Filter>97.IMGUI\Lib</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Pannel.cpp">
+    <ClCompile Include="..\private\Panel.cpp">
       <Filter>97.IMGUI\Pannel</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Hierarchy.cpp">
       <Filter>97.IMGUI\Pannel\Hierarchy</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\InspectorPannel.cpp">
+    <ClCompile Include="..\private\InspectorPanel.cpp">
       <Filter>97.IMGUI\Pannel\Inspector</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Toolbar.cpp">
@@ -1089,5 +1089,6 @@
     </None>
     <None Include="ClassDiagram.cd" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
 </Project>

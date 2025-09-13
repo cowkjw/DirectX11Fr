@@ -22,7 +22,7 @@
 
 
 CToolbar::CToolbar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CPannel(pDevice, pContext)
+	: CPanel(pDevice, pContext)
 {
 
 }

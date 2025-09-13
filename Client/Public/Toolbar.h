@@ -1,5 +1,5 @@
 #pragma once
-#include "Pannel.h"
+#include "Panel.h"
 #include <JsonLoader.h>
 #include "MySequence.h"
 BEGIN_NAMESPACE(Engine)
@@ -12,7 +12,7 @@ class CTexture;
 END_NAMESPACE
 
 BEGIN_NAMESPACE(Client)
-class CToolbar : public CPannel
+class CToolbar : public CPanel
 {
 private:
 	CToolbar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
