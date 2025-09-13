@@ -32,7 +32,7 @@ HRESULT CEditorManager::Initialize()
 	CEditorManager::m_pSelectedObject = nullptr;
 	CEditorManager::m_vecSceneObjects.clear();
 	m_vecPannels.push_back(CHierarchy::Create(m_pDevice, m_pContext));
-	m_vecPannels.push_back(CInspectorPannel::Create(m_pDevice, m_pContext));
+	m_vecPannels.push_back(CInspectorPanel::Create(m_pDevice, m_pContext));
 	m_vecPannels.push_back(CToolbar::Create(m_pDevice, m_pContext));
 
 	_uint windowWidth = g_iWinSizeX;

@@ -1,12 +1,12 @@
 #pragma once
-#include "Pannel.h"
+#include "Panel.h"
 
 BEGIN_NAMESPACE(Engine)
 class CGameObject;
 END_NAMESPACE
 
 BEGIN_NAMESPACE(Client)
-class CHierarchy :  public CPannel
+class CHierarchy :  public CPanel
 {
 private:
 	CHierarchy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

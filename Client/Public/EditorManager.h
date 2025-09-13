@@ -1,7 +1,7 @@
 #pragma once
 #include "Base.h"
 #include "Client_Defines.h"
-#include "InspectorPannel.h"
+#include "InspectorPanel.h"
 #include "Hierarchy.h"
 #include "Toolbar.h"
 
@@ -16,7 +16,7 @@ END_NAMESPACE
 BEGIN_NAMESPACE(Client)
 class CEditorManager final : public CBase
 {
-	friend class CInspectorPannel;
+	friend class CInspectorPanel;
 	friend class CHierarchy;
 	friend class CToolbar;
 	friend class CJsonLoader;
@@ -38,7 +38,7 @@ private:
 	static vector<CGameObject*> m_vecSceneObjects; // 씬에 있는 오브젝트들
 	static CGameObject* m_pSelectedObject;
 	static _bool m_bOrthoGizmo;
-	vector<CPannel*> m_vecPannels;
+	vector<CPanel*> m_vecPannels;
 
 	ID3D11Texture2D* m_pGameTex = nullptr;
 	ID3D11RenderTargetView* m_pGameRTV = nullptr;

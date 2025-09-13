@@ -1,7 +1,7 @@
-#include "Pannel.h"
+#include "Panel.h"
 #include "GameInstance.h"
 
-CPannel::CPannel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPanel::CPanel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
 	, m_pContext{ pContext }
 	, m_pGameInstance{ CGameInstance::Get_Instance() }
@@ -11,32 +11,32 @@ CPannel::CPannel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	Safe_AddRef(m_pGameInstance);
 }
 
-HRESULT CPannel::Initialize()
+HRESULT CPanel::Initialize()
 {
     return S_OK;
 }
 
-void CPannel::Update(_float fTimeDelta)
+void CPanel::Update(_float fTimeDelta)
 {
 }
 
-HRESULT CPannel::Render()
+HRESULT CPanel::Render()
 {
     return S_OK;
 }
 
-CPannel* CPannel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPanel* CPanel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CPannel* pInstance = new CPannel(pDevice, pContext);
+	CPanel* pInstance = new CPanel(pDevice, pContext);
 	if (FAILED(pInstance->Initialize()))
 	{
-		MSG_BOX("Failed to Created : CPannel");
+		MSG_BOX("Failed to Created : CPanel");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CPannel::Free()
+void CPanel::Free()
 {
 	__super::Free();
 	Safe_Release(m_pContext);

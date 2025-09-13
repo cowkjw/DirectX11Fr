@@ -210,7 +210,7 @@
     <ClInclude Include="..\Public\HitSlashCrossParticle.h" />
     <ClInclude Include="..\public\IMGUIMag.h" />
     <ClInclude Include="..\public\InputBuffer.h" />
-    <ClInclude Include="..\public\InspectorPannel.h" />
+    <ClInclude Include="..\public\InspectorPanel.h" />
     <ClInclude Include="..\public\JsonLoader.h" />
     <ClInclude Include="..\Public\Kyojuro.h" />
     <ClInclude Include="..\public\KyojuroEnk.h" />
@@ -236,7 +236,7 @@
     <ClInclude Include="..\Public\Node.h" />
     <ClInclude Include="..\public\Observer.h" />
     <ClInclude Include="..\public\ObserverManager.h" />
-    <ClInclude Include="..\public\Pannel.h" />
+    <ClInclude Include="..\public\Panel.h" />
     <ClInclude Include="..\public\Sky.h" />
     <ClInclude Include="..\Public\ParticleEffect.h" />
     <ClInclude Include="..\public\SlashEffect.h" />
@@ -337,7 +337,7 @@
     <ClCompile Include="..\Private\HitSlashCrossParticle.cpp" />
     <ClCompile Include="..\private\IMGUIMag.cpp" />
     <ClCompile Include="..\private\InputBuffer.cpp" />
-    <ClCompile Include="..\private\InspectorPannel.cpp" />
+    <ClCompile Include="..\private\InspectorPanel.cpp" />
     <ClCompile Include="..\private\JsonLoader.cpp" />
     <ClCompile Include="..\Private\Kyojuro.cpp" />
     <ClCompile Include="..\private\KyojuroEnk.cpp" />
@@ -361,7 +361,7 @@
     <ClCompile Include="..\Private\StateSkill.cpp" />
     <ClCompile Include="..\Private\TrainSmokeParticle.cpp" />
     <ClCompile Include="..\private\ObserverManager.cpp" />
-    <ClCompile Include="..\private\Pannel.cpp" />
+    <ClCompile Include="..\private\Panel.cpp" />
     <ClCompile Include="..\private\Sky.cpp" />
     <ClCompile Include="..\Private\ParticleEffect.cpp" />
     <ClCompile Include="..\private\SlashEffect.cpp" />
@@ -427,6 +427,7 @@
     <None Include="..\Asset\Json\Textures.json" />
     <None Include="ClassDiagram.cd" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

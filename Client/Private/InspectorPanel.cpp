@@ -1,4 +1,4 @@
-#include "InspectorPannel.h"
+#include "InspectorPanel.h"
 #include <Transform.h>
 #include "GameObject.h"
 #include "GameInstance.h"
@@ -8,34 +8,34 @@
 #include "CapsuleCollider.h"
 #include "SphereCollider.h"
 
-CInspectorPannel::CInspectorPannel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CPannel(pDevice, pContext)
+CInspectorPanel::CInspectorPanel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CPanel(pDevice, pContext)
 {
 }
 
 
-HRESULT CInspectorPannel::Initialize()
+HRESULT CInspectorPanel::Initialize()
 {
 	return S_OK;
 }
 
-void CInspectorPannel::Update(_float fTimeDelta)
+void CInspectorPanel::Update(_float fTimeDelta)
 {
 }
 
-HRESULT CInspectorPannel::Render()
+HRESULT CInspectorPanel::Render()
 {
 
 	DrawInspector();
 	return S_OK;
 }
 
-void CInspectorPannel::TreePop()
+void CInspectorPanel::TreePop()
 {
 	ImGui::TreePop();
 }
 
-_bool CInspectorPannel::TreeNode(const char* label)
+_bool CInspectorPanel::TreeNode(const char* label)
 {
 	if (ImGui::TreeNode(label))
 	{
@@ -45,7 +45,7 @@ _bool CInspectorPannel::TreeNode(const char* label)
 	return false;
 }
 
-_bool CInspectorPannel::Checkbox(const char* label, _bool* v)
+_bool CInspectorPanel::Checkbox(const char* label, _bool* v)
 {
 	if (ImGui::Checkbox(label, v))
 	{
@@ -54,7 +54,7 @@ _bool CInspectorPannel::Checkbox(const char* label, _bool* v)
 	return false;
 }
 
-_bool CInspectorPannel::DragFloat(const char* label, _float* v, _float speed)
+_bool CInspectorPanel::DragFloat(const char* label, _float* v, _float speed)
 {
 	if (ImGui::DragFloat(label, v, speed))
 	{
@@ -63,7 +63,7 @@ _bool CInspectorPannel::DragFloat(const char* label, _float* v, _float speed)
 	return false;
 }
 
-_bool CInspectorPannel::DragFloat3(const char* label, _float* v, _float speed)
+_bool CInspectorPanel::DragFloat3(const char* label, _float* v, _float speed)
 {
 	if (ImGui::DragFloat3(label, v, speed))
 	{
@@ -72,7 +72,7 @@ _bool CInspectorPannel::DragFloat3(const char* label, _float* v, _float speed)
 	return false;
 }
 
-_bool CInspectorPannel::InputFloat(const char* label, _float* v)
+_bool CInspectorPanel::InputFloat(const char* label, _float* v)
 {
 	if (ImGui::InputFloat(label, v))
 	{
@@ -81,7 +81,7 @@ _bool CInspectorPannel::InputFloat(const char* label, _float* v)
 	return false;
 }
 
-_bool CInspectorPannel::InputFloat3(const char* label, _float* v)
+_bool CInspectorPanel::InputFloat3(const char* label, _float* v)
 {
 	if (ImGui::InputFloat3(label, v))
 	{
@@ -90,7 +90,7 @@ _bool CInspectorPannel::InputFloat3(const char* label, _float* v)
 	return false;
 }
 
-_bool CInspectorPannel::InputInt(const char* label, int* v)
+_bool CInspectorPanel::InputInt(const char* label, int* v)
 {
 	if (ImGui::InputInt(label, v))
 	{
@@ -99,7 +99,7 @@ _bool CInspectorPannel::InputInt(const char* label, int* v)
 	return false;
 }
 
-void CInspectorPannel::DrawInspector()
+void CInspectorPanel::DrawInspector()
 {
     ImGui::Begin("Inspector");
 
@@ -156,7 +156,7 @@ void CInspectorPannel::DrawInspector()
     ImGui::End();
 }
 
-void CInspectorPannel::DrawComponentList()
+void CInspectorPanel::DrawComponentList()
 {
 	ImGui::Text("Components:");
 	auto components = CEditorManager::m_pSelectedObject->GetComponents();
@@ -180,7 +180,7 @@ void CInspectorPannel::DrawComponentList()
 	}
 }
 
-void CInspectorPannel::DrawAddComponentPopup()
+void CInspectorPanel::DrawAddComponentPopup()
 {
 	if (ImGui::Button("Add Component"))
 		ImGui::OpenPopup("AddComponentPopup");
@@ -231,7 +231,7 @@ void CInspectorPannel::DrawAddComponentPopup()
 	ImGui::EndPopup();
 }
 
-void CInspectorPannel::DrawColliderInspector()
+void CInspectorPanel::DrawColliderInspector()
 {
 	if (ImGui::Checkbox("Physics Debug Draw", &bPhysXDebug))
 	{
@@ -241,23 +241,23 @@ void CInspectorPannel::DrawColliderInspector()
 	RenderPhysicsDebug();
 }
 
-void CInspectorPannel::RenderPhysicsDebug()
+void CInspectorPanel::RenderPhysicsDebug()
 {
 	
 }
 
-CInspectorPannel* CInspectorPannel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CInspectorPanel* CInspectorPanel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CInspectorPannel* pInstance = new CInspectorPannel(pDevice, pContext);
+	CInspectorPanel* pInstance = new CInspectorPanel(pDevice, pContext);
 	if (FAILED(pInstance->Initialize()))
 	{
-		MSG_BOX("Failed to Created : CInspectorPannel");
+		MSG_BOX("Failed to Created : CInspectorPanel");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CInspectorPannel::Free()
+void CInspectorPanel::Free()
 {
 	__super::Free();
 }
